@@ -1,0 +1,40 @@
+/* Noctalia dark theme variables for Starlight */
+:root {
+	/* Brand & accents */
+	--sl-color-accent: #c7a1d8; /* Primary */
+	--sl-color-text-accent: #c7a1d8;
+	--sl-border-radius: 10px;
+
+	/* Typography */
+	--sl-font: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	--sl-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+	/* Surfaces & text (dark-first) */
+	--sl-color-bg: #1c1822; /* Surface */
+	--sl-color-bg-soft: #262130; /* Surface Variant */
+	--sl-color-text: #e9e4f0; /* On Surface */
+	--sl-color-text-soft: #a79ab0; /* On Surface Variant */
+	--sl-color-hairline: #4d445a; /* Outline */
+
+	/* Links */
+	--sl-color-link: var(--sl-color-accent);
+	--sl-color-link-hover: #a984c4; /* Secondary */
+
+	/* Shadows */
+	--sl-shadow-color: #120f18; /* Shadow */
+}
+
+/* Light theme overrides can be added later */
+
+/* Repo cards hover effect */
+.repo-card {
+	position: relative;
+	border-radius: var(--sl-border-radius);
+	transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+.repo-card:hover {
+	transform: translateY(-2px);
+	filter: drop-shadow(0 8px 20px rgba(199, 161, 216, 0.25));
+}
+
+

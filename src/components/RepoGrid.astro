@@ -1,0 +1,45 @@
+---
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+const { org = 'noctalia-dev', repos: providedRepos } = Astro.props as { org?: string; repos?: any[] };
+
+let repos = providedRepos;
+
+if (!repos) {
+	try {
+		const res = await fetch(`https://api.github.com/orgs/${org}/repos?per_page=100&sort=updated`, {
+			headers: { Accept: 'application/vnd.github+json' },
+		});
+		if (res.ok) {
+			const data = await res.json();
+			repos = (data || [])
+				.filter((r: any) => !r.archived && !(r.name || '').startsWith('.'))
+				.sort((a: any, b: any) => (b.stargazers_count ?? 0) - (a.stargazers_count ?? 0));
+		} else {
+			repos = [];
+		}
+	} catch (e) {
+		repos = [];
+	}
+}
+---
+
+{repos && repos.length > 0 ? (
+	<CardGrid>
+		{repos.map((repo: any) => (
+			<div class="repo-card" style={{ position: 'relative' }}>
+				<Card title={repo.name} icon="github">
+					{repo.description || 'No description provided.'}
+					<p style={{ marginTop: '0.5rem' }}>
+						<a href={repo.html_url} target="_blank" rel="noopener noreferrer">Open repository ↗</a>
+					</p>
+				</Card>
+				<a href={repo.html_url} target="_blank" rel="noopener noreferrer" aria-label={`Open ${repo.name} repository`} style={{ position: 'absolute', inset: 0, zIndex: 5, borderRadius: 'inherit' }} />
+			</div>
+		))}
+	</CardGrid>
+) : (
+	<p>No repositories found for {org}. Try again later.</p>
+)}
+
+
