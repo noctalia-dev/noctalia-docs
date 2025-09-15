@@ -8,7 +8,7 @@ export default defineConfig({
 		starlight({
 			title: 'Noctalia',
 			logo: { src: './src/assets/noctalia-logo.png', alt: 'Noctalia' },
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/noctalia-dev' }],
+			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/noctalia-docs' }],
 			customCss: ['./src/styles/theme.css'],
 			tableOfContents: false,
 			sidebar: [
