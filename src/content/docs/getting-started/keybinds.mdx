@@ -1,0 +1,163 @@
+---
+title: Keybinds
+description: Start here to set up and use Noctalia.
+sidebar:
+  order: 2
+---
+
+Take full control of Noctalia with keyboard shortcuts and IPC commands. This page covers how to start the shell and all available commands you can bind to your favorite keys.
+
+:::tip[Installation-specific commands]
+- **NixOS Flake users**: Use `noctalia-shell` directly instead of `qs -c noctalia-shell`
+- **Manual installation users**: If you have Noctalia in `~/.config/quickshell/`, you can use `qs ipc call...` directly
+:::
+
+## Available Commands
+
+Noctalia provides extensive IPC (Inter-Process Communication) support, allowing you to control every aspect of the shell through commands. These are perfect for binding to keyboard shortcuts in your window manager or desktop environment.
+
+### Core Functions
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Application Launcher** | `qs -c noctalia-shell ipc call launcher toggle` | Open/close the application launcher |
+| **Side Panel** | `qs -c noctalia-shell ipc call sidePanel toggle` | Toggle the side panel visibility |
+| **Settings** | `qs -c noctalia-shell ipc call settings toggle` | Open/close the settings window |
+
+### Quick Access
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Clipboard History** | `qs -c noctalia-shell ipc call launcher clipboard` | Access your clipboard history |
+| **Calculator** | `qs -c noctalia-shell ipc call launcher calculator` | Quick calculator access |
+| **Power Panel** | `qs -c noctalia-shell ipc call powerPanel toggle` | System power options |
+
+### System Controls
+
+#### Audio Management
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Volume Up** | `qs -c noctalia-shell ipc call volume increase` | Increase system volume |
+| **Volume Down** | `qs -c noctalia-shell ipc call volume decrease` | Decrease system volume |
+| **Mute Output** | `qs -c noctalia-shell ipc call volume muteOutput` | Toggle output audio mute |
+| **Mute Input** | `qs -c noctalia-shell ipc call volume muteInput` | Toggle input audio mute |
+
+#### Display & Brightness
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Brightness Up** | `qs -c noctalia-shell ipc call brightness increase` | Increase screen brightness |
+| **Brightness Down** | `qs -c noctalia-shell ipc call brightness decrease` | Decrease screen brightness |
+
+### Security & Privacy
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Lock Screen** | `qs -c noctalia-shell ipc call lockScreen toggle` | Lock your screen |
+| **Idle Inhibitor** | `qs -c noctalia-shell ipc call idleInhibitor toggle` | Prevent system from going idle |
+
+### Notifications
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Notification History** | `qs -c noctalia-shell ipc call notifications toggleHistory` | View past notifications |
+| **Do Not Disturb** | `qs -c noctalia-shell ipc call notifications toggleDND` | Toggle notification silence mode |
+
+### Appearance
+
+#### Theme Controls
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Toggle Dark Mode** | `qs -c noctalia-shell ipc call darkMode toggle` | Switch between light/dark themes |
+| **Set Dark Mode** | `qs -c noctalia-shell ipc call darkMode setDark` | Force dark theme |
+| **Set Light Mode** | `qs -c noctalia-shell ipc call darkMode setLight` | Force light theme |
+
+#### Wallpaper Management
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Set Wallpaper** | `qs -c noctalia-shell ipc call wallpaper set $path $monitor` | Set specific wallpaper on a monitor |
+| **Random Wallpaper** | `qs -c noctalia-shell ipc call wallpaper random` | Apply a random wallpaper |
+
+:::note[Wallpaper variables]
+- `$path`: Full path to your wallpaper image file
+- `$monitor`: Monitor identifier (use `hyprctl monitors` to list available monitors)
+:::
+
+## Example Configurations
+
+<details>
+<summary><strong>Niri Configuration</strong></summary>
+
+Add these binds to your `~/.config/niri/config.kdl`:
+
+```kdl
+binds {
+    // Core Noctalia binds
+    Mod+Space { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
+    Mod+S { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "sidePanel" "toggle"; }
+    Mod+Comma { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "settings" "toggle"; }
+
+    // Audio controls
+    XF86AudioRaiseVolume { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "increase"; }
+    XF86AudioLowerVolume { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "decrease"; }
+    XF86AudioMute { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "muteOutput"; }
+
+    // Brightness controls
+    XF86MonBrightnessUp { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "increase"; }
+    XF86MonBrightnessDown { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "decrease"; }
+
+    // Utility shortcuts
+    Mod+V { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "clipboard"; }
+    Mod+C { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "calculator"; }
+    Mod+L { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "lockScreen" "toggle"; }
+}
+```
+
+</details>
+
+<details>
+<summary><strong>Hyprland Configuration</strong></summary>
+
+Add these binds to your `hyprland.conf`:
+
+```bash
+# Core Noctalia binds
+bind = SUPER, SPACE, exec, qs -c noctalia-shell ipc call launcher toggle
+bind = SUPER, S, exec, qs -c noctalia-shell ipc call sidePanel toggle
+bind = SUPER, comma, exec, qs -c noctalia-shell ipc call settings toggle
+
+# Audio controls
+bindel = , XF86AudioRaiseVolume, exec, qs -c noctalia-shell ipc call volume increase
+bindel = , XF86AudioLowerVolume, exec, qs -c noctalia-shell ipc call volume decrease
+bindl = , XF86AudioMute, exec, qs -c noctalia-shell ipc call volume muteOutput
+
+# Brightness controls
+bindel = , XF86MonBrightnessUp, exec, qs -c noctalia-shell ipc call brightness increase
+bindel = , XF86MonBrightnessDown, exec, qs -c noctalia-shell ipc call brightness decrease
+
+# Utility shortcuts
+bind = SUPER, V, exec, qs -c noctalia-shell ipc call launcher clipboard
+bind = SUPER, C, exec, qs -c noctalia-shell ipc call launcher calculator
+bind = SUPER, L, exec, qs -c noctalia-shell ipc call lockScreen toggle
+```
+
+</details>
+
+## Pro Tips
+
+:::tip[Custom scripts]
+You can combine multiple IPC calls in shell scripts for complex workflows:
+
+```bash
+#!/bin/bash
+# Toggle dark mode and set matching wallpaper
+qs -c noctalia-shell ipc call darkMode toggle
+sleep 0.5
+qs -c noctalia-shell ipc call wallpaper random
+```
+:::
+
+:::tip

@@ -1,0 +1,162 @@
+---
+title: Installation
+description: Start here to set up and use Noctalia.
+sidebar:
+  order: 1
+---
+
+## Arch Linux
+
+#### Using AUR (Recommended)
+
+The simplest way to install Noctalia on Arch Linux is through the Arch User Repository (AUR). This method installs the shell system-wide and handles dependencies automatically.
+
+Please replace with your AUR helper of choice.
+
+```bash
+paru -S noctalia-shell
+```
+
+#### Development Version
+
+For the latest features and fixes, you can install the development version directly from the Git repository:
+
+```bash
+paru -S noctalia-shell-git
+```
+
+:::caution
+The development version may be less stable than the official release. Use this version if you want to test the latest features or contribute to development.
+:::
+
+#### Manual Installation
+
+If you prefer to install Noctalia locally or want more control over the installation process, you can install it manually to your user configuration directory.
+
+**Step 1**: Install Quickshell dependency
+```bash
+paru -S quickshell-git
+```
+
+**Step 2**: Download and install Noctalia
+```bash
+mkdir -p ~/.config/quickshell/noctalia-shell && \
+curl -sL https://github.com/noctalia-dev/noctalia-shell/releases/latest/download/noctalia-latest.tar.gz | \
+tar -xz --strip-components=1 -C ~/.config/quickshell/noctalia-shell
+```
+
+:::tip
+Manual installation keeps Noctalia contained within your user directory, making it easy to remove or update without affecting system packages.
+:::
+
+## NixOS
+
+#### Quick Run
+
+Test Noctalia without installing by running it directly:
+
+```bash
+nix run github:noctalia-dev/noctalia-shell
+```
+
+#### Permanent Installation
+
+For a permanent installation on NixOS, you'll need to add Noctalia to your system configuration.
+
+**Step 1**: Update your `flake.nix`
+
+Add the required inputs to your flake configuration:
+
+```nix
+{
+  description = "NixOS configuration with Noctalia";
+  
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    
+    quickshell = {
+      url = "github:outfoxxed/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.quickshell.follows = "quickshell";
+    };
+  };
+  
+  outputs = { self, nixpkgs, noctalia, quickshell, ... }: {
+    nixosConfigurations.my-host = nixpkgs.lib.nixosSystem {
+      modules = [
+        ./configuration.nix
+      ];
+    };
+  };
+}
+```
+
+**Step 2**: Add packages to `configuration.nix`
+
+Include Noctalia and Quickshell in your system packages:
+
+```nix
+{ config, pkgs, inputs, ... }:
+
+{
+  environment.systemPackages = with pkgs; [
+    inputs.noctalia.packages.${system}.default
+    inputs.quickshell.packages.${system}.default
+  ];
+}
+```
+
+**Step 3**: Rebuild your system
+
+```bash
+sudo nixos-rebuild switch --flake .
+```
+
+:::note
+NixOS installation requires nixpkgs unstable for compatibility with the latest Quickshell and Noctalia features.
+:::
+
+## Running Noctalia
+
+After installation, start Noctalia with:
+
+```bash
+qs -c noctalia-shell
+```
+
+:::tip[Installation-specific commands]
+- **NixOS Flake users**: Use `noctalia-shell` directly instead of `qs -c noctalia-shell`
+- **Manual installation users**: If you have Noctalia in `~/.config/quickshell/`, you can use `qs` to start Noctalia. For keybinds you'd use `qs ipc ...` instead.
+:::
+
+## Verification
+
+After installation, verify that Noctalia is properly installed:
+
+```bash
+# Check if Noctalia is available
+which noctalia
+
+# View version information
+noctalia --version
+```
+
+## Next Steps
+
+- **Keybinds**: Set up keyboard shortcuts for Noctalia in our [Keybinds Guide](./keybinds)
+- **Configuration**: Learn how to customize Noctalia in our [Configuration Guide](./configuration)
+- **Themes**: Explore available themes and create your own in the [Theming Guide](./theming)
+- **Troubleshooting**: Having issues? Check our [Troubleshooting Guide](./troubleshooting)
+
+## Getting Help
+
+If you encounter issues during installation:
+
+- Check our [FAQ](./faq) for common problems
+- Visit our [GitHub Issues](https://github.com/noctalia-dev/noctalia-shell/issues) page
+- Join our community on [Discord](https://discord.noctalia.dev) for real-time support

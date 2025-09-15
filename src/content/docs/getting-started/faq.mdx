@@ -1,0 +1,169 @@
+---
+title: Frequently Asked Questions
+description: Frequently asked questions and common issues with Noctalia.
+sidebar:
+  order: 3
+---
+
+Find answers to common questions about Noctalia installation, configuration, and usage.
+
+## Installation & Setup
+
+### Can I run Noctalia on other distributions besides Arch and NixOS?
+
+Currently, Noctalia currently only supports Arch Linux and NixOS. While it may work on other distributions, you might have to find the proper package names and/or compile specific things.
+
+## Configuration & Customization
+
+### How do I change the theme or appearance?
+
+Noctalia's appearance can be customized through the settings panel. Access it with:
+```bash
+qs -c noctalia-shell ipc call settings toggle
+```
+
+### Some of my app icons are missing!
+
+The issue is most likely that you did not set up your environment variables properly.
+Example environment variables that you can use one of the following:
+
+If you already have an icon theme set for GTK then you can use this one:
+- `QT_QPA_PLATFORMTHEME=gtk3`
+
+You can also use Qt6ct to set your icon theme, for that you can use:
+- `QT_QPA_PLATFORMTHEME=qt6ct`
+
+If you don't have either of those set then you can just use:
+- `QS_ICON_THEME="youricontheme"`
+
+**Any of these environment variables should go into `/etc/environment` (you need to reboot afterwards). For NixOS you can use `environment.variables` or `home.sessionVariables`.**
+
+
+### My keybinds aren't working. What's wrong?
+
+Common keybind issues:
+
+1. **Wrong command syntax**: Make sure you're using the correct IPC command format
+2. **Window manager configuration**: Verify your keybind syntax matches your WM (Hyprland vs Niri)
+3. **Noctalia not running**: Keybinds only work when Noctalia is running
+
+### Can I use Noctalia with other window managers besides Hyprland and Niri?
+
+Noctalia is specifically designed for and tested with Hyprland and Niri. While Noctalia works with other compositors we currently only support workspace indicators for niri & hyprland.
+
+### Some applications don't appear in the launcher
+
+The application launcher looks for `.desktop` files in standard locations.  
+If an application doesn’t appear:
+
+1. **Refresh the launcher cache** by restarting Noctalia.  
+2. **Verify that a `.desktop` file exists** in one of these directories:
+   - `/usr/share/applications/`
+   - `~/.local/share/applications/`
+   - `$HOME/.nix-profile/share/applications/` (apps installed with Nix/Home Manager)
+   - `/etc/profiles/per-user/$USER/share/applications/` (system/user-wide Nix profiles)
+3. **Create a `.desktop` file manually** for custom applications if none is provided.
+
+
+### Audio/brightness controls aren't working
+
+Media key functionality depends on your system setup:
+
+- **Audio**: Requires PipeWire or PulseAudio to be running
+- **Brightness**: Needs proper permissions for brightness control (usually handled automatically)
+
+Check if the commands work manually:
+```bash
+# Test audio
+qs -c noctalia-shell ipc call volume increase
+
+# Test brightness
+qs -c noctalia-shell ipc call brightness increase
+```
+
+## Troubleshooting
+
+### Noctalia crashes on startup
+
+1. **Check the error output** by running Noctalia from the terminal
+2. **Update dependencies** - outdated Quickshell versions can cause issues
+3. **Check system logs** for additional error information
+
+### The shell looks different than expected
+
+1. **Check your theme settings** in the settings panel
+2. **Verify your display settings** - scaling and resolution can affect appearance
+3. **Update to the latest version** - UI improvements are frequently released
+
+## Development & Contributing
+
+### Reporting Bugs or Requesting Features
+
+> **Note - Before opening an issue**  
+> Please check our [GitHub issues](https://github.com/noctalia-dev/noctalia-shell/issues) - your problem or idea may already be listed.
+
+1. **Search existing issues** in our [GitHub repository](https://github.com/noctalia-dev/noctalia-shell/issues).
+2. **Open a new issue** with as much detail as possible if it's not already listed.
+3. **Include system information** (OS, Noctalia version, window manager/compositor, relevant logs, steps to reproduce, etc.) to help us reproduce and troubleshoot.
+
+### Contributing to Noctalia
+
+We welcome contributions of any size - bug fixes, new features, documentation improvements, themes, or configs.
+
+> **Tip - Getting started**  
+> Read our [contributing guidelines](https://github.com/noctalia-dev/noctalia-shell/blob/main/CONTRIBUTING.md) before submitting PRs.
+
+You can:
+
+- Submit bug reports
+- Propose and discuss new features
+- Open pull requests
+- Improve documentation
+- Share themes and configurations
+
+### Project structure
+
+```
+Noctalia/
+├── shell.qml                   # Main shell entry point
+├── Modules/                    # UI components
+│   ├── Bar/                    # Status bar components
+│   └─── Modules/               # Widgets for the status bar
+│   ├── Dock/                   # Application launcher
+│   ├── SidePanel/              # Quick access panel
+│   ├── SettingsPanel/          # Configuration interface
+│   └── ...
+├── Services/                   # Backend services
+│   ├── CompositorService.qml
+│   ├── WorkspacesService.qml
+│   ├── AudioService.qml
+│   └── ...
+├── Widgets/                    # Reusable UI components
+├── Commons/                    # Shared utilities
+├── Assets/                     # Static assets
+└── Bin/                        # Utility scripts
+```
+
+
+### Development Guidelines
+
+1. Follow the existing code style and patterns.
+2. Keep features modular - place new work under `Modules/`, `Services/`, or `Widgets/` as appropriate.
+3. Implement robust error handling and logging.
+4. Test changes with both Hyprland and Niri compositors where applicable.
+5. Prefer small, focused PRs and include tests when possible.
+
+:::tip[Tip]
+Don’t worry about perfection - open an issue or start a discussion to iterate on ideas before or during implementation.
+:::
+
+## Still Need Help?
+
+If your question isn't answered here:
+
+- **Search our documentation** for more detailed guides
+- **Join our Discord community** for real-time help and discussion
+- **Check GitHub issues** for similar problems and solutions
+- **Create a new issue** if you've found a bug or need specific help
+
+Remember to include relevant system information and error messages when asking for help!

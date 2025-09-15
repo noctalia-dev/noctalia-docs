@@ -13,7 +13,7 @@ if (!repos) {
 		if (res.ok) {
 			const data = await res.json();
 			repos = (data || [])
-				.filter((r: any) => !r.archived && !(r.name || '').startsWith('.'))
+				.filter((r: any) => !r.archived && !r.fork && !(r.name || '').startsWith('.'))
 				.sort((a: any, b: any) => (b.stargazers_count ?? 0) - (a.stargazers_count ?? 0));
 		} else {
 			repos = [];

@@ -8,31 +8,13 @@ export default defineConfig({
 		starlight({
 			title: 'Noctalia',
 			logo: { src: './src/assets/noctalia-logo.png', alt: 'Noctalia' },
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/noctalia-dev/noctalia-docs' }],
+			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/noctalia-dev' }],
 			customCss: ['./src/styles/theme.css'],
 			tableOfContents: false,
 			sidebar: [
 				{
-					label: 'Documentation',
-					items: [
-						{ label: 'Overview', slug: 'docs' },
-					],
-				},
-				{
-					label: 'Guides',
-					items: [
-						{ label: 'Example Guide', slug: 'guides/example' },
-					],
-				},
-				{
-					label: 'Projects',
-					items: [
-						{ label: 'Repositories', slug: 'projects' },
-					],
-				},
-				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
+					label: 'Getting started',
+					autogenerate: { directory: 'getting-started' },
 				},
 			],
 		}),
