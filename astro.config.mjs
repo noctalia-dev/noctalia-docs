@@ -16,6 +16,10 @@ export default defineConfig({
 					label: 'Getting started',
 					autogenerate: { directory: 'getting-started' },
 				},
+				{
+					label: 'Development',
+					autogenerate: { directory: 'development' },
+				},
 			],
 		}),
 	],

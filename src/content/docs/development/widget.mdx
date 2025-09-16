@@ -1,0 +1,203 @@
+---
+title: Create a Bar widget
+description: This guide walks you through adding a new bar widget to Noctalia.
+---
+
+This guide will show you how to add a **minimal bar widget**, register it so it shows up in the Bar tab “Widgets Positioning” selector, and make it editable right from the UI.
+
+---
+
+## Overview
+
+Adding a new widget is straightforward once you know the flow.  
+You’ll go through these steps:
+
+1. [Create the widget file](#step-1-create-the-widget-file)  
+2. [Register the widget in the registry](#step-2-register-the-widget-in-the-registry)  
+3. [Verify it shows up in the BarTab selector](#step-3-verify-it-shows-up-in-the-bartab-selector)  
+4. [Test the Widget from the Settings Panel](#step-4-test-the-widget-from-the-settings-panel)  
+5. [Add a settings UI](#step-5-add-a-settings-ui)  
+6. [Add more settings later (optional)](#step-6-optional-add-more-settings-later)  
+
+Let’s break it down step by step.
+
+---
+
+## Step 1: Create the Widget File
+
+Create a new file at `Modules/Bar/Widgets/HelloWorld.qml`:
+
+```qml
+import QtQuick
+import QtQuick.Layouts
+import qs.Commons
+import qs.Services
+
+Rectangle {
+  id: root
+
+  // Provided by Bar.qml via NWidgetLoader
+  property var screen
+  property real scaling: 1.0
+  property string widgetId: ""
+  property string section: ""
+  property int sectionWidgetIndex: -1
+  property int sectionWidgetsCount: 0
+
+  // Access your metadata and per-instance settings
+  property var widgetMetadata: BarWidgetRegistry.widgetMetadata[widgetId]
+  property var widgetSettings: {
+    if (section && sectionWidgetIndex >= 0) {
+      var widgets = Settings.data.bar.widgets[section]
+      if (widgets && sectionWidgetIndex < widgets.length) {
+        return widgets[sectionWidgetIndex]
+      }
+    }
+    return {}
+  }
+
+  implicitHeight: Math.round(Style.capsuleHeight * scaling)
+  implicitWidth: Math.round(120 * scaling)
+  radius: Math.round(Style.radiusS * scaling)
+  color: Color.mSurfaceVariant
+  border.width: Math.max(1, Style.borderS * scaling)
+  border.color: Color.mOutline
+
+  RowLayout {
+    id: layout
+    anchors.fill: parent
+    anchors.margins: Style.marginXS * scaling
+    spacing: Style.marginXS * scaling
+
+    NText {
+      text: widgetSettings.text !== undefined ? widgetSettings.text : (widgetMetadata?.text || "Hello")
+      font.pointSize: Style.fontSizeXS * scaling
+      font.weight: Style.fontWeightBold
+      color: Color.mPrimary
+      Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+    }
+  }
+}
+```
+
+## Step 2: Register the Widget in the Registry
+
+Open `Services/BarWidgetRegistry.qml` and make three small edits:
+
+1. Add the widget to the `widgets` map:
+
+```qml
+"HelloWorld": helloWorldComponent,
+```
+
+2. Provide defaults in `widgetMetadata` (this seeds per-instance settings when adding from the UI):
+
+```qml
+"HelloWorld": {
+  "allowUserSettings": true,
+  "text": "Hello"
+},
+```
+
+3. Add a `Component` entry so the registry can instantiate it:
+
+```qml
+property Component helloWorldComponent: Component {
+  HelloWorld {}
+}
+```
+
+:::tip[Example]
+The `text` field is just an example of a simple per-widget setting copied to the user’s settings when they add it.
+:::
+
+---
+
+## Step 3: Verify It Shows Up in the BarTab Selector
+
+The Bar settings UI (`Modules/SettingsPanel/Tabs/BarTab.qml`) reads available widgets from `BarWidgetRegistry.getAvailableWidgets()` and builds the selector automatically.  
+Once registered, `HelloWorld` appears in the add-widget menu for Left/Center/Right sections.
+
+---
+
+## Step 4: Test the Widget from the Settings Panel
+
+- Open **Settings → Bar → Widgets Positioning**.  
+- In the desired section (Left/Center/Right), click “Add” and select `HelloWorld`.  
+- Drag to reorder if needed.
+
+---
+
+## Step 5: Add a Settings UI
+
+To let users change the widget text via the Bar settings dialog, create a settings component and map it.
+
+### 1) Create `Modules/SettingsPanel/Bar/WidgetSettings/HelloWorldSettings.qml`:
+
+```qml
+import QtQuick
+import QtQuick.Layouts
+import qs.Commons
+import qs.Widgets
+
+ColumnLayout {
+  // Provided by the dialog loader
+  property var widgetData
+  property var widgetMetadata
+
+  // Local state – initialize from widgetData with metadata fallback
+  property string textValue: widgetData?.text !== undefined ? widgetData.text : (widgetMetadata?.text || "Hello")
+
+  NText {
+    text: "HelloWorld Text"
+    font.pointSize: Style.fontSizeM * scaling
+    font.weight: Style.fontWeightBold
+    color: Color.mOnSurface
+  }
+
+  NTextInput {
+    Layout.fillWidth: true
+    placeholderText: "Enter text to display..."
+    text: textValue
+    onTextChanged: textValue = text
+  }
+
+  // Called by the dialog's Apply button
+  function saveSettings() {
+    // Return a new settings object; preserve other keys
+    var updated = Object.assign({}, widgetData)
+    updated.text = textValue
+    return updated
+  }
+}
+```
+
+### 2) Map the settings component in `Modules/SettingsPanel/Bar/BarWidgetSettingsDialog.qml`:
+
+```qml
+// Inside loadWidgetSettings() widgetSettingsMap
+"HelloWorld": "WidgetSettings/HelloWorldSettings.qml",
+```
+
+Now the gear icon on the widget chip opens a dialog with an input field to edit the text.
+
+:::tip[Tip]
+The `saveSettings()` function ensures your changes are written back into the JSON safely.
+:::
+
+---
+
+## Step 6 (Optional): Add More Settings Later
+
+- Add keys under `widgetMetadata["HelloWorld"]` for new defaults (e.g., `icon`, `color`, etc.).  
+- They’ll be copied into a widget instance the first time the user adds it.  
+- To adjust existing instances, the user can edit in the UI if supported, or modify their settings JSON.
+
+---
+
+This inserts the widget with default settings for first-run configurations.  
+Existing users won’t be affected unless they reset or remove their settings file.
+
+---
+
+That’s it! You’ve now built a simple, editable widget for the Bar and exposed it cleanly in the settings UI.
