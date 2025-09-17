@@ -6,7 +6,7 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
 	integrations: [
 		starlight({
-			title: 'Noctalia',
+			title: 'Noctalia Docs',
 			logo: { src: './src/assets/noctalia-logo.png', alt: 'Noctalia' },
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/noctalia-dev' }],
 			customCss: ['./src/styles/theme.css'],
