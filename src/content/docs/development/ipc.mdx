@@ -1,0 +1,130 @@
+---
+title: Create a IPC call
+description: This guide shows how to add a new IPC target to Noctalia.
+sidebar:
+  order: 3
+---
+
+This guide walks you through adding a new IPC endpoint to Noctalia.
+
+---
+
+## Overview
+
+Adding an IPC endpoint is pretty straightforward once you know the pieces.  
+You'll go through two main steps:
+
+1. [Add an IpcHandler](#step-1-add-an-ipchandler)
+2. [Connect to a service (recommended)](#step-2-connect-to-a-service-recommended)
+
+Let's break it down step by step.
+
+---
+
+## Step 1: Add an IpcHandler
+
+First, you'll create your IPC endpoint in the main IPC manager.  
+Open **`Modules/IPC/IPCManager.qml`** and add a new handler block:
+
+```qml
+IpcHandler {
+  target: "myFeature"  // This becomes your endpoint name
+  
+  function toggle() {
+    // Your toggle logic here
+    console.log("Feature toggled!")
+  }
+  
+  function setMode(mode) {
+    // Handle different modes
+    if (mode === "compact") {
+      // do compact things
+    } else if (mode === "full") {
+      // do full things  
+    }
+  }
+}
+```
+
+Each function you add becomes callable as `<target> <function>` from your window manager.  
+So the above creates `myFeature toggle` and `myFeature setMode`.
+
+---
+
+## Step 2: Connect to a Service (Recommended)
+
+Rather than putting all your logic in the IPC handler, delegate to existing services or create a new one if need be.  
+This keeps your IPC thin and reuses logic that other parts of the shell might need.
+
+Here's how the brightness handler does it:
+
+```qml
+IpcHandler {
+  target: "brightness"
+  
+  function increase() {
+    BrightnessService.increaseBrightness()  // Delegate to service
+  }
+  
+  function decrease() {
+    BrightnessService.decreaseBrightness()  // Keep handlers simple
+  }
+}
+```
+
+---
+
+## Tips & Best Practices
+
+### Method Naming
+Keep IPC method names short and action-oriented:
+- `toggle`, `increase`, `decrease`, `set` ✅
+- `incrementBrightnessLevel` ❌
+
+### Handling Arguments
+Always validate inputs, especially for numeric values:
+
+```qml
+function setStrength(percent) {
+  // Clamp between 0-100, handle bad input gracefully
+  var value = Math.max(0, Math.min(100, Number(percent) || 0))
+  NightLightService.setStrength(value)
+}
+```
+
+### Key Repeat Support  
+If your window manager supports holding keys, make methods fast and repeatable.  
+The brightness handlers work well for this - each call makes a small adjustment.
+
+### Keep It Simple
+IPC handlers should be thin wrappers. If you're writing lots of logic in the handler, it probably belongs in a service instead.
+
+---
+
+## Examples to Reference
+
+Check out these existing handlers in **`IPCManager.qml`** for patterns:
+
+- `brightness` - Simple increase/decrease for continuous values
+- `volume` - Similar pattern to brightness  
+- `notifications` - Toggle-style functionality
+- `launcher` - Panel open/close operations
+
+Don't hesitate to copy patterns that work!
+
+---
+
+## Troubleshooting
+
+**Method not found?**  
+Double-check your target name and ensure **`IPCManager.qml`** saved properly.
+
+**Nothing happening?**  
+Add `Logger.log()` statements in your method and watch the shell output.
+
+---
+
+:::tip[Service First]
+If your IPC needs complex logic, create or extend a service in **`Services/`** first.  
+Then your IPC handler just becomes a simple call to that service.
+:::
