@@ -5,22 +5,41 @@ sidebar:
   order: 1
 ---
 
+## Overview
+
+Installing Noctalia is straightforward and depends on your Linux distribution.  
+Choose your installation method:
+
+**Arch Linux:**
+1. [AUR Installation (Recommended)](#using-aur-recommended) - Automatic dependency handling
+2. [Development Version](#development-version) - Latest features from Git
+
+**NixOS:**
+1. [Quick Run](#quick-run) - Test without installing
+2. [Permanent Installation](#permanent-installation) - Add to system configuration
+
+**Any Distribution:**
+1. [Manual Installation](#manual-installation) - Full control over the process
+
+**Compositor Settings:**
+1. [Niri](#niri) - Recommended settings to add to your config
+
+After installation, you'll [run Noctalia](#running-noctalia) and set up [keybinds](./keybinds) for the best experience.
+
+---
+
 ## Arch Linux
 
-#### Using AUR (Recommended)
-
+### Using AUR (Recommended)
 The simplest way to install Noctalia on Arch Linux is through the Arch User Repository (AUR). This method installs the shell system-wide and handles dependencies automatically.
 
 Please replace with your AUR helper of choice.
-
 ```bash
 paru -S noctalia-shell
 ```
 
-#### Development Version
-
+### Development Version
 For the latest features and fixes, you can install the development version directly from the Git repository:
-
 ```bash
 paru -S noctalia-shell-git
 ```
@@ -29,44 +48,21 @@ paru -S noctalia-shell-git
 The development version may be less stable than the official release. Use this version if you want to test the latest features or contribute to development.
 :::
 
-#### Manual Installation
-
-If you prefer to install Noctalia locally or want more control over the installation process, you can install it manually to your user configuration directory.
-
-**Step 1**: Install Quickshell dependency
-```bash
-paru -S quickshell-git
-```
-
-**Step 2**: Download and install Noctalia
-```bash
-mkdir -p ~/.config/quickshell/noctalia-shell && \
-curl -sL https://github.com/noctalia-dev/noctalia-shell/releases/latest/download/noctalia-latest.tar.gz | \
-tar -xz --strip-components=1 -C ~/.config/quickshell/noctalia-shell
-```
-
-:::tip
-Manual installation keeps Noctalia contained within your user directory, making it easy to remove or update without affecting system packages.
-:::
+---
 
 ## NixOS
 
-#### Quick Run
-
+### Quick Run
 Test Noctalia without installing by running it directly:
-
 ```bash
 nix run github:noctalia-dev/noctalia-shell
 ```
 
-#### Permanent Installation
-
+### Permanent Installation
 For a permanent installation on NixOS, you'll need to add Noctalia to your system configuration.
 
 **Step 1**: Update your `flake.nix`
-
 Add the required inputs to your flake configuration:
-
 ```nix
 {
   description = "NixOS configuration with Noctalia";
@@ -97,12 +93,9 @@ Add the required inputs to your flake configuration:
 ```
 
 **Step 2**: Add packages to `configuration.nix`
-
 Include Noctalia and Quickshell in your system packages:
-
 ```nix
 { config, pkgs, inputs, ... }:
-
 {
   environment.systemPackages = with pkgs; [
     inputs.noctalia.packages.${system}.default
@@ -112,19 +105,107 @@ Include Noctalia and Quickshell in your system packages:
 ```
 
 **Step 3**: Rebuild your system
-
 ```bash
 sudo nixos-rebuild switch --flake .
 ```
 
 :::note
-NixOS installation requires nixpkgs unstable for compatibility with the latest Quickshell and Noctalia features.
+NixOS installation requires nixpkgs unstable for compatibility with the latest Quickshell and Noctalia features. Dependencies are handled automatically by the Nix package manager.
 :::
+
+---
+
+## Manual Installation
+
+If you prefer to install Noctalia locally or want more control over the installation process, you can install it manually to your user configuration directory. This method works on any Linux distribution.
+
+**Step 1**: Install required dependencies
+
+For Arch Linux:
+```bash
+# Core dependencies (required)
+paru -S quickshell-git ttf-roboto inter-font gpu-screen-recorder brightnessctl
+
+# Desktop monitor brightness (may cause instability with some monitors)
+paru -S ddcutil
+
+# Optional dependencies
+paru -S cliphist matugen cava wlsunset xdg-desktop-portal
+```
+
+For other distributions, install the equivalent packages using your package manager.
+
+**Step 2**: Download and install Noctalia
+```bash
+mkdir -p ~/.config/quickshell/noctalia-shell && \
+curl -sL https://github.com/noctalia-dev/noctalia-shell/releases/latest/download/noctalia-latest.tar.gz | \
+tar -xz --strip-components=1 -C ~/.config/quickshell/noctalia-shell
+```
+
+### Dependencies Explained
+
+**Required:**
+- `quickshell-git` - Core shell framework
+- `ttf-roboto` - Default UI font
+- `inter-font` - Headers font (clock on LockScreen, etc.)
+- `gpu-screen-recorder` - Screen recording functionality
+- `brightnessctl` - Internal/laptop monitor brightness control
+
+**Hardware-specific:**
+- `ddcutil` - Desktop monitor brightness control (⚠️ may introduce system instability with certain monitors)
+
+**Optional but recommended:**
+- `cliphist` - Clipboard history support
+- `matugen` - Material You color scheme generation
+- `cava` - Audio visualizer component
+- `wlsunset` - Night light functionality
+- `xdg-desktop-portal` - Enables "Portal" option in screen recorder
+
+:::tip
+Manual installation keeps Noctalia contained within your user directory, making it easy to remove or update without affecting system packages.
+:::
+
+---
+
+## Compositor Settings
+
+For the best experience with Noctalia, you'll need to configure your compositor with some specific settings.
+
+### Niri
+
+Add these settings to your Niri configuration file (usually `~/.config/niri/config.kdl`):
+
+```kdl
+debug {
+    honor-xdg-activation-with-invalid-serial
+}
+
+window-rule {
+    geometry-corner-radius 20
+    clip-to-geometry true
+}
+
+layer-rule {
+    match namespace="^quickshell-overview$"
+    place-within-backdrop true
+}
+```
+
+These settings ensure:
+- Proper window activation handling
+- Rounded corners for a modern look
+- Correct backdrop placement for the overview panel
+- Allows Notification actions (`honor-xdg-activation-with-invalid-serial`)
+
+:::note
+More compositor configurations will be added as Noctalia gains support for additional window managers.
+:::
+
+---
 
 ## Running Noctalia
 
 After installation, start Noctalia with:
-
 ```bash
 qs -c noctalia-shell
 ```
@@ -133,6 +214,8 @@ qs -c noctalia-shell
 - **NixOS Flake users**: Use `noctalia-shell` directly instead of `qs -c noctalia-shell`
 - **Manual installation users**: If you have Noctalia in `~/.config/quickshell/`, you can use `qs` to start Noctalia. For keybinds you'd use `qs ipc ...` instead.
 :::
+
+---
 
 ## Next Steps
 
@@ -143,7 +226,6 @@ qs -c noctalia-shell
 ## Getting Help
 
 If you encounter issues during installation:
-
 - Check our [FAQ](./faq) for common problems
 - Visit our [GitHub Issues](https://github.com/noctalia-dev/noctalia-shell/issues) page
 - Join our community on [Discord](https://discord.noctalia.dev) for real-time support
