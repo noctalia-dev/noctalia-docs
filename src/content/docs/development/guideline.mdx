@@ -1,0 +1,54 @@
+---
+title: Guideline
+description: These are the basic guidelines for contributing to Noctalia.
+sidebar:
+  order: 1
+---
+
+These are the basic guidelines you should follow when you want to contribute to Noctalia.
+
+We welcome contributions of any size - bug fixes, new features, documentation improvements, themes, or configs.
+
+You can:
+
+- Submit bug reports
+- Propose and discuss new features
+- Open pull requests
+- Improve documentation
+- Share themes and configurations
+
+### Project structure
+
+```
+Noctalia/
+├── shell.qml                   # Main shell entry point
+├── Modules/                    # UI components
+│   ├── Bar/                    # Status bar components
+│   └─── Modules/               # Widgets for the status bar
+│   ├── Dock/                   # Application launcher
+│   ├── SidePanel/              # Quick access panel
+│   ├── SettingsPanel/          # Configuration interface
+│   └── ...
+├── Services/                   # Backend services
+│   ├── CompositorService.qml
+│   ├── WorkspacesService.qml
+│   ├── AudioService.qml
+│   └── ...
+├── Widgets/                    # Reusable UI components
+├── Commons/                    # Shared utilities
+├── Assets/                     # Static assets
+└── Bin/                        # Utility scripts
+```
+
+
+### Development Guidelines
+
+1. Follow the existing code style and patterns.
+2. Keep features modular - place new work under `Modules/`, `Services/`, or `Widgets/` as appropriate.
+3. Implement robust error handling and logging.
+4. Test changes with both Hyprland and Niri compositors where applicable.
+5. Prefer small, focused PRs and include tests when possible.
+
+:::tip[Tip]
+Don’t worry about perfection - open an issue or start a discussion to iterate on ideas before or during implementation.
+:::
