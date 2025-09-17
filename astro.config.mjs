@@ -4,8 +4,6 @@ import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://docs.noctalia.dev',
-	base: '/',
 	integrations: [
 		starlight({
 			title: 'Noctalia Docs',
