@@ -11,17 +11,21 @@ Installing Noctalia is straightforward and depends on your Linux distribution.
 Choose your installation method:
 
 **Arch Linux:**
+
 1. [AUR Installation (Recommended)](#using-aur-recommended) - Automatic dependency handling
 2. [Development Version](#development-version) - Latest features from Git
 
 **NixOS:**
+
 1. [Quick Run](#quick-run) - Test without installing
 2. [Permanent Installation](#permanent-installation) - Add to system configuration
 
 **Any Distribution:**
+
 1. [Manual Installation](#manual-installation) - Full control over the process
 
 **Compositor Settings:**
+
 1. [Niri](#niri) - Recommended settings to add to your config
 
 After installation, you'll [run Noctalia](#running-noctalia) and set up [keybinds](./keybinds) for the best experience.
@@ -31,15 +35,19 @@ After installation, you'll [run Noctalia](#running-noctalia) and set up [keybind
 ## Arch Linux
 
 ### Using AUR (Recommended)
+
 The simplest way to install Noctalia on Arch Linux is through the Arch User Repository (AUR). This method installs the shell system-wide and handles dependencies automatically.
 
 Please replace with your AUR helper of choice.
+
 ```bash
 paru -S noctalia-shell
 ```
 
 ### Development Version
+
 For the latest features and fixes, you can install the development version directly from the Git repository:
+
 ```bash
 paru -S noctalia-shell
 ```
@@ -52,59 +60,45 @@ The development version may be less stable than the official release. Use this v
 
 ## NixOS
 
-### Quick Run
-Test Noctalia without installing by running it directly:
-```bash
-nix run github:noctalia-dev/noctalia-shell
-```
+### Flake Installation
 
-### Permanent Installation
-For a permanent installation on NixOS, you'll need to add Noctalia to your system configuration.
+For NixOS users, you can add Noctalia to your system configuration using flakes and the provided NixOS module.
 
 **Step 1**: Update your `flake.nix`
 Add the required inputs to your flake configuration:
+
 ```nix
 {
   description = "NixOS configuration with Noctalia";
-  
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    
+
     quickshell = {
       url = "github:outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.quickshell.follows = "quickshell";
+      inputs.quickshell.follows = "quickshell";  # Use same quickshell version
     };
   };
-  
-  outputs = { self, nixpkgs, noctalia, quickshell, ... }: {
+
+  outputs = { self, nixpkgs, noctalia, ... }: {
     nixosConfigurations.my-host = nixpkgs.lib.nixosSystem {
       modules = [
         ./configuration.nix
+        noctalia.nixosModules.noctalia  # Import Noctalia module here
       ];
     };
   };
 }
 ```
 
-**Step 2**: Add packages to `configuration.nix`
-Include Noctalia and Quickshell in your system packages:
-```nix
-{ config, pkgs, inputs, ... }:
-{
-  environment.systemPackages = with pkgs; [
-    inputs.noctalia.packages.${system}.default
-    inputs.quickshell.packages.${system}.default
-  ];
-}
-```
+**Step 2**: Rebuild your system
 
-**Step 3**: Rebuild your system
 ```bash
 sudo nixos-rebuild switch --flake .
 ```
@@ -122,6 +116,7 @@ If you prefer to install Noctalia locally or want more control over the installa
 **Step 1**: Install required dependencies
 
 For Arch Linux:
+
 ```bash
 # Core dependencies (required)
 paru -S quickshell ttf-roboto inter-font gpu-screen-recorder brightnessctl
@@ -136,6 +131,7 @@ paru -S cliphist matugen cava wlsunset xdg-desktop-portal
 For other distributions, install the equivalent packages using your package manager.
 
 **Step 2**: Download and install Noctalia
+
 ```bash
 mkdir -p ~/.config/quickshell/noctalia-shell && \
 curl -sL https://github.com/noctalia-dev/noctalia-shell/releases/latest/download/noctalia-latest.tar.gz | \
@@ -145,6 +141,7 @@ tar -xz --strip-components=1 -C ~/.config/quickshell/noctalia-shell
 ### Dependencies Explained
 
 **Required:**
+
 - `quickshell` - Core shell framework
 - `ttf-roboto` - Default UI font
 - `inter-font` - Headers font (clock on LockScreen, etc.)
@@ -152,9 +149,11 @@ tar -xz --strip-components=1 -C ~/.config/quickshell/noctalia-shell
 - `brightnessctl` - Internal/laptop monitor brightness control
 
 **Hardware-specific:**
+
 - `ddcutil` - Desktop monitor brightness control (⚠️ may introduce system instability with certain monitors)
 
 **Optional but recommended:**
+
 - `cliphist` - Clipboard history support
 - `matugen` - Material You color scheme generation
 - `cava` - Audio visualizer component
@@ -192,6 +191,7 @@ layer-rule {
 ```
 
 These settings ensure:
+
 - Proper window activation handling
 - Rounded corners for a modern look
 - Correct backdrop placement for the overview panel
@@ -212,6 +212,7 @@ The configuration files are saved in `~/.config/noctalia/` and the cache files a
 ## Getting Help
 
 If you encounter issues during installation:
+
 - Check our [FAQ](./faq) for common problems
 - Visit our [GitHub Issues](https://github.com/noctalia-dev/noctalia-shell/issues) page
 - Join our community on [Discord](https://discord.noctalia.dev) for real-time support
