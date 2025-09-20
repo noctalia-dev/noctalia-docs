@@ -1,5 +1,5 @@
 ---
-title: Frequently Asked Questions
+title: FAQ
 description: Frequently asked questions and common issues with Noctalia.
 sidebar:
   order: 4
@@ -36,10 +36,16 @@ If you don't have either of those set then you can set:
 </details>
 
 <details>
-<summary><strong>Why wont unoccupied workspaces show up in Hyprland?</strong></summary>
+<summary><strong>How can I make empty or unused workspaces always show up in Hyprland?</strong></summary>
 
-Set workspaces as persistent in your Hyprland config. See [Hyprland Workspace Rules](https://wiki.hypr.land/Configuring/Workspace-Rules/#rules) for details.
-
+To make workspaces always visible, even when empty, you need to set them as persistent in your hyprland.conf file. You can find the specific syntax and examples in the official documentation for [Workspace Rules](https://wiki.hypr.land/Configuring/Workspace-Rules/#rules).
+```
+workspace = 1, monitor:DP-1, persistent:true
+workspace = 2, monitor:DP-1, persistent:true
+workspace = 3, monitor:DP-1, persistent:true
+workspace = 4, monitor:DP-1, persistent:true
+workspace = 5, monitor:DP-1, persistent:true
+```
 </details>
 
 <details>
