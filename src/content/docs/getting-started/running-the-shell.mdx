@@ -5,12 +5,56 @@ sidebar:
   order: 2
 ---
 
-After installation, start Noctalia with:
+### Standard Launch
+The most direct way to start Noctalia is by invoking it through Quickshell. Open your terminal and run:
 ```bash
 qs -c noctalia-shell
 ```
 
-:::tip[Installation-specific commands]
-- **NixOS Flake users**: Use `noctalia-shell` directly instead of `qs -c noctalia-shell`
+:::tip[Manual installation users]
 - **Manual installation users**: If you have Noctalia in `~/.config/quickshell/`, you can use `qs` to start Noctalia. For keybinds you'd use `qs ipc ...` instead.
 :::
+
+
+### For NixOS Users
+If you installed Noctalia using the NixOS Flake, a simpler, direct command is available:
+```bash
+noctalia-shell
+```
+
+### Running as a Systemd Service (Advanced)
+For more robust control, you can run Noctalia as a systemd user service. This automatically handles restarts on failure and centralizes logging with journalctl
+
+#### 1. Create the service file
+First, create a new service definition file at `~/.config/systemd/user/noctalia.service` with the following content:
+
+```toml
+[Unit]
+Description=Noctalia Shell Service
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+ExecStart=qs -c noctalia-shell
+Restart=on-failure
+RestartSec=1
+
+[Install]
+WantedBy=graphical-session.target
+```
+
+#### 2. Enable and Start the Service
+
+Next, enable the service to have it start automatically with your graphical session.
+
+If you use a compositor like Niri, it's best to tie Noctalia directly to it. This ensures they start and stop together.
+
+```bash
+# Example for Niri users
+systemctl --user add-wants niri.service noctalia.service
+```
+
+Alternatively, you can enable it more generally with:
+```bash
+systemctl --user enable --now noctalia.service
+```
