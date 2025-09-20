@@ -7,7 +7,7 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'Noctalia Docs',
-			logo: { src: './src/assets/noctalia-logo.png', alt: 'Noctalia' },
+			logo: { src: './src/assets/noctalia-logo-256.png', alt: 'Noctalia' },
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/noctalia-dev' }],
 			customCss: ['./src/styles/theme.css'],
 			tableOfContents: false,
