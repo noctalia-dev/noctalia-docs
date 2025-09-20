@@ -1,0 +1,297 @@
+---
+title: NixOS
+description: Start here to set up and use Noctalia.
+sidebar:
+  order: 100
+---
+
+
+For NixOS users, you can add Noctalia to your system configuration using flakes and the provided NixOS module.
+
+:::note
+The Noctalia flake requires **nixpkgs unstable**, since we depend on the latest Quickshell version.
+:::
+
+## Installation
+
+To install Noctalia, you need to [add a flake input](#add-flake-input) and [install the package](#install-package).
+
+### Adding the flake input {#add-flake-input}
+
+Add the required inputs to your flake configuration:
+
+```nix
+# flake.nix
+{
+  description = "NixOS configuration with Noctalia";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    quickshell = {
+      url = "github:outfoxxed/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.quickshell.follows = "quickshell";  # Use same quickshell version
+    };
+  };
+
+  outputs = inputs@{ self, nixpkgs, ... }: {
+    nixosConfigurations.awesomebox = nixpkgs.lib.nixosSystem {
+      modules = [
+        # ... other modules
+        ./noctalia.nix
+      ];
+    };
+  };
+}
+```
+
+With the flake installed, we can access Noctalia packages and modules in our configuration.
+
+### Installing the package {#install-package}
+
+In `noctalia.nix` or some other module of your choice, install the default Noctalia package from the new `noctalia` input:
+
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  # install pacakge
+  environment.systemPackages = with pkgs; [
+    inputs.noctalia.packages.${system}.default
+    # ... maybe other stuff
+  ];
+}
+```
+
+Rebuild with `sudo nixos-rebuild switch --flake .`.
+
+---
+
+## Config with home-manager
+
+If you have [home manager](https://github.com/nix-community/home-manager) installed, you can configure your Noctalia shell in Nix.
+
+### Noctalia settings
+
+To configure Noctalia settings, you can use the Noctalia home manager module:
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  home-manager.users.mrfoobar = {
+    # import the home manager module
+    imports = [
+      inputs.noctalia-shell.homeModules.default
+    ];
+
+    # configure options        
+    programs.noctalia-shell = {
+      enable = true;
+      settings = {
+        # put ALL settings here, see the note below.
+        # ...
+      };
+      # this may also be a string or a path to a JSON file.
+    };
+  };
+}
+```
+
+:::note
+You **must** set all configuration options, since this overrides the *full* settings file.Its good to backup your current config - found in `~/.config/settings.json` before trying. You can also use this file as a starting point for your new configuration. We hope to enable partial configuration with default fallbacks in the future.
+:::
+
+### Theme colors
+
+
+To configure Noctalia settings, you can use the Noctalia home manager module:
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  home-manager.users.mrfoobar = {
+    # import the home manager module
+    imports = [
+      inputs.noctalia-shell.homeModules.default
+    ];
+
+    # configure options        
+    programs.noctalia-shell = {
+      enable = true;
+      colors = {
+        # you must set ALL of these
+        mError = "#dddddd";
+        mOnError = "#111111";
+        mOnPrimary = "#111111";
+        mOnSecondary = "#111111";
+        mOnSurface = "#828282";
+        mOnSurfaceVariant = "#5d5d5d";
+        mOnTertiary = "#111111";
+        mOutline = "#3c3c3c";
+        mPrimary = "#aaaaaa";
+        mSecondary = "#a7a7a7";
+        mShadow = "#000000";
+        mSurface = "#111111";
+        mSurfaceVariant = "#191919";
+        mTertiary = "#cccccc";
+      };
+      # this may also be a string or a path to a JSON file.
+    };
+  };
+}
+```
+
+### Keybinds
+
+Keybindings are configured in your compositor. You make IPC calls to Noctalia [as explained in the keybinds section](/getting-started/keybinds). The only difference is that you can call `noctalia-shell` instead of `qs -c noctalia-shell`.
+
+To safely configure noctalia keybindings in the Niri flake, be sure to pass a list:
+```nix
+# niri.nix
+{ pkgs, inputs, ... }:
+{
+  # ...
+  home-manager.users.drfoobar =
+    { config, ... }:
+    {
+      # ...
+      programs.niri = {
+        settings = {
+          # ...
+          binds = with config.lib.niri.actions; {
+            "Mod+Space".action.spawn = [
+              "noctalia-shell" "ipc" "call" "launcher" "toggle" # ✅
+            ];
+            "Mod+P".action.spawn =
+              "noctalia-shell ipc call powerPanel toggle"; # ❌
+        };
+      };
+    };
+}
+
+```
+
+It may convenient to define a utility function to allow you to use simple strings:
+
+```nix
+# niri.nix
+{ pkgs, inputs, ... }:
+
+let
+  noctalia = cmd: [
+    "noctalia-shell" "ipc" "call"
+  ] ++ (pkgs.lib.splitString " " cmd);
+in
+{
+  # ...
+  home-manager.users.drfoobar =
+    { config, lib, ... }:
+    {
+      # ...
+      programs = {
+        niri = {
+          # ...
+          settings = {
+            binds = with config.lib.niri.actions; {
+              # ...
+              "Mod+L".action.spawn = noctalia "lockScreen toggle";
+              "XF86AudioLowerVolume".action.spawn = noctalia "volume decrease";
+              "XF86AudioRaiseVolume".action.spawn = noctalia "volume increase";
+              "XF86AudioMute".action.spawn = noctalia "volume muteOutput";
+              # etc
+          };
+        };
+      };
+    };
+}
+
+```
+---
+
+## Running the shell
+
+The Noctalia shell can now be run in two ways: [manually](#running-manually) or using a systemd service
+
+
+### Running manually {#running-manually}
+
+To run Noctalia using the flake, run:
+
+```bash
+noctalia-shell
+```
+
+With the [Niri flake](https://github.com/sodiboo/niri-flake), you can then spawn Noctalia on startup like this:
+
+```nix
+# niri.nix
+{ pkgs, inputs, ... }:
+{
+  # ...
+  
+  home-manager.users.drfoobar = {
+    # ...
+    programs.niri = {
+      package = niri;
+      settings = {
+        # ...
+        spawn-at-startup = [
+          {
+            command = [
+              "noctalia-shell"
+            ];
+          }
+        ];
+      };
+    };
+  };
+}
+
+```
+
+### Running with systemd
+
+To setup a systemd service, import the Noctalia NixOS modules and enable the service:
+
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  # import the nixos module
+  imports = [
+    inputs.noctalia-shell.nixosModules.default
+  ];
+  # enable the systemd service
+  services.noctalia-shell.enable = true;
+}
+```
+
+The service will start after [`graphical-session.target`](https://www.freedesktop.org/software/systemd/man/latest/systemd.special.html#graphical-session.target) by default, which will work correctly out of the box for [Niri](https://github.com/YaLTeR/niri) and [Hyprland with UWSM](https://wiki.hypr.land/Useful-Utilities/Systemd-start/#uwsm).
+
+If you have some custom target, you can configure it with the `target` option:
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  # ... 
+  services.noctalia-shell = {
+    enable = true;
+    target = "my-hyprland-session.target";
+  };
+}
+```
+This target depends on how you configure your hyperland session systemd service.
+
+:::caution
+The systemd service is currently **experimental**:
+- you may experience weird issues when rebuilding your system
+- We haven't fully tested newer features on **Hyprland**
+
+Please send us feedback on the [#nixos channel](https://discord.com/channels/1401598189823590460/1418903722616160349) on Discord or [raise an issue](https://github.com/noctalia-dev/noctalia-shell/issues) if you encounter issues.
+:::
+
