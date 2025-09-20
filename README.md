@@ -38,3 +38,4 @@ Static assets, like favicons, can be placed in the `public/` directory.
 ## 👀 Want to learn more?
 
 Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+
