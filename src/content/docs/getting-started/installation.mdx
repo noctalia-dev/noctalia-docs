@@ -5,33 +5,9 @@ sidebar:
   order: 1
 ---
 
-## Overview
+Noctalia is packaged for [Arch Linux](#arch) and [NixOS](/getting-started/nixos), but can also be [installed manually](#manual-install) in other distributions.
 
-Installing Noctalia is straightforward and depends on your Linux distribution.  
-Choose your installation method:
-
-**Arch Linux:**
-
-1. [AUR Installation (Recommended)](#using-aur-recommended) - Automatic dependency handling
-2. [Development Version](#development-version) - Latest features from Git
-
-**NixOS:**
-
-1. [Flake Installation](#flake-installation) - Add to system configuration using flakes
-
-**Any Distribution:**
-
-1. [Manual Installation](#manual-installation) - Full control over the process
-
-**Compositor Settings:**
-
-1. [Niri](#niri) - Recommended settings to add to your config
-
-After installation, you'll [run Noctalia](#running-noctalia) and set up [keybinds](./keybinds) for the best experience.
-
----
-
-## Arch Linux
+## Arch Linux {#arch}
 
 ### Using AUR (Recommended)
 
@@ -54,61 +30,9 @@ paru -S noctalia-shell
 :::caution
 The development version may be less stable than the official release. Use this version if you want to test the latest features or contribute to development.
 :::
-
 ---
 
-## NixOS
-
-### Flake Installation
-
-For NixOS users, you can add Noctalia to your system configuration using flakes and the provided NixOS module.
-
-**Step 1**: Update your `flake.nix`
-Add the required inputs to your flake configuration:
-
-```nix
-{
-  description = "NixOS configuration with Noctalia";
-
-  inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
-    quickshell = {
-      url = "github:outfoxxed/quickshell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.quickshell.follows = "quickshell";  # Use same quickshell version
-    };
-  };
-
-  outputs = { self, nixpkgs, noctalia, ... }: {
-    nixosConfigurations.my-host = nixpkgs.lib.nixosSystem {
-      modules = [
-        ./configuration.nix
-        noctalia.nixosModules.noctalia  # Import Noctalia module here
-      ];
-    };
-  };
-}
-```
-
-**Step 2**: Rebuild your system
-
-```bash
-sudo nixos-rebuild switch --flake .
-```
-
-:::note
-NixOS installation requires nixpkgs unstable for compatibility with the latest Quickshell and Noctalia features. Dependencies are handled automatically by the Nix package manager.
-:::
-
----
-
-## Manual Installation
+## Manual Installation {#manual-install}
 
 If you prefer to install Noctalia locally or want more control over the installation process, you can install it manually to your user configuration directory. This method works on any Linux distribution.
 
