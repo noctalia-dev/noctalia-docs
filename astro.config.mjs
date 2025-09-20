@@ -10,6 +10,11 @@ export default defineConfig({
       logo: { src: "./src/assets/noctalia-logo.svg", alt: "Noctalia" },
       social: [
         {
+          icon: "discord",
+          label: "Discord",
+          href: "https://discord.noctalia.dev",
+        },
+        {
           icon: "github",
           label: "GitHub",
           href: "https://github.com/noctalia-dev",
