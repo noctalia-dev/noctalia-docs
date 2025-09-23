@@ -107,6 +107,11 @@ window-rule {
     clip-to-geometry true
 }
 
+window-rule {
+  match app-id="qs"
+  open-floating true
+}
+
 layer-rule {
     match namespace="^quickshell-overview$"
     place-within-backdrop true
@@ -119,6 +124,7 @@ These settings ensure:
 - Rounded corners for a modern look
 - Correct backdrop placement for the overview panel
 - Allows Notification actions (`honor-xdg-activation-with-invalid-serial`)
+- Makes the file picker float (`match app-id="qs"`)
 
 :::note
 The configuration files are saved in `~/.config/noctalia/` and the cache files are saved in `~/.cache/noctalia/`.
