@@ -86,7 +86,7 @@ To configure Noctalia settings, you can use the Noctalia home manager module:
   home-manager.users.mrfoobar = {
     # import the home manager module
     imports = [
-      inputs.noctalia-shell.homeModules.default
+      inputs.noctalia.homeModules.default
     ];
 
     # configure options        
@@ -117,7 +117,7 @@ To configure Noctalia settings, you can use the Noctalia home manager module:
   home-manager.users.mrfoobar = {
     # import the home manager module
     imports = [
-      inputs.noctalia-shell.homeModules.default
+      inputs.noctalia.homeModules.default
     ];
 
     # configure options        
@@ -264,7 +264,7 @@ To setup a systemd service, import the Noctalia NixOS modules and enable the ser
 {
   # import the nixos module
   imports = [
-    inputs.noctalia-shell.nixosModules.default
+    inputs.noctalia.nixosModules.default
   ];
   # enable the systemd service
   services.noctalia-shell.enable = true;
