@@ -70,3 +70,8 @@
 	transform: translateY(-2px);
 	filter: drop-shadow(0 2px 8px var(--sl-shadow-color));
 }
+
+button {
+	background-color: var(--sl-color-bg);
+}
+        
