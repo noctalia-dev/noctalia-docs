@@ -19,6 +19,9 @@
 	--sl-color-text: #f3edf7; /* On Surface */
 	--sl-color-text-soft: #7c80b4; /* On Surface Variant */
 	--sl-color-hairline: #21215F; /* Outline */
+	--sl-color-bg-nav: var(--sl-color-bg-soft);
+	--sl-color-black:  var(--sl-color-bg-soft);
+	--sl-color-bg-sidebar:  var(--sl-color-bg-soft);
 
 	/* Links */
 	--sl-color-link: var(--sl-color-accent);
@@ -44,6 +47,7 @@
 	--sl-color-hairline: #8288fc; /* Outline */
 	--sl-color-bg-nav: var(--sl-color-bg-soft);
 	--sl-color-black:  var(--sl-color-bg-soft);
+	--sl-color-bg-sidebar:  var(--sl-color-bg-soft);
 
 	/* Links */
 	--sl-color-link: var(--sl-color-accent);
@@ -56,11 +60,13 @@
 
 /* Repo cards hover effect */
 .repo-card {
-	position: relative;
-	border-radius: var(--sl-border-radius);
 	transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+.repo-card article {
+	border-radius: var(--sl-border-radius);
+	border: 1px solid var(--sl-color-hairline);
 }
 .repo-card:hover {
 	transform: translateY(-2px);
-	filter: drop-shadow(0 8px 20px var(--sl-shadow-color));
+	filter: drop-shadow(0 2px 8px var(--sl-shadow-color));
 }
