@@ -1,56 +1,54 @@
 /* Noctalia for Starlight */
 
+:root {
+	/* Typography */
+	--sl-font: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	--sl-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
 
 /* Dark Theme */
 :root[data-theme='dark'] {
 	/* Brand & accents */
-	--sl-color-accent: #c7a1d8; /* Primary */
-	--sl-color-text-accent: #c7a1d8;
+	--sl-color-accent: #fff59b; /* Primary */
+	--sl-color-text-accent: #fff59b;
 	--sl-border-radius: 10px;
 
-	/* Typography */
-	--sl-font: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-	--sl-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-
 	/* Surfaces & text */
-	--sl-color-bg: #1c1822; /* Surface */
-	--sl-color-bg-soft: #262130; /* Surface Variant */
-	--sl-color-text: #e9e4f0; /* On Surface */
-	--sl-color-text-soft: #a79ab0; /* On Surface Variant */
-	--sl-color-hairline: #4d445a; /* Outline */
+	--sl-color-bg: #070722; /* Surface */
+	--sl-color-bg-soft: #11112d; /* Surface Variant */
+	--sl-color-text: #f3edf7; /* On Surface */
+	--sl-color-text-soft: #7c80b4; /* On Surface Variant */
+	--sl-color-hairline: #21215F; /* Outline */
 
 	/* Links */
 	--sl-color-link: var(--sl-color-accent);
-	--sl-color-link-hover: #a984c4; /* Secondary */
+	--sl-color-link-hover: #9BFECE; /* Secondary */
 
 	/* Shadows */
-	--sl-shadow-color: #030304; /* Shadow - almost pitch black */
+	--sl-shadow-color: #7c80b4; /* Shadow - almost pitch black */
 }
 
 /* Light Theme */
 :root[data-theme='light'] {
 	/* Brand & accents */
-	--sl-color-accent: #c7a1d8; /* Primary */
-	--sl-color-text-accent: #c7a1d8;
+	--sl-color-accent: #5d65f5; /* Primary */
+	--sl-color-text-accent: #5d65f5;
 	--sl-border-radius: 10px;
 
-	/* Typography */
-	--sl-font: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-	--sl-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
 	/* Surfaces & text */
-	--sl-color-bg: #e9e4f0 ; /* Surface */
-	--sl-color-bg-soft: #a79ab0; /* Surface Variant */
-	--sl-color-text: #1c1822; /* On Surface */
-	--sl-color-text-soft: #262130; /* On Surface Variant */
-	--sl-color-hairline: #4d445a; /* Outline */
+	--sl-color-bg: #e6e8fa ; /* Surface */
+	--sl-color-bg-soft: #eff0ff; /* Surface Variant */
+	--sl-color-text: #4b55c8; /* On Surface */
+	--sl-color-text-soft: #4b55c8; /* On Surface Variant */
+	--sl-color-hairline: #8288fc; /* Outline */
 
 	/* Links */
 	--sl-color-link: var(--sl-color-accent);
-	--sl-color-link-hover: #a984c4; /* Secondary */
+	--sl-color-link-hover: #fef29a; /* Secondary */
 
 	/* Shadows */
-	--sl-shadow-color: #030304; /* Shadow - almost pitch black */
+	--sl-shadow-color: #4b55c8; /* Shadow - almost pitch black */
 }
 
 
