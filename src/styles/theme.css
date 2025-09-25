@@ -42,6 +42,8 @@
 	--sl-color-text: #4b55c8; /* On Surface */
 	--sl-color-text-soft: #4b55c8; /* On Surface Variant */
 	--sl-color-hairline: #8288fc; /* Outline */
+	--sl-color-bg-nav: var(--sl-color-bg-soft);
+	--sl-color-black:  var(--sl-color-bg-soft);
 
 	/* Links */
 	--sl-color-link: var(--sl-color-accent);
