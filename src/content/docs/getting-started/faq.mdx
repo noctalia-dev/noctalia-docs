@@ -82,6 +82,18 @@ The launcher looks for `.desktop` files in standard locations. If an application
 </details>
 
 <details>
+<summary><strong>Why my screen recorder won't start recording?</strong></summary>
+
+Common causes:
+
+1. **Missing package**: Make sure you're have installed the proper package or flatpak
+2. **Portal crashed**: Verify the status of your xdg-desktop-portal-xxx service and/or restart it. On Niri the gnome portal is recommended and can be restarted using the following command: ```systemctl --user restart xdg-desktop-portal-gnome.service```
+3. **Change the vide source**: In Noctalia's settings, switch the source from portal to screen. And try recording.
+4. **Check output in terminal**: ```gpu-screen-recorder -w screen -f 60 -a default_output -o video.mp4```
+
+</details>
+
+<details>
 <summary><strong>Why does Noctalia crash on startup?</strong></summary>
 
 1. **Check the error output** by running Noctalia from the terminal
