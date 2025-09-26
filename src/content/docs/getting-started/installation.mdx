@@ -98,23 +98,18 @@ For the best experience with Noctalia, you'll need to configure your compositor 
 Add these settings to your Niri configuration file (usually `~/.config/niri/config.kdl`):
 
 ```kdl
-debug {
-    honor-xdg-activation-with-invalid-serial
-}
-
 window-rule {
     geometry-corner-radius 20
     clip-to-geometry true
 }
 
-window-rule {
-  match app-id="qs"
-  open-floating true
-}
-
 layer-rule {
     match namespace="^quickshell-overview$"
     place-within-backdrop true
+}
+
+debug {
+    honor-xdg-activation-with-invalid-serial
 }
 ```
 
