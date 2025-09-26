@@ -16,6 +16,14 @@ qs -c noctalia-shell
 :::
 
 
+### Autostart (recommended)
+This is the recommended way of starting noctalia-shell.
+For Hyprland you can just add `exec-once = qs -c noctalia-shell` to your `hyprland.conf`.
+
+For Niri you will have to add `spawn-at-startup "qs" "-c" "noctalia-shell` OR `spawn-sh-at-startup "qs -c noctalia-shell"` depending on your niri version to your `config.kdl`.
+
+You might have to adjust the command depending on how you installed `noctalia-shell` though so please keep that in mind.
+
 ### Running as a Systemd Service (Advanced)
 For more robust control, you can run Noctalia as a systemd user service. This automatically handles restarts on failure and centralizes logging with journalctl
 
