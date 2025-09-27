@@ -5,27 +5,27 @@ sidebar:
   order: 3
 ---
 
-### Standard Launch
-The most direct way to start Noctalia is by invoking it through Quickshell. Open your terminal and run:
-```bash
-qs -c noctalia-shell
+### Autostart by your Wayland compositor
+This is the recommended method for launching noctalia-shell, as it integrates with your window manager.
+
+For the *Niri* compositor, add the following line to the end of your configuration file, typically located at `~/.config/niri/config.kdl`
+```kdl
+spawn-at-startup "qs" "-c" "noctalia-shell
 ```
 
-:::tip[Manual installation users]
-- **Manual installation users**: If you have Noctalia in `~/.config/quickshell/`, you can use `qs` to start Noctalia. For keybinds you'd use `qs ipc ...` instead.
+For *Hyprland*, append this line to your configuration file, which is usually found at  `~/.config/hypr/hyprland.conf`
+```conf
+exec-once = qs -c noctalia-shell
+```
+
+:::tip[Important]
+- Be aware that the command might need to be adjusted based on how you installed `noctalia-shell`.
+- **Manual installation**: If you installed Noctalia into `~/.config/quickshell/`, you can use `qs` to start it. For keybindings, you must use `qs ipc ...` instead.
 :::
 
 
-### Autostart (recommended)
-This is the recommended way of starting noctalia-shell.
-For Hyprland you can just add `exec-once = qs -c noctalia-shell` to your `hyprland.conf`.
-
-For Niri you will have to add `spawn-at-startup "qs" "-c" "noctalia-shell` OR `spawn-sh-at-startup "qs -c noctalia-shell"` depending on your niri version to your `config.kdl`.
-
-You might have to adjust the command depending on how you installed `noctalia-shell` though so please keep that in mind.
-
 ### Running as a Systemd Service (Advanced)
-For more robust control, you can run Noctalia as a systemd user service. This automatically handles restarts on failure and centralizes logging with journalctl
+For more robust process management, you can configure Noctalia to run as a systemd user service. This approach provides automatic restarts on failure and centralizes logging with `journalctl`.
 
 #### 1. Create the service file
 First, create a new service definition file at `~/.config/systemd/user/noctalia.service` with the following content:
@@ -59,4 +59,10 @@ systemctl --user add-wants niri.service noctalia.service
 Alternatively, you can enable it more generally with:
 ```bash
 systemctl --user enable --now noctalia.service
+```
+
+### Manual Launch for Debugging
+The most direct way to run Noctalia for testing or debugging is to invoke it through Quickshell. Open a terminal and execute:
+```bash
+qs -c noctalia-shell
 ```
