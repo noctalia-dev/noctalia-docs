@@ -85,9 +85,12 @@ Noctalia provides extensive IPC (Inter-Process Communication) support, allowing 
 
 | Function | Command | Description |
 |----------|---------|-------------|
-| **Toggle Wallpaper selector** | `qs -c noctalia-shell ipc call wallpaper toggle` | Toggle the wallpaper selector |
+| **Toggle Selector** | `qs -c noctalia-shell ipc call wallpaper toggle` | Toggle the wallpaper selector |
 | **Set Wallpaper** | `qs -c noctalia-shell ipc call wallpaper set $path $monitor` | Set specific wallpaper on a monitor |
 | **Random Wallpaper** | `qs -c noctalia-shell ipc call wallpaper random` | Apply a random wallpaper |
+| **Toggle Automation** | `qs -c noctalia-shell ipc call wallpaper toggleAutomation` | Toggle wallpaper automation |
+| **Enable Automation** | `qs -c noctalia-shell ipc call wallpaper enableAutomation` | Enable wallpaper automation |
+| **Disable Automation** | `qs -c noctalia-shell ipc call wallpaper disableAutomation` | Disable wallpaper automation |
 
 :::note[Wallpaper variables]
 - `$path`: Full path to your wallpaper image file
