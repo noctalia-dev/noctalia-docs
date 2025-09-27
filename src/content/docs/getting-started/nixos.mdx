@@ -83,7 +83,7 @@ To configure Noctalia settings, you can use the Noctalia home manager module:
 # noctalia.nix
 { pkgs, inputs, ... }:
 {
-  home-manager.users.mrfoobar = {
+  home-manager.users.drfoobar = {
     # import the home manager module
     imports = [
       inputs.noctalia.homeModules.default
@@ -93,17 +93,67 @@ To configure Noctalia settings, you can use the Noctalia home manager module:
     programs.noctalia-shell = {
       enable = true;
       settings = {
-        # put ALL settings here, see the note below.
-        # ...
+        # configure noctalia here; defaults will
+        # be deep merged with these attributes.
+        bar = {
+          density = "compact";
+          position = "right";
+          showCapsule = false;
+          widgets = {
+            left = [
+              {
+                id = "SidePanelToggle";
+                useDistroLogo = true;
+              }
+              {
+                id = "WiFi";
+              }
+              {
+                id = "Bluetooth";
+              }
+            ];
+            center = [
+              {
+                hideUnoccupied = false;
+                id = "Workspace";
+                labelMode = "none";
+              }
+            ];
+            right = [
+              {
+                alwaysShowPercentage = false;
+                id = "Battery";
+                warningThreshold = 30;
+              }
+              {
+                formatHorizontal = "HH:mm";
+                formatVertical = "HH mm";
+                id = "Clock";
+                useMonospacedFont = true;
+                usePrimaryColor = true;
+              }
+            ];
+          };
+        };
+        colorSchemes.predefinedScheme = "Monochrome";
+        general = {
+          avatarImage = "/home/drfoobar/.face";
+          radiusRatio = 0.2;
+        };
+        location = {
+          monthBeforeDay = true;
+          name = "Marseille, France";
+        };
       };
-      # this may also be a string or a path to a JSON file.
+      # this may also be a string or a path to a JSON file,
+      # but in this case must include *all* settings.
     };
   };
 }
 ```
 
 :::note
-You **must** set all configuration options, since this overrides the *full* settings file.Its good to backup your current config - found in `~/.config/settings.json` before trying. You can also use this file as a starting point for your new configuration. We hope to enable partial configuration with default fallbacks in the future.
+If you provide a path or a JSON string, you **must** set all configuration options, since this overrides the *full* settings file without merging with defaults. Its good to backup your current config - found in `~/.config/settings.json` before trying. You can also use this file as a starting point for your new configuration. We hope to enable partial configuration with default fallbacks in the future.
 :::
 
 ### Theme colors
@@ -114,7 +164,7 @@ To configure Noctalia settings, you can use the Noctalia home manager module:
 # noctalia.nix
 { pkgs, inputs, ... }:
 {
-  home-manager.users.mrfoobar = {
+  home-manager.users.drfoobar = {
     # import the home manager module
     imports = [
       inputs.noctalia.homeModules.default
