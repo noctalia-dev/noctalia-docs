@@ -94,7 +94,15 @@ Noctalia provides extensive IPC (Inter-Process Communication) support, allowing 
 
 :::note[Wallpaper variables]
 - `$path`: Full path to your wallpaper image file
-- `$monitor`: Monitor identifier (use `hyprctl monitors` to list available monitors)
+- `$monitor`: Monitor identifier
+
+**To list available monitors**
+```bash
+# Hyprland
+hyprctl monitors
+# Niri
+niri msg -j outputs | jq 'keys'
+```
 :::
 
 ## Example Configurations
