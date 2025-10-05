@@ -108,7 +108,7 @@ Add these binds to your `~/.config/niri/config.kdl`:
 binds {
     // Core Noctalia binds
     Mod+Space { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
-    Mod+S { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "sidePanel" "toggle"; }
+    Mod+S { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "controlCenter" "toggle"; }
     Mod+Comma { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "settings" "toggle"; }
 
     // Audio controls
@@ -137,7 +137,7 @@ Add these binds to your `hyprland.conf`:
 ```bash
 # Core Noctalia binds
 bind = SUPER, SPACE, exec, qs -c noctalia-shell ipc call launcher toggle
-bind = SUPER, S, exec, qs -c noctalia-shell ipc call sidePanel toggle
+bind = SUPER, S, exec, qs -c noctalia-shell ipc call controlCenter toggle
 bind = SUPER, comma, exec, qs -c noctalia-shell ipc call settings toggle
 
 # Audio controls
