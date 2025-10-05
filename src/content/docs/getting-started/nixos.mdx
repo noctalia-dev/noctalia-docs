@@ -62,7 +62,7 @@ In `noctalia.nix` or some other module of your choice, install the default Nocta
 # noctalia.nix
 { pkgs, inputs, ... }:
 {
-  # install pacakge
+  # install package
   environment.systemPackages = with pkgs; [
     inputs.noctalia.packages.${system}.default
     # ... maybe other stuff
@@ -158,7 +158,7 @@ To configure Noctalia settings, you can use the Noctalia home manager module:
 
 We don't have extensive documentation of Noctalia's configuration options; however, you can see and up-to-date list of [configuration defaults](#config-ref).
 
-Additionally, if you use the [systemd service](#systemd-service), editing the settings with the GUI will show the resulting configuration in `~/.config/noctalia/gui-settings.json`. You can then use this information to update your Nix config to make it permenant.
+Additionally, if you use the [systemd service](#systemd-service), editing the settings with the GUI will show the resulting configuration in `~/.config/noctalia/gui-settings.json`. You can then use this information to update your Nix config to make it permanent.
 
 :::tip
  To see the diff between your current build and the temporary GUI settings, run:
