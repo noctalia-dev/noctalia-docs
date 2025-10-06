@@ -157,34 +157,11 @@ This checkbox:
 
 ---
 
-## How Color Generation Works
-
-Noctalia supports two color generation modes:
-
 ### Wallpaper-Based Colors
 When `Settings.data.colorSchemes.useWallpaperColors` is enabled, Matugen analyzes the current wallpaper and generates a complete Material Design 3 color palette. This palette is then used to generate all templates.
 
 ### Predefined Color Schemes
 When wallpaper colors are disabled, Noctalia uses predefined color schemes (like Nord, Dracula, etc.). These schemes are converted to Matugen's format and used to generate templates. Terminal colors are handled separately for better contrast and readability.
-
----
-
-## Template Categories
-
-Templates are organized into logical categories with different generation behaviors:
-
-- **Terminal**: `foot`, `ghostty`, `kitty` - Terminal emulator themes
-  - **Only generated when wallpaper colors are enabled**
-  - Uses predefined color schemes directly for better contrast and readability
-  
-- **Desktop**: `gtk`, `qt` - Desktop environment themes  
-  - **Always generated** (both wallpaper and predefined modes)
-  
-- **Applications**: `fuzzel`, `pywalfox`, `vesktop` - Application-specific themes
-  - **Always generated** (both wallpaper and predefined modes)
-  
-- **Core**: `noctalia` - Internal Noctalia color scheme
-  - **Only generated when wallpaper colors are enabled**
 
 :::info[**Terminal Templates**]
 Terminal templates are handled specially - they only generate when wallpaper colors are enabled, and use predefined color schemes directly for better contrast and readability rather than the generated Material Design 3 palette.
