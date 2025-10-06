@@ -83,20 +83,21 @@ This adds a persistent toggle that defaults to `false`.
 
 ## Step 3: Wire It Into the Config Generator
 
-Now tell Matugen when to use the new template.  
-Open **`Services/MatugenTemplates.qml`** and find the `buildConfigToml()` function.  
+Now tell the system when to use the new template.  
+Open **`Services/AppThemeService.qml`** and find the `predefinedTemplateConfigs` object.  
 Add your template config alongside the existing ones:
 
 ```qml
-if (Settings.data.templates.kitty) {
-    lines.push("\n[templates.kitty]")
-    lines.push('input_path = "' + Quickshell.shellDir + '/Assets/MatugenTemplates/kitty.conf"')
-    lines.push('output_path = "~/.config/kitty/themes/noctalia.conf"')
-    lines.push(`post_hook = "${MatugenService.colorsApplyScript} kitty"`)
+"kitty": {
+  "input": "kitty.conf",
+  "outputs": [{
+      "path": "~/.config/kitty/themes/noctalia.conf"
+    }],
+  "postProcess": () => `${colorsApplyScript} kitty\n`
 }
 ```
 
-The `post_hook` line tells Matugen to run a script after generating the colors, which is useful for reloading the application's theme.
+The `postProcess` function tells the system to run a script after generating the colors, which is useful for reloading the application's theme.
 
 ---
 
@@ -142,9 +143,9 @@ NCheckbox {
         if (ProgramCheckerService.kittyAvailable) {
             Settings.data.templates.kitty = checked
             if (Settings.data.colorSchemes.useWallpaperColors)
-                MatugenService.generateFromWallpaper()
-            else
-                MatugenService.generateFromPredefinedScheme(ColorSchemeService.getCurrentScheme())
+                AppThemeService.generateFromWallpaper()
+            else if (Settings.data.colorSchemes.generateTemplatesForPredefined)
+                AppThemeService.generateFromPredefinedScheme(ColorSchemeService.getCurrentScheme())
         }
     }
 }
@@ -157,14 +158,25 @@ This checkbox:
 
 ---
 
+## How Color Generation Works
+
+Noctalia supports two different color generation modes:
+
 ### Wallpaper-Based Colors
-When `Settings.data.colorSchemes.useWallpaperColors` is enabled, Matugen analyzes the current wallpaper and generates a complete Material Design 3 color palette. This palette is then used to generate all templates.
+When `Settings.data.colorSchemes.useWallpaperColors` is enabled, the system uses Matugen to analyze the current wallpaper and generates a complete Material Design 3 color palette. This palette is then used to generate all enabled templates using the standard Matugen workflow.
 
 ### Predefined Color Schemes
-When wallpaper colors are disabled, Noctalia uses predefined color schemes (like Nord, Dracula, etc.). These schemes are converted to Matugen's format and used to generate templates. Terminal colors are handled separately for better contrast and readability.
+When wallpaper colors are disabled, Noctalia uses predefined color schemes (like Nord, Dracula, Catppuccin, etc.). For these schemes, the system:
+
+1. **Generates a Material Design 3 palette** - Uses `ColorsConvert.js` helper functions to create a complete Material Design 3 color palette from the predefined scheme's key colors
+2. **Maps predefined colors intelligently** - Primary, secondary, tertiary, error, and surface colors from the predefined scheme are used as the foundation
+3. **Generates complementary colors** - Container colors, "on" colors (for text/icons), surface variants, and outline colors are generated using color theory algorithms
+4. **Processes templates directly** - Templates are copied and color placeholders are replaced with the generated Material Design 3 colors using `sed`
+
+This approach ensures that predefined color schemes maintain their authentic look while providing a complete Material Design 3 palette for consistent theming across all applications.
 
 :::info[**Terminal Templates**]
-Terminal templates are handled specially - they only generate when wallpaper colors are enabled, and use predefined color schemes directly for better contrast and readability rather than the generated Material Design 3 palette.
+Terminal templates are handled specially - they use predefined color schemes directly for better contrast and readability rather than the generated Material Design 3 palette. This ensures terminal applications have optimal readability with high contrast colors.
 :::
 
 ---
@@ -173,3 +185,18 @@ Terminal templates are handled specially - they only generate when wallpaper col
 If there's no obvious category for your template, don't hesitate to create a new collapsible section.  
 For miscellaneous apps, you can drop them into a "Misc" category.
 :::
+
+---
+
+## Template Development Tips
+
+### Testing Your Template
+1. Enable your template in the settings
+2. Switch between different predefined color schemes to ensure your template works with all of them
+3. Test with both wallpaper-based and predefined color schemes
+4. Verify that the generated files are placed in the correct locations
+
+### Common Issues
+- **Path expansion**: Make sure to use `~` in output paths as the system handles tilde expansion
+- **Color mapping**: Ensure your template uses the correct Material Design 3 color tokens
+- **File permissions**: Some applications may require specific file permissions or locations
