@@ -50,6 +50,12 @@ Noctalia provides extensive IPC (Inter-Process Communication) support, allowing 
 | **Brightness Up** | `qs -c noctalia-shell ipc call brightness increase` | Increase screen brightness |
 | **Brightness Down** | `qs -c noctalia-shell ipc call brightness decrease` | Decrease screen brightness |
 
+#### Media
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Screen record toggle** | `qs -c noctalia-shell ipc call screenRecorder toggle` | Start / stop the screen recording |
+
 ### Security & Privacy
 
 | Function | Command | Description |
@@ -94,7 +100,7 @@ Noctalia provides extensive IPC (Inter-Process Communication) support, allowing 
 
 :::note[Wallpaper variables]
 - `$path`: Full path to your wallpaper image file
-- `$monitor`: Monitor identifier (use `hyprctl monitors` to list available monitors)
+- `$monitor`: Monitor identifier (use `niri msg outputs` or `hyprctl monitors` (depending on your compositor) to list available monitors)
 :::
 
 ## Example Configurations
