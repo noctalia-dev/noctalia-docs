@@ -138,6 +138,27 @@ Common causes:
 
 </details>
 
+<details>
+<summary><strong>Why can't I unlock my lock screen??</strong></summary>
+
+openSUSE in particular does not provide the required /etc/pam.d/login.
+You must create an /etc/pam.d/login manually.
+Execute:
+```bash
+sudo tee /etc/pam.d/login <<'EOF'
+```
+And enter:
+```
+#%PAM-1.0
+auth       include      common-auth
+account    include      common-account
+password   include      common-password
+session    include      common-session
+EOF
+```
+
+</details>
+
 ## Still Need Help?
 
 If your question isn't answered here:
