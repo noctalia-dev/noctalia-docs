@@ -1,0 +1,418 @@
+---
+title: Create a Predefined Color Scheme
+description: This guide walks you through adding a new predefined color scheme to Noctalia.
+sidebar:
+  order: 5
+---
+
+This guide walks you through adding a new **predefined color scheme** to **Noctalia**.
+
+---
+
+## Overview
+
+Adding a new predefined color scheme involves five steps:
+
+1. [Create the scheme directory](#step-1-create-the-scheme-directory)  
+2. [Create the main scheme file](#step-2-create-the-main-scheme-file)  
+3. [Create terminal themes](#step-3-create-terminal-themes)  
+4. [Test your scheme](#step-4-test-your-scheme)  
+5. [Add translations](#step-5-add-translations)
+
+---
+
+## Step 1: Create the Scheme Directory
+
+Create a new directory in the ColorScheme assets folder:
+
+**`Assets/ColorScheme/YourSchemeName/`**
+
+For example, if you're creating a "Monokai" scheme:
+
+**`Assets/ColorScheme/Monokai/`**
+
+---
+
+## Step 2: Create the Main Scheme File
+
+Create the main scheme file named after your scheme:
+
+**`Assets/ColorScheme/Monokai/Monokai.json`**
+
+```json
+{
+    "dark": {
+        "mPrimary": "#a6e22e",
+        "mOnPrimary": "#272822",
+        "mSecondary": "#66d9ef",
+        "mOnSecondary": "#272822",
+        "mTertiary": "#f92672",
+        "mOnTertiary": "#272822",
+        "mError": "#f92672",
+        "mOnError": "#272822",
+        "mSurface": "#272822",
+        "mOnSurface": "#f8f8f2",
+        "mSurfaceVariant": "#3e3d32",
+        "mOnSurfaceVariant": "#a6e22e",
+        "mOutline": "#75715e",
+        "mShadow": "#272822"
+    },
+    "light": {
+        "mPrimary": "#a6e22e",
+        "mOnPrimary": "#f8f8f2",
+        "mSecondary": "#66d9ef",
+        "mOnSecondary": "#f8f8f2",
+        "mTertiary": "#f92672",
+        "mOnTertiary": "#f8f8f2",
+        "mError": "#f92672",
+        "mOnError": "#f8f8f2",
+        "mSurface": "#f8f8f2",
+        "mOnSurface": "#272822",
+        "mSurfaceVariant": "#e6e1dc",
+        "mOnSurfaceVariant": "#272822",
+        "mOutline": "#a6e22e",
+        "mShadow": "#d8d8d8"
+    }
+}
+```
+
+### Color Properties Explained
+
+Each color scheme must define both `dark` and `light` variants with these Material Design 3 properties:
+
+- **`mPrimary`** - Primary color (buttons, links, highlights)
+- **`mOnPrimary`** - Text/icon color on primary surfaces
+- **`mSecondary`** - Secondary accent color
+- **`mOnSecondary`** - Text/icon color on secondary surfaces
+- **`mTertiary`** - Tertiary accent color
+- **`mOnTertiary`** - Text/icon color on tertiary surfaces
+- **`mError`** - Error/warning color
+- **`mOnError`** - Text/icon color on error surfaces
+- **`mSurface`** - Main background color
+- **`mOnSurface`** - Primary text color
+- **`mSurfaceVariant`** - Secondary background color (cards, panels)
+- **`mOnSurfaceVariant`** - Text color on surface variants
+- **`mOutline`** - Border/divider color
+- **`mShadow`** - Shadow color
+
+### Color Selection Guidelines
+
+1. **Primary Color**: Choose a distinctive color that represents your scheme's character
+2. **Secondary/Tertiary**: Use complementary colors that work well with the primary
+3. **Surface Colors**: Ensure good contrast for readability
+4. **Error Color**: Typically red-based for universal recognition
+5. **Outline Colors**: Should provide subtle separation without being distracting
+
+---
+
+## Step 3: Create Terminal Themes
+
+Create terminal-specific themes for better contrast and readability. Terminal themes bypass the Material Design 3 generation and use your scheme's colors directly.
+
+### Directory Structure
+
+Create terminal theme directories:
+
+```
+Assets/ColorScheme/Monokai/
+├── Monokai.json
+└── terminal/
+    ├── foot/
+    │   ├── Monokai-dark
+    │   └── Monokai-light
+    ├── ghostty/
+    │   ├── Monokai-dark
+    │   └── Monokai-light
+    └── kitty/
+        ├── Monokai-dark.conf
+        └── Monokai-light.conf
+```
+
+### Foot Terminal Theme
+
+**`Assets/ColorScheme/Monokai/terminal/foot/Monokai-dark`**
+
+```ini
+[colors]
+background=272822
+foreground=f8f8f2
+
+# Normal colors
+regular0=272822
+regular1=f92672
+regular2=a6e22e
+regular3=f4bf75
+regular4=66d9ef
+regular5=ae81ff
+regular6=a1efe4
+regular7=f8f8f2
+
+# Bright colors
+bright0=75715e
+bright1=f92672
+bright2=a6e22e
+bright3=f4bf75
+bright4=66d9ef
+bright5=ae81ff
+bright6=a1efe4
+bright7=f9f8f5
+
+[cursor]
+color=f8f8f2 272822
+```
+
+### Ghostty Terminal Theme
+
+**`Assets/ColorScheme/Monokai/terminal/ghostty/Monokai-dark`**
+
+```ini
+[colors]
+background=272822
+foreground=f8f8f2
+
+# Normal colors
+regular0=272822
+regular1=f92672
+regular2=a6e22e
+regular3=f4bf75
+regular4=66d9ef
+regular5=ae81ff
+regular6=a1efe4
+regular7=f8f8f2
+
+# Bright colors
+bright0=75715e
+bright1=f92672
+bright2=a6e22e
+bright3=f4bf75
+bright4=66d9ef
+bright5=ae81ff
+bright6=a1efe4
+bright7=f9f8f5
+
+[cursor]
+color=f8f8f2 272822
+```
+
+### Kitty Terminal Theme
+
+**`Assets/ColorScheme/Monokai/terminal/kitty/Monokai-dark.conf`**
+
+```conf
+color0 #272822
+color1 #f92672
+color2 #a6e22e
+color3 #f4bf75
+color4 #66d9ef
+color5 #ae81ff
+color6 #a1efe4
+color7 #f8f8f2
+color8 #75715e
+color9 #f92672
+color10 #a6e22e
+color11 #f4bf75
+color12 #66d9ef
+color13 #ae81ff
+color14 #a1efe4
+color15 #f9f8f5
+background #272822
+selection_foreground #272822
+cursor #f8f8f2
+cursor_text_color #272822
+foreground #f8f8f2
+selection_background #f8f8f2
+```
+
+### Terminal Color Mapping
+
+Terminal themes use a standard 16-color palette:
+
+- **colors 0-7**: Normal colors (dark background variants)
+- **colors 8-15**: Bright colors (lighter variants)
+- **background**: Terminal background
+- **foreground**: Primary text color
+- **cursor**: Cursor color and text color
+- **selection_foreground/background**: Text selection colors
+
+---
+
+## Step 4: Test Your Scheme
+
+1. **Place your scheme files** in the correct directories
+2. **Restart Noctalia** to load the new scheme
+3. **Open settings** and navigate to Color Scheme
+4. **Select your scheme** from the predefined schemes list
+5. **Test both dark and light modes**
+6. **Verify terminal themes** work correctly
+7. **Check Material Design 3 generation** if you have templates enabled
+
+### Testing Checklist
+
+- [ ] Scheme appears in the predefined schemes list
+- [ ] Dark mode variant works correctly
+- [ ] Light mode variant works correctly
+- [ ] Terminal themes apply correctly
+- [ ] Material Design 3 templates generate properly
+- [ ] Colors have good contrast and readability
+- [ ] Scheme name displays correctly
+
+---
+
+## Step 5: Add Translations
+
+Add translations for your scheme name in the translation files:
+
+**`Assets/Translations/en.json`**
+
+```json
+{
+  "color-scheme": {
+    "predefined": {
+      "schemes": {
+        "Monokai": "Monokai"
+      }
+    }
+  }
+}
+```
+
+**`Assets/Translations/fr.json`**
+
+```json
+{
+  "color-scheme": {
+    "predefined": {
+      "schemes": {
+        "Monokai": "Monokai"
+      }
+    }
+  }
+}
+```
+
+Add translations for all supported languages:
+- `en.json` (English)
+- `fr.json` (French)
+- `de.json` (German)
+- `es.json` (Spanish)
+- `pt.json` (Portuguese)
+- `zh-CN.json` (Chinese Simplified)
+
+---
+
+## How Predefined Schemes Work
+
+### Color Generation Process
+
+When a predefined scheme is selected:
+
+1. **Scheme Loading**: The system loads your `SchemeName.json` file
+2. **Variant Selection**: Chooses `dark` or `light` variant based on current mode
+3. **Material Design 3 Generation**: Uses `ColorsConvert.js` to generate a complete Material Design 3 palette
+4. **Template Processing**: Applies colors to enabled Matugen templates
+5. **Terminal Theme Application**: Uses terminal-specific themes for better contrast
+
+### Material Design 3 Palette Generation
+
+The system automatically generates complementary colors:
+
+- **Container Colors**: Lighter/darker variants of primary colors
+- **"On" Colors**: High-contrast text colors for each surface
+- **Surface Variants**: Progressive elevation levels
+- **Outline Colors**: Border and divider colors
+- **Shadow Colors**: Drop shadow colors
+
+### Terminal Theme Special Handling
+
+Terminal themes bypass Material Design 3 generation and use your scheme's colors directly for optimal readability and contrast.
+
+---
+
+## Color Scheme Design Tips
+
+### Choosing Colors
+
+1. **Start with a Base**: Choose 2-3 core colors that define your scheme's character
+2. **Consider Accessibility**: Ensure sufficient contrast ratios (WCAG AA minimum)
+3. **Test Both Modes**: Dark and light variants should both be usable
+4. **Think About Usage**: Consider how colors will look in different contexts
+
+### Popular Color Scheme Sources
+
+- **Existing Themes**: Adapt popular themes (Dracula, Nord, Catppuccin)
+- **Design Systems**: Use established design system color palettes
+- **Nature Inspiration**: Draw colors from natural environments
+
+### Tools for Color Selection
+
+- **Color Pickers**: Use tools like Coolors.co or Adobe Color
+- **Contrast Checkers**: Verify accessibility with WebAIM contrast checker
+- **Preview Tools**: Test colors in actual applications
+- **Terminal Testing**: Verify terminal themes work well for coding
+
+---
+
+## Advanced Customization
+
+### Custom Color Algorithms
+
+You can modify `Helpers/ColorsConvert.js` to change how Material Design 3 colors are generated:
+
+- **Container Generation**: Adjust how container colors are created
+- **Surface Variants**: Modify elevation level calculations
+- **Outline Colors**: Customize border color generation
+- **"On" Color Logic**: Change text color contrast calculations
+
+### Scheme Variants
+
+Create multiple variants of your scheme:
+
+```
+Assets/ColorScheme/Monokai/
+├── Monokai.json
+├── Monokai-Pro.json
+├── Monokai-Classic.json
+└── terminal/
+    └── ...
+```
+
+### Dynamic Schemes
+
+For advanced users, you can create schemes that adapt based on:
+- Time of day
+- System preferences
+- User settings
+- External factors
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Scheme Not Appearing**: Check file naming and directory structure
+2. **Colors Not Applying**: Verify JSON syntax and color format
+3. **Poor Contrast**: Use contrast checking tools to verify readability
+4. **Terminal Themes Broken**: Check terminal-specific file formats
+5. **Translation Missing**: Ensure scheme name is in all translation files
+
+### Debug Tips
+
+1. **Check Logs**: Look for color scheme loading errors in Noctalia logs
+2. **Validate JSON**: Use JSON validators to check syntax
+3. **Test Incrementally**: Add one component at a time
+4. **Compare Working Schemes**: Use existing schemes as references
+
+---
+
+:::tip[Testing Your Scheme]
+Always test your scheme with both dark and light modes, and verify that terminal themes provide good contrast for coding work.
+:::
+
+:::info[Terminal Themes]
+Terminal themes are crucial for developer workflows. Ensure your terminal colors provide excellent readability and syntax highlighting support.
+:::
+
+:::warning[Accessibility]
+Always verify that your color scheme meets accessibility guidelines, especially for users with visual impairments.
+:::
