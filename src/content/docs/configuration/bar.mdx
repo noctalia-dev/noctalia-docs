@@ -1,0 +1,169 @@
+---
+title: Bar and bar widgets
+description: Configurating the Bar.
+sidebar:
+  order: 2
+---
+
+
+
+
+
+## Bar
+**Customize the bar's appearance and position.**
+```json
+"bar": {
+    "position": "top",
+    "backgroundOpacity": 1,
+    "monitors": [],
+    "density": "default",
+    "showCapsule": true,
+    "floating": false,
+    "marginVertical": 0.25,
+    "marginHorizontal": 0.25,
+    "widgets": {
+      "left": [
+        < Widgets >
+      ],
+      "center": [
+        < Widgets >
+      ],
+      "right": [
+        < Widgets >
+      ]
+    }
+  }
+```
+| Settings           | Default     | Options                                                | Description                                              |
+|--------------------|-------------|--------------------------------------------------------|----------------------------------------------------------| 
+| position           | `"top"`     | `"bottom"` , `"top"` , `"right"` , `"left"`            | Choose where to place the bar on the screen.             |
+| backgroundOpacity  | `1`         | 0.00 to 1.00 with 0.01 steps                           | Adjust the background opacity of the bar.                |
+| monitors           | blank, therefore all monitors | See note on monitors | Show bar on specific monitors. Defaults to all if none are chosen. |
+| density            | `"default"` | `"mini"` , `"compact"` , `"comfortable"` , `"default"` | Adjust the bar's padding for a compact or spacious look. |
+| showCapsule        | true        | boolean                                                | Show widget backgrounds.                                 |
+| floating           | false       | boolean                                                | Displays the bar as a floating 'pill'. Note: This will move the screen corners to the edges. |
+| marginVertical     | 0.25        | 0.00 to 1.00 with 0.01 steps                           | Adjust the vertical margin around the floating bar.      |
+| marginHorizontal   | 0.25        | 0.00 to 1.00 with 0.01 steps                           | Adjust the horizontal margin around the floating bar.    |
+
+**Note on monitors:**
+You can determine your monitor identifiers from:
+
+Hyprland:
+```bash
+hyprctl monitors
+```
+
+Niri:
+```bash
+niri msg outputs
+```
+
+## Widgets
+
+### Default widgets
+All widgets can be placed in either `"left"`, `center` or `"right"`.
+
+<details>
+<summary>Expand this section to see the defaults widgets</summary>
+
+```json
+"widgets": {
+    "left": [
+      {
+        "id": "SystemMonitor"
+      },
+      {
+        "id": "ActiveWindow"
+      },
+      {
+        "id": "MediaMini"
+      }
+    ],
+    "center": [
+      {
+        "id": "Workspace"
+      }
+    ],
+    "right": [
+      {
+        "id": "ScreenRecorder"
+      },
+      {
+        "id": "Tray"
+      },
+      {
+        "id": "NotificationHistory"
+      },
+      {
+        "id": "Battery"
+      },
+      {
+        "id": "Volume"
+      },
+      {
+        "id": "Brightness"
+      },
+      {
+        "id": "Clock"
+      },
+      {
+        "id": "ControlCenter"
+      }
+    ]
+  }
+
+```
+</details>
+
+### ActiveWindow
+
+Displays the title and icon of the current active window.
+
+```json
+{
+  "id": "ActiveWindow",
+  "showIcon": true,
+  "hideMode": "hidden",
+  "scrollingMode": "hover",
+  "width": 145,
+  "colorizeIcons": false
+}
+```
+
+| Settings      | Default    | Options                                                | Description                                               |
+|---------------|------------|--------------------------------------------------------|-----------------------------------------------------------|
+| showIcon      | true       | boolean                                                | Show the icon of the active window                        |
+| hideMode      | `"hidden"` | `"visible"` , `"hidden"` , `"transparent"`             | "visible": Always Visible, "hidden": Hide When Empty, "transparent": Transparent When Empty. |
+| scrollingMode | `"hover"`  | `"visible"` , `"hidden"` , `"transparent"` , `"hover"` | When should long titles scroll to show more of the title. |
+| width         | 145        | Integer value in pixels                                | Controls the horizontal size of the widget.               |
+| colorizeIcons | false      | boolean                                                | Show original window icon if false or colorize (match theme) if true. |
+
+
+### Battery
+
+Displays battery percentage.
+
+```json
+{
+  "id": "Battery",
+  "displayMode": "onhover",
+  "warningThreshold": 30
+}
+```
+
+| Settings         | Default        | Options                            | Description                                                  |
+|------------------|----------------|------------------------------------|--------------------------------------------------------------| 
+| displayMode      | `"alwaysHide"` | `"alwaysShow"` , `"alwaysHide"`    | Whether to always show battery percentage, or only on hover. |
+| warningThreshold | `30`           | Integer values between 0 to 100    | At what percentate to warn of low battery.                   |
+
+### Bluetooth
+
+Access Bluetooth popup for devices and adapter.
+
+```json
+{
+  "id": "Bluetooth"
+}
+```
+
+No further settings.
