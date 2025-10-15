@@ -58,6 +58,15 @@ Noctalia provides extensive IPC (Inter-Process Communication) support, allowing 
 |----------|---------|-------------|
 | **Screen record toggle** | `qs -c noctalia-shell ipc call screenRecorder toggle` | Start / stop the screen recording |
 
+#### Battery Management
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Cycle charging modes** | `qs -c noctalia-shell ipc call batteryManager cycle` | Switch between charging modes |
+| **Full capacity** | `qs -c noctalia-shell ipc call batteryManager set full` | Set Full capacity mode |
+| **Balanced** | `qs -c noctalia-shell ipc call batteryManager set balanced` | Set Balanced mode |
+| **Lifespan** | `qs -c noctalia-shell ipc call batteryManager set lifespan` | Set Lifespan mode |
+
 ### Security & Privacy
 
 | Function | Command | Description |
