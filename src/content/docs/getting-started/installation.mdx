@@ -49,6 +49,9 @@ paru -S ddcutil
 
 # Optional dependencies
 paru -S cliphist matugen-git cava wlsunset xdg-desktop-portal
+
+# Polkit agent (can be any other agent)
+paru -S polkit-kde-agent
 ```
 
 For other distributions, install the equivalent packages using your package manager.
@@ -82,6 +85,7 @@ tar -xz --strip-components=1 -C ~/.config/quickshell/noctalia-shell
 - `cava` - Audio visualizer component
 - `wlsunset` - Night light functionality
 - `xdg-desktop-portal` - Enables "Portal" option in screen recorder
+- `polkit-kde-agent` - Only needed to authenticate Battery Manager installation for laptop charge limits; skip if installing via Bin/battery-manager/install-battery-manager.sh with sudo.
 
 :::tip
 Manual installation keeps Noctalia contained within your user directory, making it easy to remove or update without affecting system packages.
