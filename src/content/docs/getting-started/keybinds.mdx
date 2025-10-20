@@ -31,6 +31,7 @@ Noctalia provides extensive IPC (Inter-Process Communication) support, allowing 
 | **Clipboard History** | `qs -c noctalia-shell ipc call launcher clipboard` | Access your clipboard history |
 | **Calculator** | `qs -c noctalia-shell ipc call launcher calculator` | Quick calculator access |
 | **Session Menu** | `qs -c noctalia-shell ipc call sessionMenu toggle` | Logout, reboot, shutdown... |
+| **Lock & Suspend** | `qs -c noctalia-shell ipc call sessionMenu lockAndSuspend` | Lock the screen and suspend the system |
 
 ### System Controls
 
@@ -41,7 +42,21 @@ Noctalia provides extensive IPC (Inter-Process Communication) support, allowing 
 | **Volume Up** | `qs -c noctalia-shell ipc call volume increase` | Increase system volume |
 | **Volume Down** | `qs -c noctalia-shell ipc call volume decrease` | Decrease system volume |
 | **Mute Output** | `qs -c noctalia-shell ipc call volume muteOutput` | Toggle output audio mute |
+| **Input Up** | `qs -c noctalia-shell ipc call volume increaseInput` | Increase input volume |
+| **Input Down** | `qs -c noctalia-shell ipc call volume decreaseInput` | Decrease input volume |
 | **Mute Input** | `qs -c noctalia-shell ipc call volume muteInput` | Toggle input audio mute |
+
+#### Media Controls
+
+| Function | Command | Description |
+|---|---|---|
+| **Play/Pause** | `qs -c noctalia-shell ipc call media playPause` | Toggle play/pause for media |
+| **Play** | `qs -c noctalia-shell ipc call media play` | Play media |
+| **Pause** | `qs -c noctalia-shell ipc call media pause` | Pause media |
+| **Next** | `qs -c noctalia-shell ipc call media next` | Go to the next media track |
+| **Previous** | `qs -c noctalia-shell ipc call media previous` | Go to the previous media track |
+| **Seek Relative** | `qs -c noctalia-shell ipc call media seekRelative $offset` | Seek media by a relative offset in seconds |
+| **Seek By Ratio** | `qs -c noctalia-shell ipc call media seekByRatio $position` | Seek media to a specific position from 0.0 to 1.0 |
 
 #### Display & Brightness
 
@@ -50,11 +65,20 @@ Noctalia provides extensive IPC (Inter-Process Communication) support, allowing 
 | **Brightness Up** | `qs -c noctalia-shell ipc call brightness increase` | Increase screen brightness |
 | **Brightness Down** | `qs -c noctalia-shell ipc call brightness decrease` | Decrease screen brightness |
 
-#### Media
+#### Screen Recorder
 
 | Function | Command | Description |
 |----------|---------|-------------|
 | **Screen record toggle** | `qs -c noctalia-shell ipc call screenRecorder toggle` | Start / stop the screen recording |
+
+#### Battery Management
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Cycle charging modes** | `qs -c noctalia-shell ipc call batteryManager cycle` | Switch between charging modes |
+| **Full capacity** | `qs -c noctalia-shell ipc call batteryManager set full` | Set Full capacity mode |
+| **Balanced** | `qs -c noctalia-shell ipc call batteryManager set balanced` | Set Balanced mode |
+| **Lifespan** | `qs -c noctalia-shell ipc call batteryManager set lifespan` | Set Lifespan mode |
 
 ### Security & Privacy
 
@@ -66,10 +90,12 @@ Noctalia provides extensive IPC (Inter-Process Communication) support, allowing 
 ### Notifications
 
 | Function | Command | Description |
-|----------|---------|-------------|
+|---|---|---|
 | **Notification History** | `qs -c noctalia-shell ipc call notifications toggleHistory` | View past notifications |
 | **Do Not Disturb** | `qs -c noctalia-shell ipc call notifications toggleDND` | Toggle notification silence mode |
 | **Clear Notification History** | `qs -c noctalia-shell ipc call notifications clear` | Clear notification history |
+| **Dismiss Oldest** | `qs -c noctalia-shell ipc call notifications dismissOldest` | Dismiss the oldest active notification |
+| **Dismiss All** | `qs -c noctalia-shell ipc call notifications dismissAll` | Dismiss all active notifications |
 
 ### Appearance
 
@@ -100,7 +126,15 @@ Noctalia provides extensive IPC (Inter-Process Communication) support, allowing 
 
 :::note[Wallpaper variables]
 - `$path`: Full path to your wallpaper image file
-- `$monitor`: Monitor identifier (use `niri msg outputs` or `hyprctl monitors` (depending on your compositor) to list available monitors)
+- `$monitor`: Monitor identifier
+
+**To list available monitors**
+```bash
+# Hyprland
+hyprctl monitors
+# Niri
+niri msg -j outputs | jq 'keys'
+```
 :::
 
 ## Example Configurations
@@ -114,7 +148,7 @@ Add these binds to your `~/.config/niri/config.kdl`:
 binds {
     // Core Noctalia binds
     Mod+Space { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
-    Mod+S { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "sidePanel" "toggle"; }
+    Mod+S { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "controlCenter" "toggle"; }
     Mod+Comma { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "settings" "toggle"; }
 
     // Audio controls
@@ -143,7 +177,7 @@ Add these binds to your `hyprland.conf`:
 ```bash
 # Core Noctalia binds
 bind = SUPER, SPACE, exec, qs -c noctalia-shell ipc call launcher toggle
-bind = SUPER, S, exec, qs -c noctalia-shell ipc call sidePanel toggle
+bind = SUPER, S, exec, qs -c noctalia-shell ipc call controlCenter toggle
 bind = SUPER, comma, exec, qs -c noctalia-shell ipc call settings toggle
 
 # Audio controls

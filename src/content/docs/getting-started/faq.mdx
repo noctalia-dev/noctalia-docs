@@ -2,7 +2,7 @@
 title: FAQ
 description: Frequently asked questions and common issues with Noctalia.
 sidebar:
-  order: 5
+  order: 6
 ---
 
 Find answers to common questions about Noctalia installation, configuration, and usage.
@@ -135,6 +135,27 @@ Common causes:
 1. **Check your theme settings** in the settings panel
 2. **Verify your display settings** - scaling and resolution can affect appearance
 3. **Update to the latest version** - UI improvements are frequently released
+
+</details>
+
+<details>
+<summary><strong>Why can't I unlock my lock screen??</strong></summary>
+
+openSUSE in particular does not provide the required /etc/pam.d/login.
+You must create an /etc/pam.d/login manually.
+Execute:
+```bash
+sudo tee /etc/pam.d/login <<'EOF'
+```
+And enter:
+```
+#%PAM-1.0
+auth       include      common-auth
+account    include      common-account
+password   include      common-password
+session    include      common-session
+EOF
+```
 
 </details>
 
