@@ -1,0 +1,178 @@
+---
+title: App Theming
+description: Learn how to theme your applications to match Noctalia's color scheme
+sidebar:
+  order: 5
+---
+
+Noctalia includes powerful theming capabilities that can automatically apply your chosen color scheme to various applications. Whether you're using colors from your wallpaper or a predefined scheme, Noctalia can keep your entire desktop consistent.
+
+## Built-in Application Support
+
+Noctalia comes with pre-configured templates for popular applications. Simply enable the ones you want to theme in **Settings → Color Scheme → Templates**.
+
+### Supported Applications
+
+#### Desktop Environments
+
+- **GTK 3/4** - Themes all GTK-based applications (GNOME apps, many Linux applications)
+- **Qt5ct/Qt6ct** - Themes Qt-based applications (KDE apps, many cross-platform apps)
+- **KColorScheme** - Native KDE Plasma color scheme support
+
+#### Terminals
+
+- **Kitty** - Fast, GPU-accelerated terminal emulator
+- **Foot** - Lightweight Wayland terminal
+- **Ghostty** - Modern terminal emulator
+
+#### Other Applications
+
+- **Fuzzel** - Application launcher
+- **Discord** - Discord clients like vesktop, equibop etc can all be themed
+- **Firefox (via Pywalfox)** - Browser theming through the Pywalfox extension
+
+:::tip[We may add new templates!]
+You should check the ColorScheme Tab from time to time in case we added new templates!
+:::
+
+## How to Enable Theming
+
+1. Open **Settings**
+2. Navigate to **Color Scheme** tab
+3. Scroll down to the **Templates** section
+4. Toggle on the applications you want to theme
+5. Your color scheme will be applied automatically
+
+## Color Sources
+
+Noctalia supports two ways to generate color schemes:
+
+### Wallpaper Colors
+
+When enabled, Noctalia uses **Matugen** to extract colors from your wallpaper and generate a Material You color scheme.
+
+- Automatically updates when you change wallpapers
+- Creates harmonious colors based on your wallpaper
+- Requires `matugen` package
+
+### Predefined Schemes
+
+Choose from carefully crafted color schemes:
+
+- **Noctalia (default)** - The original Noctalia color palette
+- **Noctalia (legacy)** - Classic Noctalia colors
+- **Tokyo Night** - Popular dark theme
+and many more!
+
+:::note
+Predefined schemes work without Matugen and provide consistent colors regardless of your wallpaper (except for custom templates).
+:::
+
+## Advanced: Custom Templates
+
+For advanced users who want to theme additional applications, Noctalia supports custom Matugen templates.
+
+### Enabling Custom Templates
+
+1. Go to **Settings → Color Scheme → Templates**
+2. Scroll to **Misc** section
+3. Enable **User templates**
+4. A template file will be created at `~/.config/noctalia/user-templates.toml`
+
+### Creating Your Own Templates
+
+Edit `~/.config/noctalia/user-templates.toml` to add your custom templates:
+
+```toml
+[config]
+
+# Example: Theme Alacritty terminal
+[templates.alacritty]
+input_path = "~/.config/noctalia/templates/alacritty.toml"
+output_path = "~/.config/alacritty/colors.toml"
+post_hook = "echo 'Alacritty theme updated'"
+```
+
+### Template File Format
+
+Your template files use Matugen's template syntax with color placeholders:
+
+```css
+/* Example CSS template */
+.my-app {
+  background: {{colors.surface.default.hex}};
+  color: {{colors.on_surface.default.hex}};
+  accent: {{colors.primary.default.hex}};
+}
+```
+
+### Available Color Variables
+
+Matugen generates a full Material Design 3 color palette with many color roles like `primary`, `secondary`, `tertiary`, `surface`, `error`, and more.
+
+For a complete list of all available colors and formats, see the [Matugen Configuration Documentation](https://github.com/InioX/matugen/wiki/Configuration#colors).
+
+You can also look at Noctalia's built-in templates in `Assets/MatugenTemplates/` for practical examples.
+
+:::tip[Color Format]
+Use `.hex` for colors with `#` (e.g., `#FF5733`) or `.hex_stripped` for colors without `#` (e.g., `FF5733`).
+:::
+
+### Template Workflow
+
+1. **Create template file** anywhere you like (e.g., `~/.config/matugen/templates/myapp.css` or `~/myapp-template.css`)
+2. **Add color placeholders** using the syntax above
+3. **Configure in user-templates.toml** with input/output paths
+4. **Optional: Add post_hook** to reload the app after theming
+5. **Change your color scheme** and the template will be processed automatically
+
+### Post Hooks
+
+Post hooks run commands after generating a theme, useful for reloading applications:
+
+```toml
+[templates.neovim]
+input_path = "~/.config/matugen/templates/neovim-colors.lua"
+output_path = "~/.config/nvim/colors/noctalia.lua"
+post_hook = "echo 'Neovim theme updated - restart Neovim to apply'"
+```
+
+## Troubleshooting
+
+### Theme Not Applying
+
+- **Restart the application** - Some apps need a restart to load new themes
+- **Verify template syntax** - Invalid syntax will prevent theme generation
+
+### Colors Look Wrong
+
+- **Light/Dark mode** - Check if your color scheme setting matches your preference
+- **Matugen not installed** - Wallpaper colors require `matugen` package
+- **Application limitations** - Some apps may not support all color properties
+
+### Custom Templates Not Working
+
+- **File paths** - Use absolute paths or `~` for home directory
+- **TOML syntax** - Validate your `user-templates.toml` syntax
+- **Check logs** - Run Noctalia from terminal to see error messages
+
+## Manual Theme Application
+
+If you need to manually trigger theme regeneration:
+
+1. Change any color scheme setting in Noctalia
+2. Toggle between wallpaper colors and predefined schemes
+3. Switch dark/light mode
+
+## Getting Help
+
+For theming support:
+
+- Check [Matugen documentation](https://github.com/InioX/matugen) for template syntax
+- Visit our [GitHub Issues](https://github.com/noctalia-dev/noctalia-shell/issues)
+- Join our [Discord](https://discord.noctalia.dev) community
+
+:::tip[Share Your Templates]
+Created a great template? Share it with the community on our Discord or maybe even create a pull request and it might just get added to Noctalia!
+:::
+
