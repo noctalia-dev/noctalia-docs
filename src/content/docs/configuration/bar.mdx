@@ -183,6 +183,75 @@ Displays the laptop brightness percentage.
 |-------------|-------------|-----------------------------------------------|----------------------------------------------------------------------------|
 | displayMode | `"onhover"` | `"onhover"` , `"alwaysShow"` , `"alwaysHide"` | Whether to always show the laptop brightness percentage, or only on hover. |
 
+### Clock
+
+Displays time, date or other time related information of your choosing, with a calender upon left click.
+
+```json
+{
+  "id": "Clock",
+  "usePrimaryColor": true,
+  "useCustomFont": false,
+  "customFont": "",
+  "formatHorizontal": "HH:mm ddd, MMM dd",
+  "formatVertical": "HH mm - dd MM"
+}
+```
+
+| Settings         | Default               | Options                          | Description                                                  |
+|------------------|-----------------------|----------------------------------|--------------------------------------------------------------|
+| usePrimaryColor  | true                  | boolean                          | When enabled, this applies the primary color for emphasis.   |
+| useCustomFont    | false                 | boolean                          | Override the default font selection with a custom font for the clock. |
+| customFont       | `""`                  | String of a installed font name. | Select a custom font for the clock display. |
+| formatHorizontal | `"HH:mm ddd, MMM dd"` | String of QTime formatting. See note on QTime formatting | Format the Clock for when the bar is horizontal. |
+| formatVertical   | `"HH mm - dd MM"`     | String of QTime formatting. See note on QTime formatting | Format the Clock for when the bar is vertical.   |
+
+**Note on QTime formatting:**
+Clock uses the [QTime formatting](https://doc.qt.io/qt-6/qtime.html#toString-1)
+
+### ControlCenter
+
+Adds a icon-button to open the ControlCenter menu.
+
+```json
+{
+  "id": "ControlCenter",
+  "useDistroLogo": false,
+  "icon": "noctalia",
+  "customIconPath": ""
+}
+```
+
+| Settings         | Default               | Options             | Description                                         |
+|------------------|-----------------------|---------------------|-----------------------------------------------------|
+| useDistroLogo    | false                 | boolean             | When enabled, the distro logo will be used as icon. |
+| icon             | `"noctalia"`          | String of icon name | Choose a icon by name.                              |
+| customIconPath   | `""`                  | String of icon path | Manually link to a custom icon.                     |
+
+### CustomButton
+
+Adds a custom button that can be configured to execute commands and display command returns.
+
+```json
+{
+  "id": "CustomButton",
+  "icon": "heart",
+  "leftClickExec": "",
+  "rightClickExec": "",
+  "middleClickExec": "",
+  "textCommand": "",
+  "textIntervalMs": 3000
+}
+```
+
+| Settings        | Default   | Options                        | Description                                                 |
+|-----------------|-----------|--------------------------------|-------------------------------------------------------------|
+| icon            | `"heart"` | String of icon name            | Choose a icon to by name.                                   |
+| leftClickExec   | `""`      | String of command              | Command to execute when the button is left-clicked.         |
+| rightClickExec  | `""`      | String of command              | Command to execute when the button is right-clicked.        |
+| middleClickExec | `""`      | String of command              | Command to execute when the button is right-clicked.        |
+| textCommand     | `""`      | String of command              | The return of this command will be displayed by the widget. |
+| textIntervalMs  | 3000      | Integer values in milliseconds | The time delay between executing the *textCommand* command. |
 
 ### DarkMode
 
@@ -222,6 +291,33 @@ Adds a button to toggle between keyboard layouts.
 | Settings    | Default     | Options                                      | Description                                                          |
 |-------------|-------------|----------------------------------------------|----------------------------------------------------------------------|
 | displayMode | `"onhover"` | `"onhover"` , `"forceOpen"` , `"alwaysHide"` | Whether to always show the active keyboard layout, or only on hover. |
+
+### MediaMini
+
+Display a media-player widget with animations.
+
+```json
+{
+  "id": "MediaMini",
+  "hideMode": "hidden",
+  "scrollingMode": "hover",
+  "maxWidth": 145,
+  "useFixedWidth": false,
+  "showAlbumArt": false,
+  "showVisualizer": false,
+  "visualizerType": "linear"
+}
+```
+
+| Settings       | Default               | Options                            | Description                                                  |
+|----------------|-----------------------|------------------------------------|--------------------------------------------------------------|
+| hideMode       | `"hidden"` | `"visible"` , `"hidden"` , `"transparent"` | Whether to always the show widget, hide or make it transparent when empty. |
+| scrollingMode  | `"hover"`  | `"never"` , `"always"` , `"hover"` | Control when text scrolling is enabled for long track titles. |
+| maxWidth       | 145        | Integer values in pixels | Sets the maximum horizontal size of the widget. The widget will shrink to fit shorter content. |
+| useFixedWidth  | false      | boolean | When enabled, the widget will always use the maximum width instead of dynamically adjusting to content. |
+| showAlbumArt   | false      | boolean | Display the album artwork for the currently playing track. |
+| showVisualizer | false      | boolean  | Display an audio visualizer when music is playing. |
+| visualizerType | `"linear"` | `"linear"` , `"mirrored"` , `"wave"` | Choose the style of audio visualizer to display. |
 
 ### Microphone
 
@@ -361,7 +457,7 @@ Show and access open applications.
 |----------------------|----------|---------|----------------------------------------------------------|
 | onlySameOutput       | true     | boolean | Show only apps from the output where the bar is located. |
 | onlyActiveWorkspaces | true     | boolean | Show only apps from active workspaces.                   |
-| hideMode             | "hidden" | `"visible"` , `"hidden"` , `"transparent"` | Whether to always the show widget, hide or make it transparent when empty. |
+| hideMode             | `"hidden"` | `"visible"` , `"hidden"` , `"transparent"` | Whether to always the show widget, hide or make it transparent when empty. |
 | colorizeIcons        | false    | boolean | Apply theme colors to taskbar icons.                     |
 
 ### Tray
@@ -450,5 +546,3 @@ View and access workspaces.
 |----------------|-----------|---------|----------------------------------------------------------|
 | labelMode      | `"index"` | `"none"` , `"name"` , `"index"` | Choose how workspace labels are displayed. |
 | hideUnoccupied | false     | boolean | Whether to display workspaces without windows. |
-
-
