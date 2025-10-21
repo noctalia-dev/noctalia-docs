@@ -1,6 +1,6 @@
 ---
 title: Bar and bar widgets
-description: Configurating the Bar.
+description: Configuration of the Bar.
 sidebar:
   order: 2
 ---
@@ -35,7 +35,7 @@ sidebar:
   }
 ```
 | Settings           | Default     | Options                                                | Description                                              |
-|--------------------|-------------|--------------------------------------------------------|----------------------------------------------------------| 
+|--------------------|-------------|--------------------------------------------------------|----------------------------------------------------------|
 | position           | `"top"`     | `"bottom"` , `"top"` , `"right"` , `"left"`            | Choose where to place the bar on the screen.             |
 | backgroundOpacity  | `1`         | 0.00 to 1.00 with 0.01 steps                           | Adjust the background opacity of the bar.                |
 | monitors           | blank, therefore all monitors | See note on monitors | Show bar on specific monitors. Defaults to all if none are chosen. |
@@ -61,7 +61,7 @@ niri msg outputs
 ## Widgets
 
 ### Default widgets
-All widgets can be placed in either `"left"`, `center` or `"right"`.
+All widgets can be placed in either `"left"`, `"center"` or `"right"`.
 
 <details>
 <summary>Expand this section to see the defaults widgets</summary>
@@ -151,10 +151,10 @@ Displays battery percentage.
 }
 ```
 
-| Settings         | Default        | Options                            | Description                                                  |
-|------------------|----------------|------------------------------------|--------------------------------------------------------------| 
-| displayMode      | `"alwaysHide"` | `"alwaysShow"` , `"alwaysHide"`    | Whether to always show battery percentage, or only on hover. |
-| warningThreshold | `30`           | Integer values between 0 to 100    | At what percentate to warn of low battery.                   |
+| Settings         | Default     | Options                                       | Description                                                  |
+|------------------|-------------|-----------------------------------------------|--------------------------------------------------------------|
+| displayMode      | `"onhover"` | `"onhover"` , `"alwaysShow"` , `"alwaysHide"` | Whether to always show battery percentage, or only on hover. |
+| warningThreshold | `30`        | Integer values between 0 to 100               | At what percentage to warn of low battery.                   |
 
 ### Bluetooth
 
@@ -167,3 +167,288 @@ Access Bluetooth popup for devices and adapter.
 ```
 
 No further settings.
+
+### Brightness
+
+Displays the laptop brightness percentage.
+
+```json
+{
+  "id": "Brightness",
+  "displayMode": "onhover"
+}
+```
+
+| Settings    | Default     | Options                                       | Description                                                                |
+|-------------|-------------|-----------------------------------------------|----------------------------------------------------------------------------|
+| displayMode | `"onhover"` | `"onhover"` , `"alwaysShow"` , `"alwaysHide"` | Whether to always show the laptop brightness percentage, or only on hover. |
+
+
+### DarkMode
+
+Adds a button to toggle dark mode.
+
+```json
+{
+  "id": "DarkMode"
+}
+```
+
+No further settings.
+
+### KeepAwake
+
+Adds a button to toggle keep awake mode.
+
+```json
+{
+  "id": "KeepAwake"
+}
+```
+
+No further settings.
+
+### KeyboardLayout
+
+Adds a button to toggle between keyboard layouts.
+
+```json
+{
+  "id": "KeyboardLayout",
+  "displayMode": "onhover"
+}
+```
+
+| Settings    | Default     | Options                                      | Description                                                          |
+|-------------|-------------|----------------------------------------------|----------------------------------------------------------------------|
+| displayMode | `"onhover"` | `"onhover"` , `"forceOpen"` , `"alwaysHide"` | Whether to always show the active keyboard layout, or only on hover. |
+
+### Microphone
+
+Mute or control the volume of the microphone.
+
+```json
+{
+  "id": "Microphone",
+  "displayMode": "onhover"
+}
+```
+
+| Settings    | Default     | Options                                       | Description                                                                |
+|-------------|-------------|-----------------------------------------------|----------------------------------------------------------------------------|
+| displayMode | `"onhover"` | `"onhover"` , `"alwaysShow"` , `"alwaysHide"` | Whether to always show the microphone volume percentage, or only on hover. |
+
+### NightLight
+
+Adds a button to toggle Night Light mode.
+
+```json
+{
+  "id": "NightLight"
+}
+```
+
+No further settings.
+
+### NotificationHistory
+
+Adds a button to show notifications or toggle *Do not disturb* mode.
+
+```json
+{
+  "id": "NotificationHistory",
+  "showUnreadBadge": true,
+  "hideWhenZero": true
+}
+```
+
+| Settings        | Default | Options | Description                                                         |
+|-----------------|---------|---------|---------------------------------------------------------------------|
+| showUnreadBadge | true    | boolean | Display a badge showing the number of unread notifications.         |
+| hideWhenZero    | true    | boolean | Hide the notification badge when there are no unread notifications. |
+
+### PowerProfile
+
+Adds a button to switch between Power-profiles.
+
+```json
+{
+  "id": "PowerProfile"
+}
+```
+
+No further settings.
+
+### ScreenRecorder
+
+Adds a button to start and stop screen recordings.
+
+```json
+{
+  "id": "ScreenRecorder"
+}
+```
+
+No further settings.
+
+### SessionMenu
+
+Adds a button to open the sessions menu.
+
+```json
+{
+  "id": "SessionMenu"
+}
+```
+
+No further settings.
+
+### Spacer
+
+Mute or control the volume of the microphone.
+
+```json
+{
+  "id": "Spacer",
+  "width": 20
+}
+```
+
+| Settings | Default | Options                 | Description              |
+|----------|---------|-------------------------|--------------------------|
+| width    | 20      | Integer value in pixels | Spacing width in pixels. |
+
+### SystemMonitor
+
+Show information about the system, like CPU, RAM and disk usage, as well as CPU temperature.
+
+```json
+{
+  "id": "SystemMonitor",
+  "showCpuUsage": true,
+  "showCpuTemp": true,
+  "showMemoryUsage": true,
+  "showMemoryAsPercent": false,
+  "showNetworkStats": false,
+  "showDiskUsage": false
+}
+```
+
+| Settings            | Default | Options | Description                                                   |
+|---------------------|---------|---------|---------------------------------------------------------------|
+| showCpuUsage        | true    | boolean | Display current CPU usage percentage.                         |
+| showCpuTemp         | true    | boolean | Show CPU temperature readings if available.                   |
+| showMemoryUsage     | true    | boolean | Display current RAM usage information.                        |
+| showMemoryAsPercent | false   | boolean | Show memory usage as a percentage instead of absolute values. |
+| showNetworkStats    | false   | boolean | Display network upload and download speeds.                   |
+| showDiskUsage       | false   | boolean |Show disk space usage information.                             |
+
+### Taskbar
+
+Show and access open applications.
+
+```json
+{
+  "id": "Taskbar",
+  "onlySameOutput": true,
+  "onlyActiveWorkspaces": true,
+  "hideMode": "hidden",
+  "colorizeIcons": false
+}
+```
+
+| Settings             | Default  | Options | Description                                              |
+|----------------------|----------|---------|----------------------------------------------------------|
+| onlySameOutput       | true     | boolean | Show only apps from the output where the bar is located. |
+| onlyActiveWorkspaces | true     | boolean | Show only apps from active workspaces.                   |
+| hideMode             | "hidden" | `"visible"` , `"hidden"` , `"transparent"` | Whether to always the show widget, hide or make it transparent when empty. |
+| colorizeIcons        | false    | boolean | Apply theme colors to taskbar icons.                     |
+
+### Tray
+
+Show and access open applications.
+
+```json
+{
+  "id": "Tray",
+  "blacklist": [],
+  "colorizeIcons": false
+}
+```
+
+| Settings      | Default  | Options | Description                                              |
+|---------------|----------|---------|----------------------------------------------------------|
+| blacklist     | blank, therefore all tray icons are shown | See note on applications | Hide tray listed tray icons. Exclusion rules supports wildcards (*). |
+| colorizeIcons | false    | boolean | Apply theme colors to tray icons.                    |
+
+**Note on applications:**
+If you have a tray icon you want to hide, hover over the icon in the icon tray, note down the name, and input it as a string in the `"blacklist"` list. Example for hiding the Remmina tray icon:
+
+```json
+{
+  "id": "Tray",
+  "blacklist": [ "remmina-icon" ],
+  "colorizeIcons": false
+}
+```
+
+### Volume
+
+Mute or control the volume of the active audio device.
+
+```json
+{
+  "id": "Volume",
+  "displayMode": "onhover"
+}
+```
+
+| Settings    | Default     | Options                                       | Description                                                                |
+|-------------|-------------|-----------------------------------------------|----------------------------------------------------------------------------|
+| displayMode | `"onhover"` | `"onhover"` , `"alwaysShow"` , `"alwaysHide"` | Whether to always show the volume percentage, or only on hover. |
+
+### WiFi
+
+Adds a button to access the WiFi menu.
+
+```json
+{
+  "id": "WiFi",
+  "displayMode": "onhover"
+}
+```
+
+| Settings    | Default     | Options                                       | Description                                                                |
+|-------------|-------------|-----------------------------------------------|----------------------------------------------------------------------------|
+| displayMode | `"onhover"` | `"onhover"` , `"alwaysShow"` , `"alwaysHide"` | Whether to always show the SSID of the connected WiFi network, only on hover or to always hide. |
+
+### WallpaperSelector
+
+Adds a button to open the Wallpaper manager.
+
+```json
+{
+  "id": "WallpaperSelector"
+}
+```
+
+No further settings.
+
+### Workspace
+
+View and access workspaces.
+
+```json
+{
+  "id": "Workspace",
+  "labelMode": "index",
+  "hideUnoccupied": false
+}
+```
+
+| Settings       | Default   | Options | Description                                              |
+|----------------|-----------|---------|----------------------------------------------------------|
+| labelMode      | `"index"` | `"none"` , `"name"` , `"index"` | Choose how workspace labels are displayed. |
+| hideUnoccupied | false     | boolean | Whether to display workspaces without windows. |
+
+
