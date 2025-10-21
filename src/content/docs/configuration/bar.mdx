@@ -185,7 +185,7 @@ Displays the laptop brightness percentage.
 
 ### Clock
 
-Displays time, date or other time related information of your choosing, with a calender upon left click.
+Displays time, date or other time related information of your choosing, with a calendar upon left click.
 
 ```json
 {
@@ -211,7 +211,7 @@ Clock uses the [QTime formatting](https://doc.qt.io/qt-6/qtime.html#toString-1)
 
 ### ControlCenter
 
-Adds a icon-button to open the ControlCenter menu.
+Adds an icon-button to open the ControlCenter menu.
 
 ```json
 {
@@ -225,7 +225,7 @@ Adds a icon-button to open the ControlCenter menu.
 | Settings         | Default               | Options             | Description                                         |
 |------------------|-----------------------|---------------------|-----------------------------------------------------|
 | useDistroLogo    | false                 | boolean             | When enabled, the distro logo will be used as icon. |
-| icon             | `"noctalia"`          | String of icon name | Choose a icon by name.                              |
+| icon             | `"noctalia"`          | String of icon name | Choose an icon by name.                              |
 | customIconPath   | `""`                  | String of icon path | Manually link to a custom icon.                     |
 
 ### CustomButton
@@ -246,10 +246,10 @@ Adds a custom button that can be configured to execute commands and display comm
 
 | Settings        | Default   | Options                        | Description                                                 |
 |-----------------|-----------|--------------------------------|-------------------------------------------------------------|
-| icon            | `"heart"` | String of icon name            | Choose a icon to by name.                                   |
+| icon            | `"heart"` | String of icon name            | Choose a icon by name.                                   |
 | leftClickExec   | `""`      | String of command              | Command to execute when the button is left-clicked.         |
 | rightClickExec  | `""`      | String of command              | Command to execute when the button is right-clicked.        |
-| middleClickExec | `""`      | String of command              | Command to execute when the button is right-clicked.        |
+| middleClickExec | `""`      | String of command              | Command to execute when the button is middle-clicked.        |
 | textCommand     | `""`      | String of command              | The return of this command will be displayed by the widget. |
 | textIntervalMs  | 3000      | Integer values in milliseconds | The time delay between executing the *textCommand* command. |
 
@@ -311,7 +311,7 @@ Display a media-player widget with animations.
 
 | Settings       | Default               | Options                            | Description                                                  |
 |----------------|-----------------------|------------------------------------|--------------------------------------------------------------|
-| hideMode       | `"hidden"` | `"visible"` , `"hidden"` , `"transparent"` | Whether to always the show widget, hide or make it transparent when empty. |
+| hideMode       | `"hidden"` | `"visible"` , `"hidden"` , `"transparent"` | Whether to always show the widget, hide it, or make it transparent when empty. |
 | scrollingMode  | `"hover"`  | `"never"` , `"always"` , `"hover"` | Control when text scrolling is enabled for long track titles. |
 | maxWidth       | 145        | Integer values in pixels | Sets the maximum horizontal size of the widget. The widget will shrink to fit shorter content. |
 | useFixedWidth  | false      | boolean | When enabled, the widget will always use the maximum width instead of dynamically adjusting to content. |
@@ -401,7 +401,7 @@ No further settings.
 
 ### Spacer
 
-Mute or control the volume of the microphone.
+Adds a spacer.
 
 ```json
 {
@@ -437,7 +437,7 @@ Show information about the system, like CPU, RAM and disk usage, as well as CPU 
 | showMemoryUsage     | true    | boolean | Display current RAM usage information.                        |
 | showMemoryAsPercent | false   | boolean | Show memory usage as a percentage instead of absolute values. |
 | showNetworkStats    | false   | boolean | Display network upload and download speeds.                   |
-| showDiskUsage       | false   | boolean |Show disk space usage information.                             |
+| showDiskUsage       | false   | boolean | Show disk space usage information.                             |
 
 ### Taskbar
 
@@ -457,7 +457,7 @@ Show and access open applications.
 |----------------------|----------|---------|----------------------------------------------------------|
 | onlySameOutput       | true     | boolean | Show only apps from the output where the bar is located. |
 | onlyActiveWorkspaces | true     | boolean | Show only apps from active workspaces.                   |
-| hideMode             | `"hidden"` | `"visible"` , `"hidden"` , `"transparent"` | Whether to always the show widget, hide or make it transparent when empty. |
+| hideMode             | `"hidden"` | `"visible"` , `"hidden"` , `"transparent"` | Whether to always show the widget, hide it, or make it transparent when empty. |
 | colorizeIcons        | false    | boolean | Apply theme colors to taskbar icons.                     |
 
 ### Tray
@@ -474,7 +474,7 @@ Show and access open applications.
 
 | Settings      | Default  | Options | Description                                              |
 |---------------|----------|---------|----------------------------------------------------------|
-| blacklist     | blank, therefore all tray icons are shown | See note on applications | Hide tray listed tray icons. Exclusion rules supports wildcards (*). |
+| blacklist     | blank, therefore all tray icons are shown | See note on applications | Hide listed tray icons. Exclusion rules support wildcards (*). |
 | colorizeIcons | false    | boolean | Apply theme colors to tray icons.                    |
 
 **Note on applications:**
