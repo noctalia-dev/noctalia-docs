@@ -144,7 +144,7 @@ niri msg -j outputs | jq 'keys'
 
 Add these binds to your `~/.config/niri/config.kdl`:
 
-```kdl
+```ini
 binds {
     // Core Noctalia binds
     Mod+Space { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
@@ -174,7 +174,7 @@ binds {
 
 Add these binds to your `hyprland.conf`:
 
-```bash
+```ini
 # Core Noctalia binds
 bind = SUPER, SPACE, exec, qs -c noctalia-shell ipc call launcher toggle
 bind = SUPER, S, exec, qs -c noctalia-shell ipc call controlCenter toggle

@@ -9,12 +9,12 @@ sidebar:
 This is the recommended method for launching noctalia-shell, as it integrates with your window manager.
 
 For the *Niri* compositor, add the following line to the end of your configuration file, typically located at `~/.config/niri/config.kdl`
-```kdl
+```ini
 spawn-at-startup "qs" "-c" "noctalia-shell"
 ```
 
 For the *Hyprland* compositor, append this line to your configuration file, typically located at `~/.config/hypr/hyprland.conf`
-```conf
+```ini
 exec-once = qs -c noctalia-shell
 ```
 
