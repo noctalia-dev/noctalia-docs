@@ -80,6 +80,15 @@ Noctalia provides extensive IPC (Inter-Process Communication) support, allowing 
 | **Balanced** | `qs -c noctalia-shell ipc call batteryManager set balanced` | Set Balanced mode |
 | **Lifespan** | `qs -c noctalia-shell ipc call batteryManager set lifespan` | Set Lifespan mode |
 
+#### Power Profile Management
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Cycle power profiles** | `qs -c noctalia-shell ipc call powerProfile cycle` | Switch between power profiles |
+| **Power Saver* | `qs -c noctalia-shell ipc call powerProfile set powersaver` | Set Power Saver mode |
+| **Balanced** | `qs -c noctalia-shell ipc call powerProfile set balanced` | Set Balanced mode |
+| **Performance** | `qs -c noctalia-shell ipc call powerProfile set performance` | Set Performance mode |
+
 ### Security & Privacy
 
 | Function | Command | Description |
