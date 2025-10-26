@@ -7,6 +7,10 @@ sidebar:
 
 **Customize the general look and feel of Noctalia shell.**
 
+### General
+
+These are mostly the settings found in the ***User interface*** tap in the settings window.
+
 ```json
 "general": {
   "avatarImage": "",
@@ -26,7 +30,7 @@ sidebar:
 
 | Settings                | Default   | Options                          | Description                                                 |
 |-------------------------|-----------|----------------------------------|-------------------------------------------------------------|
-| avatarImage             | `""`      | string of the avatar image path  | Your profile picture that appears throughout Noctalia's interface. |
+| avatarImage             | `""`      | string of the avatar image path  | Your profile picture that appears throughout Noctalia interface. |
 | dimDesktop              | true      | boolean                          | Dim the desktop when panels or menus are open.              |
 | showScreenCorners       | false     | boolean                          | Display rounded corners on the edge of the screen.          |
 | forceBlackScreenCorners | false     | boolean                          | Use solid black instead of the bar background color.        |
@@ -53,3 +57,27 @@ To manually configure the language, set the value to one of the supported langua
 - Chinese (Simplified):    `"zh-CN"`
 
 New languages can be found and added in [Translations](https://github.com/noctalia-dev/noctalia-shell/tree/main/Assets/Translations) directory of the Noctalia shell Github repository.
+
+### UI
+
+These are mostly the settings found in the ***General*** tap in the settings window.
+
+```json
+"ui": {
+  "fontDefault": "Roboto",
+  "fontFixed": "DejaVu Sans Mono",
+  "fontDefaultScale": 1,
+  "fontFixedScale": 1,
+  "tooltipsEnabled": true,
+  "panelsOverlayLayer": true
+}
+```
+
+| Settings                | Default              | Options                                  | Description                                           |
+|-------------------------|----------------------|------------------------------------------|-------------------------------------------------------|
+| fontDefault             | `"Roboto"`           | String of the name of an installed font. | Main font used throughout the Noctalia interface.     |
+| fontFixed               | `"DejaVu Sans Mono"` | String of the name of an installed font. | Monospaced font used for numbers and stats display.   |
+| fontDefaultScale        | 1.00                 | 0.75 to 1.25 with 0.01 steps             | Increase or decrease the size of the standard text.   |
+| fontFixedScale          | 1.00                 | 0.75 to 1.25 with 0.01 steps             | Increase or decrease the size of the monospaced text. |
+| tooltipsEnabled         | true                 | boolean                                  | Enable or disable tooltips throughout the interface.  |
+| panelsOverlayLayer      | true                 | boolean                                  | Panels will appear above fullscreen windows.          |
