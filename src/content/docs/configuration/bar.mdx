@@ -23,13 +23,13 @@ sidebar:
     "marginHorizontal": 0.25,
     "widgets": {
       "left": [
-        < Widgets >
+        // Widgets
       ],
       "center": [
-        < Widgets >
+        // Widgets
       ],
       "right": [
-        < Widgets >
+        // Widgets
       ]
     }
   }
@@ -46,6 +46,7 @@ sidebar:
 | marginHorizontal   | 0.25        | 0.00 to 1.00 with 0.01 steps                           | Adjust the horizontal margin around the floating bar.    |
 
 **Note on monitors:**
+
 You can determine your monitor identifiers from:
 
 Hyprland:
@@ -130,14 +131,13 @@ Displays the title and icon of the current active window.
 }
 ```
 
-| Settings      | Default    | Options                                                | Description                                               |
-|---------------|------------|--------------------------------------------------------|-----------------------------------------------------------|
-| showIcon      | true       | boolean                                                | Show the icon of the active window                        |
-| hideMode      | `"hidden"` | `"visible"` , `"hidden"` , `"transparent"`             | "visible": Always Visible, "hidden": Hide When Empty, "transparent": Transparent When Empty. |
-| scrollingMode | `"hover"`  | `"visible"` , `"hidden"` , `"transparent"` , `"hover"` | When should long titles scroll to show more of the title. |
-| width         | 145        | Integer value in pixels                                | Controls the horizontal size of the widget.               |
-| colorizeIcons | false      | boolean                                                | Show original window icon if false or colorize (match theme) if true. |
-
+| Settings      | Default    | Options                                    | Description                                               |
+|---------------|------------|--------------------------------------------|-----------------------------------------------------------|
+| showIcon      | true       | boolean                                    | Show the icon of the active window                        |
+| hideMode      | `"hidden"` | `"visible"` , `"hidden"` , `"transparent"` | "visible": Always Visible, "hidden": Hide When Empty, "transparent": Transparent When Empty. |
+| scrollingMode | `"hover"`  | `"never"` , `"always"` , `"hover"`         | When should long titles scroll to show more of the title. |
+| width         | 145        | Integer value in pixels                    | Controls the horizontal size of the widget.               |
+| colorizeIcons | false      | boolean                                    | Show original window icon if false or colorize (match theme) if true. |
 
 ### Battery
 
@@ -207,6 +207,7 @@ Displays time, date or other time related information of your choosing, with a c
 | formatVertical   | `"HH mm - dd MM"`     | String of QTime formatting. See note on QTime formatting | Format the Clock for when the bar is vertical.   |
 
 **Note on QTime formatting:**
+
 Clock uses the [QTime formatting](https://doc.qt.io/qt-6/qtime.html#toString-1)
 
 ### ControlCenter
@@ -478,6 +479,7 @@ Show and access open applications.
 | colorizeIcons | false    | boolean | Apply theme colors to tray icons.                    |
 
 **Note on applications:**
+
 If you have a tray icon you want to hide, hover over the icon in the icon tray, note down the name, and input it as a string in the `"blacklist"` list. Example for hiding the Remmina tray icon:
 
 ```json
