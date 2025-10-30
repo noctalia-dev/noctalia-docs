@@ -1,0 +1,137 @@
+---
+title: ControlCenter
+description: Configure the ControlCenter.
+sidebar:
+  order: 3
+---
+
+**Configure the ControlCenter panel positioning and behavior.**
+
+```json
+"controlCenter": {
+  "position": "close_to_bar_button",
+  "shortcuts": {
+    "left": [
+      // Shortcut-Widgets
+    ],
+    "right": [
+      // Shortcut-Widgets
+    ]
+  },
+  "cards": [
+    {
+      "enabled": true,
+      "id": "profile-card"
+    },
+    {
+      "enabled": true,
+      "id": "shortcuts-card"
+    },
+    {
+      "enabled": true,
+      "id": "audio-card"
+    },
+    {
+      "enabled": true,
+      "id": "weather-card"
+    },
+    {
+      "enabled": true,
+      "id": "media-sysmon-card"
+    }
+  ]
+}
+```
+
+| Settings  | Default                 | Options                                                | Description                                              |
+|-----------|-------------------------|--------------------------------------------------------|----------------------------------------------------------|
+| position  | `"close_to_bar_button"` | `"top_left"` , `"top_center"` , `"top_right"` , `"center"` , `"bottom_left"` , `"bottom_center"` , `"bottom_right"` , `"close_to_bar_button"` | Specifies the position where the ControlCenter panel will appear when opened. |
+
+All *Shortcut-Widgets* can be placed in either `"left"` or `"right"`. Both *Shortcut-Widgets* are displayed in the order they appear in the configuration.
+
+## Widgets
+
+The Shortcut-Widgets are small buttons that can launch managers like WiFi, Bluetooth or the WallpaperSelector, or directly toggle functions like NightLight, KeepAwake or ScreenRecorder.
+
+These are the available widgets:
+
+- `"WiFi"`: Launch the WiFi menu.
+- `"Bluetooth"`: Launch the Bluetooth menu.
+- `"ScreenRecorder"`: Start screen recording.
+- `"WallpaperSelector"`: Launch the WallpaperSelector menu.
+- `"Notifications"`: View notifications.
+- `"PowerProfile"`: Cycle between power profiles.
+- `"KeepAwake"`: Toggle KeepAwake mode.
+- `"NightLight"`: Cycle between *Forced Nightlight mode*, *NightLight disabled*, and *automatic Nightlight*.
+
+<details>
+<summary>Expand this section to see the defaults shortcuts</summary>
+
+```json
+"shortcuts": {
+  "left": [
+    {
+      "id": "WiFi"
+    },
+    {
+      "id": "Bluetooth"
+    },
+    {
+      "id": "ScreenRecorder"
+    },
+    {
+      "id": "WallpaperSelector"
+    }
+  ],
+  "right": [
+    {
+      "id": "Notifications"
+    },
+    {
+      "id": "PowerProfile"
+    },
+    {
+      "id": "KeepAwake"
+    },
+    {
+      "id": "NightLight"
+    }
+  ]
+}
+```
+</details>
+
+## Cards
+
+Cards can display system information such as hardware usage and temperature, provide controls for active media playback, show the local weather, and contain the shortcut widgets panel.
+
+**Note! The `"profile-card"` must be enabled!**
+
+**Also note: If you intend to use shortcuts, you must have enabled the `"shortcuts-card"`.**
+
+*Cards* are displayed in the order they appear in the configuration. These are the default *Cards* and their locations:
+
+```json
+"cards": [
+  {
+    "enabled": true,
+    "id": "profile-card"
+  },
+  {
+    "enabled": true,
+    "id": "shortcuts-card"
+  },
+  {
+    "enabled": true,
+    "id": "audio-card"
+  },
+  {
+    "enabled": true,
+    "id": "weather-card"
+  },
+  {
+    "enabled": true,
+    "id": "media-sysmon-card"
+  }
+]
+```
