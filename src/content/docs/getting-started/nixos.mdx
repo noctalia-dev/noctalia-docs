@@ -321,7 +321,20 @@ With the [Niri flake](https://github.com/sodiboo/niri-flake), you can then spawn
 
 ### Running with systemd {#systemd-service}
 
-To setup a systemd service, import the Noctalia NixOS modules and enable the service:
+You can setup systemd service via NixOS module or Home Manager module. If you [configure Noctalia shell with home-manager](#config-with-home-manager), then Home Manager module is a better choice.
+and it's best not to enable systemd service in both modules at the same time, as names of two systemd services are the same; it's unpredictable which one will run (usually, it's systemd service in Home Manager module).
+
+:::caution
+The systemd service is currently **experimental**:
+- you may experience weird issues when rebuilding your system
+- We haven't fully tested newer features on **Hyprland**
+
+Please send us feedback on the [#nixos channel](https://discord.com/channels/1401598189823590460/1418903722616160349) on Discord or [raise an issue](https://github.com/noctalia-dev/noctalia-shell/issues) if you encounter issues.
+:::
+
+#### NixOS module
+
+Import the Noctalia NixOS modules and enable the service:
 
 ```nix
 # noctalia.nix
@@ -352,12 +365,31 @@ If you have some custom target, you can configure it with the `target` option:
 ```
 This target depends on how you configure your hyperland session systemd service.
 
-:::caution
-The systemd service is currently **experimental**:
-- you may experience weird issues when rebuilding your system
-- We haven't fully tested newer features on **Hyprland**
+#### Home Manager module
 
-Please send us feedback on the [#nixos channel](https://discord.com/channels/1401598189823590460/1418903722616160349) on Discord or [raise an issue](https://github.com/noctalia-dev/noctalia-shell/issues) if you encounter issues.
+Import the Noctalia Home Manager modules and enable the service:
+
+```nix
+{ pkgs, inputs, ... }:
+{
+  home-manager.users.drfoobar = {
+    # import the home manager module
+    imports = [
+      inputs.noctalia.homeModules.default
+    ];
+
+    # enable the systemd service
+    programs.noctalia-shell.systemd.enable = true;
+  };
+}
+```
+The systemd service target is set by the `wayland.systemd.target` option in Home Manager.
+
+:::caution
+When switching home manager generations, settings and color file backups may cause errors like
+`Existing file '/home/myuser/.config/noctalia/colors.json.backup' would be clobbered by backing up
+ '/home/myuser/.config/noctalia/colors.json'`; if this happens you need to delete or move the files in
+this directory and rebuild.
 :::
 
 ---
