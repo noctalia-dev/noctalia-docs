@@ -1,5 +1,5 @@
 ---
-title: App Theming
+title: Basic App Theming
 description: Learn how to theme your applications to match Noctalia's color scheme
 sidebar:
   order: 5
@@ -37,11 +37,67 @@ You should check the ColorScheme Tab from time to time in case we added new temp
 
 ## How to Enable Theming
 
+#### General
+
 1. Open **Settings**
 2. Navigate to **Color Scheme** tab
 3. Scroll down to the **Templates** section
 4. Toggle on the applications you want to theme
 5. Your color scheme will be applied automatically
+
+:::note[Some applications require manual configuration]
+For the applications below, you need to manually configure some settings for them to work.
+:::
+
+#### QT
+
+1. Install **`qt5ct`&`qt6ct`**
+2. Set the environment variable **`QT_QPA_PLATFORMTHEME`** to `qt5ct` or `qt6ct`
+3. Open **Settings**
+4. Navigate to **Color Scheme** tab
+5. Scroll down to the **Templates** section
+6. Toggle on the **Qt**
+7. Open **`qt5ct`** and **`qt6ct`**
+8. Select `noctalia` in the **color scheme** and save
+9. Your QT applications will applied the noctalia color scheme
+
+:::tip[Set environment in config of window manager]
+You can set environment variables in the window manager's configuration file.
+Like niri,you can add this in `config.kdl`:
+```kdl
+environment {
+ QT_QPA_PLATFORMTHEME "qt5ct"
+}
+```
+:::
+
+#### GTK
+
+1. Install **`adw-gtk-theme`** & **`nwg-look(Optional)`**
+2. If you installed `nwg-look`,just select `adw-gtk3` then apply
+![nwg-look](../../../assets/app-theming/nwg-look.png)
+3. You can also use the following command to set if you don't want to install `nwg-look`
+```shell
+gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
+```
+4. Open **Settings**
+5. Navigate to **Color Scheme** tab
+6. Scroll down to the **Templates** section
+7. Toggle on the **GTK**
+8. If some GTK applications is running, you may need to completely restart them for it to work
+9. Your GTK applications will applied the noctalia color scheme
+
+#### Discord
+
+1. Noctalia supports `Vencord`, `Vesktop`, `Webcord`, `Armcord`, `Equibop`, `Lightcord`, and `Dorion`. Choose one or more of your preferred ones to install.
+2. Open **Settings**
+3. Navigate to **Color Scheme** tab
+4. Scroll down to the **Templates** section
+5. Toggle on the **Discord**
+6. Open **Settings of Discord**
+7. Select **Themes** then toggle on the **LunarCord(HyprLuna theme)**
+![Discord](../../../assets/app-theming/discord.png)
+8. Your Discord will applied the noctalia color scheme
 
 ## Color Sources
 
@@ -67,112 +123,3 @@ and many more!
 :::note
 Predefined schemes work without Matugen and provide consistent colors regardless of your wallpaper (except for custom templates).
 :::
-
-## Advanced: Custom Templates
-
-For advanced users who want to theme additional applications, Noctalia supports custom Matugen templates.
-
-### Enabling Custom Templates
-
-1. Go to **Settings → Color Scheme → Templates**
-2. Scroll to **Misc** section
-3. Enable **User templates**
-4. A template file will be created at `~/.config/noctalia/user-templates.toml`
-
-### Creating Your Own Templates
-
-Edit `~/.config/noctalia/user-templates.toml` to add your custom templates:
-
-```toml
-[config]
-
-# Example: Theme Alacritty terminal
-[templates.alacritty]
-input_path = "~/.config/noctalia/templates/alacritty.toml"
-output_path = "~/.config/alacritty/colors.toml"
-post_hook = "echo 'Alacritty theme updated'"
-```
-
-### Template File Format
-
-Your template files use Matugen's template syntax with color placeholders:
-
-```css
-/* Example CSS template */
-.my-app {
-  background: {{colors.surface.default.hex}};
-  color: {{colors.on_surface.default.hex}};
-  accent: {{colors.primary.default.hex}};
-}
-```
-
-### Available Color Variables
-
-Matugen generates a full Material Design 3 color palette with many color roles like `primary`, `secondary`, `tertiary`, `surface`, `error`, and more.
-
-For a complete list of all available colors and formats, see the [Matugen Configuration Documentation](https://github.com/InioX/matugen/wiki/Configuration#colors).
-
-You can also look at Noctalia's built-in templates in `Assets/MatugenTemplates/` for practical examples.
-
-:::tip[Color Format]
-Use `.hex` for colors with `#` (e.g., `#FF5733`) or `.hex_stripped` for colors without `#` (e.g., `FF5733`).
-:::
-
-### Template Workflow
-
-1. **Create template file** anywhere you like (e.g., `~/.config/matugen/templates/myapp.css` or `~/myapp-template.css`)
-2. **Add color placeholders** using the syntax above
-3. **Configure in user-templates.toml** with input/output paths
-4. **Optional: Add post_hook** to reload the app after theming
-5. **Change your color scheme** and the template will be processed automatically
-
-### Post Hooks
-
-Post hooks run commands after generating a theme, useful for reloading applications:
-
-```toml
-[templates.neovim]
-input_path = "~/.config/matugen/templates/neovim-colors.lua"
-output_path = "~/.config/nvim/colors/noctalia.lua"
-post_hook = "echo 'Neovim theme updated - restart Neovim to apply'"
-```
-
-## Troubleshooting
-
-### Theme Not Applying
-
-- **Restart the application** - Some apps need a restart to load new themes
-- **Verify template syntax** - Invalid syntax will prevent theme generation
-
-### Colors Look Wrong
-
-- **Light/Dark mode** - Check if your color scheme setting matches your preference
-- **Matugen not installed** - Wallpaper colors require `matugen` package
-- **Application limitations** - Some apps may not support all color properties
-
-### Custom Templates Not Working
-
-- **File paths** - Use absolute paths or `~` for home directory
-- **TOML syntax** - Validate your `user-templates.toml` syntax
-- **Check logs** - Run Noctalia from terminal to see error messages
-
-## Manual Theme Application
-
-If you need to manually trigger theme regeneration:
-
-1. Change any color scheme setting in Noctalia
-2. Toggle between wallpaper colors and predefined schemes
-3. Switch dark/light mode
-
-## Getting Help
-
-For theming support:
-
-- Check [Matugen documentation](https://github.com/InioX/matugen) for template syntax
-- Visit our [GitHub Issues](https://github.com/noctalia-dev/noctalia-shell/issues)
-- Join our [Discord](https://discord.noctalia.dev) community
-
-:::tip[Share Your Templates]
-Created a great template? Share it with the community on our Discord or maybe even create a pull request and it might just get added to Noctalia!
-:::
-
