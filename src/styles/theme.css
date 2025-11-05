@@ -28,7 +28,12 @@
 	--sl-color-link-hover: #9BFECE; /* Secondary */
 
 	/* Shadows */
-	--sl-shadow-color: #7c80b4; /* Shadow - almost pitch black */
+	--sl-shadow-color: #7c80b4; /* Shadow */
+
+	/* Slightly brighter than surface variant */
+	--ec-frm-edBg: #151538;
+	--ec-frm-trmBg: #151538;
+}
 }
 
 /* Light Theme */
@@ -54,7 +59,11 @@
 	--sl-color-link-hover: #fef29a; /* Secondary */
 
 	/* Shadows */
-	--sl-shadow-color: #4b55c8; /* Shadow - almost pitch black */
+	--sl-shadow-color: #4b55c8; /* Shadow */
+
+	/* Slightly darker than surface variant */
+	--ec-frm-edBg: #e0e2ff;
+	--ec-frm-trmBg: #e0e2ff;
 }
 
 
