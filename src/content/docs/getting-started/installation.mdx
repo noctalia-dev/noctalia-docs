@@ -98,33 +98,61 @@ Manual installation keeps Noctalia contained within your user directory, making 
 
 For the best experience with Noctalia, you'll need to configure your compositor with some specific settings.
 
-### Niri
+### Niri configuration
 
-Add these settings to your Niri configuration file (usually `~/.config/niri/config.kdl`):
+Add the following settings to your Niri configuration file (usually located at ~/.config/niri/config.kdl).
+
+These settings are for general window appearance and functionality.
 
 ```ini
+// Rounded corners for a modern look
 window-rule {
     geometry-corner-radius 20
     clip-to-geometry true
 }
 
-layer-rule {
-    match namespace="^quickshell-overview$"
-    place-within-backdrop true
-}
-
+// Allows Notification actions and some more flexible window activation
 debug {
     honor-xdg-activation-with-invalid-serial
 }
 ```
 
-These settings ensure:
+Next, choose one of the following options for your wallpaper setup.
 
-- Proper window activation handling
-- Rounded corners for a modern look
-- Correct backdrop placement for the overview panel
-- Allows Notification actions (`honor-xdg-activation-with-invalid-serial`)
-- Makes the file picker float (`match app-id="qs"`)
+#### Option 1: Blurred Overview Wallpaper
+
+This minimal configuration allows you to have a blurred and dimmed copy of your wallpaper that appears only in Niri's overview.
+
+```ini
+// Set the overview wallpaper on the backdrop.
+layer-rule {
+    match namespace="^noctalia-overview*"
+    place-within-backdrop true
+}
+```
+
+#### Option 2: Stationary Wallpaper
+If you prefer a stationary wallpaper that is visible at all times and that do not scroll when switching workspace, use the following configuration instead of Option 1.
+
+```ini
+// Set the regular wallpaper on the backdrop.
+layer-rule {
+  match namespace="^noctalia-wallpaper*"
+  place-within-backdrop true
+}
+
+// Set transparent workspace background color so you see the backdrop at all time.
+layout {
+    background-color "transparent"
+}
+
+// Optionally, disable the workspace shadows in the overview.
+overview {
+    workspace-shadow {
+        off
+    }
+}
+```
 
 :::note
 The configuration files are saved in `~/.config/noctalia/` and the cache files are saved in `~/.cache/noctalia/`.
