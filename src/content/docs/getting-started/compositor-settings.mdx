@@ -1,0 +1,101 @@
+
+---
+title: Compositor Settings
+description: Start here to set up and use Noctalia.
+sidebar:
+  order: 16
+---
+
+For the best experience with Noctalia, you'll need to configure your compositor with some specific settings.
+
+## Niri configuration
+
+Add the following settings to your Niri configuration file (usually located at ~/.config/niri/config.kdl).
+
+These settings are for general window appearance and functionality.
+
+```ini
+window-rule {
+  // Rounded corners for a modern look.
+  geometry-corner-radius 20
+
+  // Clips window contents to the rounded corner boundaries.
+  clip-to-geometry true  
+}
+
+debug {
+  // Allows notification actions and window activation from Noctalia.
+  honor-xdg-activation-with-invalid-serial 
+}
+```
+
+## Niri wallpaper and overview setup
+
+Next choose one of the following options for your wallpaper and overview setup.
+
+:::note
+The "backdrop" in Niri is a layer behind all workspaces that is visible when you trigger the overview mode.
+:::
+
+### Option 1: Blurred Overview Wallpaper
+
+This minimal configuration allows you to have a blurred and dimmed copy of your wallpaper that appears only in Niri's overview.
+
+![Blurred Overview Wallpaper](../../../assets/niri-overview/option1.png)
+
+```ini
+// Set the overview wallpaper on the backdrop.
+layer-rule {
+  match namespace="^noctalia-overview*"
+  place-within-backdrop true
+}
+```
+:::note
+Option 1 requires "Enable overview wallpaper" to be turned ON in Noctalia's settings on the Wallpaper tab.
+:::
+
+### Option 2: Stationary Wallpaper
+If you prefer a stationary wallpaper that is visible at all times and that does not scroll when switching workspaces, use the following configuration.
+
+![Stationary Wallpaper](../../../assets/niri-overview/option2.png)
+
+```ini
+// Set the regular wallpaper on the backdrop.
+layer-rule {
+  match namespace="^noctalia-wallpaper*"
+  place-within-backdrop true
+}
+
+// Set transparent workspace background color so you see the backdrop at all time.
+layout {
+  background-color "transparent"
+}
+
+// Optionally, disable the workspace shadows in the overview.
+overview {
+  workspace-shadow {
+    off
+  }
+}
+```
+:::note
+Option 2 requires "Enable overview wallpaper" to be turned ON in Noctalia's settings on the Wallpaper tab.
+:::
+
+
+### Option 3: Flat colored overview
+
+If you prefer a more productivity oriented look, you can use this minimal configuration.
+
+![Flat colored overview](../../../assets/niri-overview/option3.png)
+
+```
+overview {
+  // Choose your favorite color.
+  backdrop-color "#26233a"
+}
+```
+
+:::note
+Option 3 requires "Enable overview wallpaper" to be turned OFF in Noctalia's settings on the Wallpaper tab.
+:::
