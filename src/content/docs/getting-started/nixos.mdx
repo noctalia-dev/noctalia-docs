@@ -18,6 +18,14 @@ The Noctalia flake requires **nixpkgs unstable**, since we depend on the latest 
 
 To install Noctalia, you need to [add a flake input](#add-flake-input) and [install the package](#install-package).
 
+:::caution
+To make Noctalia's wifi, bluetooth, power-profile, and battery feature available, please ensure the following NixOS options are enabled:
+- `networking.networkmanager.enable`
+- `hardware.bluetooth.enable`
+- `services.power-profiles-daemon.enable` or `services.tuned.enable`
+- `services.upower.enable`
+:::
+
 ### Adding the flake input {#add-flake-input}
 
 Add the required inputs to your flake configuration:
