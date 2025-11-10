@@ -27,6 +27,13 @@ exec-once = qs -c noctalia-shell
 ### Running as a Systemd Service (Advanced)
 For more robust process management, you can configure Noctalia to run as a systemd user service. This approach provides automatic restarts on failure and centralizes logging with `journalctl`.
 
+:::tip[AUR Installation]
+If you installed `noctalia-shell` or `noctalia-shell-git` from the AUR, the service file is already included. You can skip to step 2 and simply run:
+```bash
+systemctl --user enable --now noctalia.service
+```
+:::
+
 #### 1. Create the service file
 First, create a new service definition file at `~/.config/systemd/user/noctalia.service` with the following content:
 
