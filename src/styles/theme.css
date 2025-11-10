@@ -83,4 +83,7 @@
 button {
 	background-color: var(--sl-color-bg);
 }
-        
+
+summary {
+	color: var(--sl-color-accent);
+}
