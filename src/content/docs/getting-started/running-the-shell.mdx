@@ -34,6 +34,7 @@ First, create a new service definition file at `~/.config/systemd/user/noctalia.
 [Unit]
 Description=Noctalia Shell Service
 PartOf=graphical-session.target
+Requisite=graphical-session.target
 After=graphical-session.target
 
 [Service]
