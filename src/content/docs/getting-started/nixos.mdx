@@ -159,7 +159,7 @@ To configure Noctalia settings, you can use the Noctalia home manager module:
 
 
 
-We don't have extensive documentation of Noctalia's configuration options; however, you can see and up-to-date list of [configuration defaults](#config-ref).
+We don't have extensive documentation of Noctalia's configuration options; however, you can see an up-to-date list of [configuration defaults](#config-ref).
 
 Additionally, if you use the [systemd service](#systemd-service), editing the settings with the GUI will show the resulting configuration in `~/.config/noctalia/gui-settings.json`. You can then use this information to update your Nix config to make it permanent.
 
@@ -244,7 +244,7 @@ To safely configure noctalia keybindings in the Niri flake, be sure to pass a li
 
 ```
 
-It may convenient to define a utility function to allow you to use simple strings:
+It may be convenient to define a utility function to allow you to use simple strings:
 
 ```nix
 # niri.nix
@@ -366,7 +366,7 @@ If you have some custom target, you can configure it with the `target` option:
   };
 }
 ```
-This target depends on how you configure your hyperland session systemd service.
+This target depends on how you configure your Hyperland session systemd service.
 
 #### Home Manager module
 
