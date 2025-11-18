@@ -59,7 +59,11 @@ With the flake installed, we can access Noctalia packages and modules in our con
 
 ### Installing the package {#install-package}
 
-In `noctalia.nix` or some other module of your choice, install the default Noctalia package from the new `noctalia` input:
+In `noctalia.nix` or some other module of your choice, install the default Noctalia package from the new `noctalia` input.
+
+#### Package
+
+If you only want to install package and not use the modules provided by noctalia:
 
 ```nix
 # noctalia.nix
@@ -67,13 +71,43 @@ In `noctalia.nix` or some other module of your choice, install the default Nocta
 {
   # install package
   environment.systemPackages = with pkgs; [
-    inputs.noctalia.packages.${system}.default
+    (inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
+      quickshell = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.quickshell;
+    })
     # ... maybe other stuff
   ];
 }
 ```
 
 Rebuild with `sudo nixos-rebuild switch --flake .`.
+
+#### NixOS module
+
+if you use [NixOS module](#systemd-service-nixos):
+
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  services.noctalia-shell.package = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
+    quickshell = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.quickshell;
+  };
+}
+```
+
+#### Home Manager module
+
+if you use [home manager module](#noctalia-settings):
+
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  programs.noctalia-shell.package = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
+    quickshell = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.quickshell;
+  };
+}
+```
 
 ---
 
@@ -335,7 +369,7 @@ The systemd service is currently **experimental**:
 Please send us feedback on the [#nixos channel](https://discord.com/channels/1401598189823590460/1418903722616160349) on Discord or [raise an issue](https://github.com/noctalia-dev/noctalia-shell/issues) if you encounter issues.
 :::
 
-#### NixOS module
+#### NixOS module {#systemd-service-nixos}
 
 Import the Noctalia NixOS modules and enable the service:
 
@@ -373,6 +407,7 @@ This target depends on how you configure your Hyprland session systemd service.
 Import the Noctalia Home Manager modules and enable the service:
 
 ```nix
+# noctalia.nix
 { pkgs, inputs, ... }:
 {
   home-manager.users.drfoobar = {
@@ -395,30 +430,36 @@ When switching home manager generations, settings and color file backups may cau
 this directory and rebuild.
 :::
 
-#### Calendar events support
+---
+
+## Calendar events support
 
 To add support for events in the calendar via evolution-data-server.
 
 ```nix
-services.gnome.evolution-data-server.enable = true;
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  services.gnome.evolution-data-server.enable = true;
 
-environment.systemPackages = with pkgs; [
-  (python3.withPackages (pyPkgs: with pyPkgs; [ pygobject3 ]))
-];
+  environment.systemPackages = with pkgs; [
+    (python3.withPackages (pyPkgs: with pyPkgs; [ pygobject3 ]))
+  ];
 
-environment.sessionVariables = {
-  GI_TYPELIB_PATH = lib.makeSearchPath "lib/girepository-1.0" (
-    with pkgs;
-    [
-      evolution-data-server
-      libical
-      glib.out
-      libsoup_3
-      json-glib
-      gobject-introspection
-    ]
-  );
-};
+  environment.sessionVariables = {
+    GI_TYPELIB_PATH = lib.makeSearchPath "lib/girepository-1.0" (
+      with pkgs;
+      [
+        evolution-data-server
+        libical
+        glib.out
+        libsoup_3
+        json-glib
+        gobject-introspection
+      ]
+    );
+  };
+}
 ```
 
 ---
