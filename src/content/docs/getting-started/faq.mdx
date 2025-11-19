@@ -149,6 +149,18 @@ Common causes:
 </details>
 
 <details>
+<summary><strong>Why do I have a weird gap?</strong></summary>
+
+This usually means `noctalia-shell` is running more than once (for example, launched by both your compositor autostart and the systemd service). Multiple instances fight over layout space and leave blank gaps.
+
+Make sure only a single instance is started:
+
+1. Stop extra copies (`kill -9 qs` or reboot)
+2. Pick one startup method (manual, compositor autostart, systemd, or Home Manager) and disable the others
+
+</details>
+
+<details>
 <summary><strong>Why can't I unlock my lock screen??</strong></summary>
 
 openSUSE in particular does not provide the required /etc/pam.d/login.

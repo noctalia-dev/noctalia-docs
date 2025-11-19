@@ -211,7 +211,7 @@ If you provide a path or a JSON string, you **must** set all configuration optio
 ### Theme colors
 
 
-To configure Noctalia settings, you can use the Noctalia home manager module:
+To configure Noctalia settings, you can use the Noctalia home manager module. Be sure to set every Material 3 color, including hover-state values, when overriding the defaults:
 ```nix
 # noctalia.nix
 { pkgs, inputs, ... }:
@@ -234,11 +234,13 @@ To configure Noctalia settings, you can use the Noctalia home manager module:
         mOnSurface = "#828282";
         mOnSurfaceVariant = "#5d5d5d";
         mOnTertiary = "#111111";
+        mOnHover = "#ffffff";
         mOutline = "#3c3c3c";
         mPrimary = "#aaaaaa";
         mSecondary = "#a7a7a7";
         mShadow = "#000000";
         mSurface = "#111111";
+        mHover = "#1f1f1f";
         mSurfaceVariant = "#191919";
         mTertiary = "#cccccc";
       };
