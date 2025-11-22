@@ -16,7 +16,7 @@ Noctalia comes with pre-configured templates for popular applications. Simply en
 #### Desktop Environments
 
 - **GTK 3/4** - Themes all GTK-based applications (GNOME apps, many Linux applications)
-- **Qt5ct/Qt6ct** - Themes Qt-based applications (KDE apps, many cross-platform apps)
+- **Qt6ct** - Themes Qt-based applications (KDE apps, many cross-platform apps)
 - **KColorScheme** - Native KDE Plasma color scheme support
 
 #### Terminals
@@ -51,30 +51,30 @@ For the applications below, you need to manually configure some settings for the
 
 #### QT
 
-1. Install **`qt5ct`&`qt6ct`**
-2. Set the environment variable **`QT_QPA_PLATFORMTHEME`** to `qt5ct` or `qt6ct`
+1. Install **qt6ct**
+2. Set the environment variable **`QT_QPA_PLATFORMTHEME`** to `qt6ct`
 3. Open **Settings**
 4. Navigate to **Color Scheme** tab
 5. Scroll down to the **Templates** section
-6. Toggle on the **Qt**
-7. Open **`qt5ct`** and **`qt6ct`**
+6. Active the **Qt** toggle
+7. Run **`qt6ct`**
 8. Select `noctalia` in the **color scheme** and save
 9. Your QT applications will applied the noctalia color scheme
 
 :::tip[Set environment in config of window manager]
-You can set environment variables in the window manager's configuration file.
-Like niri,you can add this in `config.kdl`:
+You can set environment variables in your window manager's configuration file.
+For niri, you can add this in `config.kdl`:
 ```kdl
 environment {
- QT_QPA_PLATFORMTHEME "qt5ct"
+ QT_QPA_PLATFORMTHEME "qt6ct"
 }
 ```
 :::
 
 #### GTK
 
-1. Install **`adw-gtk-theme`** & **`nwg-look(Optional)`**
-2. If you installed `nwg-look`,just select `adw-gtk3` then apply
+1. Install **`adw-gtk-theme`** & **`nwg-look`**
+2. In `nwg-look`, simply select `adw-gtk3` then apply
 ![nwg-look](../../../assets/app-theming/nwg-look.png)
 3. You can also use the following command to set if you don't want to install `nwg-look`
 ```shell

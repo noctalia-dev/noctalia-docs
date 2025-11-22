@@ -13,19 +13,27 @@ Find answers to common questions about Noctalia installation, configuration, and
 <details>
 <summary><strong>Why are some of my app icons missing?</strong></summary>
 
-The issue is most likely that environment variables are not set properly.
-Use one of the following:
+The issue is most likely that your environment variables and icons theme are not set properly.
 
-If you already have an icon theme set for GTK then you can use this one:
-- `QT_QPA_PLATFORMTHEME=gtk3`
+Add these variables via your compositor or to `/etc/environment` and reboot. 
+On NixOS, use `environment.variables` or `home.sessionVariables`.
 
-You can also use Qt6ct to set your icon theme; for that you can use:
-- `QT_QPA_PLATFORMTHEME=qt6ct`
+Then use one of the three following options:
 
-If you don't have either of those set then you can set:
-- `QS_ICON_THEME="youricontheme"`
+:::note[Option 1: if you prefer GTK]
+Set `QT_QPA_PLATFORMTHEME=gtk3`  
+Then use an utility like `nwg-look` (available in most distros) to select and apply your favorite icons theme.
+:::
 
-**Add these variables to `/etc/environment` and reboot. On NixOS, use `environment.variables` or `home.sessionVariables`.**
+:::note[Option 2: If you prefer Qt]
+Set `QT_QPA_PLATFORMTHEME=qt6ct`  
+Then run `qt6ct` to select and apply your favorite icons theme.
+:::
+
+:::note[Option 3: Force an icon them for Quickshell]
+Set `QS_ICON_THEME="youricontheme"`
+:::
+
 
 </details>
 
