@@ -1,0 +1,95 @@
+---
+title: Laptop Battery
+description: Battery health monitoring and charge threshold management
+sidebar:
+  order: 100
+---
+
+## Battery Health
+
+Noctalia uses Quickshell and UPower to monitor your battery health. Depending on your hardware, battery health information may appear in the battery panel.
+
+
+## Battery Charge Threshold
+
+Previous versions of Noctalia included a battery manager that allowed setting charging thresholds. This functionality was removed in v3 due to compatibility issues across different distributions and hardware.
+
+**If you need charge threshold management**, we recommend installing [TLP](https://linrunner.de/tlp/), which is widely supported and easy to configure. If you install TLP you most likely want to uninstall Power-profiles-daemon.
+
+### Resetting Old Thresholds
+
+If you used the old battery manager and need to reset thresholds to their default values (0 and 100%), use the following script:
+
+```bash
+#!/bin/bash
+
+# Script to reset battery charge thresholds to default values
+# This script resets charge_start and charge_stop thresholds to allow full charging
+
+set -e
+
+# Check if running as root
+if [ "$EUID" -ne 0 ]; then 
+    echo "Error: This script must be run as root (use sudo)"
+    exit 1
+fi
+
+echo "Resetting battery charge thresholds to default..."
+echo ""
+
+# Track if any changes were made
+changes_made=false
+
+# Find and reset charge_start_threshold (typically set to 0)
+for threshold in /sys/class/power_supply/BAT*/charge_control_start_threshold \
+                 /sys/class/power_supply/BAT*/charge_start_threshold; do
+    if [ -f "$threshold" ] && [ -w "$threshold" ]; then
+        echo "Found: $threshold"
+        current_value=$(cat "$threshold")
+        echo "  Current value: $current_value"
+        echo 0 > "$threshold"
+        echo "  Reset to: 0"
+        changes_made=true
+    fi
+done
+
+# Find and reset charge_end_threshold (typically set to 100)
+for threshold in /sys/class/power_supply/BAT*/charge_control_end_threshold \
+                 /sys/class/power_supply/BAT*/charge_stop_threshold \
+                 /sys/class/power_supply/BAT*/charge_end_threshold; do
+    if [ -f "$threshold" ] && [ -w "$threshold" ]; then
+        echo "Found: $threshold"
+        current_value=$(cat "$threshold")
+        echo "  Current value: $current_value"
+        echo 100 > "$threshold"
+        echo "  Reset to: 100"
+        changes_made=true
+    fi
+done
+
+# Check for Huawei laptops (different format)
+if [ -f "/sys/devices/platform/huawei-wmi/charge_control_thresholds" ]; then
+    threshold="/sys/devices/platform/huawei-wmi/charge_control_thresholds"
+    echo "Found: $threshold"
+    current_value=$(cat "$threshold")
+    echo "  Current value: $current_value"
+    echo "0 100" > "$threshold"
+    echo "  Reset to: 0 100"
+    changes_made=true
+fi
+
+echo ""
+if [ "$changes_made" = true ]; then
+    echo "✓ Battery charge thresholds have been reset to default."
+    echo "  Your battery will now charge to 100%."
+else
+    echo "No battery charge threshold files found or accessible."
+    echo "This could mean:"
+    echo "  - Your system doesn't support charge thresholds"
+    echo "  - The thresholds are already at default values"
+    echo "  - Your laptop uses a different threshold mechanism"
+fi
+
+echo ""
+echo "Done!"
+```
