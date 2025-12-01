@@ -94,7 +94,7 @@ To configure Noctalia settings, you can use the Noctalia home manager module:
       inputs.noctalia.homeModules.default
     ];
 
-    # configure options        
+    # configure options
     programs.noctalia-shell = {
       enable = true;
       settings = {
@@ -107,7 +107,7 @@ To configure Noctalia settings, you can use the Noctalia home manager module:
           widgets = {
             left = [
               {
-                id = "SidePanelToggle";
+                id = "ControlCenter";
                 useDistroLogo = true;
               }
               {
@@ -185,7 +185,7 @@ To configure Noctalia settings, you can use the Noctalia home manager module. Be
       inputs.noctalia.homeModules.default
     ];
 
-    # configure options        
+    # configure options
     programs.noctalia-shell = {
       enable = true;
       colors = {
@@ -300,7 +300,7 @@ With the [Niri flake](https://github.com/sodiboo/niri-flake), you can then spawn
 { pkgs, inputs, ... }:
 {
   # ...
-  
+
   home-manager.users.drfoobar = {
     # ...
     programs.niri = {
@@ -358,7 +358,7 @@ If you have some custom target, you can configure it with the `target` option:
 # noctalia.nix
 { pkgs, inputs, ... }:
 {
-  # ... 
+  # ...
   services.noctalia-shell = {
     enable = true;
     target = "my-hyprland-session.target";
