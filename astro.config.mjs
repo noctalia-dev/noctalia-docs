@@ -33,6 +33,18 @@ export default defineConfig({
           autogenerate: { directory: "configuration" },
         },
         {
+          label: "Theming",
+          items: [
+            { label: "Basic App Theming", link: "/theming/app-theming/" },
+            { label: "Advanced App Theming", link: "/theming/advanced-app-theming/" },
+            {
+              label: "Program Specific Theming",
+              collapsed: false,
+              autogenerate: { directory: "theming/program-specific" },
+            },
+          ],
+        },
+        {
           label: "Development",
           autogenerate: { directory: "development" },
         },

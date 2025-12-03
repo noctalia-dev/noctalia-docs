@@ -2,7 +2,7 @@
 title: Basic App Theming
 description: Learn how to theme your applications to match Noctalia's color scheme
 sidebar:
-  order: 50
+  order: 1
 ---
 
 Noctalia includes powerful theming capabilities that can automatically apply your chosen color scheme to various applications. Whether you're using colors from your wallpaper or a predefined scheme, Noctalia can keep your entire desktop consistent.
@@ -45,59 +45,9 @@ You should check the ColorScheme Tab from time to time in case we added new temp
 4. Toggle on the applications you want to theme
 5. Your color scheme will be applied automatically
 
-:::note[Some applications require manual configuration]
-For the applications below, you need to manually configure some settings for them to work.
+:::note[Need detailed setup instructions?]
+For detailed, program-specific setup instructions, see the [Program Specific Theming](/theming/program-specific/gtk-qt/) section. You'll find step-by-step guides for GTK, Qt, Discord, VSCode, Emacs, Firefox, and more.
 :::
-
-#### QT
-
-1. Install **qt6ct**
-2. Set the environment variable **`QT_QPA_PLATFORMTHEME`** to `qt6ct`
-3. Open **Settings**
-4. Navigate to **Color Scheme** tab
-5. Scroll down to the **Templates** section
-6. Active the **Qt** toggle
-7. Run **`qt6ct`**
-8. Select `noctalia` in the **color scheme** and save
-9. Your QT applications will applied the noctalia color scheme
-
-:::tip[Set environment in config of window manager]
-You can set environment variables in your window manager's configuration file.
-For niri, you can add this in `config.kdl`:
-```kdl
-environment {
- QT_QPA_PLATFORMTHEME "qt6ct"
-}
-```
-:::
-
-#### GTK
-
-1. Install **`adw-gtk-theme`** & **`nwg-look`**
-2. In `nwg-look`, simply select `adw-gtk3` then apply
-![nwg-look](../../../assets/app-theming/nwg-look.png)
-3. You can also use the following command to set if you don't want to install `nwg-look`
-```shell
-gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
-```
-4. Open **Settings**
-5. Navigate to **Color Scheme** tab
-6. Scroll down to the **Templates** section
-7. Toggle on the **GTK**
-8. If some GTK applications is running, you may need to completely restart them for it to work
-9. Your GTK applications will applied the noctalia color scheme
-
-#### Discord
-
-1. Noctalia supports `Vencord`, `Vesktop`, `Webcord`, `Armcord`, `Equibop`, `Lightcord`, and `Dorion`. Choose one or more of your preferred ones to install.
-2. Open **Settings**
-3. Navigate to **Color Scheme** tab
-4. Scroll down to the **Templates** section
-5. Toggle on the **Discord**
-6. Open **Settings of Discord**
-7. Select **Themes** then toggle on the **LunarCord(HyprLuna theme)**
-![Discord](../../../assets/app-theming/discord.png)
-8. Your Discord will applied the noctalia color scheme
 
 ## Color Sources
 
@@ -123,3 +73,4 @@ and many more!
 :::note
 Predefined schemes work without Matugen and provide consistent colors regardless of your wallpaper (except for custom templates).
 :::
+

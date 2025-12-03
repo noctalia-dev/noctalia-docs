@@ -34,7 +34,6 @@
 	--ec-frm-edBg: #151538;
 	--ec-frm-trmBg: #151538;
 }
-}
 
 /* Light Theme */
 :root[data-theme='light'] {
@@ -86,4 +85,17 @@ button {
 
 summary {
 	color: var(--sl-color-accent);
+}
+
+/* Nested sidebar groups (subcategories) */
+details details > summary .group-label .large,
+details details > summary .group-label {
+	font-size: 0.95em !important;
+	font-weight: 600 !important;
+	
+}
+
+details details > summary:hover .group-label .large,
+details details > summary:hover .group-label {
+	color: var(--sl-color-text) !important;
 }

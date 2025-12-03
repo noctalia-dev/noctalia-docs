@@ -1,0 +1,134 @@
+---
+title: GTK and Qt Applications
+description: Theming GTK, Qt, and KDE Plasma applications
+sidebar:
+  order: 1
+---
+
+This guide covers theming applications built with GTK, Qt, and KDE Plasma toolkits.
+
+## GTK 3/4 Applications
+
+GTK applications include most GNOME apps and many Linux applications. Noctalia can automatically theme them using the `adw-gtk3` theme.
+
+### Setup
+
+1. **Install required packages:**
+   ```bash
+   # Arch Linux / Manjaro
+   paru -S adw-gtk-theme nwg-look
+   
+   # Other distributions
+   # Install adw-gtk-theme and nwg-look from your package manager
+   ```
+
+2. **Apply the GTK theme:**
+   - **Using nwg-look (recommended):**
+     - Open `nwg-look`
+     - Select `adw-gtk3` from the theme list
+     - Click "Apply"
+     - ![nwg-look](../../../../assets/app-theming/nwg-look.png)
+   
+   - **Using command line:**
+     ```bash
+     gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
+     ```
+
+3. **Enable GTK theming in Noctalia:**
+   - Open **Settings → Color Scheme → Templates**
+   - Toggle on **GTK**
+
+### Troubleshooting
+
+- **Theme not applying:** Completely restart GTK applications (close and reopen)
+- **Some apps still look wrong:** Some GTK apps may need GTK 4 theme separately:
+  ```bash
+  gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
+  gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'  # or 'prefer-light'
+  ```
+- **Flatpak apps:** Flatpak apps may need the theme installed in their sandbox:
+  ```bash
+  flatpak install org.gtk.Gtk3theme.adw-gtk3-dark
+  flatpak install org.gtk.Gtk3theme.adw-gtk3
+  ```
+
+---
+
+## Qt Applications
+
+Qt applications include KDE apps and many cross-platform applications. Noctalia themes them through `qt6ct`.
+
+### Setup
+
+1. **Install qt6ct:**
+   ```bash
+   # Arch Linux / Manjaro
+   paru -S qt6ct
+   
+   # Other distributions
+   # Install qt6ct from your package manager
+   ```
+
+2. **Set environment variable:**
+   Add this to your window manager configuration or shell profile:
+   
+   **For Niri (`config.kdl`):**
+   ```kdl
+   environment {
+     QT_QPA_PLATFORMTHEME "qt6ct"
+   }
+   ```
+   
+   **For Hyprland (`hyprland.conf`):**
+   ```conf
+   env = QT_QPA_PLATFORMTHEME,qt6ct
+   ```
+   
+   **For Sway (`config`):**
+   ```bash
+   setenv QT_QPA_PLATFORMTHEME qt6ct
+   ```
+   
+   **For shell profile (`~/.bashrc` or `~/.zshrc`):**
+   ```bash
+   export QT_QPA_PLATFORMTHEME=qt6ct
+   ```
+
+3. **Enable Qt theming in Noctalia:**
+   - Open **Settings → Color Scheme → Templates**
+   - Toggle on **Qt**
+
+4. **Configure qt6ct:**
+   - Run `qt6ct` from terminal
+   - Go to **Color Scheme** tab
+   - Select `noctalia` from the dropdown
+   - Click **Apply** and **OK**
+
+### Troubleshooting
+
+- **Qt apps not themed:** Ensure the environment variable is set before launching applications
+- **qt6ct not found:** Make sure qt6ct is installed and in your PATH
+- **Theme not updating:** Restart Qt applications after changing color schemes
+
+---
+
+## KDE Plasma (KColorScheme)
+
+If you're using KDE Plasma, Noctalia can apply colors through the native KColorScheme system.
+
+### Setup
+
+1. **Enable KColorScheme in Noctalia:**
+   - Open **Settings → Color Scheme → Templates**
+   - Toggle on **KColorScheme**
+
+2. **Apply in KDE System Settings:**
+   - Open **System Settings → Appearance → Colors**
+   - Select the `noctalia` color scheme
+   - The scheme will update automatically when you change colors in Noctalia
+
+### Troubleshooting
+
+- **Scheme not appearing:** Restart KDE Plasma or log out and back in
+- **Colors not updating:** Ensure KColorScheme toggle is enabled in Noctalia settings
+
