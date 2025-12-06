@@ -46,7 +46,25 @@ export default defineConfig({
         },
         {
           label: "Development",
-          autogenerate: { directory: "development" },
+          items: [
+            { label: "Guidelines", link: "/development/guideline/" },
+            { label: "IPC", link: "/development/ipc/" },
+            { label: "Widgets", link: "/development/widget/" },
+            { label: "Color Scheme", link: "/development/colorscheme/" },
+            { label: "Matugen", link: "/development/matugen/" },
+            {
+              label: "Plugins",
+              collapsed: false,
+              items: [
+                { label: "Overview", link: "/plugins/overview/" },
+                { label: "Getting Started", link: "/plugins/getting-started/" },
+                { label: "Manifest Reference", link: "/plugins/manifest/" },
+                { label: "Bar Widget Development", link: "/plugins/bar-widget/" },
+                { label: "Panel Development", link: "/plugins/panel/" },
+                { label: "Plugin API", link: "/plugins/api/" },
+              ],
+            },
+          ],
         },
       ],
     }),

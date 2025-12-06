@@ -1,0 +1,624 @@
+---
+title: Plugin API Reference
+description: Complete reference for the Plugin API
+---
+
+Every plugin component receives a `pluginApi` object that provides access to plugin functionality and Noctalia services.
+
+## Plugin API Object
+
+The `pluginApi` object is injected into all plugin components (BarWidget, Panel, Main, Settings):
+
+```qml
+Item {
+  // Injected by PluginService
+  property var pluginApi: null
+
+  Component.onCompleted: {
+    if (pluginApi) {
+      Logger.i("Plugin", "API available:", pluginApi.pluginId)
+    }
+  }
+}
+```
+
+## Properties
+
+### `pluginId`
+- **Type**: `string`
+- **Read-only**: Yes
+- **Description**: Unique identifier for this plugin
+
+```qml
+readonly property string id: pluginApi?.pluginId || ""
+
+Component.onCompleted: {
+  Logger.i("Plugin", "ID:", pluginApi.pluginId) // "my-plugin"
+}
+```
+
+### `pluginDir`
+- **Type**: `string`
+- **Read-only**: Yes
+- **Description**: Absolute path to plugin directory
+
+```qml
+readonly property string dir: pluginApi?.pluginDir || ""
+
+// Example: "/home/user/.config/noctalia/plugins/my-plugin"
+```
+
+### `pluginSettings`
+- **Type**: `object`
+- **Read-only**: No
+- **Description**: User settings object for this plugin
+
+```qml
+// Read setting
+readonly property string message: pluginApi?.pluginSettings?.message || ""
+
+// Write setting
+function updateMessage(newMessage) {
+  pluginApi.pluginSettings.message = newMessage
+  pluginApi.saveSettings() // Don't forget to save!
+}
+```
+
+:::caution
+Always call `saveSettings()` after modifying `pluginSettings` to persist changes to disk.
+:::
+
+### `manifest`
+- **Type**: `object`
+- **Read-only**: Yes
+- **Description**: Plugin manifest data
+
+```qml
+// Access manifest data
+readonly property string pluginName: pluginApi?.manifest?.name || ""
+readonly property string pluginVersion: pluginApi?.manifest?.version || ""
+readonly property var defaultSettings: pluginApi?.manifest?.metadata?.defaultSettings || {}
+
+// Get default value if setting not set
+readonly property string message:
+  pluginApi?.pluginSettings?.message ||
+  pluginApi?.manifest?.metadata?.defaultSettings?.message ||
+  "Default"
+```
+
+### `currentLanguage`
+- **Type**: `string`
+- **Read-only**: Yes
+- **Description**: Current UI language code (e.g., `"en"`, `"es"`)
+
+```qml
+readonly property string lang: pluginApi?.currentLanguage || "en"
+
+// Automatically updates when user changes language
+```
+
+### `pluginTranslations`
+- **Type**: `object`
+- **Read-only**: Yes
+- **Description**: Loaded translations for current language
+
+```qml
+// Don't access directly - use tr() function instead
+// pluginApi.pluginTranslations contains the loaded translation data
+```
+
+## Functions
+
+### `saveSettings()`
+Save plugin settings to disk.
+
+**Signature**:
+```qml
+function saveSettings(): void
+```
+
+**Usage**:
+```qml
+function updateSetting(key, value) {
+  pluginApi.pluginSettings[key] = value
+  pluginApi.saveSettings()
+}
+```
+
+**Example**:
+```qml
+NButton {
+  text: "Save"
+  onClicked: {
+    pluginApi.pluginSettings.message = messageInput.text
+    pluginApi.pluginSettings.count = counterValue
+    pluginApi.saveSettings()
+
+    ToastService.showNotice("Settings saved!")
+  }
+}
+```
+
+:::tip
+Settings are saved to `~/.config/noctalia/plugins/<plugin-id>/settings.json`
+:::
+
+### `openPanel(screen)`
+Open this plugin's panel on the specified screen.
+
+**Signature**:
+```qml
+function openPanel(screen: ShellScreen): bool
+```
+
+**Parameters**:
+- `screen` - The ShellScreen to open the panel on
+
+**Returns**: `true` if panel opened successfully, `false` otherwise
+
+**Usage**:
+```qml
+// In BarWidget.qml
+MouseArea {
+  anchors.fill: parent
+  onClicked: {
+    pluginApi.openPanel(root.screen)
+  }
+}
+```
+
+**Example**:
+```qml
+NIconButton {
+  icon: "external-link"
+  tooltip: "Open details"
+  onClicked: {
+    if (pluginApi.openPanel(root.screen)) {
+      Logger.i("Plugin", "Panel opened")
+    } else {
+      Logger.w("Plugin", "Failed to open panel")
+    }
+  }
+}
+```
+
+:::note
+This only works if your plugin provides a `panel` entry point in the manifest.
+:::
+
+### `closePanel(screen)`
+Close this plugin's panel.
+
+**Signature**:
+```qml
+function closePanel(screen: ShellScreen): bool
+```
+
+**Parameters**:
+- `screen` - The ShellScreen to close the panel on (usually same as opened)
+
+**Returns**: `true` if panel closed successfully, `false` otherwise
+
+**Usage**:
+```qml
+// In Panel.qml
+NButton {
+  text: "Close"
+  onClicked: {
+    pluginApi.closePanel(root.screen)
+  }
+}
+```
+
+### `tr(key, interpolations)`
+Translate a text key using plugin translations.
+
+**Signature**:
+```qml
+function tr(key: string, interpolations: object = {}): string
+```
+
+**Parameters**:
+- `key` - Translation key (supports dot notation for nested keys)
+- `interpolations` - Object with placeholder values (optional)
+
+**Returns**: Translated string, or `## key ##` if translation not found
+
+**Usage**:
+```qml
+// Simple translation
+NText {
+  text: pluginApi?.tr("panel.title") || "Title"
+}
+
+// With interpolations
+NText {
+  text: pluginApi?.tr("welcome.message", { name: userName }) || ""
+}
+```
+
+**Translation file** (`i18n/en.json`):
+```json
+{
+  "panel": {
+    "title": "My Panel"
+  },
+  "welcome": {
+    "message": "Hello, {name}!"
+  }
+}
+```
+
+**Example**:
+```qml
+ColumnLayout {
+  NText {
+    text: pluginApi?.tr("settings.title") || "Settings"
+  }
+
+  NText {
+    text: pluginApi?.tr("status.count", { count: itemCount }) || ""
+    // With count=5: "You have 5 items"
+  }
+}
+```
+
+### `trp(key, count, defaultSingular, defaultPlural, interpolations)`
+Translate with plural forms.
+
+**Signature**:
+```qml
+function trp(
+  key: string,
+  count: number,
+  defaultSingular: string = "",
+  defaultPlural: string = "",
+  interpolations: object = {}
+): string
+```
+
+**Parameters**:
+- `key` - Base translation key
+- `count` - Number to determine singular/plural
+- `defaultSingular` - Fallback singular text (optional)
+- `defaultPlural` - Fallback plural text (optional)
+- `interpolations` - Additional placeholder values (optional)
+
+**Returns**: Translated string with correct plural form
+
+**Usage**:
+```qml
+NText {
+  text: pluginApi?.trp(
+    "items.count",
+    itemCount,
+    "1 item",
+    "{count} items"
+  ) || ""
+}
+```
+
+**Translation file** (`i18n/en.json`):
+```json
+{
+  "items": {
+    "count": "{count} item",
+    "count_plural": "{count} items"
+  }
+}
+```
+
+**Example**:
+```qml
+property int fileCount: 5
+
+NText {
+  text: pluginApi?.trp(
+    "files.selected",
+    fileCount,
+    "1 file selected",
+    "{count} files selected"
+  ) || ""
+  // Output: "5 files selected"
+}
+```
+
+### `hasTranslation(key)`
+Check if a translation key exists.
+
+**Signature**:
+```qml
+function hasTranslation(key: string): bool
+```
+
+**Parameters**:
+- `key` - Translation key to check
+
+**Returns**: `true` if translation exists, `false` otherwise
+
+**Usage**:
+```qml
+if (pluginApi?.hasTranslation("optional.message")) {
+  text = pluginApi.tr("optional.message")
+} else {
+  text = "Default message"
+}
+```
+
+**Example**:
+```qml
+function getLocalizedHelp() {
+  if (pluginApi?.hasTranslation("help.advanced")) {
+    return pluginApi.tr("help.advanced")
+  }
+  return pluginApi?.tr("help.basic") || "No help available"
+}
+```
+
+## Accessing Noctalia Services
+
+Plugins have full access to Noctalia services through QML imports.
+
+### Common Services
+
+#### Settings
+```qml
+import qs.Commons
+
+// Access global Noctalia settings
+readonly property bool isDarkMode: Settings.data.ui.darkMode
+readonly property string barPosition: Settings.data.bar.position
+readonly property string fontMain: Settings.data.ui.fontMain
+```
+
+#### Internationalization (I18n)
+```qml
+import qs.Commons
+
+// Access global translations (not plugin translations)
+NText {
+  text: I18n.tr("common.save")
+}
+
+// Current language
+readonly property string lang: I18n.langCode // "en", "es", etc.
+```
+
+#### Logger
+```qml
+import qs.Commons
+
+Component.onCompleted: {
+  Logger.i("PluginName", "Info message")
+  Logger.d("PluginName", "Debug:", someValue)
+  Logger.w("PluginName", "Warning!")
+  Logger.e("PluginName", "Error occurred:", error)
+}
+```
+
+#### Style
+```qml
+import qs.Commons
+
+Rectangle {
+  color: Style.capsuleColor
+  radius: Style.radiusM
+  height: Style.barHeight
+
+  Layout.margins: Style.marginL
+}
+
+NText {
+  pointSize: Style.fontSizeM
+}
+```
+
+#### Color
+```qml
+import qs.Commons
+
+NText {
+  color: Color.mOnSurface       // Primary text
+  color: Color.mOnSurfaceVariant // Secondary text
+  color: Color.mPrimary          // Accent
+}
+
+Rectangle {
+  color: Color.mSurface
+  color: Color.mSurfaceVariant
+  color: Color.transparent
+}
+```
+
+### UI Services
+
+#### ToastService
+```qml
+import qs.Services.UI
+
+ToastService.showNotice("Operation completed!")
+ToastService.showError("Something went wrong")
+```
+
+#### TooltipService
+```qml
+import qs.Services.UI
+
+MouseArea {
+  hoverEnabled: true
+  onEntered: TooltipService.show(parent, "Tooltip text")
+  onExited: TooltipService.hide()
+}
+```
+
+#### PanelService
+```qml
+import qs.Services.UI
+
+// Open other panels
+PanelService.openPanel("settings", root.screen)
+PanelService.closePanel("launcher", root.screen)
+
+// Check panel state
+readonly property bool launcherOpen: PanelService.isPanelOpen("launcher", root.screen)
+```
+
+### System Services
+
+#### AudioService
+```qml
+import qs.Services.System
+
+// Volume control
+readonly property real volume: AudioService.volume
+function setVolume(value) {
+  AudioService.setVolume(value)
+}
+
+// Mute
+readonly property bool isMuted: AudioService.muted
+function toggleMute() {
+  AudioService.setMuted(!AudioService.muted)
+}
+```
+
+#### BatteryService
+```qml
+import qs.Services.System
+
+readonly property real batteryPercent: BatteryService.percentage
+readonly property bool isCharging: BatteryService.charging
+readonly property string batteryIcon: BatteryService.icon
+```
+
+#### NetworkService
+```qml
+import qs.Services.System
+
+readonly property bool isConnected: NetworkService.connected
+readonly property string networkName: NetworkService.ssid
+readonly property int signalStrength: NetworkService.signalStrength
+```
+
+## Complete Example
+
+Here's a complete example using most of the Plugin API:
+
+```qml
+import QtQuick
+import QtQuick.Layouts
+import Quickshell
+import qs.Commons
+import qs.Widgets
+import qs.Services.UI
+
+Rectangle {
+  id: root
+
+  property var pluginApi: null
+  property ShellScreen screen
+  property string widgetId: ""
+  property string section: ""
+
+  // Get settings with defaults
+  readonly property string displayText:
+    pluginApi?.pluginSettings?.text ||
+    pluginApi?.manifest?.metadata?.defaultSettings?.text ||
+    "Default"
+
+  readonly property int counter:
+    pluginApi?.pluginSettings?.counter || 0
+
+  implicitWidth: row.implicitWidth + Style.marginM * 2
+  implicitHeight: Style.barHeight
+
+  color: Style.capsuleColor
+  radius: Style.radiusM
+
+  RowLayout {
+    id: row
+    anchors.centerIn: parent
+    spacing: Style.marginS
+
+    NIcon {
+      icon: "plugin"
+      color: Color.mPrimary
+    }
+
+    NText {
+      text: pluginApi?.tr("widget.title") || "Plugin"
+      color: Color.mOnSurface
+      pointSize: Style.fontSizeS
+    }
+
+    NText {
+      text: root.counter.toString()
+      color: Color.mPrimary
+      pointSize: Style.fontSizeS
+      font.weight: Font.Bold
+      visible: root.counter > 0
+    }
+  }
+
+  MouseArea {
+    anchors.fill: parent
+    hoverEnabled: true
+    acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+    cursorShape: Qt.PointingHandCursor
+
+    onEntered: {
+      root.color = Qt.lighter(Style.capsuleColor, 1.1)
+
+      // Show tooltip
+      var tooltip = pluginApi?.trp(
+        "widget.clicks",
+        root.counter,
+        "Click to increment",
+        "{count} clicks"
+      ) || ""
+      TooltipService.show(root, tooltip)
+    }
+
+    onExited: {
+      root.color = Style.capsuleColor
+      TooltipService.hide()
+    }
+
+    onClicked: function(mouse) {
+      if (mouse.button === Qt.LeftButton) {
+        // Increment counter
+        var newCount = root.counter + 1
+        pluginApi.pluginSettings.counter = newCount
+        pluginApi.saveSettings()
+
+        Logger.i(pluginApi.pluginId, "Counter incremented to:", newCount)
+        ToastService.showNotice(
+          pluginApi?.tr("widget.incremented") || "Incremented!"
+        )
+      } else if (mouse.button === Qt.RightButton) {
+        // Open panel
+        if (pluginApi.openPanel(root.screen)) {
+          Logger.i(pluginApi.pluginId, "Panel opened")
+        }
+      }
+    }
+  }
+
+  Component.onCompleted: {
+    Logger.i("Plugin", "Widget loaded")
+    Logger.d("Plugin", "ID:", pluginApi?.pluginId)
+    Logger.d("Plugin", "Version:", pluginApi?.manifest?.version)
+    Logger.d("Plugin", "Language:", pluginApi?.currentLanguage)
+    Logger.d("Plugin", "Counter:", root.counter)
+  }
+}
+```
+
+## See Also
+
+- [Getting Started](/plugins/getting-started/) - Create your first plugin
+- [Bar Widget](/plugins/bar-widget/) - Bar widget development
+- [Panel](/plugins/panel/) - Panel development
+- [Translations](/plugins/translations/) - i18n guide
+- [Settings](/plugins/settings/) - Settings UI guide

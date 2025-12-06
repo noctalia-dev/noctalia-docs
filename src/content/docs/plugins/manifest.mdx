@@ -1,0 +1,373 @@
+---
+title: Plugin Manifest Reference
+description: Complete reference for plugin manifest.json files
+---
+
+Every Noctalia plugin must include a `manifest.json` file that describes the plugin and its capabilities.
+
+## Complete Example
+
+```json
+{
+  "id": "my-plugin",
+  "name": "My Awesome Plugin",
+  "version": "1.2.3",
+  "minNoctaliaVersion": "3.6.0",
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": "https://github.com/noctalia-dev/noctalia-plugins",
+  "description": "A comprehensive example plugin demonstrating all features",
+  "entryPoints": {
+    "main": "Main.qml",
+    "barWidget": "BarWidget.qml",
+    "panel": "Panel.qml",
+    "settings": "Settings.qml"
+  },
+  "dependencies": {
+    "plugins": ["other-plugin"]
+  },
+  "metadata": {
+    "defaultSettings": {
+      "enabled": true,
+      "customValue": "hello"
+    }
+  }
+}
+```
+
+## Required Fields
+
+### `id`
+- **Type**: String
+- **Required**: Yes
+- **Description**: Unique identifier for your plugin
+- **Rules**:
+  - Must match the plugin directory name
+  - Use lowercase with hyphens (kebab-case)
+  - Should be globally unique
+  - Cannot be changed after publication
+
+**Example**: `"my-plugin"`, `"privacy-indicator"`, `"launcher-button"`
+
+### `name`
+- **Type**: String
+- **Required**: Yes
+- **Description**: Human-readable plugin name displayed in the UI
+
+**Example**: `"Privacy Indicator"`, `"Hello World"`
+
+### `version`
+- **Type**: String
+- **Required**: Yes
+- **Format**: Semantic versioning (x.y.z)
+- **Description**: Plugin version number
+- **Rules**:
+  - Must follow semantic versioning
+  - Format: `MAJOR.MINOR.PATCH`
+  - Used for update detection
+
+**Example**: `"1.0.0"`, `"2.3.1"`
+
+### `author`
+- **Type**: String
+- **Required**: Yes
+- **Description**: Plugin author name or organization
+
+**Example**: `"Noctalia Team"`, `"John Doe"`
+
+### `description`
+- **Type**: String
+- **Required**: Yes
+- **Description**: Brief description of what the plugin does
+- **Recommendation**: Keep under 100 characters
+
+**Example**: `"A privacy indicator widget that shows when microphone, camera, or screen sharing is active."`
+
+## Optional Fields
+
+### `minNoctaliaVersion`
+- **Type**: String
+- **Default**: No minimum
+- **Format**: Semantic versioning (x.y.z)
+- **Description**: Minimum Noctalia Shell version required
+
+**Example**: `"3.6.0"`
+
+:::tip
+Always specify `minNoctaliaVersion` to ensure compatibility with your plugin's required APIs.
+:::
+
+### `license`
+- **Type**: String
+- **Default**: None
+- **Description**: SPDX license identifier
+- **Common values**: `"MIT"`, `"GPL-3.0"`, `"Apache-2.0"`
+
+**Example**: `"MIT"`
+
+### `repository`
+- **Type**: String (URL)
+- **Default**: None
+- **Description**: Git repository URL for your plugin
+
+**Example**: `"https://github.com/noctalia-dev/noctalia-plugins"`
+
+## Entry Points
+
+The `entryPoints` object specifies which components your plugin provides. All entry points are optional, but you must provide at least one.
+
+```json
+{
+  "entryPoints": {
+    "main": "Main.qml",
+    "barWidget": "BarWidget.qml",
+    "panel": "Panel.qml",
+    "settings": "Settings.qml"
+  }
+}
+```
+
+### `main`
+- **File**: Main.qml
+- **Purpose**: Background logic and IPC handlers
+- **Use cases**:
+  - Process IPC commands
+  - Run background tasks
+  - Monitor system events
+  - Provide services to other components
+
+**Example**:
+```json
+{
+  "entryPoints": {
+    "main": "Main.qml"
+  }
+}
+```
+
+See [IPC Guide](/plugins/ipc/) for details.
+
+### `barWidget`
+- **File**: BarWidget.qml
+- **Purpose**: Widget displayed in the top/bottom bar
+- **Use cases**:
+  - Display system information
+  - Show indicators
+  - Provide quick actions
+  - Open panels on click
+
+**Example**:
+```json
+{
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  }
+}
+```
+
+See [Bar Widget Guide](/plugins/bar-widget/) for details.
+
+### `panel`
+- **File**: Panel.qml
+- **Purpose**: Full-screen overlay panel
+- **Use cases**:
+  - Detailed information display
+  - Complex UI interactions
+  - Configuration interfaces
+  - Content browsers
+
+**Example**:
+```json
+{
+  "entryPoints": {
+    "panel": "Panel.qml"
+  }
+}
+```
+
+See [Panel Guide](/plugins/panel/) for details.
+
+### `settings`
+- **File**: Settings.qml
+- **Purpose**: Settings UI integrated into Noctalia Settings
+- **Use cases**:
+  - User configuration
+  - Plugin customization
+  - Feature toggles
+  - Preferences
+
+**Example**:
+```json
+{
+  "entryPoints": {
+    "settings": "Settings.qml"
+  }
+}
+```
+
+See [Settings Guide](/plugins/settings/) for details.
+
+## Dependencies
+
+Specify plugin dependencies in the `dependencies` object.
+
+```json
+{
+  "dependencies": {
+    "plugins": ["other-plugin", "required-plugin"]
+  }
+}
+```
+
+### `plugins`
+- **Type**: Array of plugin IDs
+- **Default**: `[]`
+- **Description**: List of plugin IDs that must be installed for this plugin to work
+
+**Example**:
+```json
+{
+  "dependencies": {
+    "plugins": []
+  }
+}
+```
+
+:::note
+Plugin dependency resolution is not yet implemented. This field is reserved for future use.
+:::
+
+## Metadata
+
+The `metadata` object contains additional plugin information.
+
+```json
+{
+  "metadata": {
+    "defaultSettings": {
+      "message": "Hello World",
+      "backgroundColor": "#A9AEFE",
+      "enabled": true,
+      "updateInterval": 1000
+    }
+  }
+}
+```
+
+### `defaultSettings`
+- **Type**: Object
+- **Default**: `{}`
+- **Description**: Default values for plugin settings
+- **Purpose**:
+  - Provide initial values when plugin is first enabled
+  - Serve as fallback when settings file doesn't exist
+  - Document available settings
+
+**Usage in plugin**:
+```qml
+// Get value from settings with fallback to default
+readonly property string message:
+  pluginApi?.pluginSettings?.message ||
+  pluginApi?.manifest?.metadata?.defaultSettings?.message ||
+  ""
+```
+
+**Supported types**:
+- String: `"hello"`
+- Number: `42`, `3.14`
+- Boolean: `true`, `false`
+- Object: `{"key": "value"}`
+- Array: `["item1", "item2"]`
+
+## Validation Rules
+
+The PluginRegistry validates manifests with these rules:
+
+1. **Required fields**: `id`, `name`, `version`, `author`, `description`, `entryPoints`
+2. **Version format**: Must match `x.y.z` pattern (e.g., `1.0.0`)
+3. **Entry points**: At least one entry point must be specified
+4. **ID format**: Should be lowercase with hyphens
+
+## Best Practices
+
+### Versioning
+- Start at `1.0.0` for initial release
+- Increment PATCH for bug fixes: `1.0.1`
+- Increment MINOR for new features: `1.1.0`
+- Increment MAJOR for breaking changes: `2.0.0`
+
+### Description
+- Be concise (under 100 characters)
+- Focus on what the plugin does
+- Use proper capitalization
+- Avoid marketing language
+
+### Default Settings
+- Provide sensible defaults
+- Document all available settings
+- Use descriptive key names
+- Include comments in your code explaining settings
+
+### Repository
+- Link to the plugin's source code
+- Include a README.md in your plugin directory
+- Maintain a changelog
+- Provide screenshots if applicable
+
+## Example Manifests
+
+### Minimal Bar Widget
+```json
+{
+  "id": "simple-widget",
+  "name": "Simple Widget",
+  "version": "1.0.0",
+  "author": "Your Name",
+  "description": "A minimal bar widget",
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "dependencies": {
+    "plugins": []
+  },
+  "metadata": {
+    "defaultSettings": {}
+  }
+}
+```
+
+### Full-Featured Plugin
+```json
+{
+  "id": "hello-world",
+  "name": "Hello World",
+  "version": "1.0.0",
+  "minNoctaliaVersion": "3.6.0",
+  "author": "Noctalia Team",
+  "license": "MIT",
+  "repository": "https://github.com/noctalia-dev/noctalia-plugins",
+  "description": "A simple Hello World plugin demonstrating functionalities.",
+  "entryPoints": {
+    "main": "Main.qml",
+    "barWidget": "BarWidget.qml",
+    "panel": "Panel.qml",
+    "settings": "Settings.qml"
+  },
+  "dependencies": {
+    "plugins": []
+  },
+  "metadata": {
+    "defaultSettings": {
+      "message": "Hello World",
+      "backgroundColor": "#A9AEFE"
+    }
+  }
+}
+```
+
+## See Also
+
+- [Getting Started](/plugins/getting-started/) - Create your first plugin
+- [Bar Widget Guide](/plugins/bar-widget/) - Develop bar widgets
+- [Panel Guide](/plugins/panel/) - Create overlay panels
+- [Plugin API](/plugins/api/) - Full API reference

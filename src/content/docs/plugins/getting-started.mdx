@@ -1,0 +1,290 @@
+---
+title: Getting Started with Plugin Development
+description: Create your first Noctalia Shell plugin
+---
+
+This guide will walk you through creating your first Noctalia plugin.
+
+## Prerequisites
+
+- Noctalia Shell installed and running
+- Basic knowledge of QML (Qt Quick)
+- Text editor of your choice
+- Git (for submitting to the plugin registry)
+
+## Step 1: Set Up Your Plugin Directory
+
+Plugins are stored in `~/.config/noctalia/plugins/`. You can develop directly in this directory or use a separate location and symlink it.
+
+```bash
+# Option 1: Develop in the plugins directory
+cd ~/.config/noctalia/plugins/
+mkdir my-plugin
+cd my-plugin
+
+# Option 2: Develop elsewhere and symlink
+mkdir ~/dev/my-noctalia-plugin
+cd ~/.config/noctalia/plugins/
+ln -s ~/dev/my-noctalia-plugin my-plugin
+```
+
+## Step 2: Create the Manifest
+
+Every plugin **must** have a `manifest.json` file. Create it with this minimal structure:
+
+```json
+{
+  "id": "my-plugin",
+  "name": "My Plugin",
+  "version": "1.0.0",
+  "minNoctaliaVersion": "3.6.0",
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": "https://github.com/yourusername/noctalia-plugins",
+  "description": "A simple example plugin",
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "dependencies": {
+    "plugins": []
+  },
+  "metadata": {
+    "defaultSettings": {}
+  }
+}
+```
+
+:::tip
+The `id` field must match your plugin directory name and should be unique across all plugins.
+:::
+
+## Step 3: Create a Bar Widget
+
+Let's create a simple bar widget that displays an icon and text. Create `BarWidget.qml`:
+
+```qml
+import QtQuick
+import QtQuick.Layouts
+import Quickshell
+import qs.Commons
+import qs.Widgets
+
+Rectangle {
+  id: root
+
+  // Plugin API (injected by PluginService)
+  property var pluginApi: null
+
+  // Required properties for bar widgets
+  property ShellScreen screen
+  property string widgetId: ""
+  property string section: ""
+
+  implicitWidth: row.implicitWidth + Style.marginM * 2
+  implicitHeight: Style.barHeight
+
+  color: Style.capsuleColor
+  radius: Style.radiusM
+
+  RowLayout {
+    id: row
+    anchors.centerIn: parent
+    spacing: Style.marginS
+
+    NIcon {
+      icon: "heart"
+      color: Color.mPrimary
+    }
+
+    NText {
+      text: "My Plugin"
+      color: Color.mOnSurface
+      pointSize: Style.fontSizeS
+    }
+  }
+}
+```
+
+## Step 4: Restart Noctalia and Enable Your Plugin
+
+After creating these files, restart Noctalia:
+
+```bash
+# Restart Noctalia (the method depends on your setup)
+# For systemd:
+systemctl --user restart noctalia
+
+# Or kill and restart manually
+killall qs && qs -p ~/.config/noctalia/noctalia-shell
+```
+
+Then:
+1. Open Noctalia Settings (Super+comma or click the settings icon)
+2. Navigate to the **Plugins** tab
+3. Find your plugin in the list
+4. Click **Enable**
+5. Your widget should appear in the bar!
+
+## Step 5: Add Your Widget to the Bar
+
+After enabling the plugin, you need to add it to the bar:
+
+1. Go to Settings > **Bar** tab
+2. Click on a section (Left/Center/Right)
+3. Find your plugin widget in the available widgets list
+4. Add it to your preferred section
+
+## What's Next?
+
+Now that you have a basic plugin working, you can:
+
+- [Add a Panel](/plugins/panel/) - Create an overlay panel
+- [Add Settings](/plugins/settings/) - Let users configure your plugin
+- [Use IPC](/plugins/ipc/) - Respond to external commands
+- [Add Translations](/plugins/translations/) - Support multiple languages
+- [Style Your Plugin](/plugins/styling/) - Use Noctalia's design system
+
+## Example: Complete Simple Plugin
+
+Here's a complete example of a simple plugin that displays a counter:
+
+**manifest.json**:
+```json
+{
+  "id": "counter",
+  "name": "Counter Widget",
+  "version": "1.0.0",
+  "minNoctaliaVersion": "3.6.0",
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": "https://github.com/yourusername/noctalia-plugins",
+  "description": "A simple counter widget",
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "dependencies": {
+    "plugins": []
+  },
+  "metadata": {
+    "defaultSettings": {
+      "count": 0
+    }
+  }
+}
+```
+
+**BarWidget.qml**:
+```qml
+import QtQuick
+import QtQuick.Layouts
+import Quickshell
+import qs.Commons
+import qs.Widgets
+import qs.Services.UI
+
+Rectangle {
+  id: root
+
+  property var pluginApi: null
+  property ShellScreen screen
+  property string widgetId: ""
+  property string section: ""
+
+  property int count: pluginApi?.pluginSettings?.count || 0
+
+  implicitWidth: row.implicitWidth + Style.marginM * 2
+  implicitHeight: Style.barHeight
+  color: Style.capsuleColor
+  radius: Style.radiusM
+
+  RowLayout {
+    id: row
+    anchors.centerIn: parent
+    spacing: Style.marginS
+
+    NIcon {
+      icon: "numbers"
+      color: Color.mPrimary
+    }
+
+    NText {
+      text: root.count.toString()
+      color: Color.mOnSurface
+      pointSize: Style.fontSizeM
+      font.weight: Font.Bold
+    }
+  }
+
+  MouseArea {
+    anchors.fill: parent
+    onClicked: {
+      root.count++
+      pluginApi.pluginSettings.count = root.count
+      pluginApi.saveSettings()
+      ToastService.showNotice("Count: " + root.count)
+    }
+  }
+
+  Component.onCompleted: {
+    Logger.i("Counter", "Widget loaded with count:", root.count)
+  }
+}
+```
+
+This creates a counter that:
+- Displays a number icon and the current count
+- Increments when clicked
+- Saves the count to settings
+- Shows a toast notification
+- Persists across restarts
+
+## Debugging Tips
+
+### View Logs
+Run Noctalia from the terminal to see logs:
+```bash
+qs -p ~/.config/noctalia/noctalia-shell
+```
+
+Use `Logger` in your plugin:
+```qml
+Logger.i("MyPlugin", "Info message")
+Logger.d("MyPlugin", "Debug message")
+Logger.w("MyPlugin", "Warning message")
+Logger.e("MyPlugin", "Error message")
+```
+
+### Check Plugin Status
+```bash
+# View plugin settings file
+cat ~/.config/noctalia/plugins.json
+
+# View your plugin's manifest
+cat ~/.config/noctalia/plugins/my-plugin/manifest.json
+
+# View your plugin's settings
+cat ~/.config/noctalia/plugins/my-plugin/settings.json
+```
+
+### Common Issues
+
+**Plugin doesn't appear in settings:**
+- Check that `manifest.json` is valid JSON
+- Verify the plugin ID matches the directory name
+- Restart Noctalia
+
+**Widget doesn't show in bar:**
+- Make sure you enabled the plugin in Settings > Plugins
+- Check that you added the widget in Settings > Bar
+- Look for errors in the terminal output
+
+**Settings don't persist:**
+- Make sure you call `pluginApi.saveSettings()` after changing settings
+- Check file permissions on `~/.config/noctalia/plugins/`
+
+## Next Steps
+
+Continue to learn about:
+- [Manifest Reference](/plugins/manifest/) - Complete manifest documentation
+- [Bar Widgets](/plugins/bar-widget/) - Advanced bar widget features
+- [Plugin API](/plugins/api/) - Full API reference

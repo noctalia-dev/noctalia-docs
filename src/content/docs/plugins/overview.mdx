@@ -1,0 +1,92 @@
+---
+title: Plugin Development Overview
+description: Learn how to create plugins for Noctalia Shell
+---
+
+Noctalia Shell features a powerful plugin system that allows you to extend the shell with custom functionality. Plugins are written in QML and can integrate seamlessly with the shell's UI and services.
+
+## What Can Plugins Do?
+
+Plugins can provide several types of components:
+
+### Bar Widgets
+Add custom widgets to the top/bottom bar. Examples:
+- Display system information
+- Show custom indicators
+- Quick action buttons
+- Status monitors
+
+### Panels
+Create overlay panels that can be opened from bar widgets or other triggers. Panels are full-screen overlays with custom UI.
+
+### Main Logic
+Run background logic using IPC (Inter-Process Communication) handlers to:
+- Process external commands
+- Monitor system events
+- Perform background tasks
+- Integrate with external services
+
+### Settings UI
+Provide a settings interface that integrates with Noctalia's settings panel, allowing users to configure your plugin.
+
+## Plugin Architecture
+
+Plugins in Noctalia follow a modular architecture:
+
+```
+your-plugin/
+├── manifest.json      # Plugin metadata (required)
+├── Main.qml           # Background logic with IPC handlers (optional)
+├── BarWidget.qml      # Bar widget component (optional)
+├── Panel.qml          # Panel overlay component (optional)
+├── Settings.qml       # Settings UI component (optional)
+├── settings.json      # User settings data (auto-generated)
+├── i18n/              # Translations (optional)
+│   ├── en.json
+│   └── es.json
+└── README.md          # Plugin documentation
+```
+
+## Plugin Lifecycle
+
+1. **Installation**: Plugin is downloaded from a registry to `~/.config/noctalia/plugins/`
+2. **Registration**: PluginRegistry scans the folder and validates the manifest
+3. **Enabling**: User enables the plugin in settings
+4. **Loading**: PluginService loads the plugin components and injects the Plugin API
+5. **Running**: Plugin components receive `pluginApi` property with access to services
+6. **Settings**: Users can configure the plugin through the integrated settings UI
+7. **Unloading**: When disabled, the plugin is cleanly unloaded
+8. **Uninstallation**: Plugin folder is removed from disk
+
+## Plugin API
+
+Every plugin component receives a `pluginApi` object with access to:
+
+- **pluginId**: Unique plugin identifier
+- **pluginDir**: Plugin directory path
+- **pluginSettings**: User settings object
+- **manifest**: Plugin manifest data
+- **saveSettings()**: Save settings to disk
+- **openPanel(screen)**: Open the plugin's panel
+- **closePanel(screen)**: Close the plugin's panel
+- **tr(key, interpolations)**: Translate text
+- **trp(key, count, ...)**: Translate with plurals
+- **hasTranslation(key)**: Check if translation exists
+
+Additionally, plugins have access to all Noctalia services through QML imports:
+- `qs.Commons` - Settings, I18n, Logger, Style, Color
+- `qs.Services.UI` - ToastService, PanelService, TooltipService
+- `qs.Services.System` - AudioService, BatteryService, NetworkService, etc.
+- `qs.Widgets` - All Noctalia UI widgets (NButton, NIcon, NText, etc.)
+
+## Example Plugins
+
+Check out these example plugins in the [official repository](https://github.com/noctalia-dev/noctalia-plugins):
+
+- **hello-world**: Demonstrates all plugin features (bar widget, panel, settings, IPC)
+- **launcher-button**: Simple bar widget that opens the app launcher
+- **privacy-indicator**: Shows when mic/camera/screen sharing is active
+
+## Getting Started
+
+Ready to create your first plugin? Continue to the [Getting Started](/plugins/getting-started/) guide.
