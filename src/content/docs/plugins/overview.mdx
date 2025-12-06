@@ -36,6 +36,7 @@ Plugins in Noctalia follow a modular architecture:
 ```
 your-plugin/
 ├── manifest.json      # Plugin metadata (required)
+├── preview.png        # Preview image for plugin gallery (optional, recommended)
 ├── Main.qml           # Background logic with IPC handlers (optional)
 ├── BarWidget.qml      # Bar widget component (optional)
 ├── Panel.qml          # Panel overlay component (optional)
@@ -46,6 +47,10 @@ your-plugin/
 │   └── es.json
 └── README.md          # Plugin documentation
 ```
+
+:::tip[Preview Images]
+Add a `preview.png`, `preview.jpg`, `preview.jpeg`, or `preview.webp` file to your plugin folder to display a preview image in the plugin gallery. The preview image should showcase what your plugin does or how it looks. Recommended size: 800x600px or similar aspect ratio. If no preview image is provided, a placeholder will be shown instead.
+:::
 
 ## Plugin Lifecycle
 
