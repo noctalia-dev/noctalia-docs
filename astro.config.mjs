@@ -37,12 +37,12 @@ export default defineConfig({
           items: [
             { label: "Basic App Theming", link: "/theming/app-theming/" },
             { label: "Advanced App Theming", link: "/theming/advanced-app-theming/" },
-            {
-              label: "Program Specific Theming",
-              collapsed: false,
-              autogenerate: { directory: "theming/program-specific" },
-            },
           ],
+        },
+        {
+          label: "Program Specific Theming",
+          collapsed: false,
+          autogenerate: { directory: "theming/program-specific" },
         },
         {
           label: "Development",
@@ -52,18 +52,18 @@ export default defineConfig({
             { label: "Widgets", link: "/development/widget/" },
             { label: "Color Scheme", link: "/development/colorscheme/" },
             { label: "Matugen", link: "/development/matugen/" },
-            {
-              label: "Plugins",
-              collapsed: false,
-              items: [
-                { label: "Overview", link: "/plugins/overview/" },
-                { label: "Getting Started", link: "/plugins/getting-started/" },
-                { label: "Manifest Reference", link: "/plugins/manifest/" },
-                { label: "Bar Widget Development", link: "/plugins/bar-widget/" },
-                { label: "Panel Development", link: "/plugins/panel/" },
-                { label: "Plugin API", link: "/plugins/api/" },
-              ],
-            },
+          ],
+        },
+        {
+          label: "Plugins development",
+          collapsed: false,
+          items: [
+            { label: "Overview", link: "/plugins/overview/" },
+            { label: "Getting Started", link: "/plugins/getting-started/" },
+            { label: "Manifest Reference", link: "/plugins/manifest/" },
+            { label: "Bar Widget Development", link: "/plugins/bar-widget/" },
+            { label: "Panel Development", link: "/plugins/panel/" },
+            { label: "Plugin API", link: "/plugins/api/" },
           ],
         },
       ],
