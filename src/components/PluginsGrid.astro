@@ -10,11 +10,43 @@ interface Plugin {
 	repository: string;
 	minNoctaliaVersion?: string;
 	license?: string;
+	lastUpdated?: string;
 }
 
 interface Registry {
 	version: number;
 	plugins: Plugin[];
+}
+
+function formatDate(dateString: string): { text: string; full: string } {
+	try {
+		const date = new Date(dateString);
+		const now = new Date();
+		const diffTime = Math.abs(now.getTime() - date.getTime());
+		const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+		let text = '';
+		
+		if (diffDays === 0) {
+			text = 'Today';
+		} else if (diffDays === 1) {
+			text = 'Yesterday';
+		} else if (diffDays < 7) {
+			text = `${diffDays} days ago`;
+		} else if (diffDays < 30) {
+			const weeks = Math.floor(diffDays / 7);
+			text = `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`;
+		} else if (diffDays < 365) {
+			const months = Math.floor(diffDays / 30);
+			text = `${months} ${months === 1 ? 'month' : 'months'} ago`;
+		} else {
+			text = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+		}
+		
+		const full = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+		return { text, full };
+	} catch (e) {
+		return { text: '', full: '' };
+	}
 }
 
 let plugins: Plugin[] = [];
@@ -26,6 +58,53 @@ try {
 	if (res.ok) {
 		const data: Registry = await res.json();
 		plugins = data.plugins || [];
+		
+		// Fetch last updated date from manifest.json for each plugin
+		plugins = await Promise.all(plugins.map(async (plugin) => {
+			try {
+				const repoBase = plugin.repository.replace('github.com', 'raw.githubusercontent.com');
+				const manifestUrl = `${repoBase}/main/${plugin.id}/manifest.json`;
+				const manifestRes = await fetch(manifestUrl, {
+					headers: { Accept: 'application/json' },
+				});
+				
+				if (manifestRes.ok) {
+					const manifest = await manifestRes.json();
+					// Try to get date from manifest (could be 'updated', 'lastUpdated', 'date', etc.)
+					const date = manifest.updated || manifest.lastUpdated || manifest.date || manifest.modified;
+					if (date) {
+						plugin.lastUpdated = date;
+					} else {
+						// Fallback: use GitHub API to get last commit date
+						try {
+							const apiUrl = `https://api.github.com/repos/${plugin.repository.replace('https://github.com/', '')}/contents/${plugin.id}/manifest.json`;
+							const apiRes = await fetch(apiUrl, {
+								headers: { Accept: 'application/vnd.github+json' },
+							});
+							if (apiRes.ok) {
+								const fileData = await apiRes.json();
+								// Get commit info
+								const commitUrl = `https://api.github.com/repos/${plugin.repository.replace('https://github.com/', '')}/commits?path=${plugin.id}/manifest.json&per_page=1`;
+								const commitRes = await fetch(commitUrl, {
+									headers: { Accept: 'application/vnd.github+json' },
+								});
+								if (commitRes.ok) {
+									const commits = await commitRes.json();
+									if (commits[0]?.commit?.committer?.date) {
+										plugin.lastUpdated = commits[0].commit.committer.date;
+									}
+								}
+							}
+						} catch (apiError) {
+							// Silently fail, no date available
+						}
+					}
+				}
+			} catch (e) {
+				// Silently fail, no date available
+			}
+			return plugin;
+		}));
 	} else {
 		plugins = [];
 	}
@@ -61,9 +140,30 @@ try {
 				{plugins.map((plugin: Plugin, index: number) => {
 					// Construct URL to plugin folder: {repository}/tree/main/{id}
 					const pluginUrl = `${plugin.repository}/tree/main/${plugin.id}`;
+					const repoBase = plugin.repository.replace('github.com', 'raw.githubusercontent.com');
+					const previewBase = `${repoBase}/main/${plugin.id}/preview`;
+					// Format last updated date
+					const lastUpdatedFormatted = plugin.lastUpdated ? formatDate(plugin.lastUpdated) : null;
 					return (
 					<div class="plugin-card" data-plugin-name={plugin.name.toLowerCase()} data-plugin-description={plugin.description.toLowerCase()} data-plugin-author={(plugin.author || '').toLowerCase()} style={{ position: 'relative', animationDelay: `${index * 0.05}s` }}>
 						<Card>
+							<div class="plugin-preview" data-preview-base={previewBase}>
+								<img 
+									src={`${previewBase}.png`} 
+									alt={`${plugin.name} preview`}
+									class="plugin-preview-image"
+									loading="lazy"
+									onerror="this.onerror=null; this.src=this.src.replace('.png', '.jpg');"
+								/>
+								<div class="plugin-preview-placeholder">
+									<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+										<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+										<polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+										<line x1="12" y1="22.08" x2="12" y2="12"></line>
+									</svg>
+									<span>No preview</span>
+								</div>
+							</div>
 							<div class="plugin-title">
 								<h3 class="plugin-name">{plugin.name}</h3>
 								<svg class="plugin-external-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -75,6 +175,14 @@ try {
 							<p class="plugin-description">{plugin.description}</p>
 							<div class="plugin-metadata">
 								<div class="plugin-badges">
+									<span class="plugin-badge id-badge" title="Plugin ID">
+										<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+											<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+											<polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+											<line x1="12" y1="22.08" x2="12" y2="12"></line>
+										</svg>
+										{plugin.id}
+									</span>
 									<span class="plugin-badge version-badge" title="Plugin version">
 										<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 											<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
@@ -82,6 +190,15 @@ try {
 										</svg>
 										v{plugin.version}
 									</span>
+									{lastUpdatedFormatted && lastUpdatedFormatted.text && (
+										<span class="plugin-badge updated-badge" title={`Last updated: ${lastUpdatedFormatted.full}`}>
+											<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+												<circle cx="12" cy="12" r="10"></circle>
+												<polyline points="12 6 12 12 16 14"></polyline>
+											</svg>
+											{lastUpdatedFormatted.text}
+										</span>
+									)}
 									{plugin.minNoctaliaVersion && (
 										<span class="plugin-badge noctalia-badge" title="Minimum Noctalia version">
 											<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -208,6 +325,44 @@ try {
 			}
 		});
 		
+		// Handle preview image loading errors - try different formats
+		const previewImages = document.querySelectorAll('.plugin-preview-image');
+		previewImages.forEach((img) => {
+			let attempts = 0;
+			const formats = ['.jpg', '.jpeg', '.webp'];
+			
+			img.addEventListener('error', function() {
+				attempts++;
+				if (attempts < formats.length) {
+					// Try next format
+					const currentSrc = this.getAttribute('src') || '';
+					const baseSrc = currentSrc.replace(/\.(png|jpg|jpeg|webp)$/, '');
+					this.src = baseSrc + formats[attempts - 1];
+				} else {
+					// All formats failed, show placeholder
+					const preview = this.closest('.plugin-preview');
+					if (preview) {
+						this.style.display = 'none';
+						const placeholder = preview.querySelector('.plugin-preview-placeholder');
+						if (placeholder) {
+							(placeholder as HTMLElement).style.display = 'flex';
+						}
+					}
+				}
+			});
+			
+			// Show placeholder initially, hide when image loads
+			img.addEventListener('load', function() {
+				const preview = this.closest('.plugin-preview');
+				if (preview) {
+					const placeholder = preview.querySelector('.plugin-preview-placeholder');
+					if (placeholder) {
+						(placeholder as HTMLElement).style.display = 'none';
+					}
+				}
+			});
+		});
+		
 	}
 	
 	// Wait for DOM to be ready
@@ -329,6 +484,151 @@ try {
 		flex-direction: column;
 		position: relative;
 		overflow: hidden;
+		padding: 0;
+	}
+	
+	.plugin-preview {
+		width: 100%;
+		height: 200px;
+		margin: 0 0 1.5rem 0;
+		overflow: hidden;
+		background: var(--sl-color-bg-soft);
+		position: relative;
+		flex-shrink: 0;
+		border-radius: calc(var(--sl-border-radius) * 0.8);
+		border: 1px solid var(--sl-color-hairline);
+		box-shadow: 
+			0 2px 8px rgba(0, 0, 0, 0.08),
+			inset 0 1px 0 rgba(255, 255, 255, 0.05);
+		transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+	
+	.plugin-card:hover .plugin-preview {
+		border-color: var(--sl-color-accent);
+		box-shadow: 
+			0 8px 24px rgba(0, 0, 0, 0.12),
+			0 0 0 1px var(--sl-color-accent),
+			inset 0 1px 0 rgba(255, 255, 255, 0.1);
+		transform: translateY(-3px);
+	}
+	
+	.plugin-card article > *:not(.plugin-preview) {
+		padding-left: 1rem;
+		padding-right: 1rem;
+	}
+	
+	.plugin-card article > .plugin-title:first-of-type {
+		padding-top: 1rem;
+	}
+	
+	.plugin-card article > *:last-child:not(.plugin-preview) {
+		padding-bottom: 1rem;
+	}
+	
+	.plugin-card article > .plugin-preview:first-child + .plugin-title {
+		padding-top: 1rem;
+		position: relative;
+	}
+	
+	.plugin-card article > .plugin-preview:first-child + .plugin-title::before {
+		content: '';
+		position: absolute;
+		top: -1.5rem;
+		left: 0;
+		right: 0;
+		height: 1px;
+		background: linear-gradient(to right, 
+			transparent 0%, 
+			var(--sl-color-hairline) 20%, 
+			var(--sl-color-hairline) 80%, 
+			transparent 100%);
+		opacity: 0.5;
+	}
+	
+	.plugin-preview::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: 
+			radial-gradient(ellipse at center top, transparent 0%, rgba(0, 0, 0, 0.1) 70%),
+			linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
+		opacity: 0.6;
+		transition: opacity 0.4s ease;
+		pointer-events: none;
+		z-index: 1;
+		border-radius: inherit;
+	}
+	
+	.plugin-card:hover .plugin-preview::before {
+		opacity: 0.8;
+	}
+	
+	.plugin-preview::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: radial-gradient(ellipse 80% 50% at 50% 0%, transparent 60%, rgba(0, 0, 0, 0.3) 100%);
+		opacity: 0;
+		transition: opacity 0.4s ease;
+		pointer-events: none;
+		z-index: 2;
+		border-radius: inherit;
+	}
+	
+	.plugin-card:hover .plugin-preview::after {
+		opacity: 1;
+	}
+	
+	.plugin-preview-placeholder {
+		display: none;
+		position: absolute;
+		inset: 0;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0.75rem;
+		color: var(--sl-color-text-soft);
+		background: var(--sl-color-bg-soft);
+		z-index: 0;
+		border-radius: inherit;
+	}
+	
+	.plugin-preview-placeholder svg {
+		opacity: 0.3;
+		transition: opacity 0.2s ease;
+	}
+	
+	.plugin-card:hover .plugin-preview-placeholder svg {
+		opacity: 0.5;
+	}
+	
+	.plugin-preview-placeholder span {
+		font-size: 0.875rem;
+		font-weight: 500;
+		opacity: 0.5;
+		transition: opacity 0.2s ease;
+	}
+	
+	.plugin-card:hover .plugin-preview-placeholder span {
+		opacity: 0.7;
+	}
+	
+	.plugin-preview-image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center top;
+		transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
+		            filter 0.4s ease,
+		            object-position 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+		display: block;
+		filter: brightness(0.95) contrast(1.05);
+	}
+	
+	.plugin-card:hover .plugin-preview-image {
+		transform: scale(1.03);
+		object-position: center top;
+		filter: brightness(1) contrast(1.1);
 	}
 	
 	.plugin-title {
