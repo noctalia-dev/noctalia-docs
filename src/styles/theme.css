@@ -79,6 +79,19 @@
 	filter: drop-shadow(0 2px 8px var(--sl-shadow-color));
 }
 
+/* Plugin cards hover effect - enhanced styles are in PluginsGrid component */
+.plugin-card {
+	transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.plugin-card article {
+	border-radius: var(--sl-border-radius);
+	border: 1px solid var(--sl-color-hairline);
+}
+.plugin-card:hover {
+	transform: translateY(-4px) scale(1.01);
+	filter: drop-shadow(0 8px 16px var(--sl-shadow-color));
+}
+
 button {
 	background-color: var(--sl-color-bg);
 }
