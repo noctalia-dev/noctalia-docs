@@ -63,6 +63,7 @@ export default defineConfig({
             { label: "Manifest Reference", link: "/plugins/manifest/" },
             { label: "Bar Widget Development", link: "/plugins/bar-widget/" },
             { label: "Panel Development", link: "/plugins/panel/" },
+            { label: "IPC System", link: "/plugins/ipc/" },
             { label: "Plugin API", link: "/plugins/api/" },
           ],
         },
