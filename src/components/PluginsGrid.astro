@@ -58,55 +58,6 @@ try {
 	if (res.ok) {
 		const data: Registry = await res.json();
 		plugins = data.plugins || [];
-		
-		// Fetch last updated date from manifest.json for each plugin
-		plugins = await Promise.all(plugins.map(async (plugin) => {
-			try {
-				const repoBase = plugin.repository.replace('github.com', 'raw.githubusercontent.com');
-				const manifestUrl = `${repoBase}/main/${plugin.id}/manifest.json`;
-				const manifestRes = await fetch(manifestUrl, {
-					headers: { Accept: 'application/json' },
-				});
-				
-				if (manifestRes.ok) {
-					const manifest = await manifestRes.json();
-					// Try to get date from manifest (could be 'updated', 'lastUpdated', 'date', etc.)
-					const date = manifest.updated || manifest.lastUpdated || manifest.date || manifest.modified;
-					if (date) {
-						plugin.lastUpdated = date;
-					} else {
-						// Fallback: use GitHub API to get last commit date
-						try {
-							const apiUrl = `https://api.github.com/repos/${plugin.repository.replace('https://github.com/', '')}/contents/${plugin.id}/manifest.json`;
-							const apiRes = await fetch(apiUrl, {
-								headers: { Accept: 'application/vnd.github+json' },
-							});
-							if (apiRes.ok) {
-								const fileData = await apiRes.json();
-								// Get commit info
-								const commitUrl = `https://api.github.com/repos/${plugin.repository.replace('https://github.com/', '')}/commits?path=${plugin.id}/manifest.json&per_page=1`;
-								const commitRes = await fetch(commitUrl, {
-									headers: { Accept: 'application/vnd.github+json' },
-								});
-								if (commitRes.ok) {
-									const commits = await commitRes.json();
-									if (commits[0]?.commit?.committer?.date) {
-										plugin.lastUpdated = commits[0].commit.committer.date;
-									}
-								}
-							}
-						} catch (apiError) {
-							// Silently fail, no date available
-						}
-					}
-				}
-			} catch (e) {
-				// Silently fail, no date available
-			}
-			return plugin;
-		}));
-	} else {
-		plugins = [];
 	}
 } catch (e) {
 	plugins = [];
