@@ -61,6 +61,19 @@ Noctalia provides extensive IPC (Inter-Process Communication) support, allowing 
 | **Seek Relative** | `qs -c noctalia-shell ipc call media seekRelative $offset` | Seek media by a relative offset in seconds |
 | **Seek By Ratio** | `qs -c noctalia-shell ipc call media seekByRatio $position` | Seek media to a specific position from 0.0 to 1.0 |
 
+#### Network & Connectivity
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **WiFi Toggle** | `qs -c noctalia-shell ipc call wifi toggle` | Toggle WiFi on/off |
+| **WiFi Enable** | `qs -c noctalia-shell ipc call wifi enable` | Enable WiFi |
+| **WiFi Disable** | `qs -c noctalia-shell ipc call wifi disable` | Disable WiFi |
+| **WiFi Panel** | `qs -c noctalia-shell ipc call wifi togglePanel` | Toggle the WiFi panel |
+| **Bluetooth Toggle** | `qs -c noctalia-shell ipc call bluetooth toggle` | Toggle Bluetooth on/off |
+| **Bluetooth Enable** | `qs -c noctalia-shell ipc call bluetooth enable` | Enable Bluetooth |
+| **Bluetooth Disable** | `qs -c noctalia-shell ipc call bluetooth disable` | Disable Bluetooth |
+| **Bluetooth Panel** | `qs -c noctalia-shell ipc call bluetooth togglePanel` | Toggle the Bluetooth panel |
+
 #### Display & Brightness
 
 | Function | Command | Description |
@@ -82,6 +95,7 @@ Noctalia provides extensive IPC (Inter-Process Communication) support, allowing 
 | **Full capacity** | `qs -c noctalia-shell ipc call batteryManager set full` | Set Full capacity mode |
 | **Balanced** | `qs -c noctalia-shell ipc call batteryManager set balanced` | Set Balanced mode |
 | **Lifespan** | `qs -c noctalia-shell ipc call batteryManager set lifespan` | Set Lifespan mode |
+| **Battery Panel** | `qs -c noctalia-shell ipc call battery togglePanel` | Toggle the Battery panel |
 
 #### Power Profile Management
 
