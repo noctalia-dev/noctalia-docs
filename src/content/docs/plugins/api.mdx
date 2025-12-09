@@ -107,6 +107,37 @@ readonly property string lang: pluginApi?.currentLanguage || "en"
 // pluginApi.pluginTranslations contains the loaded translation data
 ```
 
+### `mainInstance`
+- **Type**: `Item` (or null)
+- **Read-only**: Yes
+- **Description**: Reference to the instantiated Main.qml component
+
+```qml
+// Access the main instance from bar widget or panel
+if (pluginApi?.mainInstance) {
+  // Call a function defined in Main.qml
+  pluginApi.mainInstance.doSomething()
+}
+```
+
+:::note
+This property is `null` if your plugin doesn't have a `main` entry point in the manifest, or if Main.qml hasn't been loaded yet.
+:::
+
+### `barWidget`
+- **Type**: `Component` (or null)
+- **Read-only**: Yes
+- **Description**: Reference to the bar widget Component
+
+```qml
+// Check if plugin has a bar widget
+readonly property bool hasBarWidget: pluginApi?.barWidget !== null
+```
+
+:::note
+This property is `null` if your plugin doesn't have a `barWidget` entry point in the manifest.
+:::
+
 ## Functions
 
 ### `saveSettings()`
