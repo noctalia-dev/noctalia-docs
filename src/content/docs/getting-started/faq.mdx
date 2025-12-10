@@ -34,6 +34,20 @@ Then run `qt6ct` to select and apply your favorite icons theme.
 Set `QS_ICON_THEME="youricontheme"`
 :::
 
+:::note[If you set these in Niri's configuration]
+Ensure that you also launch Noctalia via Niri.
+This is because Niri only override environment variables for processes it spawns.
+
+For example:
+1. Disable the systemd service (if currently enabled):
+  ```bash
+  systemctl --user disable noctalia.service
+  ```
+2. Add a startup command to your `config.kdl`:
+  ```ini
+  spawn-at-startup "qs" "-c" "noctalia-shell"
+  ```
+:::
 
 </details>
 
