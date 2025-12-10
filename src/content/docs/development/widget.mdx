@@ -7,19 +7,24 @@ sidebar:
 
 This guide will show you how to add a **minimal bar widget**, register it so it shows up in the Bar tab “Widgets Positioning” selector, and make it editable right from the UI.
 
+:::note
+At this point, we recommend contributing **plugins** rather than core widgets. Plugins are easier to distribute, maintain independently, and don't require changes to the main codebase. See the [Plugins Overview](/plugins/overview/) for details on creating and sharing plugins.
+:::
+
+
 ---
 
 ## Overview
 
-Adding a new widget is straightforward once you know the flow.  
+Adding a new widget is straightforward once you know the flow.
 You’ll go through these steps:
 
-1. [Create the widget file](#step-1-create-the-widget-file)  
-2. [Register the widget in the registry](#step-2-register-the-widget-in-the-registry)  
-3. [Verify it shows up in the BarTab selector](#step-3-verify-it-shows-up-in-the-bartab-selector)  
-4. [Test the Widget from the Settings Panel](#step-4-test-the-widget-from-the-settings-panel)  
-5. [Add a settings UI](#step-5-add-a-settings-ui)  
-6. [Add more settings later (optional)](#step-6-optional-add-more-settings-later)  
+1. [Create the widget file](#step-1-create-the-widget-file)
+2. [Register the widget in the registry](#step-2-register-the-widget-in-the-registry)
+3. [Verify it shows up in the BarTab selector](#step-3-verify-it-shows-up-in-the-bartab-selector)
+4. [Test the Widget from the Settings Panel](#step-4-test-the-widget-from-the-settings-panel)
+5. [Add a settings UI](#step-5-add-a-settings-ui)
+6. [Add more settings later (optional)](#step-6-optional-add-more-settings-later)
 
 Let’s break it down step by step.
 
@@ -117,15 +122,15 @@ The `text` field is just an example of a simple per-widget setting copied to the
 
 ## Step 3: Verify It Shows Up in the BarTab Selector
 
-The Bar settings UI (`Modules/SettingsPanel/Tabs/BarTab.qml`) reads available widgets from `BarWidgetRegistry.getAvailableWidgets()` and builds the selector automatically.  
+The Bar settings UI (`Modules/Panels/Settings/Tabs/BarTab.qml`) reads available widgets from `BarWidgetRegistry.getAvailableWidgets()` and builds the selector automatically.
 Once registered, `HelloWorld` appears in the add-widget menu for Left/Center/Right sections.
 
 ---
 
 ## Step 4: Test the Widget from the Settings Panel
 
-- Open **Settings → Bar → Widgets Positioning**.  
-- In the desired section (Left/Center/Right), click “Add” and select `HelloWorld`.  
+- Open **Settings → Bar → Widgets Positioning**.
+- In the desired section (Left/Center/Right), click “Add” and select `HelloWorld`.
 - Drag to reorder if needed.
 
 ---
@@ -134,7 +139,7 @@ Once registered, `HelloWorld` appears in the add-widget menu for Left/Center/Rig
 
 To let users change the widget text via the Bar settings dialog, create a settings component and map it.
 
-### 1) Create `Modules/SettingsPanel/Bar/WidgetSettings/HelloWorldSettings.qml`:
+### 1) Create `Modules/Panels/Settings/Bar/WidgetSettings/HelloWorldSettings.qml`:
 
 ```qml
 import QtQuick
@@ -174,7 +179,7 @@ ColumnLayout {
 }
 ```
 
-### 2) Map the settings component in `Modules/SettingsPanel/Bar/BarWidgetSettingsDialog.qml`:
+### 2) Map the settings component in `Modules/Panels/Settings/Bar/BarWidgetSettingsDialog.qml`:
 
 ```qml
 // Inside loadWidgetSettings() widgetSettingsMap
@@ -191,13 +196,13 @@ The `saveSettings()` function ensures your changes are written back into the JSO
 
 ## Step 6 (Optional): Add More Settings Later
 
-- Add keys under `widgetMetadata["HelloWorld"]` for new defaults (e.g., `icon`, `color`, etc.).  
-- They’ll be copied into a widget instance the first time the user adds it.  
+- Add keys under `widgetMetadata["HelloWorld"]` for new defaults (e.g., `icon`, `color`, etc.).
+- They’ll be copied into a widget instance the first time the user adds it.
 - To adjust existing instances, the user can edit in the UI if supported, or modify their settings JSON.
 
 ---
 
-This inserts the widget with default settings for first-run configurations.  
+This inserts the widget with default settings for first-run configurations.
 Existing users won’t be affected unless they reset or remove their settings file.
 
 ---
