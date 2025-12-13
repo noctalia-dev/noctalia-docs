@@ -34,6 +34,42 @@ Then run `qt6ct` to select and apply your favorite icons theme.
 Set `QS_ICON_THEME="youricontheme"`
 :::
 
+:::note[For Niri users]
+Ensure that you set environment variables properly.
+
+<details>
+<summary>If you prefer set these in Niri's config</summary>
+Ensure that you also launch Noctalia via Niri:
+```ini
+spawn-at-startup "qs" "-c" "noctalia-shell"
+```
+This is because Niri only override environment variables for processes it spawns.
+</details>
+
+<details>
+<summary>If you prefer systemd</summary>
+You can edit the noctalia.service.
+
+1. Edit the user service configuration:
+```bash
+systemctl edit --user noctalia.service
+```
+
+2. Add variables in the [Service] section:
+```ini
+[Service]
+Environment="QT_QPA_PLATFORM=wayland;xcb"
+Environment="QT_QPA_PLATFORMTHEME=qt6ct"
+Environment="QT_AUTO_SCREEN_SCALE_FACTOR=1"
+```
+
+3. Reload and restart the service:
+```bash
+systemctl --user daemon-reload
+systemctl --user restart noctalia.service
+```
+</details>
+:::
 
 </details>
 
