@@ -46,6 +46,7 @@ Add the required inputs to your flake configuration:
 
   outputs = inputs@{ self, nixpkgs, ... }: {
     nixosConfigurations.awesomebox = nixpkgs.lib.nixosSystem {
+      specialArgs = { inherit inputs; };
       modules = [
         # ... other modules
         ./noctalia.nix
@@ -430,7 +431,7 @@ To add support for events in the calendar via evolution-data-server.
 
 ```nix
 # noctalia.nix
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, lib, ... }:
 {
   services.gnome.evolution-data-server.enable = true;
 
