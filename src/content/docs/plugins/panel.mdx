@@ -664,8 +664,8 @@ IpcHandler {
   target: "plugin:my-plugin"
 
   function showPanel() {
-    // Note: Need to get screen reference asynchronously
-     pluginApi.withCurrentScreen(screen => {
+    // Need to get screen reference asynchronously
+    pluginApi.withCurrentScreen(screen => {
       pluginApi.openPanel(screen);
     });
   }
