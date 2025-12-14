@@ -193,6 +193,26 @@ Common causes:
 </details>
 
 <details>
+<summary><strong>Why does my clipboard history preview look weird?</strong></summary>
+**How to fix:**
+
+1. Open Noctalia's Settings -> Color Scheme -> Generate templates for predefined schemes -> UI -> Check the Qt checkbox (skip this part if you have your own Qt theme).
+
+![enable_qt_template](../../../assets/clipboard-preview/enable_qt_template.png)
+
+2. Install **qt5ct** and **qt6ct** on your system, then set both Color schemes to **noctalia**.
+
+![qt5ct](../../../assets/clipboard-preview/qt5ct.png)
+
+![qt6ct](../../../assets/clipboard-preview/qt6ct.png)
+
+3. Check **>clip** again to see if the theme is applied (if not try to restart noctalia or logout/login again)
+
+![clipboard-preview](../../../assets/clipboard-preview/clipboard_preview.png)
+
+</details>
+
+<details>
 <summary><strong>Why do I have a weird gap?</strong></summary>
 
 This usually means `noctalia-shell` is running more than once (for example, launched by both your compositor autostart and the systemd service). Multiple instances fight over layout space and leave blank gaps.
