@@ -245,6 +245,27 @@ EOF
 
 </details>
 
+<details>
+<summary><strong>How do I enable fingerprint authentication on the lockscreen?</strong></summary>
+
+Noctalia supports fingerprint authentication via PAM. To enable it:
+
+1. **Edit the PAM configuration file** at `~/.config/noctalia/pam/password.conf`
+2. **Uncomment the fingerprint line** by removing the `#`:
+   ```conf
+   auth sufficient pam_fprintd.so max-tries=1
+   auth required pam_unix.so
+   ```
+3. **Install required packages**: `fprintd` and `pam_fprintd`
+4. **Enroll your fingerprint** (if needed): `fprintd-enroll`
+5. **Restart Noctalia** for changes to take effect
+
+After enabling, you can unlock using either your fingerprint or password. The fingerprint will be attempted first (max 1 try), then it falls back to password authentication.
+
+**Note:** The PAM configuration file is created automatically on first launch. If it doesn't exist, restart Noctalia and it will be generated.
+
+</details>
+
 ## Still Need Help?
 
 If your question isn't answered here:
