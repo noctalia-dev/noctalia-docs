@@ -62,6 +62,7 @@ export default defineConfig({
             { label: "Getting Started", link: "/plugins/getting-started/" },
             { label: "Manifest Reference", link: "/plugins/manifest/" },
             { label: "Bar Widget Development", link: "/plugins/bar-widget/" },
+            { label: "Desktop Widget Development", link: "/plugins/desktop-widget/" },
             { label: "Panel Development", link: "/plugins/panel/" },
             { label: "IPC System", link: "/plugins/ipc/" },
             { label: "Plugin API", link: "/plugins/api/" },

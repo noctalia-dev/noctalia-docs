@@ -138,6 +138,20 @@ readonly property bool hasBarWidget: pluginApi?.barWidget !== null
 This property is `null` if your plugin doesn't have a `barWidget` entry point in the manifest.
 :::
 
+### `desktopWidget`
+- **Type**: `Component` (or null)
+- **Read-only**: Yes
+- **Description**: Reference to the desktop widget Component
+
+```qml
+// Check if plugin has a desktop widget
+readonly property bool hasDesktopWidget: pluginApi?.desktopWidget !== null
+```
+
+:::note
+This property is `null` if your plugin doesn't have a `desktopWidget` entry point in the manifest.
+:::
+
 ## Functions
 
 ### `saveSettings()`
@@ -650,6 +664,7 @@ Rectangle {
 
 - [Getting Started](/plugins/getting-started/) - Create your first plugin
 - [Bar Widget](/plugins/bar-widget/) - Bar widget development
+- [Desktop Widget](/plugins/desktop-widget/) - Desktop widget development
 - [Panel](/plugins/panel/) - Panel development
 - [Manifest Reference](/plugins/manifest/) - Plugin configuration
 - [Plugin Overview](/plugins/overview/) - Plugin system overview

@@ -1,0 +1,506 @@
+---
+title: Desktop Widget Development
+description: Create draggable widgets for the Noctalia desktop
+---
+
+Desktop widgets are floating, draggable components that appear on the desktop background. They provide at-a-glance information and can be positioned and scaled by the user in edit mode.
+
+## Basic Structure
+
+A desktop widget must extend `DraggableDesktopWidget`:
+
+```qml
+import QtQuick
+import QtQuick.Layouts
+import qs.Commons
+import qs.Modules.DesktopWidgets
+import qs.Widgets
+
+DraggableDesktopWidget {
+  id: root
+
+  // Plugin API (injected by PluginService)
+  property var pluginApi: null
+
+  // Widget dimensions
+  implicitWidth: 200
+  implicitHeight: 120
+
+  // Your widget content here
+}
+```
+
+## Required Import
+
+Desktop widgets must import the `qs.Modules.DesktopWidgets` module to access the `DraggableDesktopWidget` base component:
+
+```qml
+import qs.Modules.DesktopWidgets
+```
+
+## Required Properties
+
+### `pluginApi`
+Injected by the PluginService. Provides access to plugin APIs and services.
+
+```qml
+property var pluginApi: null
+```
+
+## Inherited Properties
+
+The `DraggableDesktopWidget` base component provides these properties automatically:
+
+### `screen`
+The ShellScreen this widget is displayed on.
+
+```qml
+// Inherited from DraggableDesktopWidget
+property ShellScreen screen
+```
+
+### `widgetData`
+Configuration data for this widget instance (position, scale, custom settings).
+
+```qml
+// Access widget-specific data
+property var widgetData: null
+
+// Example usage
+property color textColor: (widgetData && widgetData.textColor) ? widgetData.textColor : Color.mOnSurface
+```
+
+### `widgetIndex`
+Index of this widget in the monitor's widget list.
+
+```qml
+property int widgetIndex: -1
+```
+
+### `isDragging`
+Whether the widget is currently being dragged (read-only).
+
+```qml
+readonly property bool isDragging
+```
+
+### `isScaling`
+Whether the widget is currently being scaled (read-only).
+
+```qml
+readonly property bool isScaling
+```
+
+### `showBackground`
+Whether to show the default background container. Can be overridden from `widgetData`.
+
+```qml
+property bool showBackground: true
+```
+
+### `widgetScale`
+Current scale factor of the widget. Controlled via right-click drag in edit mode.
+
+```qml
+property real widgetScale: 1.0
+property real minScale: 0.5
+property real maxScale: 3.0
+```
+
+## Sizing
+
+Desktop widgets should define their natural size:
+
+```qml
+DraggableDesktopWidget {
+  id: root
+
+  // Fixed size
+  implicitWidth: 200
+  implicitHeight: 120
+
+  // Or dynamic size based on content
+  implicitWidth: contentLayout.implicitWidth + Style.marginXL * 2
+  implicitHeight: contentLayout.implicitHeight + Style.marginXL * 2
+  width: implicitWidth
+  height: implicitHeight
+
+  ColumnLayout {
+    id: contentLayout
+    // ...
+  }
+}
+```
+
+## Manifest Entry
+
+Register the desktop widget in your plugin's `manifest.json`:
+
+```json
+{
+  "id": "my-plugin",
+  "name": "My Plugin",
+  "version": "1.0.0",
+  "entryPoints": {
+    "desktopWidget": "DesktopWidget.qml"
+  }
+}
+```
+
+## Using Settings
+
+Access plugin settings via `pluginApi`:
+
+```qml
+// Get setting with fallback to default
+readonly property string message:
+  pluginApi?.pluginSettings?.message ||
+  pluginApi?.manifest?.metadata?.defaultSettings?.message ||
+  "Default Message"
+```
+
+## Using widgetData
+
+Widget-specific configuration is available through `widgetData`. This is useful for per-instance settings:
+
+```qml
+DraggableDesktopWidget {
+  id: root
+
+  // Custom colors from widget data
+  property color textColor: {
+    var color = widgetData && widgetData.textColor ? widgetData.textColor : ""
+    return (color && color !== "") ? color : Color.mOnSurface
+  }
+
+  // Custom font size
+  property real fontSize: {
+    var size = widgetData && widgetData.fontSize ? widgetData.fontSize : 0
+    return (size && size > 0) ? size : Style.fontSizeL
+  }
+
+  // Opacity
+  property real widgetOpacity: (widgetData && widgetData.opacity) ? widgetData.opacity : 1.0
+
+  // Boolean options
+  property bool showDetails: (widgetData && widgetData.showDetails !== undefined) ? widgetData.showDetails : true
+}
+```
+
+## Styling
+
+Use Noctalia's design system for consistent styling:
+
+### Colors
+```qml
+import qs.Commons
+
+NText {
+  // Primary text
+  color: Color.mOnSurface
+
+  // Secondary text
+  color: Color.mOnSurfaceVariant
+
+  // Accent color
+  color: Color.mPrimary
+}
+```
+
+### Typography
+```qml
+NText {
+  font.pointSize: Style.fontSizeS
+  font.pointSize: Style.fontSizeM
+  font.pointSize: Style.fontSizeL
+  font.pointSize: Style.fontSizeXL
+  font.pointSize: Style.fontSizeXXL
+
+  font.weight: Font.Light
+  font.weight: Font.Normal
+  font.weight: Font.Medium
+  font.weight: Font.Bold
+}
+```
+
+### Spacing
+```qml
+ColumnLayout {
+  anchors.fill: parent
+  anchors.margins: Style.marginL
+  spacing: Style.marginS
+  spacing: Style.marginM
+  spacing: Style.marginL
+}
+```
+
+## Background Control
+
+The `DraggableDesktopWidget` provides a default styled background with shadow. You can control it:
+
+```qml
+DraggableDesktopWidget {
+  id: root
+
+  // Disable the default background (for transparent or custom backgrounds)
+  showBackground: false
+
+  // Or let it be controlled by widget settings
+  // showBackground is automatically bound to widgetData.showBackground if available
+}
+```
+
+## Edit Mode
+
+Users can position and scale desktop widgets in edit mode:
+
+- **Left-click drag**: Move the widget
+- **Right-click drag**: Scale the widget
+
+Your widget should respond gracefully to scaling. The `isDragging` and `isScaling` properties let you adjust behavior during these operations:
+
+```qml
+DraggableDesktopWidget {
+  id: root
+
+  // Disable animations during drag/scale for better performance
+  Rectangle {
+    opacity: root.isDragging ? 0.8 : 1.0
+
+    Behavior on opacity {
+      enabled: !root.isDragging && !root.isScaling
+      NumberAnimation { duration: 200 }
+    }
+  }
+}
+```
+
+## Complete Examples
+
+### Simple Message Widget
+
+```qml
+import QtQuick
+import QtQuick.Layouts
+import qs.Commons
+import qs.Modules.DesktopWidgets
+import qs.Widgets
+
+DraggableDesktopWidget {
+  id: root
+
+  property var pluginApi: null
+
+  readonly property string message:
+    pluginApi?.pluginSettings?.message ||
+    pluginApi?.manifest?.metadata?.defaultSettings?.message ||
+    "Hello World"
+
+  implicitWidth: 200
+  implicitHeight: 120
+
+  ColumnLayout {
+    anchors.fill: parent
+    anchors.margins: Style.marginL
+    spacing: Style.marginS
+
+    NIcon {
+      icon: "noctalia"
+      pointSize: Style.fontSizeXXL
+      Layout.alignment: Qt.AlignHCenter
+    }
+
+    NText {
+      text: root.message
+      font.pointSize: Style.fontSizeM
+      Layout.alignment: Qt.AlignHCenter
+    }
+
+    NText {
+      text: "Desktop Widget"
+      font.pointSize: Style.fontSizeS
+      color: Color.mOnSurfaceVariant
+      Layout.alignment: Qt.AlignHCenter
+    }
+  }
+}
+```
+
+### Widget with Custom Settings
+
+```qml
+import QtQuick
+import QtQuick.Layouts
+import qs.Commons
+import qs.Modules.DesktopWidgets
+import qs.Widgets
+
+DraggableDesktopWidget {
+  id: root
+
+  property var pluginApi: null
+
+  // Customizable properties from widgetData
+  property color textColor: {
+    var color = widgetData && widgetData.textColor ? widgetData.textColor : ""
+    return (color && color !== "") ? color : Color.mOnSurface
+  }
+
+  property real fontSize: {
+    var size = widgetData && widgetData.fontSize ? widgetData.fontSize : 0
+    return (size && size > 0) ? size : Style.fontSizeL
+  }
+
+  property real widgetOpacity: (widgetData && widgetData.opacity) ? widgetData.opacity : 1.0
+
+  implicitWidth: contentLayout.implicitWidth + Style.marginXL * 2
+  implicitHeight: contentLayout.implicitHeight + Style.marginXL * 2
+  width: implicitWidth
+  height: implicitHeight
+
+  ColumnLayout {
+    id: contentLayout
+    anchors.centerIn: parent
+    spacing: Style.marginM
+    opacity: root.widgetOpacity
+
+    NText {
+      text: pluginApi?.pluginSettings?.message || "Custom Widget"
+      font.pointSize: root.fontSize
+      color: root.textColor
+      Layout.alignment: Qt.AlignHCenter
+    }
+
+    NText {
+      text: new Date().toLocaleDateString()
+      font.pointSize: Style.fontSizeS
+      color: Color.mOnSurfaceVariant
+      Layout.alignment: Qt.AlignHCenter
+    }
+  }
+}
+```
+
+### Transparent Widget (No Background)
+
+```qml
+import QtQuick
+import QtQuick.Layouts
+import qs.Commons
+import qs.Modules.DesktopWidgets
+import qs.Widgets
+
+DraggableDesktopWidget {
+  id: root
+
+  property var pluginApi: null
+
+  // Disable default background
+  showBackground: false
+
+  implicitWidth: 300
+  implicitHeight: 150
+
+  // Custom transparent styling
+  ColumnLayout {
+    anchors.fill: parent
+    anchors.margins: Style.marginL
+    spacing: Style.marginS
+
+    NText {
+      text: "12:34"
+      font.pointSize: Style.fontSizeXXXL * 2
+      font.weight: Font.Light
+      color: Color.mOnSurface
+      Layout.alignment: Qt.AlignHCenter
+
+      // Optional: add shadow for visibility on any background
+      layer.enabled: true
+      layer.effect: MultiEffect {
+        shadowEnabled: true
+        shadowBlur: 0.5
+        shadowOpacity: 0.3
+      }
+    }
+  }
+}
+```
+
+### Widget Using Services
+
+```qml
+import QtQuick
+import QtQuick.Layouts
+import qs.Commons
+import qs.Modules.DesktopWidgets
+import qs.Widgets
+import qs.Services.System
+
+DraggableDesktopWidget {
+  id: root
+
+  property var pluginApi: null
+
+  implicitWidth: 180
+  implicitHeight: 100
+
+  ColumnLayout {
+    anchors.fill: parent
+    anchors.margins: Style.marginL
+    spacing: Style.marginS
+
+    RowLayout {
+      Layout.alignment: Qt.AlignHCenter
+      spacing: Style.marginS
+
+      NIcon {
+        icon: BatteryService.icon
+        color: BatteryService.charging ? Color.mPrimary : Color.mOnSurface
+      }
+
+      NText {
+        text: Math.round(BatteryService.percentage) + "%"
+        font.pointSize: Style.fontSizeL
+        font.weight: Font.Bold
+      }
+    }
+
+    NText {
+      text: BatteryService.charging ? "Charging" : "On Battery"
+      font.pointSize: Style.fontSizeS
+      color: Color.mOnSurfaceVariant
+      Layout.alignment: Qt.AlignHCenter
+    }
+  }
+}
+```
+
+## Best Practices
+
+1. **Use `DraggableDesktopWidget`**: Always extend this base component for proper drag/scale behavior
+2. **Define implicit size**: Set `implicitWidth` and `implicitHeight` for proper layout
+3. **Support scaling**: Ensure your widget looks good at different scale factors (0.5x to 3x)
+4. **Handle `widgetData`**: Use defensive checks when accessing widget-specific data
+5. **Respect theming**: Use `Color.m*` colors that adapt to light/dark mode
+6. **Keep it performant**: Avoid expensive operations since widgets are always visible
+7. **Disable animations during interaction**: Use `isDragging` and `isScaling` to optimize
+8. **Provide fallbacks**: Always have default values for settings and data
+
+## Adding Desktop Widgets to the Desktop
+
+Users can add plugin desktop widgets through the Noctalia settings:
+
+1. Open Settings panel
+2. Navigate to Desktop Widgets
+3. Add new widget from the widget picker
+4. Enable edit mode
+5. Position and scale as desired
+6. Exit edit mode
+
+## See Also
+
+- [Getting Started](/plugins/getting-started/) - Create your first plugin
+- [Bar Widget Development](/plugins/bar-widget/) - Create bar widgets
+- [Panel Development](/plugins/panel/) - Create overlay panels
+- [Plugin API](/plugins/api/) - Full API reference
+- [Manifest Reference](/plugins/manifest/) - Plugin configuration
