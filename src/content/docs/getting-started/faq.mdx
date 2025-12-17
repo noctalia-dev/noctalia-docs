@@ -7,8 +7,23 @@ sidebar:
 
 Find answers to common questions about Noctalia installation, configuration, and usage.
 
-## Frequently Asked Questions
+## Installation & Compatibility
 
+<details>
+<summary><strong>How can I run Noctalia on distributions other than Arch and NixOS?</strong></summary>
+
+Most distributions offer `quickshell`. If you can install either, you can use Noctalia. If your distro doesn't provide Quickshell, you can build it from source.
+
+</details>
+
+<details>
+<summary><strong>What window managers does Noctalia support?</strong></summary>
+
+Noctalia is designed for and tested with Hyprland and Niri. While it may work with other compositors, we currently only support workspace indicators for Niri and Hyprland.
+
+</details>
+
+## Configuration
 
 <details>
 <summary><strong>Why are some of my app icons missing?</strong></summary>
@@ -74,32 +89,12 @@ systemctl --user restart noctalia.service
 </details>
 
 <details>
-<summary><strong>How can I make empty or unused workspaces always show up in Hyprland?</strong></summary>
-
-To make workspaces always visible, even when empty, you need to set them as persistent in your hyprland.conf file. You can find the specific syntax and examples in the official documentation for [Workspace Rules](https://wiki.hypr.land/Configuring/Workspace-Rules/#rules).
-```
-workspace = 1, monitor:DP-1, persistent:true
-workspace = 2, monitor:DP-1, persistent:true
-workspace = 3, monitor:DP-1, persistent:true
-workspace = 4, monitor:DP-1, persistent:true
-workspace = 5, monitor:DP-1, persistent:true
-```
-</details>
-
-<details>
 <summary><strong>How can I make the UI bigger?</strong></summary>
 
 You can start noctalia-shell like this to make the UI bigger:
 `QT_SCALE_FACTOR=2 qs -c noctalia-shell`
 You might have to play around with the scale factor to fit your needs.
 This can also be added to your compositor autostart.
-
-</details>
-
-<details>
-<summary><strong>How can I run Noctalia on distributions other than Arch and NixOS?</strong></summary>
-
-Most distributions offer `quickshell`. If you can install either, you can use Noctalia. If your distro doesn’t provide Quickshell, you can build it from source.
 
 </details>
 
@@ -128,6 +123,43 @@ After changing your system's language, restart Noctalia for the changes to take 
 If Noctalia doesn't support your language yet, consider contributing a translation! Check the project's repository on GitHub for instructions on how to contribute.
 </details>
 
+<details>
+<summary><strong>How do I enable fingerprint authentication on the lockscreen?</strong></summary>
+
+Noctalia supports fingerprint authentication via PAM. To enable it:
+
+1. **Edit the PAM configuration file** at `~/.config/noctalia/pam/password.conf`
+2. **Uncomment the fingerprint line** by removing the `#`:
+   ```conf
+   auth sufficient pam_fprintd.so max-tries=1
+   auth required pam_unix.so
+   ```
+3. **Install required packages**: `fprintd` and `pam_fprintd`
+4. **Enroll your fingerprint** (if needed): `fprintd-enroll`
+5. **Restart Noctalia** for changes to take effect
+
+After enabling, you can unlock using either your fingerprint or password. The fingerprint will be attempted first (max 1 try), then it falls back to password authentication.
+
+**Note:** The PAM configuration file is created automatically on first launch. If it doesn't exist, restart Noctalia and it will be generated.
+
+</details>
+
+## Window Manager Integration
+
+<details>
+<summary><strong>How can I make empty or unused workspaces always show up in Hyprland?</strong></summary>
+
+To make workspaces always visible, even when empty, you need to set them as persistent in your hyprland.conf file. You can find the specific syntax and examples in the official documentation for [Workspace Rules](https://wiki.hypr.land/Configuring/Workspace-Rules/#rules).
+```
+workspace = 1, monitor:DP-1, persistent:true
+workspace = 2, monitor:DP-1, persistent:true
+workspace = 3, monitor:DP-1, persistent:true
+workspace = 4, monitor:DP-1, persistent:true
+workspace = 5, monitor:DP-1, persistent:true
+```
+</details>
+
+## Troubleshooting
 
 <details>
 <summary><strong>Why aren't my keybinds working?</strong></summary>
@@ -137,13 +169,6 @@ Common causes:
 1. **Wrong command syntax**: Make sure you're using the correct IPC command format
 2. **Window manager configuration**: Verify your keybind syntax matches your WM (Hyprland vs Niri)
 3. **Noctalia not running**: Keybinds only work when Noctalia is running
-
-</details>
-
-<details>
-<summary><strong>What window managers does Noctalia support?</strong></summary>
-
-Noctalia is designed for and tested with Hyprland and Niri. While it may work with other compositors, we currently only support workspace indicators for Niri and Hyprland.
 
 </details>
 
@@ -163,52 +188,11 @@ The launcher looks for `.desktop` files in standard locations. If an application
 </details>
 
 <details>
-<summary><strong>Why my screen recorder won't start recording?</strong></summary>
-
-Common causes:
-
-1. **Missing package**: Make sure you're have installed the proper package or flatpak
-2. **Portal crashed**: Verify the status of your xdg-desktop-portal-xxx service and/or restart it. On Niri the gnome portal is recommended and can be restarted using the following command: ```systemctl --user restart xdg-desktop-portal-gnome.service```
-3. **Change the vide source**: In Noctalia's settings, switch the source from portal to screen. And try recording.
-4. **Check output in terminal**: ```gpu-screen-recorder -w screen -f 60 -a default_output -o video.mp4```
-
-</details>
-
-<details>
 <summary><strong>Why does Noctalia crash on startup?</strong></summary>
 
 1. **Check the error output** by running Noctalia from the terminal
 2. **Update dependencies** - outdated Quickshell versions can cause issues
 3. **Check system logs** for additional error information
-
-</details>
-
-<details>
-<summary><strong>Why does the shell look different than expected?</strong></summary>
-
-1. **Check your theme settings** in the settings panel
-2. **Verify your display settings** - scaling and resolution can affect appearance
-3. **Update to the latest version** - UI improvements are frequently released
-
-</details>
-
-<details>
-<summary><strong>Why does my clipboard history preview look weird?</strong></summary>
-**How to fix:**
-
-1. Open Noctalia's Settings -> Color Scheme -> Generate templates for predefined schemes -> UI -> Check the Qt checkbox (skip this part if you have your own Qt theme).
-
-![enable_qt_template](../../../assets/clipboard-preview/enable_qt_template.png)
-
-2. Install **qt5ct** and **qt6ct** on your system, then set both Color schemes to **noctalia**.
-
-![qt5ct](../../../assets/clipboard-preview/qt5ct.png)
-
-![qt6ct](../../../assets/clipboard-preview/qt6ct.png)
-
-3. Check **>clip** again to see if the theme is applied (if not try to restart noctalia or logout/login again)
-
-![clipboard-preview](../../../assets/clipboard-preview/clipboard_preview.png)
 
 </details>
 
@@ -246,23 +230,45 @@ EOF
 </details>
 
 <details>
-<summary><strong>How do I enable fingerprint authentication on the lockscreen?</strong></summary>
+<summary><strong>Why wont my screen recorder start recording?</strong></summary>
 
-Noctalia supports fingerprint authentication via PAM. To enable it:
+Common causes:
 
-1. **Edit the PAM configuration file** at `~/.config/noctalia/pam/password.conf`
-2. **Uncomment the fingerprint line** by removing the `#`:
-   ```conf
-   auth sufficient pam_fprintd.so max-tries=1
-   auth required pam_unix.so
-   ```
-3. **Install required packages**: `fprintd` and `pam_fprintd`
-4. **Enroll your fingerprint** (if needed): `fprintd-enroll`
-5. **Restart Noctalia** for changes to take effect
+1. **Missing package**: Make sure you're have installed the proper package or flatpak
+2. **Portal crashed**: Verify the status of your xdg-desktop-portal-xxx service and/or restart it. On Niri the gnome portal is recommended and can be restarted using the following command: ```systemctl --user restart xdg-desktop-portal-gnome.service```
+3. **Change the vide source**: In Noctalia's settings, switch the source from portal to screen. And try recording.
+4. **Check output in terminal**: ```gpu-screen-recorder -w screen -f 60 -a default_output -o video.mp4```
 
-After enabling, you can unlock using either your fingerprint or password. The fingerprint will be attempted first (max 1 try), then it falls back to password authentication.
+</details>
 
-**Note:** The PAM configuration file is created automatically on first launch. If it doesn't exist, restart Noctalia and it will be generated.
+## Appearance & UI
+
+<details>
+<summary><strong>Why does the shell look different than expected?</strong></summary>
+
+1. **Check your theme settings** in the settings panel
+2. **Verify your display settings** - scaling and resolution can affect appearance
+3. **Update to the latest version** - UI improvements are frequently released
+
+</details>
+
+<details>
+<summary><strong>Why does my clipboard history preview look weird?</strong></summary>
+**How to fix:**
+
+1. Open Noctalia's Settings -> Color Scheme -> Generate templates for predefined schemes -> UI -> Check the Qt checkbox (skip this part if you have your own Qt theme).
+
+![enable_qt_template](../../../assets/clipboard-preview/enable_qt_template.png)
+
+2. Install **qt5ct** and **qt6ct** on your system, then set both Color schemes to **noctalia**.
+
+![qt5ct](../../../assets/clipboard-preview/qt5ct.png)
+
+![qt6ct](../../../assets/clipboard-preview/qt6ct.png)
+
+3. Check **>clip** again to see if the theme is applied (if not try to restart noctalia or logout/login again)
+
+![clipboard-preview](../../../assets/clipboard-preview/clipboard_preview.png)
 
 </details>
 
