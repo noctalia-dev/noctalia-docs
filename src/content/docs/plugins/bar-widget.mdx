@@ -86,6 +86,25 @@ implicitHeight: isVertical ? content.implicitHeight + Style.marginM * 2 : Style.
 
 Use Noctalia's built-in styling system for consistency:
 
+:::important[Required Styling]
+Bar widgets **must** have a background and an outline (`mOutline`) for proper visual integration with the bar. The outline requires these properties:
+
+```qml
+Rectangle {
+  id: root
+  
+  // Required: Background color
+  color: Style.capsuleColor
+  
+  // Required: Outline border
+  border.color: Style.capsuleBorderColor
+  border.width: Style.capsuleBorderWidth
+}
+```
+
+Without these properties, the widget may not display correctly or may not integrate properly with the bar's visual style.
+:::
+
 ### Colors
 ```qml
 import qs.Commons
@@ -342,6 +361,8 @@ Rectangle {
 
   color: Style.capsuleColor
   radius: Style.radiusM
+  border.color: Style.capsuleBorderColor
+  border.width: Style.capsuleBorderWidth
 
   RowLayout {
     id: row
@@ -386,6 +407,8 @@ Rectangle {
 
   color: Style.capsuleColor
   radius: Style.radiusM
+  border.color: Style.capsuleBorderColor
+  border.width: Style.capsuleBorderWidth
 
   RowLayout {
     id: row
@@ -453,6 +476,8 @@ Rectangle {
 
   color: Style.capsuleColor
   radius: Style.radiusM
+  border.color: Style.capsuleBorderColor
+  border.width: Style.capsuleBorderWidth
 
   RowLayout {
     id: row
