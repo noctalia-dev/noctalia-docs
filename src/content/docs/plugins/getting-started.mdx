@@ -144,12 +144,8 @@ Now that you have a basic plugin working, you can:
 - [Manifest Reference](/plugins/manifest/) - Full manifest documentation
 
 - [IPC Guide](/plugins/ipc/) - Respond to external commands
-
-:::info[Coming Soon]
-- Settings UI - Let users configure your plugin
-- Translations - Support multiple languages
-- Styling Guide - Use Noctalia's design system
-:::
+- [Settings UI](/plugins/settings-ui/) - Let users configure your plugin
+- [Translations](/plugins/translations/) - Support multiple languages
 
 ## Example: Complete Simple Plugin
 
@@ -245,12 +241,55 @@ This creates a counter that:
 - Shows a toast notification
 - Persists across restarts
 
+## Hot Reload (Development Mode)
+
+During plugin development, you can enable **hot reload** to automatically reload your plugin when you save changes to QML files. This eliminates the need to restart Noctalia after every edit.
+
+### Enabling Hot Reload
+
+Start Noctalia with the `NOCTALIA_DEBUG` environment variable:
+
+```bash
+NOCTALIA_DEBUG=1 qs -c noctalia-shell
+```
+
+Or if using systemd, create an override:
+
+```bash
+systemctl --user edit noctalia
+```
+
+Add:
+```ini
+[Service]
+Environment="NOCTALIA_DEBUG=1"
+```
+
+### How It Works
+
+With debug mode enabled:
+- Noctalia watches your plugin's QML files for changes
+- When you save a file, the plugin automatically reloads
+- Your changes appear instantly without restarting the shell
+- Console output shows reload events for debugging
+
+### Usage Tips
+
+1. **Keep the terminal visible** - Watch for QML errors during reload
+2. **Save frequently** - Each save triggers a reload so you see changes immediately
+3. **Check for errors** - Syntax errors in QML will appear in the console
+4. **State is reset** - Plugin state resets on reload (settings persist to disk)
+
+:::caution
+Hot reload is for development only. Don't run with `NOCTALIA_DEBUG=1` in production as it adds overhead from file watching.
+:::
+
 ## Debugging Tips
 
 ### View Logs
 Run Noctalia from the terminal to see logs:
 ```bash
-qs -p ~/.config/noctalia/noctalia-shell
+NOCTALIA_DEBUG=1 qs -c noctalia-shell
 ```
 
 Use `Logger` in your plugin:

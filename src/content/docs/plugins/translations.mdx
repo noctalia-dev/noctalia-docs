@@ -1,0 +1,522 @@
+---
+title: Plugin Translations
+description: Add multi-language support to your Noctalia plugin
+---
+
+Noctalia plugins can support multiple languages through the translation system. When the user changes Noctalia's language, your plugin automatically uses the appropriate translations.
+
+## Directory Structure
+
+Translation files are stored in an `i18n` directory inside your plugin:
+
+```
+my-plugin/
+├── manifest.json
+├── BarWidget.qml
+├── Panel.qml
+└── i18n/
+    ├── en.json      # English (required - fallback)
+    ├── es.json      # Spanish
+    ├── de.json      # German
+    ├── fr.json      # French
+    └── ...
+```
+
+## Translation File Format
+
+Each translation file is a JSON object with nested keys:
+
+**i18n/en.json** (English - required):
+```json
+{
+  "widget": {
+    "title": "My Widget",
+    "status": "Active"
+  },
+  "panel": {
+    "header": "Settings",
+    "save": "Save Changes",
+    "cancel": "Cancel"
+  },
+  "messages": {
+    "welcome": "Welcome, {name}!",
+    "items": "{count} item",
+    "items_plural": "{count} items"
+  }
+}
+```
+
+**i18n/es.json** (Spanish):
+```json
+{
+  "widget": {
+    "title": "Mi Widget",
+    "status": "Activo"
+  },
+  "panel": {
+    "header": "Configuracion",
+    "save": "Guardar Cambios",
+    "cancel": "Cancelar"
+  },
+  "messages": {
+    "welcome": "Bienvenido, {name}!",
+    "items": "{count} elemento",
+    "items_plural": "{count} elementos"
+  }
+}
+```
+
+**i18n/de.json** (German):
+```json
+{
+  "widget": {
+    "title": "Mein Widget",
+    "status": "Aktiv"
+  },
+  "panel": {
+    "header": "Einstellungen",
+    "save": "Anderungen speichern",
+    "cancel": "Abbrechen"
+  },
+  "messages": {
+    "welcome": "Willkommen, {name}!",
+    "items": "{count} Element",
+    "items_plural": "{count} Elemente"
+  }
+}
+```
+
+## Using Translations
+
+### Basic Translation: `tr()`
+
+Use `pluginApi.tr()` to translate strings:
+
+```qml
+import QtQuick
+import qs.Commons
+import qs.Widgets
+
+Item {
+  property var pluginApi: null
+
+  NText {
+    // Simple translation
+    text: pluginApi?.tr("widget.title") || "My Widget"
+  }
+
+  NText {
+    // Nested key access
+    text: pluginApi?.tr("panel.header") || "Settings"
+  }
+}
+```
+
+### With Interpolations
+
+Pass dynamic values using interpolations:
+
+```qml
+// Translation file: "welcome": "Welcome, {name}!"
+NText {
+  text: pluginApi?.tr("messages.welcome", { name: userName }) || ""
+  // Result: "Welcome, John!"
+}
+
+// Translation file: "status": "Connected to {server} on port {port}"
+NText {
+  text: pluginApi?.tr("connection.status", {
+    server: serverName,
+    port: portNumber
+  }) || ""
+  // Result: "Connected to localhost on port 8080"
+}
+```
+
+### Plural Forms: `trp()`
+
+Use `pluginApi.trp()` for pluralization:
+
+```qml
+// Translation file:
+// "items": "{count} item"
+// "items_plural": "{count} items"
+
+NText {
+  text: pluginApi?.trp(
+    "messages.items",    // Base key
+    itemCount,           // Count for plural logic
+    "1 item",            // Fallback singular
+    "{count} items"      // Fallback plural
+  ) || ""
+}
+```
+
+The system automatically appends `_plural` to the key when count !== 1:
+- `count = 1` → uses `"messages.items"` → "1 item"
+- `count = 5` → uses `"messages.items_plural"` → "5 items"
+
+### Check Translation Exists: `hasTranslation()`
+
+Check if a translation key exists before using it:
+
+```qml
+if (pluginApi?.hasTranslation("optional.feature")) {
+  text = pluginApi.tr("optional.feature")
+} else {
+  text = "Default text"
+}
+```
+
+## Current Language
+
+Access the current language code:
+
+```qml
+// Get current language
+readonly property string currentLang: pluginApi?.currentLanguage || "en"
+
+// React to language changes
+onCurrentLangChanged: {
+  Logger.i("MyPlugin", "Language changed to:", currentLang)
+}
+```
+
+## Fallback Behavior
+
+The translation system uses this fallback order:
+
+1. Current language translation (e.g., `i18n/de.json`)
+2. English translation (`i18n/en.json`)
+3. The key itself wrapped in `## ##` (e.g., `## widget.title ##`)
+
+Always provide fallback values in your QML:
+
+```qml
+// Good - provides fallback
+text: pluginApi?.tr("widget.title") || "My Widget"
+
+// Also good - uses default from tr()
+text: pluginApi?.tr("widget.title") ?? "My Widget"
+```
+
+## Supported Languages
+
+Noctalia supports these language codes:
+
+| Code | Language |
+|------|----------|
+| `en` | English |
+| `es` | Spanish |
+| `de` | German |
+| `fr` | French |
+| `it` | Italian |
+| `pt` | Portuguese |
+| `nl` | Dutch |
+| `ru` | Russian |
+| `ja` | Japanese |
+| `zh-CN` | Chinese (Simplified) |
+| `tr` | Turkish |
+| `uk-UA` | Ukrainian |
+
+Create translation files matching these codes to support them.
+
+## Complete Example
+
+### Plugin Structure
+
+```
+weather-plugin/
+├── manifest.json
+├── BarWidget.qml
+├── Panel.qml
+└── i18n/
+    ├── en.json
+    ├── es.json
+    └── de.json
+```
+
+### i18n/en.json
+
+```json
+{
+  "widget": {
+    "title": "Weather",
+    "loading": "Loading...",
+    "error": "Unable to fetch weather"
+  },
+  "panel": {
+    "header": "Weather Details",
+    "temperature": "Temperature",
+    "humidity": "Humidity",
+    "wind": "Wind Speed",
+    "forecast": "Forecast"
+  },
+  "status": {
+    "updated": "Updated {time} ago",
+    "location": "Weather for {city}"
+  },
+  "days": {
+    "count": "{count} day",
+    "count_plural": "{count} days"
+  }
+}
+```
+
+### BarWidget.qml
+
+```qml
+import QtQuick
+import QtQuick.Layouts
+import Quickshell
+import qs.Commons
+import qs.Widgets
+
+Rectangle {
+  id: root
+
+  property var pluginApi: null
+  property ShellScreen screen
+  property string widgetId: ""
+  property string section: ""
+
+  property bool loading: false
+  property string temperature: "72°F"
+
+  implicitWidth: row.implicitWidth + Style.marginM * 2
+  implicitHeight: Style.barHeight
+
+  color: Style.capsuleColor
+  radius: Style.radiusM
+
+  RowLayout {
+    id: row
+    anchors.centerIn: parent
+    spacing: Style.marginS
+
+    NIcon {
+      icon: "sun"
+      color: Color.mPrimary
+    }
+
+    NText {
+      text: root.loading
+        ? (pluginApi?.tr("widget.loading") || "Loading...")
+        : root.temperature
+      color: Color.mOnSurface
+      pointSize: Style.fontSizeS
+    }
+  }
+
+  MouseArea {
+    anchors.fill: parent
+    hoverEnabled: true
+
+    onEntered: {
+      var tooltip = pluginApi?.tr("widget.title") || "Weather"
+      TooltipService.show(root, tooltip)
+    }
+
+    onExited: TooltipService.hide()
+
+    onClicked: pluginApi?.openPanel(root.screen)
+  }
+}
+```
+
+### Panel.qml
+
+```qml
+import QtQuick
+import QtQuick.Layouts
+import qs.Commons
+import qs.Widgets
+
+Item {
+  id: root
+
+  property var pluginApi: null
+
+  readonly property var geometryPlaceholder: panelContainer
+  readonly property bool allowAttach: true
+
+  property real contentPreferredWidth: 400 * Style.uiScaleRatio
+  property real contentPreferredHeight: 500 * Style.uiScaleRatio
+
+  // Weather data
+  property string city: "San Francisco"
+  property string lastUpdate: "5 minutes"
+  property int forecastDays: 7
+
+  anchors.fill: parent
+
+  Rectangle {
+    id: panelContainer
+    anchors.fill: parent
+    color: Color.transparent
+
+    ColumnLayout {
+      anchors {
+        fill: parent
+        margins: Style.marginL
+      }
+      spacing: Style.marginL
+
+      // Header with translated title
+      NText {
+        text: pluginApi?.tr("panel.header") || "Weather Details"
+        pointSize: Style.fontSizeL
+        font.weight: Font.Bold
+        color: Color.mOnSurface
+      }
+
+      // Location with interpolation
+      NText {
+        text: pluginApi?.tr("status.location", { city: root.city }) || ""
+        pointSize: Style.fontSizeM
+        color: Color.mOnSurfaceVariant
+      }
+
+      // Content
+      Rectangle {
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+        color: Color.mSurfaceVariant
+        radius: Style.radiusL
+
+        ColumnLayout {
+          anchors {
+            fill: parent
+            margins: Style.marginL
+          }
+          spacing: Style.marginM
+
+          // Translated labels
+          RowLayout {
+            Layout.fillWidth: true
+
+            NText {
+              text: pluginApi?.tr("panel.temperature") || "Temperature"
+              color: Color.mOnSurfaceVariant
+              Layout.fillWidth: true
+            }
+
+            NText {
+              text: "72°F / 22°C"
+              color: Color.mOnSurface
+              font.weight: Font.Medium
+            }
+          }
+
+          RowLayout {
+            Layout.fillWidth: true
+
+            NText {
+              text: pluginApi?.tr("panel.humidity") || "Humidity"
+              color: Color.mOnSurfaceVariant
+              Layout.fillWidth: true
+            }
+
+            NText {
+              text: "65%"
+              color: Color.mOnSurface
+              font.weight: Font.Medium
+            }
+          }
+
+          NDivider {
+            Layout.fillWidth: true
+          }
+
+          // Plural example
+          NText {
+            text: pluginApi?.tr("panel.forecast") || "Forecast"
+            pointSize: Style.fontSizeM
+            font.weight: Font.Medium
+            color: Color.mOnSurface
+          }
+
+          NText {
+            text: pluginApi?.trp(
+              "days.count",
+              root.forecastDays,
+              "1 day",
+              "{count} days"
+            ) || ""
+            color: Color.mOnSurfaceVariant
+          }
+        }
+      }
+
+      // Last update with interpolation
+      NText {
+        text: pluginApi?.tr("status.updated", { time: root.lastUpdate }) || ""
+        pointSize: Style.fontSizeS
+        color: Color.mOnSurfaceVariant
+        Layout.alignment: Qt.AlignRight
+      }
+    }
+  }
+}
+```
+
+## Best Practices
+
+1. **Always provide English**: The `en.json` file is required as the fallback
+2. **Use fallback values**: Always provide a fallback with `|| "default"`
+3. **Organize with nesting**: Group related translations (widget, panel, messages)
+4. **Keep keys consistent**: Use the same structure across all language files
+5. **Use interpolations**: For dynamic content like names, numbers, dates
+6. **Handle plurals properly**: Use `trp()` and `_plural` suffix keys
+7. **Test all languages**: Verify translations display correctly
+8. **Consider text length**: Some languages have longer text than English
+
+## Translating Settings UI
+
+Translations work in Settings.qml too:
+
+```qml
+ColumnLayout {
+  id: root
+
+  property var pluginApi: null
+
+  NTextInput {
+    Layout.fillWidth: true
+    label: pluginApi?.tr("settings.message.label") || "Message"
+    description: pluginApi?.tr("settings.message.description") || "Display message"
+    // ...
+  }
+
+  NToggle {
+    Layout.fillWidth: true
+    label: pluginApi?.tr("settings.enabled.label") || "Enabled"
+    description: pluginApi?.tr("settings.enabled.description") || "Enable feature"
+    // ...
+  }
+}
+```
+
+## Accessing Global Translations
+
+You can also access Noctalia's built-in translations via `I18n`:
+
+```qml
+import qs.Commons
+
+NText {
+  // Access Noctalia's global translations
+  text: I18n.tr("common.save")
+}
+
+NText {
+  // Plugin-specific translations
+  text: pluginApi?.tr("panel.save") || I18n.tr("common.save")
+}
+```
+
+## See Also
+
+- [Getting Started](/plugins/getting-started/) - Create your first plugin
+- [Plugin API](/plugins/api/) - Translation API reference
+- [Settings UI](/plugins/settings-ui/) - Translate your settings interface

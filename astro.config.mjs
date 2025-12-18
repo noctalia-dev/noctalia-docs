@@ -64,6 +64,8 @@ export default defineConfig({
             { label: "Bar Widget Development", link: "/plugins/bar-widget/" },
             { label: "Desktop Widget Development", link: "/plugins/desktop-widget/" },
             { label: "Panel Development", link: "/plugins/panel/" },
+            { label: "Settings UI", link: "/plugins/settings-ui/" },
+            { label: "Translations", link: "/plugins/translations/" },
             { label: "IPC System", link: "/plugins/ipc/" },
             { label: "Plugin API", link: "/plugins/api/" },
           ],

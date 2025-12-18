@@ -24,6 +24,17 @@ Add custom widgets to the top/bottom bar that provide quick access to informatio
 
 **Learn more:** [Bar Widget Development](/plugins/bar-widget/)
 
+### Desktop widgets 
+Add custom widgets to your desktop background. They provide at-a-glance information and can be positioned and scaled by the user in edit mode.
+
+**Use cases:**
+- Clock, MediaPlayer 
+- Weather forecast
+- Audio visualizers
+
+**Learn more:** [Desktop Widget Development](/plugins/desktop-widget/)
+
+
 ### Panels
 Create full-screen overlay panels that can be opened from bar widgets or triggered programmatically.
 
@@ -67,13 +78,14 @@ your-plugin/
 ├── preview.png        # Preview image for plugin gallery (optional, recommended)
 ├── Main.qml           # Background logic with IPC handlers (optional)
 ├── BarWidget.qml      # Bar widget component (optional)
+├── DesktopWidget.qml  # Desktop widget component (optional)
 ├── Panel.qml          # Panel overlay component (optional)
 ├── Settings.qml       # Settings UI component (optional)
-├── settings.json      # User settings data (auto-generated)
 ├── i18n/              # Translations (optional)
 │   ├── en.json
 │   └── es.json
-└── README.md          # Plugin documentation
+├── README.md          # Plugin documentation
+└── settings.json      # User saved settings (should not be committed to the repository)
 ```
 
 :::tip[Preview Images]
@@ -179,7 +191,6 @@ Follow this recommended path to master plugin development:
 7. **Additional Topics** *(coming soon)*
    - [Settings UI](/plugins/settings/) - Configuration interfaces
    - [Translations](/plugins/translations/) - Internationalization
-   - [Styling Guide](/plugins/styling/) - Design system details
 
 ## Example Plugins
 
