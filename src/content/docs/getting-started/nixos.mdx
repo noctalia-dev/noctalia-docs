@@ -229,10 +229,15 @@ As a string:
     # ...
     programs.noctalia-shell = {
       enable = true;
+      settings = {
+        templates = {
+          enableUserTemplates = true;
+        };
+      };
       user-templates = ''
         [templates.my-template]
         input = "/path/to/template.tpl"
-        output = "/path/to/config.conf"
+        output = "/path/to/config.tpl"
       '';
     };
   };
@@ -248,6 +253,11 @@ As a path:
     # ...
     programs.noctalia-shell = {
       enable = true;
+      settings = {
+        templates = {
+          enableUserTemplates = true;
+        };
+      };
       user-templates = ./path/to/templates.toml;
     };
   };
@@ -263,6 +273,11 @@ As an attribute set:
     # ...
     programs.noctalia-shell = {
       enable = true;
+      settings = {
+        templates = {
+          enableUserTemplates = true;
+        };
+      };
       user-templates = {
         config = {
           # General Matugen config settings
