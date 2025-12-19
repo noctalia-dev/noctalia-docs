@@ -235,9 +235,12 @@ As a string:
         };
       };
       user-templates = ''
-        [templates.my-template]
-        input = "/path/to/template.tpl"
-        output = "/path/to/config.tpl"
+        [config]
+        # General Matugen config settings
+        [templates.myapp]
+        input_path = "~/.config/noctalia/templates/myapp.css"
+        output_path = "~/.config/myapp/theme.css"
+        post_hook = "myapp --reload-theme"
       '';
     };
   };
@@ -258,7 +261,7 @@ As a path:
           enableUserTemplates = true;
         };
       };
-      user-templates = ./path/to/templates.toml;
+      user-templates = ./path/to/user-templates.toml;
     };
   };
 }
@@ -283,10 +286,10 @@ As an attribute set:
           # General Matugen config settings
         };
         templates = {
-          my-app= {
-            inputPath = ./templates/my-template.toml;
-            outputPath = '${config.xdg.configHome}/my-app/config.toml";
-            postHook = "pkill -SIGUSR1 my-app";
+          myapp = {
+            input_path = "~/.config/noctalia/templates/myapp.css";
+            output_path = "~/.config/myapp/theme.css";
+            post_hook = "myapp --reload-theme";
           };
         };
       };
