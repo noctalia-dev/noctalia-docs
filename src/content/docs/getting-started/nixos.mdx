@@ -213,6 +213,88 @@ To configure Noctalia settings, you can use the Noctalia home manager module. Be
 }
 ```
 
+### User Templates
+
+The `user-templates` option allows you to define custom [Matugen](https://github.com/InioX/matugen) templates.
+This is useful for theming other applications that are not supported by default.
+
+It can be a string, a path, or an attribute set.
+
+As a string:
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  home-manager.users.drfoobar = {
+    # ...
+    programs.noctalia-shell = {
+      enable = true;
+      settings = {
+        templates = {
+          enableUserTemplates = true;
+        };
+      };
+      user-templates = ''
+        [templates.my-template]
+        input = "/path/to/template.tpl"
+        output = "/path/to/config.tpl"
+      '';
+    };
+  };
+}
+```
+
+As a path:
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  home-manager.users.drfoobar = {
+    # ...
+    programs.noctalia-shell = {
+      enable = true;
+      settings = {
+        templates = {
+          enableUserTemplates = true;
+        };
+      };
+      user-templates = ./path/to/templates.toml;
+    };
+  };
+}
+```
+
+As an attribute set:
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  home-manager.users.drfoobar = {
+    # ...
+    programs.noctalia-shell = {
+      enable = true;
+      settings = {
+        templates = {
+          enableUserTemplates = true;
+        };
+      };
+      user-templates = {
+        config = {
+          # General Matugen config settings
+        };
+        templates = {
+          my-app= {
+            inputPath = ./templates/my-template.toml;
+            outputPath = '${config.xdg.configHome}/my-app/config.toml";
+            postHook = "pkill -SIGUSR1 my-app";
+          };
+        };
+      };
+    };
+  };
+}
+```
+
 ### Wallpapers
 
 Wallpapers are configured in `~/.cache/noctalia/wallpapers.json`. You can set them declaratively:
