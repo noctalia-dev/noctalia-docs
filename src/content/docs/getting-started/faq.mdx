@@ -53,12 +53,12 @@ Set `QS_ICON_THEME="youricontheme"`
 Ensure that you set environment variables properly.
 
 <details>
-<summary>If you prefer set these in Niri's config</summary>
+<summary>If you prefer to set these in Niri's config</summary>
 Ensure that you also launch Noctalia via Niri:
 ```ini
 spawn-at-startup "qs" "-c" "noctalia-shell"
 ```
-This is because Niri only override environment variables for processes it spawns.
+This is because Niri only overrides environment variables for processes it spawns.
 </details>
 
 <details>
@@ -173,7 +173,7 @@ Common causes:
 </details>
 
 <details>
-<summary><strong>Why wont some applications appear in the launcher?</strong></summary>
+<summary><strong>Why won't some applications appear in the launcher?</strong></summary>
 
 The launcher looks for `.desktop` files in standard locations. If an application doesn’t appear:
 
@@ -230,13 +230,13 @@ EOF
 </details>
 
 <details>
-<summary><strong>Why wont my screen recorder start recording?</strong></summary>
+<summary><strong>Why won't my screen recorder start recording?</strong></summary>
 
 Common causes:
 
-1. **Missing package**: Make sure you're have installed the proper package or flatpak
+1. **Missing package**: Make sure you have installed the proper package or flatpak
 2. **Portal crashed**: Verify the status of your xdg-desktop-portal-xxx service and/or restart it. On Niri the gnome portal is recommended and can be restarted using the following command: ```systemctl --user restart xdg-desktop-portal-gnome.service```
-3. **Change the vide source**: In Noctalia's settings, switch the source from portal to screen. And try recording.
+3. **Change the video source**: In Noctalia's settings, switch the source from portal to screen. And try recording.
 4. **Check output in terminal**: ```gpu-screen-recorder -w screen -f 60 -a default_output -o video.mp4```
 
 </details>

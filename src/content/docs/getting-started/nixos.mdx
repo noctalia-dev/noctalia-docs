@@ -431,8 +431,8 @@ With the [Niri flake](https://github.com/sodiboo/niri-flake), you can then spawn
 
 ### Running with systemd {#systemd-service}
 
-You can setup systemd service via NixOS module or Home Manager module. If you [configure Noctalia shell with home-manager](#config-with-home-manager), then Home Manager module is a better choice.
-and it's best not to enable systemd service in both modules at the same time, as names of two systemd services are the same; it's unpredictable which one will run (usually, it's systemd service in Home Manager module).
+You can set up systemd service via NixOS module or Home Manager module. If you [configure Noctalia shell with home-manager](#config-with-home-manager), then Home Manager module is a better choice.
+It's best not to enable systemd service in both modules at the same time, as names of two systemd services are the same; it's unpredictable which one will run (usually, it's the systemd service in Home Manager module).
 
 :::caution
 The systemd service is currently **experimental**:
