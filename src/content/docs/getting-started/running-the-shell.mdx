@@ -79,7 +79,7 @@ After=graphical-session.target
 (`Description` contents can be whatever you like.)
 
 ##### 2. Adjust your compositor configuration file
-In the section that starts things, after any and all environment variables (where everything should be anyway), add <u>before anything else</u> (Hyprland syntax in this case again, adjust as needed):
+In the section that starts things, after any and all environment variables (where everything should be anyway), add the following <u>before anything else</u> (Hyprland syntax in this case again, adjust as needed):
 ```ini
 exec-once = dbus-update-activation-environment --systemd --all
 exec-once = systemctl --user start hyprland-session.target
