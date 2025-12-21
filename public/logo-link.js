@@ -1,0 +1,57 @@
+(function() {
+	function updateLogoLink() {
+		// Try multiple selectors to find the logo link
+		const selectors = [
+			'header a[href="/"]',
+			'header a[href^="/"]',
+			'.sl-logo a',
+			'a[href="/"] img[alt*="Noctalia"]',
+			'a img[alt="Noctalia"]'
+		];
+
+		for (const selector of selectors) {
+			const element = document.querySelector(selector);
+			if (element) {
+				const link = element.closest('a') || element;
+				if (link && link.tagName === 'A' && link.href) {
+					const currentHref = new URL(link.href, window.location.origin).pathname;
+					if (currentHref === '/' || currentHref === '') {
+						link.href = 'https://noctalia.dev';
+						return;
+					}
+				}
+			}
+		}
+	}
+
+	// Run immediately
+	updateLogoLink();
+
+	// Run on DOMContentLoaded
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', updateLogoLink);
+	} else {
+		updateLogoLink();
+	}
+
+	// Use MutationObserver to catch dynamically loaded content
+	if (typeof MutationObserver !== 'undefined') {
+		const observer = new MutationObserver(() => {
+			updateLogoLink();
+		});
+		
+		if (document.body) {
+			observer.observe(document.body, { childList: true, subtree: true });
+		} else {
+			document.addEventListener('DOMContentLoaded', () => {
+				if (document.body) {
+					observer.observe(document.body, { childList: true, subtree: true });
+				}
+			});
+		}
+	}
+
+	// Also listen for navigation events (for SPA-like behavior)
+	window.addEventListener('popstate', updateLogoLink);
+})();
+

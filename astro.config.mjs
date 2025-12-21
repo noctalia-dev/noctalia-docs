@@ -7,8 +7,21 @@ import { remarkHeadingId } from "remark-custom-heading-id";
 export default defineConfig({
   integrations: [
     starlight({
+      head: [
+        {
+          tag: 'script',
+          attrs: {
+            src: '/logo-link.js',
+            defer: true,
+          },
+        },
+      ],
       title: "Noctalia",
-      logo: { src: "./src/assets/noctalia-logo.svg", alt: "Noctalia" },
+      logo: { 
+        src: "./src/assets/noctalia-logo.svg", 
+        alt: "Noctalia",
+        href: "https://noctalia.dev"
+      },
       social: [
         {
           icon: "discord",
