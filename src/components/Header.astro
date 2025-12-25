@@ -1,0 +1,72 @@
+---
+import Default from '@astrojs/starlight/components/Header.astro';
+---
+
+<Default {...Astro.props}><slot /></Default>
+
+<div class="faq-button-container">
+  <a href="/getting-started/faq/" class="faq-button">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+      <path d="M12 17h.01"></path>
+    </svg>
+    <span>FAQ</span>
+  </a>
+</div>
+
+<script>
+  function positionFaqButton() {
+    const container = document.querySelector('.faq-button-container');
+    const search = document.querySelector('site-search, starlight-search, .search-container, [data-search]');
+    if (container && search) {
+      // Insert after the search field
+      search.parentElement?.insertBefore(container, search.nextSibling);
+    }
+  }
+
+  positionFaqButton();
+  document.addEventListener('astro:page-load', positionFaqButton);
+</script>
+
+<style>
+  .faq-button-container {
+    display: flex;
+    align-items: center;
+    margin-inline: 1rem;
+  }
+
+  .faq-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--sl-color-bg);
+    background-color: var(--sl-color-accent);
+    border: 1px solid var(--sl-color-accent);
+    border-radius: var(--sl-border-radius, 0.5rem);
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+
+  .faq-button:hover {
+    background-color: transparent;
+    color: var(--sl-color-accent);
+    border-color: var(--sl-color-accent);
+  }
+
+  .faq-button svg {
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 50rem) {
+    .faq-button span {
+      display: none;
+    }
+    .faq-button {
+      padding: 0.4rem;
+    }
+  }
+</style>

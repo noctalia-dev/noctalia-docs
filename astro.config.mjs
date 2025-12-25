@@ -7,6 +7,9 @@ import { remarkHeadingId } from "remark-custom-heading-id";
 export default defineConfig({
   integrations: [
     starlight({
+      components: {
+        Header: './src/components/Header.astro',
+      },
       head: [
         {
           tag: 'script',
