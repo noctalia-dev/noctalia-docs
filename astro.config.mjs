@@ -48,41 +48,30 @@ export default defineConfig({
         {
           label: "Theming",
           items: [
-            { label: "Basic App Theming", link: "/theming/app-theming/" },
-            { label: "Advanced App Theming", link: "/theming/advanced-app-theming/" },
+            { label: "Basic App Theming", link: "theming/basic-app-theming" },
+            { label: "Advanced App Theming", link: "theming/advanced-app-theming" },
+            {
+              label: "Program Specific",
+              autogenerate: { directory: "theming/program-specific" },
+            },
           ],
-        },
-        {
-          label: "Program Specific Theming",
-          collapsed: false,
-          autogenerate: { directory: "theming/program-specific" },
         },
         {
           label: "Development",
           items: [
-            { label: "Guidelines", link: "/development/guideline/" },
-            { label: "IPC", link: "/development/ipc/" },
-            { label: "Widgets", link: "/development/widget/" },
-            { label: "Color Scheme", link: "/development/colorscheme/" },
-            { label: "Matugen", link: "/development/matugen/" },
+            { label: "Guidelines", link: "development/guideline" },
+            { label: "IPC", link: "development/ipc" },
+            { label: "Widgets", link: "development/widget" },
+            { label: "Color Scheme", link: "development/colorscheme" },
+            { label: "Matugen", link: "development/matugen" },
+            {
+              label: "Plugins",
+              autogenerate: { directory: "development/plugins" },
+
+            },
           ],
         },
-        {
-          label: "Plugins development",
-          collapsed: false,
-          items: [
-            { label: "Overview", link: "/plugins/overview/" },
-            { label: "Getting Started", link: "/plugins/getting-started/" },
-            { label: "Manifest Reference", link: "/plugins/manifest/" },
-            { label: "Bar Widget Development", link: "/plugins/bar-widget/" },
-            { label: "Desktop Widget Development", link: "/plugins/desktop-widget/" },
-            { label: "Panel Development", link: "/plugins/panel/" },
-            { label: "Settings UI", link: "/plugins/settings-ui/" },
-            { label: "Translations", link: "/plugins/translations/" },
-            { label: "IPC System", link: "/plugins/ipc/" },
-            { label: "Plugin API", link: "/plugins/api/" },
-          ],
-        },
+       
       ],
     }),
   ],
@@ -90,3 +79,4 @@ export default defineConfig({
     remarkPlugins: [remarkHeadingId],
   },
 });
+
