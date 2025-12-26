@@ -171,14 +171,16 @@ hyprctl monitors
 # Niri
 niri msg -j outputs | jq 'keys'
 ```
+:::
 
 #### Misc
 
 | Function | Command | Description |
 |----------|---------|-------------|
 | **Output settings state** | `qs -c noctalia-shell ipc call state all` | Output the current settings state |
+| **Set location** | `qs -c noctalia-shell ipc call location set $name` | Set the current geographic location |
+| **Get location** | `qs -c noctalia-shell ipc call location get` | Get the current geographic location |
 
-:::
 
 ## Example Configurations
 
