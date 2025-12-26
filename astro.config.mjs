@@ -51,8 +51,8 @@ export default defineConfig({
         {
           label: "Theming",
           items: [
-            { label: "Basic App Theming", link: "theming/basic-app-theming" },
-            { label: "Advanced App Theming", link: "theming/advanced-app-theming" },
+            { label: "Basic App Theming", link: "theming/basic-app-theming/" },
+            { label: "Advanced App Theming", link: "theming/advanced-app-theming/" },
             {
               label: "Program Specific",
               autogenerate: { directory: "theming/program-specific" },
@@ -62,11 +62,11 @@ export default defineConfig({
         {
           label: "Development",
           items: [
-            { label: "Guidelines", link: "development/guideline" },
-            { label: "IPC", link: "development/ipc" },
-            { label: "Widgets", link: "development/widget" },
-            { label: "Color Scheme", link: "development/colorscheme" },
-            { label: "Matugen", link: "development/matugen" },
+            { label: "Guidelines", link: "development/guideline/" },
+            { label: "IPC", link: "development/ipc/" },
+            { label: "Widgets", link: "development/widget/" },
+            { label: "Color Scheme", link: "development/colorscheme/" },
+            { label: "Matugen", link: "development/matugen/" },
             {
               label: "Plugins",
               autogenerate: { directory: "development/plugins" },
