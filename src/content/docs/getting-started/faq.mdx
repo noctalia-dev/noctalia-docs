@@ -91,10 +91,17 @@ systemctl --user restart noctalia.service
 <details>
 <summary><strong>How can I make the UI bigger?</strong></summary>
 
-You can start noctalia-shell like this to make the UI bigger:
-`QT_SCALE_FACTOR=2 qs -c noctalia-shell`
-You might have to play around with the scale factor to fit your needs.
+**First things first**, you should increase your **compositor scaling** per monitor. This is the **best solution** and should give you a nice scaled up UI on HiDPI monitors.
+
+:::caution[Last Resort]
+You can start noctalia-shell with a special environment variable, but this is **not recommended** on multi-monitor setups as it will likely break tooltips and other contextual menu positioning on monitors that don't have a (0,0) origin.
+
+```bash
+QT_SCALE_FACTOR=2 qs -c noctalia-shell
+```
+
 This can also be added to your compositor autostart.
+:::
 
 </details>
 
