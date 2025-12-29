@@ -515,12 +515,18 @@ this directory and rebuild.
 To add support for events in the calendar via evolution-data-server.
 
 First, enable the evolution-data-server:
-```services.gnome.evolution-data-server.enable = true;```
+```nix
+services.gnome.evolution-data-server.enable = true;
+```
 
 Then override the Noctalia package:
-```pkgs.noctalia-shell.override { calendarSupport = true; }```
+```nix
+pkgs.noctalia-shell.override { calendarSupport = true; }
+```
 or
-```inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override { calendarSupport = true; }```
+```nix
+inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override { calendarSupport = true; }
+```
 
 ---
 
