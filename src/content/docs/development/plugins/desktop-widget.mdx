@@ -298,29 +298,32 @@ DraggableDesktopWidget {
     pluginApi?.manifest?.metadata?.defaultSettings?.message ||
     "Hello World"
 
-  implicitWidth: 200
-  implicitHeight: 120
+  // Scale dimensions by widgetScale
+  implicitWidth: Math.round(200 * widgetScale)
+  implicitHeight: Math.round(120 * widgetScale)
+  width: implicitWidth
+  height: implicitHeight
 
   ColumnLayout {
     anchors.fill: parent
-    anchors.margins: Style.marginL
-    spacing: Style.marginS
+    anchors.margins: Math.round(Style.marginL * widgetScale)
+    spacing: Math.round(Style.marginS * widgetScale)
 
     NIcon {
       icon: "noctalia"
-      pointSize: Style.fontSizeXXL
+      pointSize: Math.round(Style.fontSizeXXL * widgetScale)
       Layout.alignment: Qt.AlignHCenter
     }
 
     NText {
       text: root.message
-      font.pointSize: Style.fontSizeM
+      pointSize: Math.round(Style.fontSizeM * widgetScale)
       Layout.alignment: Qt.AlignHCenter
     }
 
     NText {
       text: "Desktop Widget"
-      font.pointSize: Style.fontSizeS
+      pointSize: Math.round(Style.fontSizeS * widgetScale)
       color: Color.mOnSurfaceVariant
       Layout.alignment: Qt.AlignHCenter
     }
@@ -348,34 +351,35 @@ DraggableDesktopWidget {
     return (color && color !== "") ? color : Color.mOnSurface
   }
 
-  property real fontSize: {
+  property real baseFontSize: {
     var size = widgetData && widgetData.fontSize ? widgetData.fontSize : 0
     return (size && size > 0) ? size : Style.fontSizeL
   }
 
   property real widgetOpacity: (widgetData && widgetData.opacity) ? widgetData.opacity : 1.0
 
-  implicitWidth: contentLayout.implicitWidth + Style.marginXL * 2
-  implicitHeight: contentLayout.implicitHeight + Style.marginXL * 2
+  // Scale dimensions - use Math.round for pixel-perfect rendering
+  implicitWidth: Math.round((contentLayout.implicitWidth + Style.marginXL * 2) * widgetScale)
+  implicitHeight: Math.round((contentLayout.implicitHeight + Style.marginXL * 2) * widgetScale)
   width: implicitWidth
   height: implicitHeight
 
   ColumnLayout {
     id: contentLayout
     anchors.centerIn: parent
-    spacing: Style.marginM
+    spacing: Math.round(Style.marginM * widgetScale)
     opacity: root.widgetOpacity
 
     NText {
       text: pluginApi?.pluginSettings?.message || "Custom Widget"
-      font.pointSize: root.fontSize
+      pointSize: Math.round(root.baseFontSize * widgetScale)
       color: root.textColor
       Layout.alignment: Qt.AlignHCenter
     }
 
     NText {
       text: new Date().toLocaleDateString()
-      font.pointSize: Style.fontSizeS
+      pointSize: Math.round(Style.fontSizeS * widgetScale)
       color: Color.mOnSurfaceVariant
       Layout.alignment: Qt.AlignHCenter
     }
@@ -387,6 +391,7 @@ DraggableDesktopWidget {
 
 ```qml
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Layouts
 import qs.Commons
 import qs.Modules.DesktopWidgets
@@ -400,24 +405,28 @@ DraggableDesktopWidget {
   // Disable default background
   showBackground: false
 
-  implicitWidth: 300
-  implicitHeight: 150
+  // Scale dimensions
+  implicitWidth: Math.round(300 * widgetScale)
+  implicitHeight: Math.round(150 * widgetScale)
+  width: implicitWidth
+  height: implicitHeight
 
   // Custom transparent styling
   ColumnLayout {
     anchors.fill: parent
-    anchors.margins: Style.marginL
-    spacing: Style.marginS
+    anchors.margins: Math.round(Style.marginL * widgetScale)
+    spacing: Math.round(Style.marginS * widgetScale)
 
     NText {
       text: "12:34"
-      font.pointSize: Style.fontSizeXXXL * 2
+      pointSize: Math.round(Style.fontSizeXXXL * 2 * widgetScale)
       font.weight: Font.Light
       color: Color.mOnSurface
       Layout.alignment: Qt.AlignHCenter
 
       // Optional: add shadow for visibility on any background
-      layer.enabled: true
+      // Disable during scaling for performance
+      layer.enabled: !root.isScaling
       layer.effect: MultiEffect {
         shadowEnabled: true
         shadowBlur: 0.5
@@ -436,42 +445,220 @@ import QtQuick.Layouts
 import qs.Commons
 import qs.Modules.DesktopWidgets
 import qs.Widgets
-import qs.Services.System
+import qs.Services.Hardware
 
 DraggableDesktopWidget {
   id: root
 
   property var pluginApi: null
 
-  implicitWidth: 180
-  implicitHeight: 100
+  // Scale dimensions
+  implicitWidth: Math.round(180 * widgetScale)
+  implicitHeight: Math.round(100 * widgetScale)
+  width: implicitWidth
+  height: implicitHeight
 
   ColumnLayout {
     anchors.fill: parent
-    anchors.margins: Style.marginL
-    spacing: Style.marginS
+    anchors.margins: Math.round(Style.marginL * widgetScale)
+    spacing: Math.round(Style.marginS * widgetScale)
 
     RowLayout {
       Layout.alignment: Qt.AlignHCenter
-      spacing: Style.marginS
+      spacing: Math.round(Style.marginS * widgetScale)
 
       NIcon {
         icon: BatteryService.icon
+        pointSize: Math.round(Style.fontSizeL * widgetScale)
         color: BatteryService.charging ? Color.mPrimary : Color.mOnSurface
       }
 
       NText {
         text: Math.round(BatteryService.percentage) + "%"
-        font.pointSize: Style.fontSizeL
+        pointSize: Math.round(Style.fontSizeL * widgetScale)
         font.weight: Font.Bold
       }
     }
 
     NText {
       text: BatteryService.charging ? "Charging" : "On Battery"
-      font.pointSize: Style.fontSizeS
+      pointSize: Math.round(Style.fontSizeS * widgetScale)
       color: Color.mOnSurfaceVariant
       Layout.alignment: Qt.AlignHCenter
+    }
+  }
+}
+```
+
+## Implementing Scaling
+
+Desktop widgets support user-controlled scaling from 0.5x to 5x. **You must implement dimension-based scaling** rather than using Qt's transform-based `scale` property. Transform-based scaling causes blurry text and poor rendering at non-integer scale values.
+
+### The `widgetScale` Property
+
+The base `DraggableDesktopWidget` provides a `widgetScale` property (default: 1.0) that represents the current scale factor. Your widget must multiply all dimension-related values by this property.
+
+### What to Scale
+
+Multiply these values by `widgetScale`:
+
+1. **Widget dimensions** (`implicitWidth`, `implicitHeight`, `width`, `height`)
+2. **Font sizes** (`pointSize`, `pixelSize`)
+3. **Margins and spacing** (`anchors.margins`, `Layout.margins`, `spacing`)
+4. **Border radii** (`radius`)
+5. **Icon sizes** (`pointSize` for icons, `baseSize` for buttons)
+6. **Fixed element sizes** (image containers, buttons, etc.)
+
+### Scaling Pattern
+
+Always use `Math.round()` to ensure pixel-perfect values:
+
+```qml
+DraggableDesktopWidget {
+  id: root
+
+  // Scale widget dimensions
+  implicitWidth: Math.round(400 * widgetScale)
+  implicitHeight: Math.round(64 * widgetScale + Style.marginM * widgetScale * 2)
+  width: implicitWidth
+  height: implicitHeight
+
+  RowLayout {
+    anchors.fill: parent
+    // Scale margins and spacing
+    anchors.margins: Math.round(Style.marginM * widgetScale)
+    spacing: Math.round(Style.marginS * widgetScale)
+
+    // Scale fixed-size elements
+    Item {
+      Layout.preferredWidth: Math.round(48 * widgetScale)
+      Layout.preferredHeight: Math.round(48 * widgetScale)
+
+      NImageRounded {
+        anchors.fill: parent
+        // Scale border radius
+        radius: Math.round(Style.radiusM * widgetScale)
+      }
+    }
+
+    NText {
+      // Scale font sizes
+      pointSize: Math.round(Style.fontSizeM * widgetScale)
+    }
+
+    NIconButton {
+      // Scale button sizes
+      baseSize: Math.round(32 * widgetScale)
+      customRadius: Math.round(Style.radiusS * widgetScale)
+    }
+  }
+}
+```
+
+### Performance: Disabling Expensive Effects During Scaling
+
+The `isScaling` property is `true` while the user is actively resizing the widget. Use this to disable expensive operations that would cause lag:
+
+```qml
+DraggableDesktopWidget {
+  id: root
+
+  // Disable layer effects during scaling (expensive GPU operations)
+  Rectangle {
+    layer.enabled: Settings.data.general.enableShadows && !root.isScaling
+    layer.effect: MultiEffect {
+      shadowEnabled: true
+      shadowBlur: 0.5
+    }
+  }
+
+  // Disable drop shadows during scaling
+  NDropShadow {
+    visible: !root.isScaling
+    source: contentLayout
+  }
+
+  // Conditionally load expensive components
+  Loader {
+    active: shouldShowVisualizer && !root.isScaling
+    sourceComponent: ExpensiveVisualizerComponent {}
+  }
+
+  // Disable animations during scaling
+  Behavior on someProperty {
+    enabled: !root.isScaling && !root.isDragging
+    NumberAnimation { duration: 200 }
+  }
+}
+```
+
+### What to Disable During Scaling
+
+- **Layer effects** (`layer.enabled: false` or `layer.enabled: ... && !root.isScaling`)
+- **MultiEffect shadows** (expensive GPU recomputations on every size change)
+- **ShaderEffectSource** (re-renders source item on every change)
+- **Canvas/CustomPainter** operations (expensive redraws)
+- **Complex Loaders** (set `active: ... && !root.isScaling` to completely unload)
+- **Animations** (disable Behaviors during scaling)
+
+### Complete Scaling Example
+
+```qml
+import QtQuick
+import QtQuick.Effects
+import QtQuick.Layouts
+import qs.Commons
+import qs.Modules.DesktopWidgets
+import qs.Widgets
+
+DraggableDesktopWidget {
+  id: root
+
+  property var pluginApi: null
+
+  // Scaled dimensions
+  implicitWidth: Math.round(300 * widgetScale)
+  implicitHeight: Math.round(100 * widgetScale)
+  width: implicitWidth
+  height: implicitHeight
+
+  // Drop shadow - disabled during scaling for performance
+  NDropShadow {
+    visible: !root.isScaling
+    anchors.fill: contentLayout
+    source: contentLayout
+    shadowBlur: 1.0
+    shadowOpacity: 0.9
+  }
+
+  ColumnLayout {
+    id: contentLayout
+    anchors.fill: parent
+    anchors.margins: Math.round(Style.marginL * widgetScale)
+    spacing: Math.round(Style.marginS * widgetScale)
+
+    NText {
+      text: "Scaled Widget"
+      pointSize: Math.round(Style.fontSizeL * widgetScale)
+      font.weight: Font.Bold
+      Layout.alignment: Qt.AlignHCenter
+    }
+
+    RowLayout {
+      Layout.alignment: Qt.AlignHCenter
+      spacing: Math.round(Style.marginS * widgetScale)
+
+      NIconButton {
+        baseSize: Math.round(32 * widgetScale)
+        icon: "heart"
+        customRadius: Math.round(Style.radiusS * widgetScale)
+      }
+
+      NIconButton {
+        baseSize: Math.round(32 * widgetScale)
+        icon: "star"
+        customRadius: Math.round(Style.radiusS * widgetScale)
+      }
     }
   }
 }
@@ -481,12 +668,13 @@ DraggableDesktopWidget {
 
 1. **Use `DraggableDesktopWidget`**: Always extend this base component for proper drag/scale behavior
 2. **Define implicit size**: Set `implicitWidth` and `implicitHeight` for proper layout
-3. **Support scaling**: Ensure your widget looks good at different scale factors (0.5x to 3x)
-4. **Handle `widgetData`**: Use defensive checks when accessing widget-specific data
-5. **Respect theming**: Use `Color.m*` colors that adapt to light/dark mode
-6. **Keep it performant**: Avoid expensive operations since widgets are always visible
-7. **Disable animations during interaction**: Use `isDragging` and `isScaling` to optimize
-8. **Provide fallbacks**: Always have default values for settings and data
+3. **Implement dimension-based scaling**: Multiply all sizes by `widgetScale` with `Math.round()`
+4. **Disable expensive effects during scaling**: Use `isScaling` to turn off layer effects, shadows, and complex components
+5. **Handle `widgetData`**: Use defensive checks when accessing widget-specific data
+6. **Respect theming**: Use `Color.m*` colors that adapt to light/dark mode
+7. **Keep it performant**: Avoid expensive operations since widgets are always visible
+8. **Disable animations during interaction**: Use `isDragging` and `isScaling` to optimize
+9. **Provide fallbacks**: Always have default values for settings and data
 
 ## Adding Desktop Widgets to the Desktop
 
