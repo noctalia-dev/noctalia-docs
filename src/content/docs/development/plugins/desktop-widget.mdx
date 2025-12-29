@@ -212,11 +212,11 @@ NText {
 ### Typography
 ```qml
 NText {
-  font.pointSize: Style.fontSizeS
-  font.pointSize: Style.fontSizeM
-  font.pointSize: Style.fontSizeL
-  font.pointSize: Style.fontSizeXL
-  font.pointSize: Style.fontSizeXXL
+  pointSize: Style.fontSizeS
+  pointSize: Style.fontSizeM
+  pointSize: Style.fontSizeL
+  pointSize: Style.fontSizeXL
+  pointSize: Style.fontSizeXXL
 
   font.weight: Font.Light
   font.weight: Font.Normal
@@ -492,7 +492,7 @@ DraggableDesktopWidget {
 
 ## Implementing Scaling
 
-Desktop widgets support user-controlled scaling from 0.5x to 5x. **You must implement dimension-based scaling** rather than using Qt's transform-based `scale` property. Transform-based scaling causes blurry text and poor rendering at non-integer scale values.
+Desktop widgets support user-controlled scaling from 0.5x to 5x. **You must implement dimension-based scaling** rather than using Qt's transform-based `scale` property. Transform-based scaling usually cause jagged edges and overall poor rendering quality.
 
 ### The `widgetScale` Property
 

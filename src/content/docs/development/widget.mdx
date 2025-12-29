@@ -78,7 +78,7 @@ Rectangle {
 
     NText {
       text: widgetSettings.text !== undefined ? widgetSettings.text : (widgetMetadata?.text || "Hello")
-      font.pointSize: Style.fontSizeXS * scaling
+      pointSize: Style.fontSizeXS * scaling
       font.weight: Style.fontWeightBold
       color: Color.mPrimary
       Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
@@ -157,7 +157,7 @@ ColumnLayout {
 
   NText {
     text: "HelloWorld Text"
-    font.pointSize: Style.fontSizeM * scaling
+    pointSize: Style.fontSizeM * scaling
     font.weight: Style.fontWeightBold
     color: Color.mOnSurface
   }
