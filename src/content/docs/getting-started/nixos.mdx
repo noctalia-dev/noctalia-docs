@@ -8,15 +8,8 @@ sidebar:
 import SettingsReference from '../../../components/SettingsReference.astro';
 
 
-For NixOS users, you can add Noctalia to your system configuration using flakes and the provided NixOS module.
-
-:::note
-The Noctalia flake requires **nixpkgs unstable**, since we depend on the latest Quickshell version.
-:::
-
-## Installation
-
-To install Noctalia, you need to [add a flake input](#add-flake-input) and [install the package](#install-package).
+For NixOS users, a [Nix package](https://search.nixos.org/packages?channel=unstable&show=noctalia-shell&query=noctalia) for Noctalia is available.
+You can also get the Git version, NixOS module and Home Manager module via flakes.
 
 :::caution
 To make Noctalia's wifi, bluetooth, power-profile, and battery feature available, please ensure the following NixOS options are enabled:
@@ -24,6 +17,14 @@ To make Noctalia's wifi, bluetooth, power-profile, and battery feature available
 - `hardware.bluetooth.enable`
 - `services.power-profiles-daemon.enable` or `services.tuned.enable`
 - `services.upower.enable`
+:::
+
+## Nix flakes
+
+To install Noctalia, you need to [add a flake input](#add-flake-input) and [install the package](#install-package).
+
+:::note
+The Noctalia flake requires **nixpkgs unstable**, since we depend on the latest Quickshell version.
 :::
 
 ### Adding the flake input {#add-flake-input}
@@ -513,31 +514,13 @@ this directory and rebuild.
 
 To add support for events in the calendar via evolution-data-server.
 
-```nix
-# noctalia.nix
-{ pkgs, inputs, lib, ... }:
-{
-  services.gnome.evolution-data-server.enable = true;
+First, enable the evolution-data-server:
+```services.gnome.evolution-data-server.enable = true;```
 
-  environment.systemPackages = with pkgs; [
-    (python3.withPackages (pyPkgs: with pyPkgs; [ pygobject3 ]))
-  ];
-
-  environment.sessionVariables = {
-    GI_TYPELIB_PATH = lib.makeSearchPath "lib/girepository-1.0" (
-      with pkgs;
-      [
-        evolution-data-server
-        libical
-        glib.out
-        libsoup_3
-        json-glib
-        gobject-introspection
-      ]
-    );
-  };
-}
-```
+Then override the Noctalia package:
+```pkgs.noctalia-shell.override { calendarSupport = true; }```
+or
+```inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override { calendarSupport = true; }```
 
 ---
 
