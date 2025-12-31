@@ -42,7 +42,20 @@ export default defineConfig({
       sidebar: [
         {
           label: "Getting started",
-          autogenerate: { directory: "getting-started" },
+          items: [
+            { label: "Installation", link: "getting-started/installation/" },
+            { label: "NixOS", link: "getting-started/nixos/" },
+            { label: "Running the Shell", link: "getting-started/running-the-shell/" },
+            {
+              label: "Compositor Settings",
+              items: [
+                { label: "Niri", link: "getting-started/compositor-settings/niri/" },
+                { label: "Hyprland", link: "getting-started/compositor-settings/hyprland/" },
+              ],
+            },
+            { label: "Keybinds", link: "getting-started/keybinds/" },
+            { label: "FAQ", link: "getting-started/faq/" },
+          ],
         },
         {
           label: "Configuration",
