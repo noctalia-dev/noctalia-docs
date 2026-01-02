@@ -74,8 +74,6 @@ Noctalia/
 
 **Avoid Qt5Compat**: We don't use `Qt5Compat` since it's deprecated and will be removed in future Qt versions. Instead, use modern Qt6 alternatives like `QtQuick.Effects` (especially `MultiEffect` for visual effects).
 
-**JavaScript Syntax**: When writing JavaScript in QML files, avoid ES6+ syntax features like arrow functions, destructuring, or template literals. Stick to ES5 syntax that `qmlfmt` can properly format and validate. This ensures consistency across the codebase and prevents formatting issues.
-
 :::warning[Code Formatting]
 Always run `qmlfmt` on your QML files before submitting PRs. Modern JavaScript syntax may cause formatting errors or inconsistent output.
 :::
