@@ -5,7 +5,7 @@ sidebar:
   order: 10
 ---
 
-Noctalia is packaged for [Arch Linux](#arch) and [NixOS](/getting-started/nixos/), but can also be [installed manually](#manual-install) in other distributions.
+Noctalia is packaged for [Arch Linux](#arch), [NixOS](/getting-started/nixos/), and [Gentoo](#gentoo), but can also be [installed manually](#manual-install) in other distributions.
 
 ## Arch Linux {#arch}
 
@@ -31,6 +31,33 @@ paru -S noctalia-shell-git
 The development version may be less stable than the official release. Use this version if you want to test the latest features or contribute to development.
 :::
 ---
+
+## Gentoo {#gentoo}
+
+Noctalia-shell is available in the Gentoo [Guru](https://wiki.gentoo.org/wiki/Project:GURU) repository.
+
+First enable and sync the repository as described at [Guru Information for End Users](https://wiki.gentoo.org/wiki/Project:GURU/Information_for_End_Users):
+
+```bash
+# eselect respository enable guru
+# emerge --sync guru
+```
+
+Next, update the [/etc/portage/package.accept_keywords](https://wiki.gentoo.org/wiki//etc/portage/package.accept_keywords) file/folder to enable the unstable keyword on the noctalia-shell package:
+
+```toml
+gui-apps/noctalia-shell ~amd64
+```
+
+Now the package can be installed through emerge:
+
+```bash
+# emerge gui-apps/noctalia-shell
+```
+
+Read the post-install emerge messages for information on optional dependencies and emerge them as well if desired.
+
+For integration with systemd the package installs a user service unit to `/usr/lib/systemd/user/noctalia.service`.
 
 ## Manual Installation {#manual-install}
 
