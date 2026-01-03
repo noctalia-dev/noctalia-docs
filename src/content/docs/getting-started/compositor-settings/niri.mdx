@@ -5,6 +5,11 @@ sidebar:
   order: 1
 ---
 
+import ImageLightbox from '../../../../components/ImageLightbox.astro';
+import option1 from '../../../../assets/niri-overview/option1.png';
+import option2 from '../../../../assets/niri-overview/option2.png';
+import option3 from '../../../../assets/niri-overview/option3.png';
+
 Add the following settings to your Niri configuration file (usually located at `~/.config/niri/config.kdl`).
 
 These settings are for general window appearance and functionality.
@@ -36,7 +41,7 @@ The "backdrop" in Niri is a layer behind all workspaces that is visible when you
 
 This minimal configuration allows you to have a blurred and dimmed copy of your wallpaper that appears only in Niri's overview.
 
-![Blurred Overview Wallpaper](../../../../assets/niri-overview/option1.png)
+<ImageLightbox src={option1} alt="Blurred Overview Wallpaper" />
 
 ```ini
 // Set the overview wallpaper on the backdrop.
@@ -53,7 +58,7 @@ Option 1 requires "Enable overview wallpaper" to be turned ON in Noctalia's sett
 
 If you prefer a stationary wallpaper that is visible at all times and does not scroll when switching workspaces, use the following configuration.
 
-![Stationary Wallpaper](../../../../assets/niri-overview/option2.png)
+<ImageLightbox src={option2} alt="Stationary Wallpaper" />
 
 ```ini
 // Set the regular wallpaper on the backdrop.
@@ -82,7 +87,7 @@ Option 2 requires "Enable overview wallpaper" to be turned OFF in Noctalia's set
 
 If you prefer a more productivity-oriented look, you can use this minimal configuration.
 
-![Flat colored overview](../../../../assets/niri-overview/option3.png)
+<ImageLightbox src={option3} alt="Flat colored overview" />
 
 ```
 overview {

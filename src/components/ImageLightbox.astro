@@ -1,0 +1,63 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+}
+
+const { src, alt } = Astro.props;
+const id = `lightbox-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<figure class="lightbox-figure">
+  <button type="button" class="lightbox-trigger" aria-haspopup="dialog" data-lightbox-id={id}>
+    <Image src={src} alt={alt} class="lightbox-thumbnail" />
+  </button>
+  <figcaption>{alt}</figcaption>
+</figure>
+
+<dialog id={id} class="lightbox-dialog">
+  <div class="lightbox-content">
+    <button type="button" class="lightbox-close" aria-label="Close">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    <Image src={src} alt={alt} class="lightbox-image" />
+  </div>
+</dialog>
+
+<script>
+  function initLightboxes() {
+    document.querySelectorAll<HTMLButtonElement>('.lightbox-trigger').forEach(trigger => {
+      const dialogId = trigger.dataset.lightboxId;
+      if (!dialogId) return;
+
+      const dialog = document.getElementById(dialogId) as HTMLDialogElement | null;
+      if (!dialog) return;
+
+      trigger.addEventListener('click', () => {
+        dialog.showModal();
+      });
+
+      dialog.addEventListener('click', (e) => {
+        if (e.target === dialog) {
+          dialog.close();
+        }
+      });
+
+      const closeBtn = dialog.querySelector('.lightbox-close');
+      closeBtn?.addEventListener('click', () => {
+        dialog.close();
+      });
+    });
+  }
+
+  // Initialize on page load
+  initLightboxes();
+
+  // Re-initialize on Astro page transitions
+  document.addEventListener('astro:page-load', initLightboxes);
+</script>

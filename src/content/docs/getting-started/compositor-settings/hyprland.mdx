@@ -5,6 +5,10 @@ sidebar:
   order: 2
 ---
 
+import ImageLightbox from '../../../../components/ImageLightbox.astro';
+import blur1 from '../../../../assets/hyprland-blur/hyprland-blur-1.png';
+import blur2 from '../../../../assets/hyprland-blur/hyprland-blur-2.png';
+
 Add the following settings to your Hyprland configuration file (usually located at `~/.config/hypr/hyprland.conf`).
 
 These settings are for general window appearance and functionality.
@@ -39,7 +43,7 @@ decoration {
 
 Next, you can enable blur for the Noctalia bar and panels background.
 
-![Blurred bar and panels](../../../../assets/hyprland-blur/hyprland-blur-1.png)
+<ImageLightbox src={blur1} alt="Blurred bar and panels" />
 
 ```ini
 layerrule {
@@ -59,4 +63,4 @@ Adjust the `ignore_alpha` value in Hyprland alongside these Noctalia transparenc
 - **Dimmed desktop opacity** — Controls the full-screen blur when a panel is open
 :::
 
-![Fine-tuned blur example](../../../../assets/hyprland-blur/hyprland-blur-2.png)
+<ImageLightbox src={blur2} alt="Fine-tuned blur example" />
