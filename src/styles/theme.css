@@ -220,4 +220,30 @@ details details > summary:hover .group-label {
 	outline-offset: 2px;
 }
 
+/* TOC Snake Indicator */
+snake-toc nav {
+	position: relative;
+}
+
+snake-toc nav > ul {
+	position: relative;
+}
+
+snake-toc nav > ul::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	width: 2px;
+	background: var(--sl-color-accent);
+	top: var(--snake-top, 0);
+	height: var(--snake-height, 0);
+	transition: top 0.15s ease-out, height 0.15s ease-out;
+	border-radius: 1px;
+	pointer-events: none;
+}
+
+snake-toc a[data-visible="true"] {
+	color: var(--sl-color-text-accent);
+}
+
 /* Global script to update logo link - injected via style tag */

@@ -9,6 +9,7 @@ export default defineConfig({
     starlight({
       components: {
         Header: './src/components/Header.astro',
+        TableOfContents: './src/components/TableOfContents.astro',
       },
       head: [
         {

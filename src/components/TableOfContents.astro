@@ -1,0 +1,175 @@
+---
+import Default from '@astrojs/starlight/components/TableOfContents.astro';
+---
+
+<snake-toc>
+  <Default {...Astro.props}><slot /></Default>
+</snake-toc>
+
+<script>
+  class SnakeToc extends HTMLElement {
+    private visibleLinkIndices = new Set<number>();
+    private headingToLinkIndex = new Map<Element, number>();
+    private scrollHandler: (() => void) | null = null;
+    private topMargin = 0;
+
+    connectedCallback() {
+      this.initScrollSpy();
+      document.addEventListener('astro:page-load', () => this.initScrollSpy());
+    }
+
+    disconnectedCallback() {
+      if (this.scrollHandler) {
+        window.removeEventListener('scroll', this.scrollHandler);
+      }
+    }
+
+    private isVisible(): boolean {
+      // Check multiple ways if element is visible
+      if (this.offsetParent === null) return false;
+      const style = getComputedStyle(this);
+      if (style.display === 'none' || style.visibility === 'hidden') return false;
+      const rect = this.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0;
+    }
+
+    private initScrollSpy() {
+      // Skip if this TOC is hidden (mobile vs desktop)
+      if (!this.isVisible()) return;
+
+      this.visibleLinkIndices.clear();
+      this.headingToLinkIndex.clear();
+
+      const navHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sl-nav-height') || '0');
+      this.topMargin = navHeight + 32;
+
+      const links = Array.from(this.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'));
+
+      // Build a map from heading ID to TOC link index
+      const idToLinkIndex = new Map<string, number>();
+      links.forEach((link, index) => {
+        const id = decodeURIComponent(link.hash.slice(1));
+        if (id) {
+          idToLinkIndex.set(id, index);
+        }
+      });
+
+      // Find the content area and get all headings
+      const content = document.querySelector('.sl-markdown-content, main article, main');
+      if (content) {
+        const headings = content.querySelectorAll('h1, h2, h3, h4, h5, h6');
+        headings.forEach((heading) => {
+          const id = heading.id;
+          if (id && idToLinkIndex.has(id)) {
+            this.headingToLinkIndex.set(heading, idToLinkIndex.get(id)!);
+          }
+        });
+      }
+
+      // Add scroll listener
+      if (this.scrollHandler) {
+        window.removeEventListener('scroll', this.scrollHandler);
+      }
+      this.scrollHandler = () => this.updateVisibleHeadings();
+      window.addEventListener('scroll', this.scrollHandler, { passive: true });
+
+      // Initial update
+      requestAnimationFrame(() => this.updateVisibleHeadings());
+    }
+
+    private updateVisibleHeadings() {
+      this.visibleLinkIndices.clear();
+
+      // Get all headings sorted by their position in the document
+      const headingsWithPos: Array<{ heading: Element; linkIndex: number; top: number }> = [];
+      for (const [heading, linkIndex] of this.headingToLinkIndex.entries()) {
+        const rect = heading.getBoundingClientRect();
+        headingsWithPos.push({ heading, linkIndex, top: rect.top });
+      }
+      headingsWithPos.sort((a, b) => a.top - b.top);
+
+      // Find which headings are in or above the visible area
+      const viewportTop = this.topMargin;
+      const viewportBottom = window.innerHeight - 150;
+
+      let activeHeadingIndex = -1;
+
+      for (let i = 0; i < headingsWithPos.length; i++) {
+        const { top, linkIndex } = headingsWithPos[i];
+
+        // Find the active heading (last one that has scrolled past the top)
+        if (top <= viewportTop) {
+          activeHeadingIndex = i;
+        }
+
+        // Include headings visible in viewport
+        if (top > viewportTop && top < viewportBottom) {
+          this.visibleLinkIndices.add(linkIndex);
+        }
+      }
+
+      // Always include the active heading (the one we're currently "in")
+      if (activeHeadingIndex >= 0) {
+        this.visibleLinkIndices.add(headingsWithPos[activeHeadingIndex].linkIndex);
+      }
+
+      // If no headings are visible, show the first one
+      if (this.visibleLinkIndices.size === 0 && headingsWithPos.length > 0) {
+        this.visibleLinkIndices.add(headingsWithPos[0].linkIndex);
+      }
+
+      this.updateSnake();
+    }
+
+    private updateSnake() {
+      const nav = this.querySelector('nav');
+      const ul = nav?.querySelector<HTMLUListElement>(':scope > ul');
+      if (!nav || !ul) return;
+
+      // Skip if this TOC is hidden (mobile vs desktop)
+      if (!this.isVisible()) return;
+
+      const links = Array.from(this.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'));
+
+      // Copy visible indices and update link attributes
+      const visibleIndices = new Set(this.visibleLinkIndices);
+      links.forEach((link, index) => {
+        link.setAttribute('data-visible', visibleIndices.has(index) ? 'true' : 'false');
+      });
+
+      // Check if scrolled to bottom - include last section
+      const scrolledToBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 50;
+      if (scrolledToBottom && links.length > 0) {
+        const lastIndex = links.length - 1;
+        visibleIndices.add(lastIndex);
+        links[lastIndex].setAttribute('data-visible', 'true');
+      }
+
+      if (visibleIndices.size === 0) {
+        ul.style.setProperty('--snake-height', '0px');
+        return;
+      }
+
+      const sortedIndices = Array.from(visibleIndices).sort((a, b) => a - b);
+      const firstIndex = sortedIndices[0];
+      const lastIndex = sortedIndices[sortedIndices.length - 1];
+
+      const firstLink = links[firstIndex];
+      const lastLink = links[lastIndex];
+
+      // Calculate position relative to the ul's scroll container
+      const ulRect = ul.getBoundingClientRect();
+      const firstRect = firstLink.getBoundingClientRect();
+      const lastRect = lastLink.getBoundingClientRect();
+
+      // Use offsetTop for more reliable positioning within scrolling containers
+      const top = firstRect.top - ulRect.top + ul.scrollTop;
+      const height = lastRect.bottom - firstRect.top;
+
+      ul.style.setProperty('--snake-top', `${top}px`);
+      ul.style.setProperty('--snake-height', `${height}px`);
+    }
+  }
+
+  customElements.define('snake-toc', SnakeToc);
+</script>
