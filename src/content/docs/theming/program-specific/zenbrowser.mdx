@@ -14,17 +14,20 @@ Zen Browser can load Noctalia's generated CSS through your profile's `userChrome
    - Set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`
 
 2. **Set the Zen theme to Auto:**
-   - Open **Settings → Appearance**
-   - Set **Theme** to **Auto** so Zen applies the colors from the Noctalia CSS
+   - Open **Settings → General**
+   - Set **Website Appeararance** to **Auto** so Zen applies the colors from the Noctalia CSS
 
 3. **Reload colors after changes:**
    - Restart Zen Browser to load the updated color scheme from Noctalia
 
 ## Remove the theme
 
-Delete these lines from your profile's `userChrome.css` to revert to the default styling:
+Delete these lines from your profile's `userChrome.css` and `userContent.css` to revert to the default styling:
 
 ```css
 @import "/home/lysec/.cache/noctalia/zen-browser/zen-userChrome.css";
+```
+
+```css
 @import "/home/lysec/.cache/noctalia/zen-browser/zen-userContent.css";
 ```
