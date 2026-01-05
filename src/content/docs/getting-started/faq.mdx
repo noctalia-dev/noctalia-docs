@@ -248,6 +248,36 @@ Common causes:
 
 </details>
 
+<details>
+<summary><strong>Why are my tray icons missing after (re)starting Noctalia?</strong></summary>
+
+This typically happens when KDE is installed alongside your window manager. KDE's tray daemon (`kded6`) can interfere with Noctalia's system tray, though it usually doesn't autostart at cold boot.
+
+**Common cause:** Opening Dolphin (KDE's file manager) with sudo or elevated privileges will respawn `kded6`, which can cause tray icons to disappear.
+
+**Solution: Manually stop the process**
+
+Run this command, then restart Noctalia:
+```bash
+pkill kded6
+```
+
+You can also add this to your compositor's autostart configuration if needed:
+
+:::note[Niri]
+```ini
+spawn-sh-at-startup "pkill kded6"
+```
+:::
+
+:::note[Hyprland]
+```ini
+exec-once = pkill kded6
+```
+:::
+
+</details>
+
 ## Appearance & UI
 
 <details>
