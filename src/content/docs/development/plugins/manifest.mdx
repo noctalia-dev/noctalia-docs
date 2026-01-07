@@ -22,6 +22,9 @@ Every Noctalia plugin must include a `manifest.json` file that describes the plu
   "entryPoints": {
     "main": "Main.qml",
     "barWidget": "BarWidget.qml",
+    "desktopWidget": "DesktopWidget.qml",
+    "controlCenterWidget": "ControlCenterWidget.qml",
+    "launcherProvider": "LauncherProvider.qml",
     "panel": "Panel.qml",
     "settings": "Settings.qml"
   },
@@ -123,6 +126,9 @@ The `entryPoints` object specifies which components your plugin provides. All en
   "entryPoints": {
     "main": "Main.qml",
     "barWidget": "BarWidget.qml",
+    "desktopWidget": "DesktopWidget.qml",
+    "controlCenterWidget": "ControlCenterWidget.qml",
+    "launcherProvider": "LauncherProvider.qml",
     "panel": "Panel.qml",
     "settings": "Settings.qml"
   }
@@ -168,6 +174,64 @@ See [IPC Guide](/development/plugins/ipc/) for details.
 ```
 
 See [Bar Widget Guide](/development/plugins/bar-widget/) for details.
+
+### `desktopWidget`
+- **File**: DesktopWidget.qml
+- **Purpose**: Draggable widget on the desktop background
+- **Use cases**:
+  - Display at-a-glance information
+  - Clock, weather, or media displays
+  - Audio visualizers
+  - Decorative elements
+
+**Example**:
+```json
+{
+  "entryPoints": {
+    "desktopWidget": "DesktopWidget.qml"
+  }
+}
+```
+
+See [Desktop Widget Guide](/development/plugins/desktop-widget/) for details.
+
+### `controlCenterWidget`
+- **File**: ControlCenterWidget.qml
+- **Purpose**: Button widget in the Control Center panel
+- **Use cases**:
+  - Quick toggle actions
+  - Open plugin panels
+  - System shortcuts
+
+**Example**:
+```json
+{
+  "entryPoints": {
+    "controlCenterWidget": "ControlCenterWidget.qml"
+  }
+}
+```
+
+See [Control Center Widget Guide](/development/plugins/control-center-widget/) for details.
+
+### `launcherProvider`
+- **File**: LauncherProvider.qml
+- **Purpose**: Search/browse provider for the launcher
+- **Use cases**:
+  - Custom search sources
+  - Command handlers (e.g., `>kaomoji`)
+  - Category-based browsing
+
+**Example**:
+```json
+{
+  "entryPoints": {
+    "launcherProvider": "LauncherProvider.qml"
+  }
+}
+```
+
+See [Launcher Provider Guide](/development/plugins/launcher-provider/) for details.
 
 ### `panel`
 - **File**: Panel.qml
@@ -354,6 +418,8 @@ The PluginRegistry validates manifests with these rules:
   "entryPoints": {
     "main": "Main.qml",
     "barWidget": "BarWidget.qml",
+    "desktopWidget": "DesktopWidget.qml",
+    "controlCenterWidget": "ControlCenterWidget.qml",
     "panel": "Panel.qml",
     "settings": "Settings.qml"
   },
@@ -373,5 +439,8 @@ The PluginRegistry validates manifests with these rules:
 
 - [Getting Started](/development/plugins/getting-started/) - Create your first plugin
 - [Bar Widget Guide](/development/plugins/bar-widget/) - Develop bar widgets
+- [Desktop Widget Guide](/development/plugins/desktop-widget/) - Create desktop widgets
+- [Control Center Widget Guide](/development/plugins/control-center-widget/) - Add control center buttons
+- [Launcher Provider Guide](/development/plugins/launcher-provider/) - Extend the launcher
 - [Panel Guide](/development/plugins/panel/) - Create overlay panels
 - [Plugin API](/development/plugins/api/) - Full API reference

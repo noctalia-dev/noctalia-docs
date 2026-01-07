@@ -26,16 +26,36 @@ Add custom widgets to the top/bottom bar that provide quick access to informatio
 
 **Learn more:** [Bar Widget Development](/development/plugins/bar-widget/)
 
-### Desktop widgets 
+### Desktop Widgets
 Add custom widgets to your desktop background. They provide at-a-glance information and can be positioned and scaled by the user in edit mode.
 
 **Use cases:**
-- Clock, MediaPlayer 
+- Clock, MediaPlayer
 - Weather forecast
 - Audio visualizers
 
 **Learn more:** [Desktop Widget Development](/development/plugins/desktop-widget/)
 
+### Control Center Widgets
+Add quick action buttons to the Control Center panel. These are typically simple buttons that toggle panels or perform actions.
+
+**Use cases:**
+- Quick toggle actions
+- Open plugin panels
+- System shortcuts
+
+**Learn more:** [Control Center Widget Development](/development/plugins/control-center-widget/)
+
+### Launcher Providers
+Extend the app launcher with custom search sources, command handlers, and browsable content.
+
+**Use cases:**
+- Custom search sources (emoji, kaomoji, snippets)
+- Command handlers (>kaomoji, >todo)
+- Category-based browsing
+- Clipboard history, bookmarks
+
+**Learn more:** [Launcher Provider Development](/development/plugins/launcher-provider/)
 
 ### Panels
 Create full-screen overlay panels that can be opened from bar widgets or triggered programmatically.
@@ -76,18 +96,20 @@ Plugins in Noctalia follow a modular architecture:
 
 ```
 your-plugin/
-├── manifest.json      # Plugin metadata (required)
-├── preview.png        # Preview image for plugin gallery (optional, recommended)
-├── Main.qml           # Background logic with IPC handlers (optional)
-├── BarWidget.qml      # Bar widget component (optional)
-├── DesktopWidget.qml  # Desktop widget component (optional)
-├── Panel.qml          # Panel overlay component (optional)
-├── Settings.qml       # Settings UI component (optional)
-├── i18n/              # Translations (optional)
+├── manifest.json              # Plugin metadata (required)
+├── preview.png                # Preview image for plugin gallery (optional, recommended)
+├── Main.qml                   # Background logic with IPC handlers (optional)
+├── BarWidget.qml              # Bar widget component (optional)
+├── DesktopWidget.qml          # Desktop widget component (optional)
+├── ControlCenterWidget.qml    # Control center button (optional)
+├── LauncherProvider.qml       # Launcher search provider (optional)
+├── Panel.qml                  # Panel overlay component (optional)
+├── Settings.qml               # Settings UI component (optional)
+├── i18n/                      # Translations (optional)
 │   ├── en.json
 │   └── es.json
-├── README.md          # Plugin documentation
-└── settings.json      # User saved settings (should not be committed to the repository)
+├── README.md                  # Plugin documentation
+└── settings.json              # User saved settings (should not be committed to the repository)
 ```
 
 :::tip[Preview Images]
@@ -122,6 +144,7 @@ Every plugin component receives a `pluginApi` object that provides access to plu
 - **`saveSettings()`** - Persist settings to disk
 - **`openPanel(screen)`** - Open the plugin's panel
 - **`closePanel(screen)`** - Close the plugin's panel
+- **`togglePanel(screen)`** - Toggle the plugin's panel open/closed
 - **`tr(key, interpolations)`** - Translate text
 - **`trp(key, count, ...)`** - Translate with plurals
 - **`hasTranslation(key)`** - Check if translation exists
@@ -175,31 +198,44 @@ Follow this recommended path to master plugin development:
    - Handle user interactions
    - Style with Noctalia's design system
 
-4. **[Panel Development](/development/plugins/panel/)** - Create overlay panels
+4. **[Desktop Widget Development](/development/plugins/desktop-widget/)** - Create desktop widgets
+   - Draggable, scalable widgets
+   - At-a-glance information displays
+
+5. **[Control Center Widget](/development/plugins/control-center-widget/)** - Add control center buttons
+   - Quick action buttons
+   - Panel toggle buttons
+
+6. **[Launcher Provider](/development/plugins/launcher-provider/)** - Extend the launcher
+   - Custom search sources
+   - Command handlers
+   - Category-based browsing
+
+7. **[Panel Development](/development/plugins/panel/)** - Create overlay panels
    - Build full-screen interfaces
    - Handle panel lifecycle
    - Create complex UIs
 
-5. **[Plugin API Reference](/development/plugins/api/)** - Master the API
+8. **[Plugin API Reference](/development/plugins/api/)** - Master the API
    - Complete API documentation
    - Service integration
    - Advanced patterns
 
-6. **[IPC Guide](/development/plugins/ipc/)** - Background processing
+9. **[IPC Guide](/development/plugins/ipc/)** - Background processing
    - Create IPC handlers
    - Handle external commands
    - Integrate with scripts and keybindings
 
-7. **Additional Topics** *(coming soon)*
-   - [Settings UI](/development/plugins/settings-ui/) - Configuration interfaces
-   - [Translations](/development/plugins/translations/) - Internationalization
+10. **Additional Topics**
+    - [Settings UI](/development/plugins/settings-ui/) - Configuration interfaces
+    - [Translations](/development/plugins/translations/) - Internationalization
 
 ## Example Plugins
 
 Explore these example plugins in the [official repository](https://github.com/noctalia-dev/noctalia-plugins) to see real-world implementations:
 
-- **hello-world** - Demonstrates all plugin features (bar widget, panel, settings, IPC)
-- **launcher-button** - Simple bar widget that opens the app launcher
+- **hello-world** - Demonstrates all plugin features (bar widget, desktop widget, control center widget, panel, settings, IPC)
+- **kaomoji-provider** - Launcher provider with command mode, categories, and database loading
 - **privacy-indicator** - Shows when mic/camera/screen sharing is active
 
 ## Next Steps

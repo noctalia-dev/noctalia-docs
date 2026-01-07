@@ -9,7 +9,7 @@ Every plugin component receives a `pluginApi` object that provides access to plu
 
 ## Plugin API Object
 
-The `pluginApi` object is injected into all plugin components (BarWidget, Panel, Main, Settings):
+The `pluginApi` object is injected into all plugin components (BarWidget, DesktopWidget, ControlCenterWidget, LauncherProvider, Panel, Main, Settings):
 
 ```qml
 Item {
@@ -154,6 +154,34 @@ readonly property bool hasDesktopWidget: pluginApi?.desktopWidget !== null
 This property is `null` if your plugin doesn't have a `desktopWidget` entry point in the manifest.
 :::
 
+### `controlCenterWidget`
+- **Type**: `Component` (or null)
+- **Read-only**: Yes
+- **Description**: Reference to the control center widget Component
+
+```qml
+// Check if plugin has a control center widget
+readonly property bool hasCCWidget: pluginApi?.controlCenterWidget !== null
+```
+
+:::note
+This property is `null` if your plugin doesn't have a `controlCenterWidget` entry point in the manifest.
+:::
+
+### `launcherProvider`
+- **Type**: `Component` (or null)
+- **Read-only**: Yes
+- **Description**: Reference to the launcher provider Component
+
+```qml
+// Check if plugin has a launcher provider
+readonly property bool hasProvider: pluginApi?.launcherProvider !== null
+```
+
+:::note
+This property is `null` if your plugin doesn't have a `launcherProvider` entry point in the manifest.
+:::
+
 ## Functions
 
 ### `saveSettings()`
@@ -256,6 +284,34 @@ NButton {
   }
 }
 ```
+
+### `togglePanel(screen)`
+Toggle this plugin's panel open/closed state.
+
+**Signature**:
+```qml
+function togglePanel(screen: ShellScreen): bool
+```
+
+**Parameters**:
+- `screen` - The ShellScreen to toggle the panel on
+
+**Returns**: `true` if operation succeeded, `false` otherwise
+
+**Usage**:
+```qml
+// In BarWidget.qml or ControlCenterWidget.qml
+NIconButtonHot {
+  icon: "my-icon"
+  onClicked: {
+    pluginApi.togglePanel(root.screen)
+  }
+}
+```
+
+:::tip
+`togglePanel` is commonly used in bar widgets and control center widgets to open/close the plugin's panel with a single click.
+:::
 
 ### `tr(key, interpolations)`
 Translate a text key using plugin translations.
@@ -667,6 +723,8 @@ Rectangle {
 - [Getting Started](/development/plugins/getting-started/) - Create your first plugin
 - [Bar Widget](/development/plugins/bar-widget/) - Bar widget development
 - [Desktop Widget](/development/plugins/desktop-widget/) - Desktop widget development
+- [Control Center Widget](/development/plugins/control-center-widget/) - Control center widget development
+- [Launcher Provider](/development/plugins/launcher-provider/) - Launcher provider development
 - [Panel](/development/plugins/panel/) - Panel development
 - [Settings UI](/development/plugins/settings-ui/) - Settings UI development
 - [Translations](/development/plugins/translations/) - i18n guide
