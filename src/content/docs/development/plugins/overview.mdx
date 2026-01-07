@@ -142,9 +142,9 @@ Every plugin component receives a `pluginApi` object that provides access to plu
 
 ### Core Functions
 - **`saveSettings()`** - Persist settings to disk
-- **`openPanel(screen)`** - Open the plugin's panel
+- **`openPanel(screen, buttonItem?)`** - Open the plugin's panel (optionally near buttonItem)
 - **`closePanel(screen)`** - Close the plugin's panel
-- **`togglePanel(screen)`** - Toggle the plugin's panel open/closed
+- **`togglePanel(screen, buttonItem?)`** - Toggle the plugin's panel open/closed (optionally near buttonItem)
 - **`tr(key, interpolations)`** - Translate text
 - **`trp(key, count, ...)`** - Translate with plurals
 - **`hasTranslation(key)`** - Check if translation exists

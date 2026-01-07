@@ -190,8 +190,8 @@ MouseArea {
   cursorShape: Qt.PointingHandCursor
 
   onClicked: {
-    // Open plugin panel
-    pluginApi.openPanel(root.screen)
+    // Open plugin panel near this widget
+    pluginApi.openPanel(root.screen, root)
 
     // Or perform action
     performAction()
@@ -266,11 +266,15 @@ MouseArea {
   anchors.fill: parent
   onClicked: {
     if (pluginApi) {
-      pluginApi.openPanel(root.screen)
+      pluginApi.openPanel(root.screen, root)
     }
   }
 }
 ```
+
+:::tip
+Passing `root` (or `this` from `onClicked`) as the second parameter to `openPanel()` makes the panel open near the widget, similar to how core Noctalia panels work.
+:::
 
 ## Using Noctalia Widgets
 
@@ -512,7 +516,7 @@ Rectangle {
 
     onClicked: {
       if (pluginApi) {
-        pluginApi.openPanel(root.screen)
+        pluginApi.openPanel(root.screen, root)
       }
     }
   }

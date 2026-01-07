@@ -218,26 +218,27 @@ NButton {
 Settings are saved to `~/.config/noctalia/plugins/<plugin-id>/settings.json`
 :::
 
-### `openPanel(screen)`
+### `openPanel(screen, buttonItem)`
 Open this plugin's panel on the specified screen.
 
 **Signature**:
 ```qml
-function openPanel(screen: ShellScreen): bool
+function openPanel(screen: ShellScreen, buttonItem?: Item): bool
 ```
 
 **Parameters**:
 - `screen` - The ShellScreen to open the panel on
+- `buttonItem` - (Optional) The button/widget that triggered the panel. If provided, the panel will position itself near this button.
 
 **Returns**: `true` if panel opened successfully, `false` otherwise
 
 **Usage**:
 ```qml
-// In BarWidget.qml
+// In BarWidget.qml - panel opens near the button
 MouseArea {
   anchors.fill: parent
   onClicked: {
-    pluginApi.openPanel(root.screen)
+    pluginApi.openPanel(root.screen, root)
   }
 }
 ```
@@ -245,10 +246,12 @@ MouseArea {
 **Example**:
 ```qml
 NIconButton {
+  id: myButton
   icon: "external-link"
   tooltip: "Open details"
   onClicked: {
-    if (pluginApi.openPanel(root.screen)) {
+    // Pass 'this' to position panel near the button
+    if (pluginApi.openPanel(root.screen, this)) {
       Logger.i("Plugin", "Panel opened")
     } else {
       Logger.w("Plugin", "Failed to open panel")
@@ -256,6 +259,10 @@ NIconButton {
   }
 }
 ```
+
+:::tip
+Pass `this` (or the widget reference) as the second parameter to have the panel open near the triggering button, similar to how core Noctalia panels work.
+:::
 
 :::note
 This only works if your plugin provides a `panel` entry point in the manifest.
@@ -285,16 +292,17 @@ NButton {
 }
 ```
 
-### `togglePanel(screen)`
+### `togglePanel(screen, buttonItem)`
 Toggle this plugin's panel open/closed state.
 
 **Signature**:
 ```qml
-function togglePanel(screen: ShellScreen): bool
+function togglePanel(screen: ShellScreen, buttonItem?: Item): bool
 ```
 
 **Parameters**:
 - `screen` - The ShellScreen to toggle the panel on
+- `buttonItem` - (Optional) The button/widget that triggered the panel. If provided, the panel will position itself near this button.
 
 **Returns**: `true` if operation succeeded, `false` otherwise
 
@@ -304,13 +312,13 @@ function togglePanel(screen: ShellScreen): bool
 NIconButtonHot {
   icon: "my-icon"
   onClicked: {
-    pluginApi.togglePanel(root.screen)
+    pluginApi.togglePanel(root.screen, this)
   }
 }
 ```
 
 :::tip
-`togglePanel` is commonly used in bar widgets and control center widgets to open/close the plugin's panel with a single click.
+`togglePanel` is commonly used in bar widgets and control center widgets to open/close the plugin's panel with a single click. Pass `this` as the second parameter to have the panel open near the triggering button.
 :::
 
 ### `tr(key, interpolations)`
@@ -700,8 +708,8 @@ Rectangle {
           pluginApi?.tr("widget.incremented") || "Incremented!"
         )
       } else if (mouse.button === Qt.RightButton) {
-        // Open panel
-        if (pluginApi.openPanel(root.screen)) {
+        // Open panel near this widget
+        if (pluginApi.openPanel(root.screen, root)) {
           Logger.i(pluginApi.pluginId, "Panel opened")
         }
       }

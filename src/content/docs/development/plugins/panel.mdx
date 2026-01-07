@@ -138,7 +138,7 @@ MouseArea {
   anchors.fill: parent
   onClicked: {
     if (pluginApi) {
-      pluginApi.openPanel(root.screen)
+      pluginApi.openPanel(root.screen, root)
     }
   }
 }
@@ -147,10 +147,14 @@ MouseArea {
 Or programmatically:
 
 ```qml
-function showDetails() {
-  pluginApi.openPanel(root.screen)
+function showDetails(buttonItem) {
+  pluginApi.openPanel(root.screen, buttonItem)
 }
 ```
+
+:::tip
+Passing a button/widget reference as the second parameter makes the panel open near that widget.
+:::
 
 ## Closing the Panel
 
@@ -655,7 +659,7 @@ Item {
 // BarWidget.qml
 MouseArea {
   anchors.fill: parent
-  onClicked: pluginApi.openPanel(root.screen)
+  onClicked: pluginApi.openPanel(root.screen, root)
 }
 ```
 

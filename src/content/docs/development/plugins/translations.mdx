@@ -321,7 +321,7 @@ Rectangle {
 
     onExited: TooltipService.hide()
 
-    onClicked: pluginApi?.openPanel(root.screen)
+    onClicked: pluginApi?.openPanel(root.screen, root)
   }
 }
 ```
