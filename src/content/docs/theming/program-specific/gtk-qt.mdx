@@ -23,11 +23,16 @@ GTK applications include most GNOME apps and many Linux applications. Noctalia c
    ```
 
 2. **Apply the GTK theme:**
-   - **Using nwg-look (recommended):**
-     - Open `nwg-look`
-     - Select `adw-gtk3` from the theme list
-     - Click "Apply"
-     - ![nwg-look](../../../../assets/app-theming/nwg-look.png)
+    - **Using nwg-look (recommended):**
+      :::tip[GTK4 Theming]
+      In nwg-look, make sure to **uncheck the GTK4 option**. Leaving GTK4 checked can prevent GTK4 applications from using Noctalia's color scheme.
+
+      If you previously applied a custom GTK4 theme, you may need to hit **"Clear"** (found in the **Preference** tab) in nwg-look before reapplying and regenerating the color scheme. This ensures the new colors are accepted by GTK4 apps.
+      :::
+       - Open `nwg-look`
+       - Select `adw-gtk3` from the theme list
+       - Click "Apply"
+       - ![nwg-look](../../../../assets/app-theming/nwg-look.png)
    
    - **Using command line:**
      ```bash
