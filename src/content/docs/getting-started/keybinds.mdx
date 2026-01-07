@@ -130,6 +130,43 @@ Noctalia provides extensive IPC (Inter-Process Communication) support, allowing 
 | **Dismiss Oldest** | `qs -c noctalia-shell ipc call notifications dismissOldest` | Dismiss the oldest active notification |
 | **Dismiss All** | `qs -c noctalia-shell ipc call notifications dismissAll` | Dismiss all active notifications |
 
+### Toast & OSD
+
+#### Toast Notifications
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Send Toast** | `qs -c noctalia-shell ipc call toast send '$json'` | Display a toast notification |
+
+The toast `send` command accepts a JSON object with the following fields:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `title` | string | Yes | Toast title |
+| `body` | string | No | Toast body/description |
+| `icon` | string | No | Icon name (only for notice type) |
+| `type` | string | No | `notice` (default), `warning`, or `error` |
+| `duration` | number | No | Duration in ms (defaults: notice=3000, warning=4000, error=6000) |
+
+**Examples:**
+```bash
+# Simple notice
+qs -c noctalia-shell ipc call toast send '{"title": "Recording", "body": "Started (AV1 HDR)", "icon": "media-record"}'
+
+# Warning toast
+qs -c noctalia-shell ipc call toast send '{"title": "Low battery", "type": "warning"}'
+
+# Error with custom duration
+qs -c noctalia-shell ipc call toast send '{"title": "Connection failed", "body": "Check your network", "type": "error", "duration": 10000}'
+```
+
+#### On-Screen Display (OSD)
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Show Text** | `qs -c noctalia-shell ipc call osd showText $text` | Display text on OSD |
+| **Show Text with Icon** | `qs -c noctalia-shell ipc call osd showTextWithIcon $text $icon` | Display text with an icon on OSD |
+
 ### Appearance
 
 #### Visibility
