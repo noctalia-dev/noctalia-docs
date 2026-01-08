@@ -8,7 +8,7 @@ sidebar:
 import SettingsReference from '../../../components/SettingsReference.astro';
 
 
-For NixOS users, a [Nix package](https://search.nixos.org/packages?channel=unstable&show=noctalia-shell&query=noctalia) for Noctalia is available.
+For NixOS users, a [Nix package](https://search.nixos.org/packages?channel=unstable&show=noctalia-shell) for Noctalia is available.
 You can also get the Git version, NixOS module and Home Manager module via flakes.
 
 :::caution
@@ -151,8 +151,7 @@ To configure Noctalia settings, you can use the Noctalia home manager module:
           name = "Marseille, France";
         };
       };
-      # this may also be a string or a path to a JSON file,
-      # but in this case must include *all* settings.
+      # this may also be a string or a path to a JSON file.
     };
   };
 }
@@ -293,6 +292,53 @@ As an attribute set:
             post_hook = "myapp --reload-theme";
           };
         };
+      };
+    };
+  };
+}
+```
+
+### Plugins
+
+You can configure plugins in a declarative way. If an enabled plugin isn’t installed in the plugin directory, Noctalia will automatically install it when it starts up.
+
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  home-manager.users.drfoobar = {
+    # import the home manager module
+    imports = [
+      inputs.noctalia.homeModules.default
+    ];
+
+    # configure options
+    programs.noctalia-shell = {
+      enable = true;
+      plugins = {
+        sources = [
+          {
+            enabled = true;
+            name = "Official Noctalia Plugins";
+            url = "https://github.com/noctalia-dev/noctalia-plugins";
+          }
+        ];
+        states = {
+          catwalk = {
+            enabled = true;
+            sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
+          };
+        };
+        version = 1;
+      };
+      # this may also be a string or a path to a JSON file.
+
+      pluginSettings = {
+        catwalk = {
+          minimumThreshold = 25;
+          hideBackground = true;
+        };
+        # this may also be a string or a path to a JSON file.
       };
     };
   };
