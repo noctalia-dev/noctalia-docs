@@ -122,11 +122,13 @@ Noctalia provides extensive IPC (Inter-Process Communication) support, allowing 
 | Function | Command | Description |
 |---|---|---|
 | **Notification History** | `qs -c noctalia-shell ipc call notifications toggleHistory` | View past notifications |
+| **Get Notification History** | `qs -c noctalia-shell ipc call notifications getHistory` | Get the notification history as a JSON object |
 | **Toggle Do Not Disturb** | `qs -c noctalia-shell ipc call notifications toggleDND` | Toggle notification silence mode |
 | **Enable Do Not Disturb** | `qs -c noctalia-shell ipc call notifications enableDND` | Enable notification silence mode |
 | **Disable Do Not Disturb** | `qs -c noctalia-shell ipc call notifications disableDND` | Disable notification silence mode |
 | **Clear Notification History** | `qs -c noctalia-shell ipc call notifications clear` | Clear notification history |
 | **Remove Oldest** | `qs -c noctalia-shell ipc call notifications removeOldestHistory` | Remove oldest notification from history |
+| **Remove Notification** | `qs -c noctalia-shell ipc call notifications removeFromHistory $id` | Remove notification with given ID from history |
 | **Dismiss Oldest** | `qs -c noctalia-shell ipc call notifications dismissOldest` | Dismiss the oldest active notification |
 | **Dismiss All** | `qs -c noctalia-shell ipc call notifications dismissAll` | Dismiss all active notifications |
 
