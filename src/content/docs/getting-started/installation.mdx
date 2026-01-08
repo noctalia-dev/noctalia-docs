@@ -59,6 +59,24 @@ Read the post-install emerge messages for information on optional dependencies a
 
 For integration with systemd the package installs a user service unit to `/usr/lib/systemd/user/noctalia.service`.
 
+## Fedora {#fedora}
+
+Noctalia-shell is available in the [Terra](https://terra.fyralabs.com) repository.
+
+First install the repository as described on the website:
+
+```bash
+sudo dnf install --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
+```
+
+Next, install the noctalia-shell package:
+
+```bash
+sudo dnf install noctalia-shell
+```
+
+Installing noctalia-shell from Terra will automatically install all runtime dependencies and display optional dependencies.
+
 ## Manual Installation {#manual-install}
 
 If you prefer to install Noctalia locally or want more control over the installation process, you can install it manually to your user configuration directory. This method works on any Linux distribution.
