@@ -30,7 +30,6 @@ Noctalia provides extensive IPC (Inter-Process Communication) support, allowing 
 | Function | Command | Description |
 |----------|---------|-------------|
 | **Clipboard History** | `qs -c noctalia-shell ipc call launcher clipboard` | Access your clipboard history |
-| **Calculator** | `qs -c noctalia-shell ipc call launcher calculator` | Quick calculator access |
 | **Emoji** | `qs -c noctalia-shell ipc call launcher emoji` | Quick emoji selector access |
 | **Calendar** | `qs -c noctalia-shell ipc call calendar toggle` | Open/close the Calendar window |
 | **Session Menu** | `qs -c noctalia-shell ipc call sessionMenu toggle` | Logout, reboot, shutdown... |
@@ -253,7 +252,6 @@ binds {
 
     // Utility shortcuts
     Mod+V { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "clipboard"; }
-    Mod+C { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "calculator"; }
     Mod+L { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "lockScreen" "lock"; }
 }
 ```
@@ -282,7 +280,6 @@ bindel = , XF86MonBrightnessDown, exec, qs -c noctalia-shell ipc call brightness
 
 # Utility shortcuts
 bind = SUPER, V, exec, qs -c noctalia-shell ipc call launcher clipboard
-bind = SUPER, C, exec, qs -c noctalia-shell ipc call launcher calculator
 bind = SUPER, L, exec, qs -c noctalia-shell ipc call lockScreen lock
 ```
 
