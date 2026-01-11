@@ -152,16 +152,25 @@ Rectangle {
 ### Typography
 ```qml
 NText {
+  // For bar widgets, use barFontSize for consistent sizing
+  pointSize: Style.barFontSize // Recommended for bar widget text
+
+  // Other available sizes (for panels, dialogs, etc.)
   pointSize: Style.fontSizeXS
   pointSize: Style.fontSizeS
   pointSize: Style.fontSizeM
   pointSize: Style.fontSizeL
+
   font.weight: Font.Light
   font.weight: Font.Normal
   font.weight: Font.Medium
   font.weight: Font.Bold
 }
 ```
+
+:::tip
+Always use `Style.barFontSize` for text in bar widgets to ensure consistent sizing with other bar elements and proper scaling.
+:::
 
 ## Using Settings
 
@@ -296,7 +305,7 @@ NIcon {
 NText {
   text: "Hello World"
   color: Color.mOnSurface
-  pointSize: Style.fontSizeM
+  pointSize: Style.barFontSize // Use barFontSize for bar widgets
   font.weight: Font.Medium
 }
 ```
@@ -383,7 +392,7 @@ Rectangle {
     NText {
       text: "Ready"
       color: Color.mOnSurface
-      pointSize: Style.fontSizeS
+      pointSize: Style.barFontSize
     }
   }
 }
@@ -429,7 +438,7 @@ Rectangle {
     NText {
       text: root.count.toString()
       color: Color.mOnSurface
-      pointSize: Style.fontSizeM
+      pointSize: Style.barFontSize
       font.weight: Font.Bold
     }
   }
@@ -497,7 +506,7 @@ Rectangle {
     NText {
       text: root.message
       color: Color.mOnSurface
-      pointSize: Style.fontSizeS
+      pointSize: Style.barFontSize
     }
   }
 
@@ -596,12 +605,13 @@ Rectangle {
 
 1. **Keep it small**: Bar widgets should be compact and unobtrusive
 2. **Use consistent styling**: Stick to Noctalia's design system
-3. **Handle missing data**: Always provide fallbacks for settings and data
-4. **Respect dark mode**: Use `Color.m*` colors that adapt to theme
-5. **Add hover effects**: Provide visual feedback for interactive elements
-6. **Log important events**: Use Logger for debugging
-7. **Test on vertical bars**: Ensure your widget works in all bar positions
-8. **Optimize performance**: Avoid expensive operations in the widget
+3. **Use `Style.barFontSize` for text**: Ensures consistent sizing with other bar elements
+4. **Handle missing data**: Always provide fallbacks for settings and data
+5. **Respect dark mode**: Use `Color.m*` colors that adapt to theme
+6. **Add hover effects**: Provide visual feedback for interactive elements
+7. **Log important events**: Use Logger for debugging
+8. **Test on vertical bars**: Ensure your widget works in all bar positions
+9. **Optimize performance**: Avoid expensive operations in the widget
 
 ## See Also
 
