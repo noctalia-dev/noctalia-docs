@@ -293,16 +293,23 @@ Leverage the `pluginApi` for common operations:
 // Save settings
 pluginApi.saveSettings();
 
-// Open/close panels
-if (Quickshell.screens.length > 0) {
-  var screen = Quickshell.screens[0];
+// Open/close panels - use withCurrentScreen for proper screen selection
+pluginApi.withCurrentScreen(screen => {
   pluginApi.openPanel(screen);
+});
+
+// Or to close:
+pluginApi.withCurrentScreen(screen => {
   pluginApi.closePanel(screen);
-}
+});
 
 // Access translations
 var text = pluginApi.tr("settings.enabled");
 ```
+
+:::tip
+The `withCurrentScreen` helper is the preferred way to get a screen reference in IPC handlers. It automatically selects the appropriate screen based on cursor position.
+:::
 
 ## Complete Example
 

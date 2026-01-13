@@ -182,6 +182,24 @@ readonly property bool hasProvider: pluginApi?.launcherProvider !== null
 This property is `null` if your plugin doesn't have a `launcherProvider` entry point in the manifest.
 :::
 
+### `panelOpenScreen`
+- **Type**: `ShellScreen` (or null)
+- **Read-only**: Yes
+- **Availability**: Only in Panel.qml
+- **Description**: The screen that the panel was opened on
+
+```qml
+// In Panel.qml - get the screen this panel is displayed on
+var screen = pluginApi?.panelOpenScreen;
+if (screen && pluginApi?.manifest) {
+  BarService.openPluginSettings(screen, pluginApi.manifest);
+}
+```
+
+:::note
+This property is only available in Panel components. Use it when you need to reference the screen the panel is currently displayed on.
+:::
+
 ## Functions
 
 ### `saveSettings()`
@@ -465,6 +483,52 @@ function getLocalizedHelp() {
   return pluginApi?.tr("help.basic") || "No help available"
 }
 ```
+
+### `withCurrentScreen(callback)`
+Execute a callback with the current active screen. Useful in IPC handlers where you need a screen reference.
+
+**Signature**:
+```qml
+function withCurrentScreen(callback: function): void
+```
+
+**Parameters**:
+- `callback` - Function that receives the `ShellScreen` as its argument
+
+**Usage**:
+```qml
+// In Main.qml IPC handler
+function toggle() {
+  if (pluginApi) {
+    pluginApi.withCurrentScreen(screen => {
+      pluginApi.openPanel(screen);
+    });
+  }
+}
+```
+
+**Example**:
+```qml
+IpcHandler {
+  target: "plugin:my-plugin"
+
+  function showPanel() {
+    pluginApi.withCurrentScreen(screen => {
+      pluginApi.openPanel(screen);
+    });
+  }
+
+  function closePanel() {
+    pluginApi.withCurrentScreen(screen => {
+      pluginApi.closePanel(screen);
+    });
+  }
+}
+```
+
+:::tip
+This is the preferred way to get a screen reference in IPC handlers, as it automatically selects the appropriate screen based on cursor position.
+:::
 
 ## Accessing Noctalia Services
 
