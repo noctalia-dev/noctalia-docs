@@ -86,9 +86,21 @@ Noctalia provides extensive IPC (Inter-Process Communication) support, allowing 
 
 #### Screen Recorder
 
+:::warning[Deprecated]
+The `screenRecorder` IPC commands have been moved to the [Screen Recorder plugin](/plugins/screen-recorder/). Use the plugin's IPC commands instead.
+
 | Function | Command | Description |
 |----------|---------|-------------|
-| **Screen record toggle** | `qs -c noctalia-shell ipc call screenRecorder toggle` | Start / stop the screen recording |
+| ~~**Screen record toggle**~~ | ~~`qs -c noctalia-shell ipc call screenRecorder toggle`~~ | ~~Start / stop the screen recording~~ |
+:::
+
+**Screen Recorder Plugin** (requires [Screen Recorder plugin](/plugins/screen-recorder/) installation):
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Screen record toggle** | `qs -c noctalia-shell ipc call plugin:screen-recorder toggle` | Start / stop the screen recording |
+| **Screen record start** | `qs -c noctalia-shell ipc call plugin:screen-recorder start` | Explicitly start recording |
+| **Screen record stop** | `qs -c noctalia-shell ipc call plugin:screen-recorder stop` | Explicitly stop recording |
 
 #### Battery Management
 
