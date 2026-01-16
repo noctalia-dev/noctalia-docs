@@ -7,23 +7,22 @@ sidebar:
 
 This guide walks you through adding a new **Matugen** template to **Noctalia**.
 
+The system is designed to be dynamic: once you register a template, it automatically appears in the settings UI.
+
 ---
 
 ## Overview
 
-Adding a new template involves five steps:
+Adding a new template involves just two steps:
 
-1. [Create the template file](#step-1-create-the-template-file)  
-2. [Add a settings toggle](#step-2-add-a-settings-toggle)  
-3. [Wire the template into the config generator](#step-3-wire-it-into-the-config-generator)  
-4. [Show the toggle only if the program exists](#step-4-show-the-toggle-only-if-the-program-exists)  
-5. [Add the UI toggle](#step-5-add-the-ui-toggle)
+1. [Create the template file](#step-1-create-the-template-file)
+2. [Register the template](#step-2-register-the-template)
 
 ---
 
 ## Step 1: Create the Template File
 
-Create your template file in the Matugen templates directory.  
+Create your template file in the Matugen templates directory.
 For example, if you're making one for kitty, create:
 
 **`Assets/MatugenTemplates/Terminal/kitty.conf`**
@@ -55,121 +54,67 @@ selection_background  {{colors.surface_variant.default.hex}}
 url_color             {{colors.primary.default.hex}}
 ```
 
-Matugen uses template variables to map Material Design 3 colors to different app formats.  
+Matugen uses template variables to map Material Design 3 colors to different app formats.
 You can find all the available variables and their Material 3 mappings in the [Matugen wiki](https://github.com/InioX/matugen/wiki).
 
 ---
 
-## Step 2: Add a Settings Toggle
+## Step 2: Register the Template
 
-Create a setting to control whether this template is generated.  
-Open **`Commons/Settings.qml`**, find the `templates` JsonObject, and add a new property:
+You need to tell the system about your template. Open **`Services/Theming/TemplateRegistry.qml`**.
 
-```qml
-property JsonObject templates: JsonObject {
-    // ... existing properties ...
-    property bool kitty: false
-}
-```
-
-This adds a persistent toggle that defaults to `false`.
-
----
-
-## Step 3: Wire It Into the Config Generator
-
-Tell the system when to use the new template.  
-Open **`Services/MatugenTemplates.qml`** and find the appropriate configuration array:
+There are two main categories: **Terminals** and **Applications**.
 
 ### For Terminal Emulators
-Add to the `terminals` array in `addTerminalTemplates()`:
+Add to the `terminals` array:
 
 ```qml
-var terminals = [{
-    "name": "foot",
-    "path": "Terminal/foot",
-    "output": "~/.config/foot/themes/noctalia"
-}, {
-    "name": "kitty",
-    "path": "Terminal/kitty.conf",
-    "output": "~/.config/kitty/themes/noctalia.conf"
-}]
+{
+  "id": "kitty",
+  "name": "Kitty",
+  "matugenPath": "Terminal/kitty.conf",
+  "outputPath": "~/.config/kitty/themes/noctalia.conf"
+}
 ```
 
 ### For Applications
 Add to the `applications` array:
 
 ```qml
-readonly property var applications: [{
-    "name": "myapp",
-    "templates": [{
-        "version": "myapp",
-        "output": "~/.config/myapp/themes/noctalia.conf"
-    }],
-    "input": "myapp.conf",
-    "postHook": AppThemeService.colorsApplyScript + " myapp"
-}]
-```
-
-The `postHook` function tells the system to run a script after generating the colors, which is useful for reloading the application's theme.
-
----
-
-## Step 4: Show the Toggle Only if the Program Exists
-
-We don't want to display the toggle if the program isn't installed.  
-Open **`Services/ProgramCheckerService.qml`** and:
-
-1. Add a property to track availability:
-
-```qml
-property bool myappAvailable: false
-```
-
-2. Add an entry to the `programsToCheck` object:
-
-```qml
-programsToCheck: {
-    // ... existing entries ...
-    "myappAvailable": ["which", "myapp"],
-}
-```
-
-This automatically updates `myappAvailable` when the program is detected.
-
----
-
-## Step 5: Add the UI Toggle
-
-Add the toggle to the settings panel.  
-Open **`Modules/Settings/Tabs/ColorSchemeTab.qml`**, find the appropriate collapsible section, and insert:
-
-```qml
-NCheckbox {
-    label: "MyApp"
-    description: ProgramCheckerService.myappAvailable
-        ? I18n.tr("settings.color-scheme.templates.programs.myapp.description", {
-            "filepath": "~/.config/myapp/themes/noctalia.conf"
-        })
-        : I18n.tr("settings.color-scheme.templates.programs.myapp.description-missing", {
-            "app": "myapp"
-        })
-    checked: Settings.data.templates.myapp
-    enabled: ProgramCheckerService.myappAvailable
-    opacity: ProgramCheckerService.myappAvailable ? 1.0 : 0.6
-    onToggled: checked => {
-        if (ProgramCheckerService.myappAvailable) {
-            Settings.data.templates.myapp = checked
-            AppThemeService.generate()
-        }
+{
+  "id": "myapp",
+  "name": "My App",
+  "category": "misc", // See categories below
+  "input": "myapp.conf",
+  "outputs": [
+    {
+      "path": "~/.config/myapp/themes/noctalia.conf"
     }
+  ],
+  // Optional: Run a command after generating colors (e.g. to reload the app)
+  "postProcess": () => `${colorsApplyScript} myapp`
 }
 ```
 
-This checkbox:  
-- Shows a helpful description based on whether the app is installed  
-- Disables itself automatically if the program isn't available  
-- Regenerates colors right away when toggled
+Once registered:
+1. The template will automatically appear in **Settings > Color Scheme > Templates**.
+2. The UI will automatically show the target path in the tooltip.
+3. The state (enabled/disabled) is automatically saved in `Settings.qml`'s `activeTemplates` list—you do **not** need to add any properties to `Settings.qml` manually.
+
+---
+
+## Template Categories
+
+Use the `category` property to organize your template in the settings UI:
+
+- `system` (GTK, Qt, KDE)
+- `terminal` (Terminal emulators - automatically assigned for `terminals` array)
+- `launcher` (App launchers)
+- `browser` (Web browsers)
+- `editor` (Code editors)
+- `audio` (Music players, visualizers)
+- `compositor` (Hyprland, Niri, etc.)
+- `misc` (Everything else)
 
 ---
 
@@ -196,37 +141,13 @@ Terminal templates are handled specially - they use predefined color schemes dir
 
 ---
 
-## Template Categories
-
-Templates are organized into collapsible sections in the settings:
-
-### UI Components
-- **GTK** - GTK 3/4 theme files
-- **Qt** - Qt5/Qt6 color schemes  
-- **KColorScheme** - KDE color schemes
-
-### Terminal Emulators
-- **Foot** - Foot terminal theme
-- **Ghostty** - Ghostty terminal theme
-- **Kitty** - Kitty terminal theme
-
-### Applications
-- **Fuzzel** - Application launcher theme
-- **Discord Clients** - Various Discord client themes (Vesktop, WebCord, ArmCord, etc.)
-- **Pywalfox** - Firefox theme via Pywalfox
-
-### Miscellaneous
-- **User Templates** - Enable custom user-defined templates from `~/.config/matugen/`
-
----
-
 ## User Templates
 
-Users can create their own templates by:
+Users can create their own templates without modifying the codebase:
 
-1. Enabling "User Templates" in settings
-2. This creates a `user-templates.toml` in `~/.config/noctalia/`, this is where the user can add their own templates
-3. Templates can be anywhere as long as the path is correctly used in the `user-templates.toml`
+1. Enable "User Templates" in **Settings > Color Scheme > Templates**.
+2. This creates a `user-templates.toml` in `~/.config/noctalia/`.
+3. Add custom templates to this TOML file.
 
 User templates are automatically executed after the main matugen command when enabled.
 
@@ -235,26 +156,14 @@ User templates are automatically executed after the main matugen command when en
 ## Template Development Tips
 
 ### Testing Your Template
-1. Enable your template in the settings
-2. Switch between different predefined color schemes to ensure your template works with all of them
-3. Test with both wallpaper-based and predefined color schemes
-4. Verify that the generated files are placed in the correct locations
+1. Enable your template in the settings.
+2. Switch between different predefined color schemes to verify compatibility.
+3. Test with both wallpaper-based and predefined color schemes.
+4. Verify that the generated files are placed in the correct locations.
 
 ### Common Issues
-- **Path expansion**: Make sure to use `~` in output paths as the system handles tilde expansion
-- **Color mapping**: Ensure your template uses the correct Material Design 3 color tokens
-- **File permissions**: Some applications may require specific file permissions or locations
-- **Post hooks**: Use `AppThemeService.colorsApplyScript` for common reload commands
+- **Path expansion**: always use `~` in output paths; the system handles tilde expansion automatically.
+- **Color mapping**: ensure your template uses the correct Material Design 3 color tokens.
+- **Post hooks**: Use `colorsApplyScript` (exposed in `TemplateRegistry`) for common reload commands in `bin/colors-apply.sh`.
 
-### Template File Organization
-- Terminal templates go in `Assets/MatugenTemplates/Terminal/`
-- Application templates go directly in `Assets/MatugenTemplates/`
-- Use descriptive filenames that match the application name
-
----
-
-:::tip[Organizing Templates]
-If there's no obvious category for your template, don't hesitate to create a new collapsible section.  
-For miscellaneous apps, you can drop them into the "Applications" or "Miscellaneous" category.
-:::
 
