@@ -79,6 +79,10 @@ Installing noctalia-shell from Terra will automatically install all runtime depe
 
 ## Manual Installation {#manual-install}
 
+:::caution[Not Recommended]
+Manual installation has **no easy upgrade path**. You will need to manually download and replace files for each update. We strongly recommend using a package manager ([Arch](#arch), [NixOS](/getting-started/nixos/), [Gentoo](#gentoo), [Fedora](#fedora)) whenever possible.
+:::
+
 If you prefer to install Noctalia locally or want more control over the installation process, you can install it manually to your user configuration directory. This method works on any Linux distribution.
 
 **Step 1**: Install required dependencies
@@ -87,7 +91,7 @@ For Arch Linux:
 
 ```bash
 # Core dependencies (required)
-paru -S quickshell gpu-screen-recorder brightnessctl
+paru -S quickshell brightnessctl git
 
 # Desktop monitor brightness (may cause instability with some monitors)
 paru -S ddcutil
@@ -95,8 +99,6 @@ paru -S ddcutil
 # Optional dependencies
 paru -S cliphist matugen-git cava wlsunset xdg-desktop-portal python3 evolution-data-server
 
-# Polkit agent (can be any other agent)
-paru -S polkit-kde-agent
 ```
 
 For other distributions, install the equivalent packages using your package manager.
@@ -112,8 +114,8 @@ mkdir -p ~/.config/quickshell/noctalia-shell && curl -sL https://github.com/noct
 **Required:**
 
 - `quickshell` - Core shell framework
-- `gpu-screen-recorder` - Screen recording functionality
 - `brightnessctl` - Internal/laptop monitor brightness control
+- `git` - Required for update checking and the plugin system
 
 **Hardware-specific:**
 
@@ -127,10 +129,9 @@ mkdir -p ~/.config/quickshell/noctalia-shell && curl -sL https://github.com/noct
 - `wlsunset` - Night light functionality
 - `xdg-desktop-portal` - Enables "Portal" option in screen recorder
 - `python3`, `evolution-data-server` - Calendar events
-- `polkit-kde-agent` - Only needed to authenticate Battery Manager installation for laptop charge limits; skip if installing via Bin/battery-manager/install-battery-manager.sh with sudo.
 
 :::tip
-Manual installation keeps Noctalia contained within your user directory, making it easy to remove or update without affecting system packages.
+Manual installation keeps Noctalia contained within your user directory, making it easy to remove without affecting system packages.
 :::
 
 :::note
