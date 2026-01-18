@@ -1,0 +1,39 @@
+---
+title: Uninstall
+description: How to uninstall Noctalia and clean up configuration files.
+sidebar:
+  order: 15
+---
+
+If you wish to remove Noctalia from your system, you can uninstall the `noctalia-shell` package using your distribution's package manager.
+
+### Manual Installation
+
+If you installed manually to `~/.config/quickshell/noctalia-shell`:
+
+```bash
+rm -rf ~/.config/quickshell/noctalia-shell
+```
+
+## Cleaning Up
+
+After removing the package, you may want to remove the configuration and cache files.
+
+### Configuration and Cache
+
+Noctalia stores its configuration and cache in the standard XDG directories. To remove them:
+
+```bash
+rm -rf ~/.config/noctalia
+rm -rf ~/.cache/noctalia
+```
+
+### Generated Templates
+
+If you enabled any templates in the **Color Scheme** settings, you will need to manually delete the generated files.
+
+:::tip
+You can find the location of the generated files by hovering over the specific template chip in **Settings > Color Scheme -> Templates**.
+
+Hovering over any template gives you a tooltip with the location of the written file(s).
+:::

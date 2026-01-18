@@ -112,7 +112,7 @@ To configure Noctalia settings, you can use the Noctalia home manager module:
                 useDistroLogo = true;
               }
               {
-                id = "WiFi";
+                id = "Network";
               }
               {
                 id = "Bluetooth";
@@ -161,12 +161,12 @@ To configure Noctalia settings, you can use the Noctalia home manager module:
 
 We don't have extensive documentation of Noctalia's configuration options; however, you can see an up-to-date list of [configuration defaults](#config-ref).
 
-Additionally, if you use the [systemd service](#systemd-service), editing the settings with the GUI will show the resulting configuration in `~/.config/noctalia/gui-settings.json`. You can then use this information to update your Nix config to make it permanent.
+Additionally, since `~/.config/noctalia/settings.json` is now a read-only symlink, you can get the latest (or GUI-modified) settings via: **Open Settings Panel** -> **General** -> **Copy Settings**, then use them to update your Nix config for a permanent change.
 
 :::tip
- To see the diff between your current build and the temporary GUI settings, run:
+ To see the diff between your current build and the latest (or GUI-modified) settings, **copy settings** and run:
 ```sh
-nix shell nixpkgs#jq nixpkgs#colordiff -c bash -c "diff -u <(jq -S . ~/.config/noctalia/settings.json) <(jq -S . ~/.config/noctalia/gui-settings.json) | colordiff"
+nix shell nixpkgs#jq nixpkgs#colordiff nixpkgs#wl-clipboard -c bash -c "diff -u <(jq -S . ~/.config/noctalia/settings.json) <(wl-paste | jq -S .) | colordiff"
 ```
 :::
 
@@ -300,7 +300,7 @@ As an attribute set:
 
 ### Plugins
 
-You can configure plugins in a declarative way. If an enabled plugin isn’t installed in the plugin directory, Noctalia will automatically install it when it starts up.
+You can configure plugins in a declarative way. If an enabled plugin isn’t installed in the plugin directory, Noctalia will automatically install it when starts up.
 
 ```nix
 # noctalia.nix
@@ -478,8 +478,9 @@ With the [Niri flake](https://github.com/sodiboo/niri-flake), you can then spawn
 
 ### Running with systemd {#systemd-service}
 
-You can set up systemd service via NixOS module or Home Manager module. If you [configure Noctalia shell with home-manager](#config-with-home-manager), then Home Manager module is a better choice.
-It's best not to enable systemd service in both modules at the same time, as names of two systemd services are the same; it's unpredictable which one will run (usually, it's the systemd service in Home Manager module).
+You can setup the systemd service via the NixOS module or the Home Manager module.
+If you [configure Noctalia Shell with Home Manager](#config-with-home-manager), use the Home Manager module—it’s the better choice.
+Don’t enable the service in both modules at once, since they create services with the same name; which one runs is unpredictable (usually the Home Manager one).
 
 :::caution
 The systemd service is currently **experimental**:
@@ -560,12 +561,12 @@ this directory and rebuild.
 
 To add support for events in the calendar via evolution-data-server.
 
-First, enable the evolution-data-server:
+1. **Enable the evolution-data-server**:
 ```nix
 services.gnome.evolution-data-server.enable = true;
 ```
 
-Then override the Noctalia package:
+2. **Override the Noctalia package**:
 ```nix
 pkgs.noctalia-shell.override { calendarSupport = true; }
 ```

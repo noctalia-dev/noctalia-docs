@@ -21,8 +21,8 @@ export default defineConfig({
         },
       ],
       title: "Noctalia",
-      logo: { 
-        src: "./src/assets/noctalia-logo.svg", 
+      logo: {
+        src: "./src/assets/noctalia-logo.svg",
         alt: "Noctalia",
         href: "https://noctalia.dev"
       },
@@ -56,6 +56,7 @@ export default defineConfig({
             },
             { label: "Keybinds", link: "getting-started/keybinds/" },
             { label: "FAQ", link: "getting-started/faq/" },
+            { label: "Uninstall", link: "getting-started/uninstall/" },
           ],
         },
         {
@@ -88,7 +89,7 @@ export default defineConfig({
             },
           ],
         },
-       
+
       ],
     }),
   ],
