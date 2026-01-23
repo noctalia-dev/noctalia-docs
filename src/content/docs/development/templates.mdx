@@ -1,0 +1,190 @@
+---
+title: Create a Theme Template
+description: This guide walks you through adding a new template to the Noctalia Theming System.
+sidebar:
+  order: 5
+---
+
+This guide walks you through adding a new **Theme Template** to **Noctalia**.
+
+The system uses the **Noctalia Template Processor**, a custom Python-based engine that generates Material Design 3 and other color palettes, and renders templates. It is fully compatible with Matugen template syntax.
+
+---
+
+## Overview
+
+Adding a new template involves just two steps:
+
+1. [Create the template file](#step-1-create-the-template-file)
+2. [Register the template](#step-2-register-the-template)
+
+---
+
+## Step 1: Create the Template File
+
+Create your template file in the Templates directory.
+For example, if you're making one for kitty, create:
+
+**`Assets/Templates/Terminal/kitty.conf`**
+
+```ini
+color0 {{colors.surface.default.hex}}
+color1 {{colors.error.default.hex}}
+color2 {{colors.tertiary.default.hex}}
+color3 {{colors.secondary.default.hex}}
+color4 {{colors.primary.default.hex}}
+color5 {{colors.tertiary_fixed_dim.default.hex}}
+color6 {{colors.secondary_fixed_dim.default.hex}}
+color7 {{colors.on_surface.default.hex}}
+color8 {{colors.outline.default.hex}}
+color9 {{colors.error.default.hex}}
+color10 {{colors.tertiary.default.hex}}
+color11 {{colors.secondary.default.hex}}
+color12 {{colors.primary.default.hex}}
+color13 {{colors.tertiary_fixed_dim.default.hex}}
+color14 {{colors.secondary_fixed_dim.default.hex}}
+color15 {{colors.on_surface.default.hex}}
+
+cursor                {{colors.on_surface.default.hex}}
+cursor_text_color     {{colors.surface.default.hex}}
+background            {{colors.surface.default.hex}}
+foreground            {{colors.on_surface.default.hex}}
+selection_foreground  {{colors.on_surface_variant.default.hex}}
+selection_background  {{colors.surface_variant.default.hex}}
+url_color             {{colors.primary.default.hex}}
+```
+
+### Template Syntax
+
+The processor uses the syntax `{{colors.name.mode.format}}`:
+
+- **name**: The Material Design 3 color name (e.g., `primary`, `surface`, `on_surface`, `secondary_container`).
+- **mode**: `default`, `dark`, or `light`. Use `default` to automatically follow the system theme mode.
+- **format**: The output format. Supported formats:
+  - `hex` (#RRGGBB)
+  - `hex_stripped` (RRGGBB)
+  - `rgb` (rgb(r, g, b))
+  - `rgba` (rgba(r, g, b, a))
+  - `hsl` (hsl(h, s%, l%))
+  - `hsla` (hsla(h, s%, l%, a))
+  - `hue`, `saturation`, `lightness` (individual HSL components)
+  - `red`, `green`, `blue` (individual RGB components)
+  - `alpha` (alpha value)
+
+### Filters
+
+You can pipe colors through filters, similar to Matugen:
+
+```ini
+# value | filter argument
+color0 {{colors.primary.default.hex | lighten 10}}
+color1 {{colors.surface.default.hex | set_alpha 0.5}}
+color2 {{colors.error.default.hex | grayscale}}
+```
+
+Supported filters:
+- `lighten`, `darken`, `saturate`, `desaturate` (takes percentage argument, e.g., 10)
+- `set_alpha` (0.0 - 1.0)
+- `set_lightness`, `set_saturation` (0.0 - 1.0)
+- `set_hue` (0 - 360)
+- `grayscale`, `invert` (no arguments)
+
+---
+
+## Step 2: Register the Template
+
+You need to tell the system about your template. Open **`Services/Theming/TemplateRegistry.qml`**.
+
+There are two main categories: **Terminals** and **Applications**.
+
+### For Terminal Emulators
+Add to the `terminals` array:
+
+```qml
+{
+  "id": "kitty",
+  "name": "Kitty",
+  "templatePath": "Terminal/kitty.conf",
+  "outputPath": "~/.config/kitty/themes/noctalia.conf",
+  "postHook": `${templateApplyScript} kitty`
+}
+```
+
+### For Applications
+Add to the `applications` array:
+
+```qml
+{
+  "id": "myapp",
+  "name": "My App",
+  "category": "misc", // See categories below
+  "input": "myapp.conf",
+  "outputs": [
+    {
+      "path": "~/.config/myapp/themes/noctalia.conf"
+    }
+  ],
+  // Optional: Run a command after generating colors (e.g. to reload the app)
+  "postProcess": () => `${templateApplyScript} myapp`
+}
+```
+
+Once registered:
+1. The template will automatically appear in **Settings > Color Scheme > Templates**.
+2. The UI will automatically show the target path in the tooltip.
+3. The state (enabled/disabled) is automatically saved in `Settings.qml`.
+
+---
+
+## Template Categories
+
+Use the `category` property to organize your template in the settings UI:
+
+- `system` (GTK, Qt, KDE)
+- `terminal` (Terminal emulators - automatically assigned for `terminals` array)
+- `launcher` (App launchers)
+- `browser` (Web browsers)
+- `editor` (Code editors)
+- `audio` (Music players, visualizers)
+- `compositor` (Hyprland, Niri, etc.)
+- `misc` (Everything else)
+
+---
+
+## How Color Generation Works
+
+Noctalia uses `template-processor.py` to handle all color generation and template rendering.
+
+### 1. Wallpaper Analysis
+When "Wallpaper Colors" is enabled, the processor analyzes the current wallpaper image. It uses:
+- **Quantization**: Extracts dominant colors using the Wu quantizer (same as Android/Matugen).
+- **Scoring**: Ranks colors based on chroma and population to find the best seed color.
+- **Palette Generation**: Creates a full Material Design 3 tonal palette from the seed color.
+
+### 2. Predefined Schemes
+When using a predefined scheme (e.g., Nord, Dracula), the processor:
+- Loads the scheme's core colors.
+- Generates the missing Material Design 3 tokens (like On-Primary, Surface Variants, etc.) to ensure a complete palette.
+- This allows any legacy scheme to work with modern Material Design 3 templates.
+
+### 3. Rendering
+The processor takes the generated palette and renders all enabled templates. It parses the `{{...}}` tags, applies any filters, and writes the output files to their destinations.
+
+---
+
+## User Templates
+
+Users can create their own templates without modifying the codebase:
+
+1. Enable "User Templates" in **Settings > Color Scheme > Templates**.
+2. This creates a `user-templates.toml` in `~/.config/noctalia/`.
+3. Add custom templates to this TOML file using the TOML configuration format.
+
+```toml
+[templates.myapp]
+input_path = "~/.config/noctalia/templates/myapp.css"
+output_path = "~/.config/myapp/theme.css"
+post_hook = "myapp --reload-theme"
+```
+
+User templates are automatically processed whenever the theme changes.

@@ -9,7 +9,7 @@ Noctalia includes powerful theming capabilities that can automatically apply you
 
 ## Advanced: Custom Templates
 
-For advanced users who want to theme additional applications, Noctalia supports custom Matugen templates.
+For advanced users who want to theme additional applications, Noctalia supports custom templates.
 
 ### Enabling Custom Templates
 
@@ -47,7 +47,7 @@ Your template files use Matugen's template syntax with color placeholders:
 
 ### Available Color Variables
 
-Matugen generates a full Material Design 3 color palette with many color roles like `primary`, `secondary`, `tertiary`, `surface`, `error`, and more.
+We generate a full Material Design 3 color palette with many color roles like `primary`, `secondary`, `tertiary`, `surface`, `error`, and more.
 
 Here are all the supported color names:
 
@@ -90,9 +90,7 @@ Here are all the supported color names:
 - `tertiary_fixed_dim`
 - `on_tertiary_fixed`
 
-For more details on color formats, see the [Matugen Configuration Documentation](https://github.com/InioX/matugen/wiki/Configuration#colors).
-
-You can also look at Noctalia's built-in templates in `Assets/MatugenTemplates/` for practical examples.
+You can also look at Noctalia's built-in templates in `Assets/Templates/` for practical examples.
 
 :::tip[Color Format]
 Use `.hex` for colors with `#` (e.g., `#FF5733`) or `.hex_stripped` for colors without `#` (e.g., `FF5733`).
@@ -100,7 +98,7 @@ Use `.hex` for colors with `#` (e.g., `#FF5733`) or `.hex_stripped` for colors w
 
 ### Template Workflow
 
-1. **Create template file** anywhere you like (e.g., `~/.config/matugen/templates/myapp.css` or `~/myapp-template.css`)
+1. **Create template file** anywhere you like (e.g., `~/.config/noctalia/templates/myapp.css` or `~/myapp-template.css`)
 2. **Add color placeholders** using the syntax above
 3. **Configure in user-templates.toml** with input/output paths
 4. **Optional: Add post_hook** to reload the app after theming
@@ -112,7 +110,7 @@ Post hooks run commands after generating a theme, useful for reloading applicati
 
 ```toml
 [templates.neovim]
-input_path = "~/.config/matugen/templates/neovim-colors.lua"
+input_path = "~/.config/noctalia/templates/neovim-colors.lua"
 output_path = "~/.config/nvim/colors/noctalia.lua"
 post_hook = "echo 'Neovim theme updated - restart Neovim to apply'"
 ```
@@ -127,7 +125,6 @@ post_hook = "echo 'Neovim theme updated - restart Neovim to apply'"
 ### Colors Look Wrong
 
 - **Light/Dark mode** - Check if your color scheme setting matches your preference
-- **Matugen not installed** - Wallpaper colors require `matugen` package
 - **Application limitations** - Some apps may not support all color properties
 
 ### Custom Templates Not Working
@@ -148,7 +145,6 @@ If you need to manually trigger theme regeneration:
 
 For theming support:
 
-- Check [Matugen documentation](https://github.com/InioX/matugen) for template syntax
 - Visit our [GitHub Issues](https://github.com/noctalia-dev/noctalia-shell/issues)
 - Join our [Discord](https://discord.noctalia.dev) community
 

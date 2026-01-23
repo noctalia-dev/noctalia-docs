@@ -81,7 +81,7 @@ export default defineConfig({
             { label: "IPC", link: "development/ipc/" },
             { label: "Widgets", link: "development/widget/" },
             { label: "Color Scheme", link: "development/colorscheme/" },
-            { label: "Matugen", link: "development/matugen/" },
+            { label: "Templates", link: "development/templates/" },
             {
               label: "Plugins",
               autogenerate: { directory: "development/plugins" },

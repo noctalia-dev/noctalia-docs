@@ -215,7 +215,7 @@ To configure Noctalia settings, you can use the Noctalia home manager module. Be
 
 ### User Templates
 
-The `user-templates` option allows you to define custom [Matugen](https://github.com/InioX/matugen) templates.
+The `user-templates` option allows you to define custom templates.
 This is useful for theming other applications that are not supported by default.
 
 It can be a string, a path, or an attribute set.
@@ -236,7 +236,7 @@ As a string:
       };
       user-templates = ''
         [config]
-        # General Matugen config settings
+        # General template settings
         [templates.myapp]
         input_path = "~/.config/noctalia/templates/myapp.css"
         output_path = "~/.config/myapp/theme.css"
@@ -283,7 +283,7 @@ As an attribute set:
       };
       user-templates = {
         config = {
-          # General Matugen config settings
+          # General template settings
         };
         templates = {
           myapp = {
