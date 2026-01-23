@@ -24,7 +24,7 @@ Let's break it down step by step.
 ## Step 1: Add an IpcHandler
 
 First, you'll create your IPC endpoint in the main IPC manager.  
-Open **`Modules/IPC/IPCManager.qml`** and add a new handler block:
+Open **`Services/Control/IPCService.qml`** and add a new handler block:
 
 ```qml
 IpcHandler {
@@ -103,7 +103,7 @@ IPC handlers should be thin wrappers. If you're writing lots of logic in the han
 
 ## Examples to Reference
 
-Check out these existing handlers in **`IPCManager.qml`** for patterns:
+Check out these existing handlers in **`IPCService.qml`** for patterns:
 
 - `brightness` - Simple increase/decrease for continuous values
 - `volume` - Similar pattern to brightness  
@@ -117,7 +117,7 @@ Don't hesitate to copy patterns that work!
 ## Troubleshooting
 
 **Method not found?**  
-Double-check your target name and ensure **`IPCManager.qml`** saved properly.
+Double-check your target name and ensure **`IPCService.qml`** saved properly.
 
 **Nothing happening?**  
 Add `Logger.log()` statements in your method and watch the shell output.
