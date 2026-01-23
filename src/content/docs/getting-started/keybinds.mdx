@@ -289,6 +289,54 @@ bind = SUPER, L, exec, qs -c noctalia-shell ipc call lockScreen lock
 
 ## Pro Tips
 
+You can also run `qs -c noctalia-shell ipc call show` to view all the IPC targets and handlers. 
+```bash
+$ qs -c noctalia-shell ipc call show
+
+# Output
+target media # target
+  function seekRelative(offset: string): void # handler seekRelative
+  function pause(): void
+  function seekByRatio(position: string): void
+  function stop(): void
+  function previous(): void
+  function playPause(): void
+  function play(): void
+  function next(): void
+  ...
+```
+You can use `qs -c noctalia-shell ipc call $target show` to view handlers available for specific targets.
+```bash
+$ qs -c noctalia-shell ipc call launcher show
+
+# Output 
+target launcher
+  function toggle(): void
+  function clipboard(): void
+  function emoji(): void
+```
+
+To execute emoji handler for launcher you can run
+```bash
+$ qs -c noctialia-shell ipc call launcher emoji
+```
+
+For IPC handlers with arguments in function you provide them after the command name
+```bash
+$ qs -c noctialia-shell ipc call media seekRelative 5
+```
+
+If IPC handler requires multiple arguments you provide them sequentially.
+```bash
+$ qs -c noctalia-shell ipc call wallpaper show
+# Output
+target wallpaper
+  ...
+  function set(path: string, screen: string): void
+  ...
+$ qs -c noctalia-shell ipc call wallpaper set $path $screen
+```
+
 :::tip[Custom scripts]
 You can combine multiple IPC calls in shell scripts for complex workflows:
 
