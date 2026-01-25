@@ -206,48 +206,6 @@ Having well-defined terminal colors is crucial for developer workflows. Ensure y
 
 ---
 
-## Step 4: Add Translations (Optional)
-
-Add translations for your scheme name in the translation files:
-
-**`Assets/Translations/en.json`**
-
-```json
-{
-  "color-scheme": {
-    "predefined": {
-      "schemes": {
-        "Monokai": "Monokai"
-      }
-    }
-  }
-}
-```
-
-**`Assets/Translations/fr.json`**
-
-```json
-{
-  "color-scheme": {
-    "predefined": {
-      "schemes": {
-        "Monokai": "Monokai"
-      }
-    }
-  }
-}
-```
-
-Add translations for all supported languages:
-- `en.json` (English)
-- `fr.json` (French)
-- `de.json` (German)
-- `es.json` (Spanish)
-- `pt.json` (Portuguese)
-- `zh-CN.json` (Chinese Simplified)
-
----
-
 ## How Predefined Schemes Work
 
 ### Color Generation Process
@@ -312,7 +270,6 @@ When a scheme includes a `terminal` section, the Template Processor generates te
 2. **Colors Not Applying**: Verify JSON syntax and color format
 3. **Poor Contrast**: Use contrast checking tools to verify readability
 4. **Terminal Colors Not Working**: Ensure `terminal` section is defined with all required properties
-5. **Translation Missing**: Ensure scheme name is in all translation files (optional)
 
 ### Debug Tips
 
