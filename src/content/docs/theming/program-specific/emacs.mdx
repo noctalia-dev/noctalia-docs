@@ -22,6 +22,15 @@ Emacs can be themed using the Noctalia color scheme through the built-in theme s
    
    The `t` argument enables the theme immediately and disables any previously active themes.
 
+:::note
+If you get an error saying `noctalia-theme` can't be found, you may need to add the themes directory to your load path before loading the theme. The exact path may vary depending on your Emacs configuration:
+
+```elisp
+(add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
+(load-theme 'noctalia t)
+```
+:::
+
 3. **Reload your configuration:**
    - Restart Emacs, or
    - Evaluate the expression: `M-x eval-buffer` or `C-x C-e` after the line
@@ -44,7 +53,7 @@ You can also add it conditionally or after other configurations:
 
 ## Troubleshooting
 
-- **Theme not found:** Ensure that Emacs theming is enabled in Noctalia settings and that the theme files are being generated correctly
+- **Theme not found:** Ensure that Emacs theming is enabled in Noctalia settings and that the theme files are being generated correctly. If the files exist but aren't found, add `(add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")` before `(load-theme 'noctalia t)`.
 - **Theme not applying:** Make sure you've added `(load-theme 'noctalia t)` to your Emacs configuration file
 - **Colors not updating:** Restart Emacs or reload your configuration after changing color schemes in Noctalia
 - **Theme conflicts:** The `t` argument in `load-theme` disables other themes. If you want to keep other themes, you may need to adjust your configuration
