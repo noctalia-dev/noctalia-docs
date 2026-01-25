@@ -636,7 +636,37 @@ PanelService.closePanel("launcher", root.screen)
 
 // Check panel state
 readonly property bool launcherOpen: PanelService.isPanelOpen("launcher", root.screen)
+
+// Context menus (use these for proper cross-compositor support)
+PanelService.showContextMenu(contextMenu, anchorItem, screen)
+PanelService.closeContextMenu(screen)
 ```
+
+#### Context Menu Functions
+
+##### `showContextMenu(contextMenu, anchorItem, screen)`
+Show a context menu anchored to a widget.
+
+```qml
+onRightClicked: {
+  PanelService.showContextMenu(contextMenu, root, screen);
+}
+```
+
+##### `closeContextMenu(screen)`
+Close any open context menu on the specified screen.
+
+```qml
+onTriggered: action => {
+  contextMenu.close();
+  PanelService.closeContextMenu(screen);
+  // Handle action...
+}
+```
+
+:::tip
+Always use `PanelService.showContextMenu()` instead of directly calling `contextMenu.open()`. This ensures proper input handling across all Wayland compositors.
+:::
 
 ### System Services
 

@@ -266,6 +266,135 @@ MouseArea {
 
 The `BarService.getTooltipDirection()` function automatically determines the correct tooltip direction based on the bar's position (top, bottom, left, or right).
 
+### Context Menus
+
+Add a right-click context menu to your widget using `NPopupContextMenu` and `PanelService`:
+
+```qml
+import qs.Services.UI
+import qs.Widgets
+
+Rectangle {
+  id: root
+
+  property var pluginApi: null
+  property ShellScreen screen
+  // ... other properties
+
+  NPopupContextMenu {
+    id: contextMenu
+
+    model: [
+      {
+        "label": pluginApi?.tr("menu.refresh") || "Refresh",
+        "action": "refresh",
+        "icon": "refresh"
+      },
+      {
+        "label": pluginApi?.tr("menu.settings") || "Settings",
+        "action": "settings",
+        "icon": "settings"
+      }
+    ]
+
+    onTriggered: action => {
+      // Always close the menu first
+      contextMenu.close();
+      PanelService.closeContextMenu(screen);
+
+      // Handle actions
+      if (action === "refresh") {
+        // Perform refresh
+      } else if (action === "settings") {
+        BarService.openPluginSettings(screen, pluginApi.manifest);
+      }
+    }
+  }
+
+  MouseArea {
+    anchors.fill: parent
+    acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+    onClicked: (mouse) => {
+      if (mouse.button === Qt.LeftButton) {
+        pluginApi?.openPanel(root.screen, root)
+      } else if (mouse.button === Qt.RightButton) {
+        PanelService.showContextMenu(contextMenu, root, screen);
+      }
+    }
+  }
+}
+```
+
+#### Context Menu Model
+
+Each item in the `model` array is an object with these properties:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `label` | string | Display text for the menu item |
+| `action` | string | Action identifier passed to `onTriggered` |
+| `icon` | string | Tabler icon name (optional) |
+| `enabled` | bool | Whether the item is clickable (default: `true`) |
+
+```qml
+model: [
+  { "label": "Active Item", "action": "active", "icon": "check" },
+  { "label": "Disabled Item", "action": "disabled", "icon": "x", "enabled": false }
+]
+```
+
+#### Using NIconButton
+
+If your widget extends `NIconButton`, use the built-in `onRightClicked` signal:
+
+```qml
+import qs.Services.UI
+import qs.Widgets
+
+NIconButton {
+  id: root
+
+  property var pluginApi: null
+  property ShellScreen screen
+
+  icon: "my-icon"
+
+  onClicked: {
+    pluginApi?.openPanel(root.screen, root)
+  }
+
+  onRightClicked: {
+    PanelService.showContextMenu(contextMenu, root, screen);
+  }
+
+  NPopupContextMenu {
+    id: contextMenu
+
+    model: [
+      {
+        "label": I18n.tr("actions.widget-settings"),
+        "action": "widget-settings",
+        "icon": "settings"
+      }
+    ]
+
+    onTriggered: action => {
+      contextMenu.close();
+      PanelService.closeContextMenu(screen);
+
+      if (action === "widget-settings") {
+        BarService.openPluginSettings(screen, pluginApi.manifest);
+      }
+    }
+  }
+}
+```
+
+:::important[Required Pattern]
+Always use `PanelService.showContextMenu()` to open context menus and call both `contextMenu.close()` and `PanelService.closeContextMenu(screen)` in the `onTriggered` handler. This ensures proper behavior across all Wayland compositors (Hyprland, Sway, Niri, labwc, etc.).
+:::
+
 ## Opening Panels
 
 If your plugin provides a panel, open it from the widget:
