@@ -11,12 +11,11 @@ This guide walks you through adding a new **predefined color scheme** to **Nocta
 
 ## Overview
 
-Adding a new predefined color scheme involves five steps:
+Adding a new predefined color scheme involves three steps:
 
-1. [Create the scheme directory](#step-1-create-the-scheme-directory)  
-2. [Create the main scheme file](#step-2-create-the-main-scheme-file)  
-3. [Create terminal themes](#step-3-create-terminal-themes)  
-4. [Test your scheme](#step-4-test-your-scheme)  
+1. [Create the scheme directory](#step-1-create-the-scheme-directory)
+2. [Create the main scheme file](#step-2-create-the-main-scheme-file)
+3. [Test your scheme](#step-3-test-your-scheme)  
 
 ---
 
@@ -62,7 +61,31 @@ Create the main scheme file named after your scheme:
         "mSurfaceVariant": "#3e3d32",
         "mOnSurfaceVariant": "#a6e22e",
         "mOutline": "#75715e",
-        "mShadow": "#272822"
+        "mShadow": "#272822",
+        "terminal": {
+            "background": "#272822",
+            "foreground": "#f8f8f2",
+            "cursor": "#f8f8f2",
+            "cursorText": "#272822",
+            "selectionBackground": "#f8f8f2",
+            "selectionForeground": "#272822",
+            "color0": "#272822",
+            "color1": "#f92672",
+            "color2": "#a6e22e",
+            "color3": "#f4bf75",
+            "color4": "#66d9ef",
+            "color5": "#ae81ff",
+            "color6": "#a1efe4",
+            "color7": "#f8f8f2",
+            "color8": "#75715e",
+            "color9": "#f92672",
+            "color10": "#a6e22e",
+            "color11": "#f4bf75",
+            "color12": "#66d9ef",
+            "color13": "#ae81ff",
+            "color14": "#a1efe4",
+            "color15": "#f9f8f5"
+        }
     },
     "light": {
         "mPrimary": "#a6e22e",
@@ -80,14 +103,38 @@ Create the main scheme file named after your scheme:
         "mSurfaceVariant": "#e6e1dc",
         "mOnSurfaceVariant": "#272822",
         "mOutline": "#a6e22e",
-        "mShadow": "#d8d8d8"
+        "mShadow": "#d8d8d8",
+        "terminal": {
+            "background": "#f8f8f2",
+            "foreground": "#272822",
+            "cursor": "#272822",
+            "cursorText": "#f8f8f2",
+            "selectionBackground": "#272822",
+            "selectionForeground": "#f8f8f2",
+            "color0": "#f8f8f2",
+            "color1": "#f92672",
+            "color2": "#a6e22e",
+            "color3": "#f4bf75",
+            "color4": "#66d9ef",
+            "color5": "#ae81ff",
+            "color6": "#a1efe4",
+            "color7": "#272822",
+            "color8": "#d8d8d2",
+            "color9": "#f92672",
+            "color10": "#a6e22e",
+            "color11": "#f4bf75",
+            "color12": "#66d9ef",
+            "color13": "#ae81ff",
+            "color14": "#a1efe4",
+            "color15": "#1e1e19"
+        }
     }
 }
 ```
 
 ### Color Properties Explained
 
-Each color scheme must define both `dark` and `light` variants with these Material Design 3 properties:
+Each color scheme must define both `dark` and `light` variants with these properties:
 
 - **`mPrimary`** - Primary color (buttons, links, highlights)
 - **`mOnPrimary`** - Text/icon color on primary surfaces
@@ -114,140 +161,30 @@ Each color scheme must define both `dark` and `light` variants with these Materi
 4. **Error Color**: Typically red-based for universal recognition
 5. **Outline Colors**: Should provide subtle separation without being distracting
 
----
+### Terminal Section
 
-## Step 3: Create Terminal Themes
+The `terminal` section defines colors for terminal emulators. These colors are used to generate terminal themes at runtime for all supported terminals (Foot, Ghostty, Kitty, Alacritty, Wezterm).
 
-Create terminal-specific themes for better contrast and readability. Terminal themes bypass the Material Design 3 generation and use your scheme's colors directly.
+**Terminal properties:**
+- **`background`** - Terminal background color
+- **`foreground`** - Primary text color
+- **`cursor`** - Cursor color
+- **`cursorText`** - Text color under cursor
+- **`selectionBackground`** - Selection highlight background
+- **`selectionForeground`** - Selection highlight text color
+- **`color0-15`** - Standard 16-color terminal palette
 
-### Directory Structure
+**Terminal color mapping:**
+- **colors 0-7**: Normal colors (black, red, green, yellow, blue, magenta, cyan, white)
+- **colors 8-15**: Bright variants of colors 0-7
 
-Create terminal theme directories:
-
-```
-Assets/ColorScheme/Monokai/
-├── Monokai.json
-└── terminal/
-    ├── foot/
-    │   ├── Monokai-dark
-    │   └── Monokai-light
-    ├── ghostty/
-    │   ├── Monokai-dark
-    │   └── Monokai-light
-    └── kitty/
-        ├── Monokai-dark.conf
-        └── Monokai-light.conf
-```
-
-### Foot Terminal Theme
-
-**`Assets/ColorScheme/Monokai/terminal/foot/Monokai-dark`**
-
-```ini
-[colors]
-background=272822
-foreground=f8f8f2
-
-# Normal colors
-regular0=272822
-regular1=f92672
-regular2=a6e22e
-regular3=f4bf75
-regular4=66d9ef
-regular5=ae81ff
-regular6=a1efe4
-regular7=f8f8f2
-
-# Bright colors
-bright0=75715e
-bright1=f92672
-bright2=a6e22e
-bright3=f4bf75
-bright4=66d9ef
-bright5=ae81ff
-bright6=a1efe4
-bright7=f9f8f5
-
-[cursor]
-color=f8f8f2 272822
-```
-
-### Ghostty Terminal Theme
-
-**`Assets/ColorScheme/Monokai/terminal/ghostty/Monokai-dark`**
-
-```ini
-[colors]
-background=272822
-foreground=f8f8f2
-
-# Normal colors
-regular0=272822
-regular1=f92672
-regular2=a6e22e
-regular3=f4bf75
-regular4=66d9ef
-regular5=ae81ff
-regular6=a1efe4
-regular7=f8f8f2
-
-# Bright colors
-bright0=75715e
-bright1=f92672
-bright2=a6e22e
-bright3=f4bf75
-bright4=66d9ef
-bright5=ae81ff
-bright6=a1efe4
-bright7=f9f8f5
-
-[cursor]
-color=f8f8f2 272822
-```
-
-### Kitty Terminal Theme
-
-**`Assets/ColorScheme/Monokai/terminal/kitty/Monokai-dark.conf`**
-
-```ini
-color0 #272822
-color1 #f92672
-color2 #a6e22e
-color3 #f4bf75
-color4 #66d9ef
-color5 #ae81ff
-color6 #a1efe4
-color7 #f8f8f2
-color8 #75715e
-color9 #f92672
-color10 #a6e22e
-color11 #f4bf75
-color12 #66d9ef
-color13 #ae81ff
-color14 #a1efe4
-color15 #f9f8f5
-background #272822
-selection_foreground #272822
-cursor #f8f8f2
-cursor_text_color #272822
-foreground #f8f8f2
-selection_background #f8f8f2
-```
-
-### Terminal Color Mapping
-
-Terminal themes use a standard 16-color palette:
-
-- **colors 0-7**: Normal colors (dark background variants)
-- **colors 8-15**: Bright colors (lighter variants)
-- **background**: Terminal background
-- **foreground**: Primary text color
-- **cursor**: Cursor color and text color
-- **selection_foreground/background**: Text selection colors
+:::tip[Terminal Colors]
+Having well-defined terminal colors is crucial for developer workflows. Ensure your terminal palette provides good contrast for syntax highlighting.
+:::
 
 ---
 
-## Step 4: Test Your Scheme
+## Step 3: Test Your Scheme
 
 1. **Place your scheme files** in the correct directories
 2. **Restart Noctalia** to load the new scheme
@@ -262,14 +199,14 @@ Terminal themes use a standard 16-color palette:
 - [ ] Scheme appears in the predefined schemes list
 - [ ] Dark mode variant works correctly
 - [ ] Light mode variant works correctly
-- [ ] Terminal themes apply correctly
+- [ ] Terminal colors apply correctly (if `terminal` section is defined)
 - [ ] Material Design 3 templates generate properly
 - [ ] Colors have good contrast and readability
 - [ ] Scheme name displays correctly
 
 ---
 
-## Step 5: Add Translations
+## Step 4: Add Translations (Optional)
 
 Add translations for your scheme name in the translation files:
 
@@ -333,9 +270,13 @@ The system automatically generates complementary colors:
 - **Outline Colors**: Border and divider colors
 - **Shadow Colors**: Drop shadow colors
 
-### Terminal Theme Special Handling
+### Terminal Theme Generation
 
-Terminal themes bypass Material Design 3 generation and use your scheme's colors directly for optimal readability and contrast.
+When a scheme includes a `terminal` section, the Template Processor generates terminal-specific configuration files at runtime for all enabled terminal emulators. This ensures:
+
+- **Consistency** - All terminals use the same color palette
+- **Automatic updates** - Terminal themes update when you switch schemes
+- **No manual file creation** - Terminal configs are generated from the JSON definition
 
 ---
 
@@ -370,8 +311,8 @@ Terminal themes bypass Material Design 3 generation and use your scheme's colors
 1. **Scheme Not Appearing**: Check file naming and directory structure
 2. **Colors Not Applying**: Verify JSON syntax and color format
 3. **Poor Contrast**: Use contrast checking tools to verify readability
-4. **Terminal Themes Broken**: Check terminal-specific file formats
-5. **Translation Missing**: Ensure scheme name is in all translation files
+4. **Terminal Colors Not Working**: Ensure `terminal` section is defined with all required properties
+5. **Translation Missing**: Ensure scheme name is in all translation files (optional)
 
 ### Debug Tips
 
@@ -383,11 +324,7 @@ Terminal themes bypass Material Design 3 generation and use your scheme's colors
 ---
 
 :::tip[Testing Your Scheme]
-Always test your scheme with both dark and light modes, and verify that terminal themes provide good contrast for coding work.
-:::
-
-:::info[Terminal Themes]
-Terminal themes are crucial for developer workflows. Ensure your terminal colors provide excellent readability and syntax highlighting support.
+Always test your scheme with both dark and light modes, and verify that the terminal section provides good contrast for coding work.
 :::
 
 :::warning[Accessibility]
