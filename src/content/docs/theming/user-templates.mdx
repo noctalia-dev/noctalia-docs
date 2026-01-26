@@ -1,0 +1,365 @@
+---
+title: User Templates
+description: Create custom templates to theme any application with Noctalia's color scheme
+sidebar:
+  order: 2
+---
+
+Noctalia allows you to create custom templates to theme any application that supports configuration files. Your templates automatically update whenever you change your color scheme.
+
+---
+
+## Getting Started
+
+### 1. Enable User Templates
+
+1. Go to **Settings → Color Scheme → Templates**
+2. Scroll to **Advanced** section
+3. Enable **User templates**
+4. A configuration file will be created at `~/.config/noctalia/user-templates.toml`
+
+### 2. Create Your Template File
+
+Create a template file anywhere you like, for example `~/.config/noctalia/templates/myapp.css`:
+
+```css
+/* Example CSS template */
+.my-app {
+  background: {{colors.surface.default.hex}};
+  color: {{colors.on_surface.default.hex}};
+  accent: {{colors.primary.default.hex}};
+  border: 1px solid {{colors.outline.default.hex}};
+}
+```
+
+### 3. Register Your Template
+
+Edit `~/.config/noctalia/user-templates.toml`:
+
+```toml
+[config]
+
+[templates.myapp]
+input_path = "~/.config/noctalia/templates/myapp.css"
+output_path = "~/.config/myapp/theme.css"
+post_hook = "notify-send 'myapp templated'"
+```
+
+**Properties:**
+- **`input_path`** - Path to your template file
+- **`output_path`** - Where to write the generated theme
+- **`post_hook`** - Optional command to run after generation (e.g., reload app)
+
+Your template will now be processed automatically whenever the theme changes.
+
+---
+
+## Template Syntax
+
+Templates use the syntax `{{colors.name.mode.format}}`:
+
+- **name**: The color name (e.g., `primary`, `surface`, `on_surface`)
+- **mode**: `default`, `dark`, or `light`. Use `default` to follow the system theme.
+- **format**: Output format (see below)
+
+### Output Formats
+
+| Format | Example Output |
+|--------|----------------|
+| `hex` | `#FF5733` |
+| `hex_stripped` | `FF5733` |
+| `rgb` | `rgb(255, 87, 51)` |
+| `rgba` | `rgba(255, 87, 51, 1.0)` |
+| `hsl` | `hsl(14, 100%, 60%)` |
+| `hsla` | `hsla(14, 100%, 60%, 1.0)` |
+| `red`, `green`, `blue` | Individual RGB values (0-255) |
+| `hue`, `saturation`, `lightness` | Individual HSL values |
+| `alpha` | Alpha value (0.0-1.0) |
+
+---
+
+## Available Colors
+
+Noctalia generates a complete 48-color Material Design 3 palette:
+
+<details>
+<summary>**Primary Colors** (8)</summary>
+
+| Color Name | Description |
+|------------|-------------|
+| `primary` | Main accent color |
+| `on_primary` | Text/icons on primary |
+| `primary_container` | Container using primary |
+| `on_primary_container` | Text/icons on primary container |
+| `primary_fixed` | Fixed primary (consistent across modes) |
+| `primary_fixed_dim` | Dimmed fixed primary |
+| `on_primary_fixed` | Text on fixed primary |
+| `on_primary_fixed_variant` | Variant text on fixed primary |
+
+</details>
+
+<details>
+<summary>**Secondary Colors** (8)</summary>
+
+| Color Name | Description |
+|------------|-------------|
+| `secondary` | Secondary accent color |
+| `on_secondary` | Text/icons on secondary |
+| `secondary_container` | Container using secondary |
+| `on_secondary_container` | Text/icons on secondary container |
+| `secondary_fixed` | Fixed secondary |
+| `secondary_fixed_dim` | Dimmed fixed secondary |
+| `on_secondary_fixed` | Text on fixed secondary |
+| `on_secondary_fixed_variant` | Variant text on fixed secondary |
+
+</details>
+
+<details>
+<summary>**Tertiary Colors** (8)</summary>
+
+| Color Name | Description |
+|------------|-------------|
+| `tertiary` | Tertiary accent color |
+| `on_tertiary` | Text/icons on tertiary |
+| `tertiary_container` | Container using tertiary |
+| `on_tertiary_container` | Text/icons on tertiary container |
+| `tertiary_fixed` | Fixed tertiary |
+| `tertiary_fixed_dim` | Dimmed fixed tertiary |
+| `on_tertiary_fixed` | Text on fixed tertiary |
+| `on_tertiary_fixed_variant` | Variant text on fixed tertiary |
+
+</details>
+
+<details>
+<summary>**Error Colors** (4)</summary>
+
+| Color Name | Description |
+|------------|-------------|
+| `error` | Error/warning color |
+| `on_error` | Text/icons on error |
+| `error_container` | Container for errors |
+| `on_error_container` | Text/icons on error container |
+
+</details>
+
+<details>
+<summary>**Surface Colors** (11)</summary>
+
+| Color Name | Description |
+|------------|-------------|
+| `surface` | Main background |
+| `on_surface` | Primary text color |
+| `surface_variant` | Alternative surface |
+| `on_surface_variant` | Text on surface variant |
+| `surface_dim` | Dimmed surface |
+| `surface_bright` | Bright surface |
+| `surface_container_lowest` | Lowest elevation container |
+| `surface_container_low` | Low elevation container |
+| `surface_container` | Standard container |
+| `surface_container_high` | High elevation container |
+| `surface_container_highest` | Highest elevation container |
+
+</details>
+
+<details>
+<summary>**Outline & Utility Colors** (4)</summary>
+
+| Color Name | Description |
+|------------|-------------|
+| `outline` | Border/divider color |
+| `outline_variant` | Subtle outline variant |
+| `shadow` | Shadow color |
+| `scrim` | Overlay/scrim color |
+
+</details>
+
+<details>
+<summary>**Inverse Colors** (3)</summary>
+
+| Color Name | Description |
+|------------|-------------|
+| `inverse_surface` | Inverted surface |
+| `inverse_on_surface` | Text on inverse surface |
+| `inverse_primary` | Inverted primary |
+
+</details>
+
+<details>
+<summary>**Background Colors** (2)</summary>
+
+| Color Name | Description |
+|------------|-------------|
+| `background` | Background (alias for surface) |
+| `on_background` | Text on background |
+
+</details>
+
+---
+
+## Filters
+
+Modify colors using filters with the `|` syntax:
+
+```ini
+accent = {{colors.primary.default.hex | lighten 10}}
+overlay = {{colors.surface.default.hex | set_alpha 0.8}}
+muted = {{colors.error.default.hex | grayscale}}
+```
+
+Chain multiple filters:
+
+```ini
+highlight = {{colors.primary.default.hex | lighten 10 | set_alpha 0.9}}
+```
+
+### Color Filters
+
+| Filter | Argument | Description |
+|--------|----------|-------------|
+| `grayscale` | none | Convert to grayscale |
+| `invert` | none | Invert the color |
+| `lighten` | percentage (0-100) | Increase lightness |
+| `darken` | percentage (0-100) | Decrease lightness |
+| `saturate` | percentage (0-100) | Increase saturation |
+| `desaturate` | percentage (0-100) | Decrease saturation |
+| `set_alpha` | float (0.0-1.0) | Set alpha/opacity |
+| `set_lightness` | percentage (0-100) | Set absolute lightness |
+| `set_saturation` | percentage (0-100) | Set absolute saturation |
+| `set_hue` | degrees (0-360) | Set absolute hue |
+| `set_red` | value (0-255) | Set red channel |
+| `set_green` | value (0-255) | Set green channel |
+| `set_blue` | value (0-255) | Set blue channel |
+| `auto_lightness` | percentage | Lighten if dark, darken if light |
+| `blend` | `"#hex", amount` | Blend hue toward target color |
+| `harmonize` | `"#hex"` | M3 harmonize (max 15° hue shift) |
+
+### String Filters
+
+| Filter | Description |
+|--------|-------------|
+| `lower_case` | Convert to lowercase |
+| `camel_case` | Convert to camelCase |
+| `pascal_case` | Convert to PascalCase |
+| `snake_case` | Convert to snake_case |
+| `kebab_case` | Convert to kebab-case |
+| `replace: "find", "replace"` | String replacement |
+
+---
+
+## Advanced Features
+
+### Block Constructs
+
+Use control flow blocks with `<* ... *>` syntax:
+
+#### For Loops
+
+```
+<* for name, value in colors *>
+  --color-{{name}}: {{value.default.hex}};
+<* endfor *>
+```
+
+**Available iterables:**
+- `colors` - All 48 color name/value pairs
+- `palettes.primary`, `palettes.secondary`, etc. - Tonal palette entries
+- `0..10` - Numeric ranges
+
+**Loop variables:**
+- `loop.index` - Current index (0-based)
+- `loop.first` - `true` if first iteration
+- `loop.last` - `true` if last iteration
+
+#### Conditionals
+
+```
+<* if {{ loop.first }} *>
+  /* First item */
+<* else *>
+  /* Other items */
+<* endif *>
+```
+
+### Custom Colors
+
+Define custom colors that generate full M3 token sets:
+
+```toml
+[config.custom_colors]
+warning = "#FFA500"
+success = { color = "#00FF00", blend = true }
+```
+
+Each generates 6 tokens: `{name}`, `on_{name}`, `{name}_container`, `on_{name}_container`, `{name}_source`, `{name}_value`
+
+### Special Tags
+
+| Tag | Description |
+|-----|-------------|
+| `{{image}}` | Path to source wallpaper image |
+
+---
+
+## Examples
+
+### Neovim Color Scheme
+
+**Template** (`~/.config/noctalia/templates/neovim.lua`):
+```lua
+return {
+  bg = "{{colors.surface.default.hex}}",
+  fg = "{{colors.on_surface.default.hex}}",
+  accent = "{{colors.primary.default.hex}}",
+  error = "{{colors.error.default.hex}}",
+  warning = "{{colors.tertiary.default.hex}}",
+}
+```
+
+**Config**:
+```toml
+[templates.neovim]
+input_path = "~/.config/noctalia/templates/neovim.lua"
+output_path = "~/.config/nvim/lua/colors/noctalia.lua"
+```
+
+### CSS Variables
+
+**Template** (`~/.config/noctalia/templates/vars.css`):
+```css
+:root {
+<* for name, value in colors *>
+  --{{name | kebab_case}}: {{value.default.hex}};
+<* endfor *>
+}
+```
+
+---
+
+## Troubleshooting
+
+### Templates Not Working
+
+- **Check file paths** - Use absolute paths or `~` for home directory
+- **Validate TOML syntax** - Use a TOML validator
+- **Check logs** - Run Noctalia from terminal to see error messages
+
+### Colors Look Wrong
+
+- **Check mode** - Ensure you're using `default`, `dark`, or `light` correctly
+- **Verify color names** - Check spelling matches the available colors
+
+### Theme Not Updating
+
+- **Trigger regeneration** - Change any color scheme setting
+- **Check post_hook** - Ensure reload commands are correct
+
+---
+
+## Getting Help
+
+- Visit our [GitHub Issues](https://github.com/noctalia-dev/noctalia-shell/issues)
+- Join our [Discord](https://discord.noctalia.dev) community
+
+:::tip[Share Your Templates]
+Created a great template? Share it with the community on Discord!
+:::

@@ -67,11 +67,12 @@ export default defineConfig({
           label: "Theming",
           items: [
             { label: "Basic App Theming", link: "theming/basic-app-theming/" },
-            { label: "Advanced App Theming", link: "theming/advanced-app-theming/" },
             {
               label: "Program Specific",
               autogenerate: { directory: "theming/program-specific" },
             },
+            { label: "User Templates", link: "theming/user-templates/" },
+            { label: "User Color Schemes", link: "theming/color-schemes/" },
           ],
         },
         {
@@ -80,12 +81,10 @@ export default defineConfig({
             { label: "Guidelines", link: "development/guideline/" },
             { label: "IPC", link: "development/ipc/" },
             { label: "Widgets", link: "development/widget/" },
-            { label: "Color Scheme", link: "development/colorscheme/" },
             { label: "Templates", link: "development/templates/" },
             {
               label: "Plugins",
               autogenerate: { directory: "development/plugins" },
-
             },
           ],
         },

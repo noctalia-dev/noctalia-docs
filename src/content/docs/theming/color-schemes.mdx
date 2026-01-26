@@ -1,0 +1,208 @@
+---
+title: User Color Schemes
+description: Create your own color schemes for Noctalia
+sidebar:
+  order: 3
+---
+
+Create your own color schemes to personalize Noctalia with your favorite colors.
+
+---
+
+## Creating a Color Scheme
+
+### 1. Create the Scheme Directory
+
+Create a folder for your scheme in `~/.config/noctalia/colorschemes/`:
+
+```
+~/.config/noctalia/colorschemes/MyScheme/
+```
+
+### 2. Create the Scheme File
+
+Create a JSON file with the same name as your folder:
+
+**`~/.config/noctalia/colorschemes/MyScheme/MyScheme.json`**
+
+```json
+{
+    "dark": {
+        "mPrimary": "#a6e22e",
+        "mOnPrimary": "#272822",
+        "mSecondary": "#66d9ef",
+        "mOnSecondary": "#272822",
+        "mTertiary": "#f92672",
+        "mOnTertiary": "#272822",
+        "mError": "#f92672",
+        "mOnError": "#272822",
+        "mSurface": "#272822",
+        "mOnSurface": "#f8f8f2",
+        "mHover": "#3a3a32",
+        "mOnHover": "#f8f8f2",
+        "mSurfaceVariant": "#3e3d32",
+        "mOnSurfaceVariant": "#a6e22e",
+        "mOutline": "#75715e",
+        "mShadow": "#272822",
+        "terminal": {
+            "background": "#272822",
+            "foreground": "#f8f8f2",
+            "cursor": "#f8f8f2",
+            "cursorText": "#272822",
+            "selectionBackground": "#f8f8f2",
+            "selectionForeground": "#272822",
+            "color0": "#272822",
+            "color1": "#f92672",
+            "color2": "#a6e22e",
+            "color3": "#f4bf75",
+            "color4": "#66d9ef",
+            "color5": "#ae81ff",
+            "color6": "#a1efe4",
+            "color7": "#f8f8f2",
+            "color8": "#75715e",
+            "color9": "#f92672",
+            "color10": "#a6e22e",
+            "color11": "#f4bf75",
+            "color12": "#66d9ef",
+            "color13": "#ae81ff",
+            "color14": "#a1efe4",
+            "color15": "#f9f8f5"
+        }
+    },
+    "light": {
+        "mPrimary": "#a6e22e",
+        "mOnPrimary": "#f8f8f2",
+        "mSecondary": "#66d9ef",
+        "mOnSecondary": "#f8f8f2",
+        "mTertiary": "#f92672",
+        "mOnTertiary": "#f8f8f2",
+        "mError": "#f92672",
+        "mOnError": "#f8f8f2",
+        "mSurface": "#f8f8f2",
+        "mOnSurface": "#272822",
+        "mHover": "#e6e1dc",
+        "mOnHover": "#272822",
+        "mSurfaceVariant": "#e6e1dc",
+        "mOnSurfaceVariant": "#272822",
+        "mOutline": "#a6e22e",
+        "mShadow": "#d8d8d8",
+        "terminal": {
+            "background": "#f8f8f2",
+            "foreground": "#272822",
+            "cursor": "#272822",
+            "cursorText": "#f8f8f2",
+            "selectionBackground": "#272822",
+            "selectionForeground": "#f8f8f2",
+            "color0": "#f8f8f2",
+            "color1": "#f92672",
+            "color2": "#a6e22e",
+            "color3": "#f4bf75",
+            "color4": "#66d9ef",
+            "color5": "#ae81ff",
+            "color6": "#a1efe4",
+            "color7": "#272822",
+            "color8": "#d8d8d2",
+            "color9": "#f92672",
+            "color10": "#a6e22e",
+            "color11": "#f4bf75",
+            "color12": "#66d9ef",
+            "color13": "#ae81ff",
+            "color14": "#a1efe4",
+            "color15": "#1e1e19"
+        }
+    }
+}
+```
+
+### 3. Select Your Scheme
+
+1. Restart Noctalia to load the new scheme
+2. Open **Settings → Color Scheme**
+3. Select your scheme from the list
+
+---
+
+## Color Properties
+
+Each scheme needs both `dark` and `light` variants with these colors:
+
+| Property | Description |
+|----------|-------------|
+| `mPrimary` | Primary accent (buttons, links, highlights) |
+| `mOnPrimary` | Text/icons on primary surfaces |
+| `mSecondary` | Secondary accent color |
+| `mOnSecondary` | Text/icons on secondary surfaces |
+| `mTertiary` | Tertiary accent color |
+| `mOnTertiary` | Text/icons on tertiary surfaces |
+| `mError` | Error/warning color |
+| `mOnError` | Text/icons on error surfaces |
+| `mSurface` | Main background color |
+| `mOnSurface` | Primary text color |
+| `mHover` | Hover state background |
+| `mOnHover` | Text on hover surfaces |
+| `mSurfaceVariant` | Secondary background (cards, panels) |
+| `mOnSurfaceVariant` | Text on surface variants |
+| `mOutline` | Borders and dividers |
+| `mShadow` | Shadow color |
+
+---
+
+## Terminal Colors
+
+The `terminal` section defines colors for terminal emulators (Foot, Ghostty, Kitty, Alacritty, Wezterm):
+
+| Property | Description |
+|----------|-------------|
+| `background` | Terminal background |
+| `foreground` | Default text color |
+| `cursor` | Cursor color |
+| `cursorText` | Text under cursor |
+| `selectionBackground` | Selection highlight |
+| `selectionForeground` | Selected text color |
+| `color0-7` | Normal colors (black, red, green, yellow, blue, magenta, cyan, white) |
+| `color8-15` | Bright variants of colors 0-7 |
+
+:::tip[Terminal Colors]
+Good terminal colors are essential for syntax highlighting. Test your scheme with code to ensure readability.
+:::
+
+---
+
+## Tips
+
+### Color Selection
+
+- **Start simple** - Pick 2-3 core colors that define your scheme
+- **Ensure contrast** - Text should be readable on all backgrounds
+- **Test both modes** - Dark and light variants should both work well
+
+### Adapting Existing Themes
+
+Popular themes like Dracula, Nord, or Catppuccin can be adapted:
+1. Find the theme's color palette
+2. Map colors to Noctalia's properties
+3. Adjust for good contrast
+
+### Tools
+
+- [Coolors.co](https://coolors.co) - Color palette generator
+- [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) - Verify accessibility
+
+---
+
+## Sharing Your Scheme
+
+Want to share your color scheme with the community?
+
+Submit it to the [noctalia-colorschemes](https://github.com/noctalia-dev/noctalia-colorschemes) repository!
+
+---
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| Scheme not appearing | Check folder/file naming match exactly |
+| Colors not applying | Validate JSON syntax |
+| Poor contrast | Use contrast checker tools |
+| Terminal colors wrong | Verify all `color0-15` are defined |
