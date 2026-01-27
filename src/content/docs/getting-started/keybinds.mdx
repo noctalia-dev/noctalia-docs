@@ -224,6 +224,26 @@ niri msg -j outputs | jq 'keys'
 ```
 :::
 
+### Plugin Controls
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Open Plugin Settings** | `qs -c noctalia-shell ipc call plugin openSettings $pluginId` | Open the settings popup for a specific plugin |
+| **Open Plugin Panel** | `qs -c noctalia-shell ipc call plugin openPanel $pluginId` | Open a plugin's panel |
+| **Close Plugin Panel** | `qs -c noctalia-shell ipc call plugin closePanel $pluginId` | Close a plugin's panel |
+| **Toggle Plugin Panel** | `qs -c noctalia-shell ipc call plugin togglePanel $pluginId` | Toggle a plugin's panel visibility |
+
+:::note[Plugin ID]
+Replace `$pluginId` with the actual plugin identifier. For example:
+```bash
+# Open settings for the todo plugin
+qs -c noctalia-shell ipc call plugin openSettings todo
+
+# Toggle the pomodoro plugin panel
+qs -c noctalia-shell ipc call plugin togglePanel pomodoro
+```
+:::
+
 #### Misc
 
 | Function | Command | Description |
