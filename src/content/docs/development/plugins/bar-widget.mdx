@@ -5,7 +5,7 @@ sidebar:
   order: 30
 ---
 
-Bar widgets are components that appear in the top or bottom bar of Noctalia Shell. They provide quick access to information and actions.
+Bar widgets are components that appear in the Noctalia bar (top, bottom, left, or right). They provide quick access to information and actions.
 
 ## Basic Structure
 
@@ -29,9 +29,16 @@ Item {
   property string widgetId: ""
   property string section: ""
 
+  // Per-screen bar properties (for multi-monitor and vertical bar support)
+  readonly property string screenName: screen?.name ?? ""
+  readonly property string barPosition: Settings.getBarPositionForScreen(screenName)
+  readonly property bool isBarVertical: barPosition === "left" || barPosition === "right"
+  readonly property real capsuleHeight: Style.getCapsuleHeightForScreen(screenName)
+  readonly property real barFontSize: Style.getBarFontSizeForScreen(screenName)
+
   // Content dimensions (visual capsule size)
   readonly property real contentWidth: content.implicitWidth + Style.marginM * 2
-  readonly property real contentHeight: Style.capsuleHeight
+  readonly property real contentHeight: capsuleHeight
 
   // Widget dimensions (extends to full bar height for better click area)
   implicitWidth: contentWidth
@@ -109,12 +116,19 @@ property string section: ""
 
 ## Sizing
 
-Bar widgets use `contentWidth` and `contentHeight` properties to define the visual capsule size, while `implicitWidth` and `implicitHeight` control the click area:
+Bar widgets use `contentWidth` and `contentHeight` properties to define the visual capsule size, while `implicitWidth` and `implicitHeight` control the click area. Use per-screen properties to support multi-monitor setups and per-screen bar settings:
 
 ```qml
-// Define visual content size
+// Per-screen bar properties (required for proper multi-monitor support)
+readonly property string screenName: screen?.name ?? ""
+readonly property string barPosition: Settings.getBarPositionForScreen(screenName)
+readonly property bool isBarVertical: barPosition === "left" || barPosition === "right"
+readonly property real capsuleHeight: Style.getCapsuleHeightForScreen(screenName)
+readonly property real barFontSize: Style.getBarFontSizeForScreen(screenName)
+
+// Define visual content size using per-screen capsuleHeight
 readonly property real contentWidth: content.implicitWidth + Style.marginM * 2
-readonly property real contentHeight: Style.capsuleHeight
+readonly property real contentHeight: capsuleHeight
 
 // Click area matches content (bar loader may extend it)
 implicitWidth: contentWidth
@@ -124,15 +138,24 @@ implicitHeight: contentHeight
 For vertical bar support (left/right positions):
 
 ```qml
-readonly property string barPosition: Settings.getBarPositionForScreen(screen?.name)
-readonly property bool barIsVertical: barPosition === "left" || barPosition === "right"
+// Per-screen bar properties
+readonly property string screenName: screen?.name ?? ""
+readonly property string barPosition: Settings.getBarPositionForScreen(screenName)
+readonly property bool isBarVertical: barPosition === "left" || barPosition === "right"
+readonly property real capsuleHeight: Style.getCapsuleHeightForScreen(screenName)
+readonly property real barFontSize: Style.getBarFontSizeForScreen(screenName)
 
-readonly property real contentWidth: barIsVertical ? Style.capsuleHeight : content.implicitWidth + Style.marginM * 2
-readonly property real contentHeight: barIsVertical ? content.implicitHeight + Style.marginM * 2 : Style.capsuleHeight
+// Swap width/height for vertical bars
+readonly property real contentWidth: isBarVertical ? capsuleHeight : content.implicitWidth + Style.marginM * 2
+readonly property real contentHeight: isBarVertical ? content.implicitHeight + Style.marginM * 2 : capsuleHeight
 
 implicitWidth: contentWidth
 implicitHeight: contentHeight
 ```
+
+:::tip[Per-Screen Properties]
+Always use `Style.getCapsuleHeightForScreen(screenName)` and `Style.getBarFontSizeForScreen(screenName)` instead of `Style.capsuleHeight` or `Style.barFontSize`. This ensures your widget respects per-monitor bar settings and scales correctly on each screen.
+:::
 
 ## Styling
 
@@ -206,9 +229,13 @@ Rectangle {
 
 ### Typography
 ```qml
+// Define per-screen font size at root level
+readonly property string screenName: screen?.name ?? ""
+readonly property real barFontSize: Style.getBarFontSizeForScreen(screenName)
+
 NText {
-  // For bar widgets, use barFontSize for consistent sizing
-  pointSize: Style.barFontSize // Recommended for bar widget text
+  // For bar widgets, use per-screen barFontSize for consistent sizing
+  pointSize: barFontSize // Recommended for bar widget text
 
   // Other available sizes (for panels, dialogs, etc.)
   pointSize: Style.fontSizeXS
@@ -224,7 +251,7 @@ NText {
 ```
 
 :::tip
-Always use `Style.barFontSize` for text in bar widgets to ensure consistent sizing with other bar elements and proper scaling.
+Always use `Style.getBarFontSizeForScreen(screenName)` for text in bar widgets to ensure consistent sizing with other bar elements and proper scaling per-screen.
 :::
 
 ## Using Settings
@@ -352,8 +379,12 @@ Item {
   property ShellScreen screen
   // ... other properties
 
+  // Per-screen bar properties
+  readonly property string screenName: screen?.name ?? ""
+  readonly property real capsuleHeight: Style.getCapsuleHeightForScreen(screenName)
+
   readonly property real contentWidth: content.implicitWidth + Style.marginM * 2
-  readonly property real contentHeight: Style.capsuleHeight
+  readonly property real contentHeight: capsuleHeight
 
   implicitWidth: contentWidth
   implicitHeight: contentHeight
@@ -532,7 +563,7 @@ NIcon {
 NText {
   text: "Hello World"
   color: Color.mOnSurface
-  pointSize: Style.barFontSize // Use barFontSize for bar widgets
+  pointSize: barFontSize // Use per-screen barFontSize for bar widgets
   font.weight: Font.Medium
 }
 ```
@@ -598,8 +629,15 @@ Item {
   property string widgetId: ""
   property string section: ""
 
+  // Per-screen bar properties
+  readonly property string screenName: screen?.name ?? ""
+  readonly property string barPosition: Settings.getBarPositionForScreen(screenName)
+  readonly property bool isBarVertical: barPosition === "left" || barPosition === "right"
+  readonly property real capsuleHeight: Style.getCapsuleHeightForScreen(screenName)
+  readonly property real barFontSize: Style.getBarFontSizeForScreen(screenName)
+
   readonly property real contentWidth: row.implicitWidth + Style.marginM * 2
-  readonly property real contentHeight: Style.capsuleHeight
+  readonly property real contentHeight: capsuleHeight
 
   implicitWidth: contentWidth
   implicitHeight: contentHeight
@@ -628,7 +666,7 @@ Item {
       NText {
         text: "Ready"
         color: Color.mOnSurface
-        pointSize: Style.barFontSize
+        pointSize: barFontSize
       }
     }
   }
@@ -652,10 +690,17 @@ Item {
   property string widgetId: ""
   property string section: ""
 
+  // Per-screen bar properties
+  readonly property string screenName: screen?.name ?? ""
+  readonly property string barPosition: Settings.getBarPositionForScreen(screenName)
+  readonly property bool isBarVertical: barPosition === "left" || barPosition === "right"
+  readonly property real capsuleHeight: Style.getCapsuleHeightForScreen(screenName)
+  readonly property real barFontSize: Style.getBarFontSizeForScreen(screenName)
+
   property int count: pluginApi?.pluginSettings?.count || 0
 
   readonly property real contentWidth: row.implicitWidth + Style.marginM * 2
-  readonly property real contentHeight: Style.capsuleHeight
+  readonly property real contentHeight: capsuleHeight
 
   implicitWidth: contentWidth
   implicitHeight: contentHeight
@@ -684,7 +729,7 @@ Item {
       NText {
         text: root.count.toString()
         color: Color.mOnSurface
-        pointSize: Style.barFontSize
+        pointSize: barFontSize
         font.weight: Font.Bold
       }
     }
@@ -722,12 +767,19 @@ Item {
   property string widgetId: ""
   property string section: ""
 
+  // Per-screen bar properties
+  readonly property string screenName: screen?.name ?? ""
+  readonly property string barPosition: Settings.getBarPositionForScreen(screenName)
+  readonly property bool isBarVertical: barPosition === "left" || barPosition === "right"
+  readonly property real capsuleHeight: Style.getCapsuleHeightForScreen(screenName)
+  readonly property real barFontSize: Style.getBarFontSizeForScreen(screenName)
+
   readonly property string message:
     pluginApi?.pluginSettings?.message ||
     pluginApi?.manifest?.metadata?.defaultSettings?.message || ""
 
   readonly property real contentWidth: row.implicitWidth + Style.marginM * 2
-  readonly property real contentHeight: Style.capsuleHeight
+  readonly property real contentHeight: capsuleHeight
 
   implicitWidth: contentWidth
   implicitHeight: contentHeight
@@ -755,7 +807,7 @@ Item {
       NText {
         text: root.message
         color: Color.mOnSurface
-        pointSize: Style.barFontSize
+        pointSize: barFontSize
       }
     }
   }
@@ -794,11 +846,15 @@ Item {
   property string widgetId: ""
   property string section: ""
 
-  readonly property string barPosition: Settings.getBarPositionForScreen(screen?.name)
-  readonly property bool barIsVertical: barPosition === "left" || barPosition === "right"
+  // Per-screen bar properties
+  readonly property string screenName: screen?.name ?? ""
+  readonly property string barPosition: Settings.getBarPositionForScreen(screenName)
+  readonly property bool isBarVertical: barPosition === "left" || barPosition === "right"
+  readonly property real capsuleHeight: Style.getCapsuleHeightForScreen(screenName)
+  readonly property real barFontSize: Style.getBarFontSizeForScreen(screenName)
 
-  readonly property real contentWidth: barIsVertical ? Style.capsuleHeight : layout.implicitWidth + Style.marginM * 2
-  readonly property real contentHeight: barIsVertical ? layout.implicitHeight + Style.marginM * 2 : Style.capsuleHeight
+  readonly property real contentWidth: isBarVertical ? capsuleHeight : layout.implicitWidth + Style.marginM * 2
+  readonly property real contentHeight: isBarVertical ? layout.implicitHeight + Style.marginM * 2 : capsuleHeight
 
   implicitWidth: contentWidth
   implicitHeight: contentHeight
@@ -822,7 +878,7 @@ Item {
 
       RowLayout {
         id: rowLayout
-        visible: !root.barIsVertical
+        visible: !root.isBarVertical
         spacing: Style.marginS
 
         NIcon {
@@ -833,12 +889,13 @@ Item {
         NText {
           text: "Widget"
           color: Color.mOnSurface
+          pointSize: barFontSize
         }
       }
 
       ColumnLayout {
         id: colLayout
-        visible: root.barIsVertical
+        visible: root.isBarVertical
         spacing: Style.marginS
 
         NIcon {
@@ -849,6 +906,7 @@ Item {
         NText {
           text: "Widget"
           color: Color.mOnSurface
+          pointSize: barFontSize
         }
       }
     }
@@ -872,7 +930,7 @@ Item {
 1. **Use the visual capsule pattern**: `Item` root with centered `Rectangle` visualCapsule for extended click areas
 2. **Keep it small**: Bar widgets should be compact and unobtrusive
 3. **Use consistent styling**: Stick to Noctalia's design system
-4. **Use `Style.barFontSize` for text**: Ensures consistent sizing with other bar elements
+4. **Use per-screen properties**: Always use `Style.getCapsuleHeightForScreen(screenName)` and `Style.getBarFontSizeForScreen(screenName)` instead of global values
 5. **Handle missing data**: Always provide fallbacks for settings and data
 6. **Respect dark mode**: Use `Color.m*` colors that adapt to theme
 7. **Use binding for hover effects**: `color: mouseArea.containsMouse ? Color.mHover : Style.capsuleColor`
