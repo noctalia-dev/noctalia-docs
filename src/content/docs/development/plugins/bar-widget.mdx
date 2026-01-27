@@ -9,7 +9,7 @@ Bar widgets are components that appear in the top or bottom bar of Noctalia Shel
 
 ## Basic Structure
 
-A bar widget is a QML file that must follow this structure:
+A bar widget is a QML file that must follow this structure. The pattern uses an `Item` root with a centered `visualCapsule` Rectangle to ensure click areas extend to the full bar height while keeping the visual content properly sized:
 
 ```qml
 import QtQuick
@@ -18,7 +18,7 @@ import Quickshell
 import qs.Commons
 import qs.Widgets
 
-Rectangle {
+Item {
   id: root
 
   // Plugin API (injected by PluginService)
@@ -29,13 +29,53 @@ Rectangle {
   property string widgetId: ""
   property string section: ""
 
-  // Widget dimensions
-  implicitWidth: content.implicitWidth + Style.marginM * 2
-  implicitHeight: Style.barHeight
+  // Content dimensions (visual capsule size)
+  readonly property real contentWidth: content.implicitWidth + Style.marginM * 2
+  readonly property real contentHeight: Style.capsuleHeight
 
-  // Your widget content here
+  // Widget dimensions (extends to full bar height for better click area)
+  implicitWidth: contentWidth
+  implicitHeight: contentHeight
+
+  // Visual capsule - centered within the full click area
+  Rectangle {
+    id: visualCapsule
+    x: Style.pixelAlignCenter(parent.width, width)
+    y: Style.pixelAlignCenter(parent.height, height)
+    width: root.contentWidth
+    height: root.contentHeight
+    color: mouseArea.containsMouse ? Color.mHover : Style.capsuleColor
+    radius: Style.radiusL
+    border.color: Style.capsuleBorderColor
+    border.width: Style.capsuleBorderWidth
+
+    // Your widget content here (centered in visualCapsule)
+    RowLayout {
+      id: content
+      anchors.centerIn: parent
+      spacing: Style.marginS
+
+      // ... content items
+    }
+  }
+
+  // MouseArea at root level for extended click area
+  MouseArea {
+    id: mouseArea
+    anchors.fill: parent
+    hoverEnabled: true
+    cursorShape: Qt.PointingHandCursor
+
+    onClicked: {
+      // Handle click
+    }
+  }
 }
 ```
+
+:::tip[Extended Click Areas]
+The `Item` root with centered `visualCapsule` pattern ensures users can click slightly above or below the visible widget and still trigger the click event. This significantly improves usability, especially on high-density bars.
+:::
 
 ## Required Properties
 
@@ -69,19 +109,29 @@ property string section: ""
 
 ## Sizing
 
-Bar widgets should set their size appropriately:
+Bar widgets use `contentWidth` and `contentHeight` properties to define the visual capsule size, while `implicitWidth` and `implicitHeight` control the click area:
 
 ```qml
-// Horizontal bar (top/bottom)
-implicitWidth: content.implicitWidth + Style.marginM * 2
-implicitHeight: Style.barHeight
+// Define visual content size
+readonly property real contentWidth: content.implicitWidth + Style.marginM * 2
+readonly property real contentHeight: Style.capsuleHeight
 
-// Vertical bar (left/right) - adapt to bar position
-readonly property string barPosition: Settings.data.bar.position
-readonly property bool isVertical: barPosition === "left" || barPosition === "right"
+// Click area matches content (bar loader may extend it)
+implicitWidth: contentWidth
+implicitHeight: contentHeight
+```
 
-implicitWidth: isVertical ? Style.capsuleHeight : content.implicitWidth + Style.marginM * 2
-implicitHeight: isVertical ? content.implicitHeight + Style.marginM * 2 : Style.capsuleHeight
+For vertical bar support (left/right positions):
+
+```qml
+readonly property string barPosition: Settings.getBarPositionForScreen(screen?.name)
+readonly property bool barIsVertical: barPosition === "left" || barPosition === "right"
+
+readonly property real contentWidth: barIsVertical ? Style.capsuleHeight : content.implicitWidth + Style.marginM * 2
+readonly property real contentHeight: barIsVertical ? content.implicitHeight + Style.marginM * 2 : Style.capsuleHeight
+
+implicitWidth: contentWidth
+implicitHeight: contentHeight
 ```
 
 ## Styling
@@ -89,18 +139,21 @@ implicitHeight: isVertical ? content.implicitHeight + Style.marginM * 2 : Style.
 Use Noctalia's built-in styling system for consistency:
 
 :::important[Required Styling]
-Bar widgets **must** have a background and an outline (`mOutline`) for proper visual integration with the bar. The outline requires these properties:
+Bar widgets **must** have a background and an outline for proper visual integration with the bar. Apply these to the `visualCapsule` Rectangle:
 
 ```qml
 Rectangle {
-  id: root
-  
-  // Required: Background color
-  color: Style.capsuleColor
-  
+  id: visualCapsule
+
+  // Required: Background color with hover support
+  color: mouseArea.containsMouse ? Color.mHover : Style.capsuleColor
+
   // Required: Outline border
   border.color: Style.capsuleBorderColor
   border.width: Style.capsuleBorderWidth
+
+  // Required: Rounded corners
+  radius: Style.radiusL
 }
 ```
 
@@ -112,7 +165,9 @@ Without these properties, the widget may not display correctly or may not integr
 import qs.Commons
 
 Rectangle {
-  // Surface colors
+  id: visualCapsule
+
+  // Surface colors (for visualCapsule background)
   color: Color.mSurface
   color: Color.mSurfaceVariant
   color: Style.capsuleColor // Recommended for bar widgets
@@ -209,20 +264,36 @@ MouseArea {
 ```
 
 ### Hover Effects
+
+Use a property binding on the `visualCapsule` color instead of `onEntered`/`onExited` handlers for cleaner, more reliable hover effects:
+
 ```qml
+Rectangle {
+  id: visualCapsule
+  // ... other properties
+
+  // Hover effect via binding - cleaner than onEntered/onExited
+  color: mouseArea.containsMouse ? Color.mHover : Style.capsuleColor
+}
+
 MouseArea {
+  id: mouseArea
   anchors.fill: parent
   hoverEnabled: true
+  cursorShape: Qt.PointingHandCursor
 
-  onEntered: {
-    root.color = Qt.lighter(root.color, 1.1)
-  }
-
-  onExited: {
-    root.color = Style.capsuleColor
+  onClicked: {
+    // Handle click
   }
 }
 ```
+
+:::tip
+Using a binding for color changes is more robust than imperative `onEntered`/`onExited` handlers because:
+- The color always reflects the current hover state
+- No risk of stuck hover states if the mouse exits unexpectedly
+- Works correctly when the widget is destroyed while hovered
+:::
 
 ### Tooltips
 ```qml
@@ -274,12 +345,36 @@ Add a right-click context menu to your widget using `NPopupContextMenu` and `Pan
 import qs.Services.UI
 import qs.Widgets
 
-Rectangle {
+Item {
   id: root
 
   property var pluginApi: null
   property ShellScreen screen
   // ... other properties
+
+  readonly property real contentWidth: content.implicitWidth + Style.marginM * 2
+  readonly property real contentHeight: Style.capsuleHeight
+
+  implicitWidth: contentWidth
+  implicitHeight: contentHeight
+
+  Rectangle {
+    id: visualCapsule
+    x: Style.pixelAlignCenter(parent.width, width)
+    y: Style.pixelAlignCenter(parent.height, height)
+    width: root.contentWidth
+    height: root.contentHeight
+    color: mouseArea.containsMouse ? Color.mHover : Style.capsuleColor
+    radius: Style.radiusL
+    border.color: Style.capsuleBorderColor
+    border.width: Style.capsuleBorderWidth
+
+    RowLayout {
+      id: content
+      anchors.centerIn: parent
+      // ... content
+    }
+  }
 
   NPopupContextMenu {
     id: contextMenu
@@ -312,7 +407,10 @@ Rectangle {
   }
 
   MouseArea {
+    id: mouseArea
     anchors.fill: parent
+    hoverEnabled: true
+    cursorShape: Qt.PointingHandCursor
     acceptedButtons: Qt.LeftButton | Qt.RightButton
 
     onClicked: (mouse) => {
@@ -492,7 +590,7 @@ import Quickshell
 import qs.Commons
 import qs.Widgets
 
-Rectangle {
+Item {
   id: root
 
   property var pluginApi: null
@@ -500,28 +598,38 @@ Rectangle {
   property string widgetId: ""
   property string section: ""
 
-  implicitWidth: row.implicitWidth + Style.marginM * 2
-  implicitHeight: Style.barHeight
+  readonly property real contentWidth: row.implicitWidth + Style.marginM * 2
+  readonly property real contentHeight: Style.capsuleHeight
 
-  color: Style.capsuleColor
-  radius: Style.radiusM
-  border.color: Style.capsuleBorderColor
-  border.width: Style.capsuleBorderWidth
+  implicitWidth: contentWidth
+  implicitHeight: contentHeight
 
-  RowLayout {
-    id: row
-    anchors.centerIn: parent
-    spacing: Style.marginS
+  Rectangle {
+    id: visualCapsule
+    x: Style.pixelAlignCenter(parent.width, width)
+    y: Style.pixelAlignCenter(parent.height, height)
+    width: root.contentWidth
+    height: root.contentHeight
+    color: Style.capsuleColor
+    radius: Style.radiusL
+    border.color: Style.capsuleBorderColor
+    border.width: Style.capsuleBorderWidth
 
-    NIcon {
-      icon: "check"
-      color: Color.mPrimary
-    }
+    RowLayout {
+      id: row
+      anchors.centerIn: parent
+      spacing: Style.marginS
 
-    NText {
-      text: "Ready"
-      color: Color.mOnSurface
-      pointSize: Style.barFontSize
+      NIcon {
+        icon: "check"
+        color: Color.mPrimary
+      }
+
+      NText {
+        text: "Ready"
+        color: Color.mOnSurface
+        pointSize: Style.barFontSize
+      }
     }
   }
 }
@@ -536,7 +644,7 @@ import qs.Commons
 import qs.Widgets
 import qs.Services.UI
 
-Rectangle {
+Item {
   id: root
 
   property var pluginApi: null
@@ -546,44 +654,47 @@ Rectangle {
 
   property int count: pluginApi?.pluginSettings?.count || 0
 
-  implicitWidth: row.implicitWidth + Style.marginM * 2
-  implicitHeight: Style.barHeight
+  readonly property real contentWidth: row.implicitWidth + Style.marginM * 2
+  readonly property real contentHeight: Style.capsuleHeight
 
-  color: Style.capsuleColor
-  radius: Style.radiusM
-  border.color: Style.capsuleBorderColor
-  border.width: Style.capsuleBorderWidth
+  implicitWidth: contentWidth
+  implicitHeight: contentHeight
 
-  RowLayout {
-    id: row
-    anchors.centerIn: parent
-    spacing: Style.marginS
+  Rectangle {
+    id: visualCapsule
+    x: Style.pixelAlignCenter(parent.width, width)
+    y: Style.pixelAlignCenter(parent.height, height)
+    width: root.contentWidth
+    height: root.contentHeight
+    color: mouseArea.containsMouse ? Color.mHover : Style.capsuleColor
+    radius: Style.radiusL
+    border.color: Style.capsuleBorderColor
+    border.width: Style.capsuleBorderWidth
 
-    NIcon {
-      icon: "numbers"
-      color: Color.mPrimary
-    }
+    RowLayout {
+      id: row
+      anchors.centerIn: parent
+      spacing: Style.marginS
 
-    NText {
-      text: root.count.toString()
-      color: Color.mOnSurface
-      pointSize: Style.barFontSize
-      font.weight: Font.Bold
+      NIcon {
+        icon: "numbers"
+        color: Color.mPrimary
+      }
+
+      NText {
+        text: root.count.toString()
+        color: Color.mOnSurface
+        pointSize: Style.barFontSize
+        font.weight: Font.Bold
+      }
     }
   }
 
   MouseArea {
+    id: mouseArea
     anchors.fill: parent
     hoverEnabled: true
     cursorShape: Qt.PointingHandCursor
-
-    onEntered: {
-      root.color = Qt.lighter(Style.capsuleColor, 1.1)
-    }
-
-    onExited: {
-      root.color = Style.capsuleColor
-    }
 
     onClicked: {
       root.count++
@@ -603,7 +714,7 @@ import Quickshell
 import qs.Commons
 import qs.Widgets
 
-Rectangle {
+Item {
   id: root
 
   property var pluginApi: null
@@ -615,42 +726,45 @@ Rectangle {
     pluginApi?.pluginSettings?.message ||
     pluginApi?.manifest?.metadata?.defaultSettings?.message || ""
 
-  implicitWidth: row.implicitWidth + Style.marginM * 2
-  implicitHeight: Style.barHeight
+  readonly property real contentWidth: row.implicitWidth + Style.marginM * 2
+  readonly property real contentHeight: Style.capsuleHeight
 
-  color: Style.capsuleColor
-  radius: Style.radiusM
-  border.color: Style.capsuleBorderColor
-  border.width: Style.capsuleBorderWidth
+  implicitWidth: contentWidth
+  implicitHeight: contentHeight
 
-  RowLayout {
-    id: row
-    anchors.centerIn: parent
-    spacing: Style.marginS
+  Rectangle {
+    id: visualCapsule
+    x: Style.pixelAlignCenter(parent.width, width)
+    y: Style.pixelAlignCenter(parent.height, height)
+    width: root.contentWidth
+    height: root.contentHeight
+    color: mouseArea.containsMouse ? Color.mHover : Style.capsuleColor
+    radius: Style.radiusL
+    border.color: Style.capsuleBorderColor
+    border.width: Style.capsuleBorderWidth
 
-    NIcon {
-      icon: "noctalia"
-    }
+    RowLayout {
+      id: row
+      anchors.centerIn: parent
+      spacing: Style.marginS
 
-    NText {
-      text: root.message
-      color: Color.mOnSurface
-      pointSize: Style.barFontSize
+      NIcon {
+        icon: "noctalia"
+      }
+
+      NText {
+        text: root.message
+        color: Color.mOnSurface
+        pointSize: Style.barFontSize
+      }
     }
   }
 
   MouseArea {
+    id: mouseArea
     anchors.fill: parent
     hoverEnabled: true
     cursorShape: Qt.PointingHandCursor
-
-    onEntered: {
-      root.color = Qt.lighter(Style.capsuleColor, 1.1)
-    }
-
-    onExited: {
-      root.color = Style.capsuleColor
-    }
 
     onClicked: {
       if (pluginApi) {
@@ -672,7 +786,7 @@ import Quickshell
 import qs.Commons
 import qs.Widgets
 
-Rectangle {
+Item {
   id: root
 
   property var pluginApi: null
@@ -680,51 +794,74 @@ Rectangle {
   property string widgetId: ""
   property string section: ""
 
-  readonly property string barPosition: Settings.data.bar.position
-  readonly property bool isVertical: barPosition === "left" || barPosition === "right"
+  readonly property string barPosition: Settings.getBarPositionForScreen(screen?.name)
+  readonly property bool barIsVertical: barPosition === "left" || barPosition === "right"
 
-  implicitWidth: isVertical ? Style.capsuleHeight : layout.implicitWidth + Style.marginM * 2
-  implicitHeight: isVertical ? layout.implicitHeight + Style.marginM * 2 : Style.capsuleHeight
+  readonly property real contentWidth: barIsVertical ? Style.capsuleHeight : layout.implicitWidth + Style.marginM * 2
+  readonly property real contentHeight: barIsVertical ? layout.implicitHeight + Style.marginM * 2 : Style.capsuleHeight
 
-  color: Style.capsuleColor
-  radius: Style.radiusM
+  implicitWidth: contentWidth
+  implicitHeight: contentHeight
 
-  Item {
-    id: layout
-    anchors.centerIn: parent
-    implicitWidth: rowLayout.visible ? rowLayout.implicitWidth : colLayout.implicitWidth
-    implicitHeight: rowLayout.visible ? rowLayout.implicitHeight : colLayout.implicitHeight
+  Rectangle {
+    id: visualCapsule
+    x: Style.pixelAlignCenter(parent.width, width)
+    y: Style.pixelAlignCenter(parent.height, height)
+    width: root.contentWidth
+    height: root.contentHeight
+    color: mouseArea.containsMouse ? Color.mHover : Style.capsuleColor
+    radius: Style.radiusL
+    border.color: Style.capsuleBorderColor
+    border.width: Style.capsuleBorderWidth
 
-    RowLayout {
-      id: rowLayout
-      visible: !root.isVertical
-      spacing: Style.marginS
+    Item {
+      id: layout
+      anchors.centerIn: parent
+      implicitWidth: rowLayout.visible ? rowLayout.implicitWidth : colLayout.implicitWidth
+      implicitHeight: rowLayout.visible ? rowLayout.implicitHeight : colLayout.implicitHeight
 
-      NIcon {
-        icon: "heart"
-        color: Color.mPrimary
+      RowLayout {
+        id: rowLayout
+        visible: !root.barIsVertical
+        spacing: Style.marginS
+
+        NIcon {
+          icon: "heart"
+          color: Color.mPrimary
+        }
+
+        NText {
+          text: "Widget"
+          color: Color.mOnSurface
+        }
       }
 
-      NText {
-        text: "Widget"
-        color: Color.mOnSurface
+      ColumnLayout {
+        id: colLayout
+        visible: root.barIsVertical
+        spacing: Style.marginS
+
+        NIcon {
+          icon: "heart"
+          color: Color.mPrimary
+        }
+
+        NText {
+          text: "Widget"
+          color: Color.mOnSurface
+        }
       }
     }
+  }
 
-    ColumnLayout {
-      id: colLayout
-      visible: root.isVertical
-      spacing: Style.marginS
+  MouseArea {
+    id: mouseArea
+    anchors.fill: parent
+    hoverEnabled: true
+    cursorShape: Qt.PointingHandCursor
 
-      NIcon {
-        icon: "heart"
-        color: Color.mPrimary
-      }
-
-      NText {
-        text: "Widget"
-        color: Color.mOnSurface
-      }
+    onClicked: {
+      // Handle click
     }
   }
 }
@@ -732,15 +869,16 @@ Rectangle {
 
 ## Best Practices
 
-1. **Keep it small**: Bar widgets should be compact and unobtrusive
-2. **Use consistent styling**: Stick to Noctalia's design system
-3. **Use `Style.barFontSize` for text**: Ensures consistent sizing with other bar elements
-4. **Handle missing data**: Always provide fallbacks for settings and data
-5. **Respect dark mode**: Use `Color.m*` colors that adapt to theme
-6. **Add hover effects**: Provide visual feedback for interactive elements
-7. **Log important events**: Use Logger for debugging
-8. **Test on vertical bars**: Ensure your widget works in all bar positions
-9. **Optimize performance**: Avoid expensive operations in the widget
+1. **Use the visual capsule pattern**: `Item` root with centered `Rectangle` visualCapsule for extended click areas
+2. **Keep it small**: Bar widgets should be compact and unobtrusive
+3. **Use consistent styling**: Stick to Noctalia's design system
+4. **Use `Style.barFontSize` for text**: Ensures consistent sizing with other bar elements
+5. **Handle missing data**: Always provide fallbacks for settings and data
+6. **Respect dark mode**: Use `Color.m*` colors that adapt to theme
+7. **Use binding for hover effects**: `color: mouseArea.containsMouse ? Color.mHover : Style.capsuleColor`
+8. **Log important events**: Use Logger for debugging
+9. **Test on vertical bars**: Ensure your widget works in all bar positions
+10. **Optimize performance**: Avoid expensive operations in the widget
 
 ## See Also
 
