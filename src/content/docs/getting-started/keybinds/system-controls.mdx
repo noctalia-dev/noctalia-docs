@@ -18,15 +18,20 @@ Manage your hardware and system state directly through the shell.
 | **Input Down** | <IpcCommand command="volume decreaseInput" /> | Decrease input volume |
 | **Mute Input** | <IpcCommand command="volume muteInput" /> | Toggle input mute |
 | **Toggle Panel** | <IpcCommand command="volume togglePanel" /> | Toggle audio panel |
+| **Open Panel** | <IpcCommand command="volume openPanel" /> | Open audio panel |
+| **Close Panel** | <IpcCommand command="volume closePanel" /> | Close audio panel |
 
 ### Media Controls
 
 | Function | Command | Description |
-|----------|---------|-------------|
+|---|---|---|
 | **Play/Pause** | <IpcCommand command="media playPause" /> | Toggle playback |
+| **Play** | <IpcCommand command="media play" /> | Play media |
+| **Pause** | <IpcCommand command="media pause" /> | Pause media |
 | **Next** | <IpcCommand command="media next" /> | Next track |
 | **Previous** | <IpcCommand command="media previous" /> | Previous track |
 | **Seek Rel.** | <IpcCommand command="media seekRelative $offset" /> | Seek by seconds |
+| **Seek By Ratio** | <IpcCommand command="media seekByRatio $position" /> | Seek to position (0.0-1.0) |
 | **Toggle Panel** | <IpcCommand command="media toggle" /> | Toggle media panel |
 
 ### Network & Connectivity
@@ -34,8 +39,12 @@ Manage your hardware and system state directly through the shell.
 | Function | Command | Description |
 |----------|---------|-------------|
 | **WiFi Toggle** | <IpcCommand command="wifi toggle" /> | Toggle WiFi |
+| **WiFi Enable** | <IpcCommand command="wifi enable" /> | Enable WiFi |
+| **WiFi Disable** | <IpcCommand command="wifi disable" /> | Disable WiFi |
 | **WiFi Panel** | <IpcCommand command="wifi togglePanel" /> | Toggle WiFi panel |
 | **BT Toggle** | <IpcCommand command="bluetooth toggle" /> | Toggle Bluetooth |
+| **BT Enable** | <IpcCommand command="bluetooth enable" /> | Enable Bluetooth |
+| **BT Disable** | <IpcCommand command="bluetooth disable" /> | Disable Bluetooth |
 | **BT Panel** | <IpcCommand command="bluetooth togglePanel" /> | Toggle Bluetooth panel |
 
 ### Display & Brightness
@@ -44,12 +53,30 @@ Manage your hardware and system state directly through the shell.
 |----------|---------|-------------|
 | **Brightness Up** | <IpcCommand command="brightness increase" /> | Increase brightness |
 | **Brightness Down** | <IpcCommand command="brightness decrease" /> | Decrease brightness |
+| **Set Brightness** | <IpcCommand command="brightness set <value>" /> | Set brightness (0-100) |
 | **NightLight** | <IpcCommand command="nightLight toggle" /> | Toggle night light |
 
-### Battery & Power
+#### Screen Recorder
+
+:::warning[Deprecated]
+The `screenRecorder` IPC commands have been moved to the [Screen Recorder](/plugins/screen-recorder/) plugin. The old IPC syntax is no longer part of the core shell. See the plugin [README](https://github.com/noctalia-dev/noctalia-plugins/blob/main/screen-recorder/README.md) for the current IPC commands.
+:::
+
+### Battery Management
 
 | Function | Command | Description |
 |----------|---------|-------------|
 | **Charging Modes** | <IpcCommand command="batteryManager cycle" /> | Cycle charging modes |
+| **Full Capacity** | <IpcCommand command="batteryManager set full" /> | Set Full capacity mode |
+| **Balanced** | <IpcCommand command="batteryManager set balanced" /> | Set Balanced mode |
+| **Lifespan** | <IpcCommand command="batteryManager set lifespan" /> | Set Lifespan mode |
 | **Battery Panel** | <IpcCommand command="battery togglePanel" /> | Toggle battery panel |
+
+### Power Profile Management
+
+| Function | Command | Description |
+|----------|---------|-------------|
 | **Power Profile** | <IpcCommand command="powerProfile cycle" /> | Cycle power profiles |
+| **Power Saver** | <IpcCommand command="powerProfile set powersaver" /> | Set Power Saver mode |
+| **Balanced** | <IpcCommand command="powerProfile set balanced" /> | Set Balanced mode |
+| **Performance** | <IpcCommand command="powerProfile set performance" /> | Set Performance mode |
