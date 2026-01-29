@@ -1,0 +1,75 @@
+---
+interface Props {
+  command: string;
+}
+
+const { command } = Astro.props;
+const fullCommand = `ipc call ${command}`;
+---
+
+<span class="ipc-wrapper">
+  <code class="ipc-command" title={fullCommand}>{command}</code>
+  <button class="copy-btn" aria-label="Copy to clipboard" data-command={fullCommand}>
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+  </button>
+</span>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation(); 
+        
+      const command = btn.getAttribute('data-command');
+      if (command) {
+          navigator.clipboard.writeText(command);
+          
+          // Visual feedback
+          const originalHtml = btn.innerHTML;
+          btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"/></svg>`;
+          setTimeout(() => {
+            btn.innerHTML = originalHtml;
+          }, 1000);
+      }
+    });
+  });
+</script>
+
+<style>
+  .ipc-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    vertical-align: middle;
+  }
+
+  .ipc-command {
+    padding: 0.2rem 0.4rem;
+    background-color: var(--sl-color-bg-soft);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 4px;
+    font-family: var(--sl-font-mono);
+    font-size: 0.9em;
+    cursor: help;
+    white-space: nowrap;
+    line-height: 1;
+  }
+
+  .copy-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    margin: 0;
+    cursor: pointer;
+    color: var(--sl-color-text-soft);
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  
+  .copy-btn:hover {
+    color: var(--sl-color-text);
+    background-color: var(--sl-color-bg-soft);
+  }
+</style>

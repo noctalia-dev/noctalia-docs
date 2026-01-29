@@ -9,26 +9,34 @@
 /* Dark Theme */
 :root[data-theme='dark'] {
 	/* Brand & accents */
-	--sl-color-accent: #fff59b; /* Primary */
+	--sl-color-accent: #fff59b;
+	/* Primary */
 	--sl-color-text-accent: #fff59b;
 	--sl-border-radius: 10px;
 
 	/* Surfaces & text */
-	--sl-color-bg: #070722; /* Surface */
-	--sl-color-bg-soft: #11112d; /* Surface Variant */
-	--sl-color-text: #f3edf7; /* On Surface */
-	--sl-color-text-soft: #7c80b4; /* On Surface Variant */
-	--sl-color-hairline: #21215F; /* Outline */
+	--sl-color-bg: #070722;
+	/* Surface */
+	--sl-color-bg-soft: #11112d;
+	/* Surface Variant */
+	--sl-color-text: #f3edf7;
+	/* On Surface */
+	--sl-color-text-soft: #7c80b4;
+	/* On Surface Variant */
+	--sl-color-hairline: #21215F;
+	/* Outline */
 	--sl-color-bg-nav: var(--sl-color-bg-soft);
-	--sl-color-black:  var(--sl-color-bg-soft);
-	--sl-color-bg-sidebar:  var(--sl-color-bg-soft);
+	--sl-color-black: var(--sl-color-bg-soft);
+	--sl-color-bg-sidebar: var(--sl-color-bg-soft);
 
 	/* Links */
 	--sl-color-link: var(--sl-color-accent);
-	--sl-color-link-hover: #9BFECE; /* Secondary */
+	--sl-color-link-hover: #9BFECE;
+	/* Secondary */
 
 	/* Shadows */
-	--sl-shadow-color: #7c80b4; /* Shadow */
+	--sl-shadow-color: #7c80b4;
+	/* Shadow */
 
 	/* Slightly brighter than surface variant */
 	--ec-frm-edBg: #151538;
@@ -38,27 +46,35 @@
 /* Light Theme */
 :root[data-theme='light'] {
 	/* Brand & accents */
-	--sl-color-accent: #5d65f5; /* Primary */
+	--sl-color-accent: #5d65f5;
+	/* Primary */
 	--sl-color-text-accent: #5d65f5;
 	--sl-border-radius: 10px;
 
 
 	/* Surfaces & text */
-	--sl-color-bg: #e6e8fa ; /* Surface */
-	--sl-color-bg-soft: #eff0ff; /* Surface Variant */
-	--sl-color-text: #4b55c8; /* On Surface */
-	--sl-color-text-soft: #4b55c8; /* On Surface Variant */
-	--sl-color-hairline: #8288fc; /* Outline */
+	--sl-color-bg: #e6e8fa;
+	/* Surface */
+	--sl-color-bg-soft: #eff0ff;
+	/* Surface Variant */
+	--sl-color-text: #4b55c8;
+	/* On Surface */
+	--sl-color-text-soft: #4b55c8;
+	/* On Surface Variant */
+	--sl-color-hairline: #8288fc;
+	/* Outline */
 	--sl-color-bg-nav: var(--sl-color-bg-soft);
-	--sl-color-black:  var(--sl-color-bg-soft);
-	--sl-color-bg-sidebar:  var(--sl-color-bg-soft);
+	--sl-color-black: var(--sl-color-bg-soft);
+	--sl-color-bg-sidebar: var(--sl-color-bg-soft);
 
 	/* Links */
 	--sl-color-link: var(--sl-color-accent);
-	--sl-color-link-hover: #fef29a; /* Secondary */
+	--sl-color-link-hover: #fef29a;
+	/* Secondary */
 
 	/* Shadows */
-	--sl-shadow-color: #4b55c8; /* Shadow */
+	--sl-shadow-color: #4b55c8;
+	/* Shadow */
 
 	/* Slightly darker than surface variant */
 	--ec-frm-edBg: #e0e2ff;
@@ -70,10 +86,12 @@
 .repo-card {
 	transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
+
 .repo-card article {
 	border-radius: var(--sl-border-radius);
 	border: 1px solid var(--sl-color-hairline);
 }
+
 .repo-card:hover {
 	transform: translateY(-2px);
 	filter: drop-shadow(0 2px 8px var(--sl-shadow-color));
@@ -88,15 +106,15 @@ summary {
 }
 
 /* Nested sidebar groups (subcategories) */
-details details > summary .group-label .large,
-details details > summary .group-label {
+details details>summary .group-label .large,
+details details>summary .group-label {
 	font-size: 0.95em !important;
 	font-weight: 600 !important;
-	
+
 }
 
-details details > summary:hover .group-label .large,
-details details > summary:hover .group-label {
+details details>summary:hover .group-label .large,
+details details>summary:hover .group-label {
 	color: var(--sl-color-text) !important;
 }
 
@@ -173,6 +191,7 @@ details details > summary:hover .group-label {
 		opacity: 0;
 		transform: scale(0.95);
 	}
+
 	to {
 		opacity: 1;
 		transform: scale(1);
@@ -225,11 +244,11 @@ snake-toc nav {
 	position: relative;
 }
 
-snake-toc nav > ul {
+snake-toc nav>ul {
 	position: relative;
 }
 
-snake-toc nav > ul::before {
+snake-toc nav>ul::before {
 	content: '';
 	position: absolute;
 	left: 0;

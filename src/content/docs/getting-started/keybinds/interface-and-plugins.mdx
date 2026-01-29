@@ -1,0 +1,63 @@
+---
+title: Interface & Plugins
+description: Commands for security, notifications, appearance and plugins.
+---
+
+import IpcCommand from '../../../../components/IpcCommand.astro';
+
+Customize and secure your desktop experience with these commands.
+
+### Security & Privacy
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Lock Screen** | <IpcCommand command="lockScreen lock" /> | Lock your screen |
+| **Idle Inhibit** | <IpcCommand command="idleInhibitor toggle" /> | Toggle idle inhibitor |
+
+### Notifications
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **History** | <IpcCommand command="notifications toggleHistory" /> | View past notifications |
+| **Do Not Disturb** | <IpcCommand command="notifications toggleDND" /> | Toggle silence mode |
+| **Clear All** | <IpcCommand command="notifications clear" /> | Clear notification history |
+| **Dismiss All** | <IpcCommand command="notifications dismissAll" /> | Dismiss active notifications |
+
+### Feedback & UI
+
+#### Toast Notifications
+
+Display transient messages with a JSON payload using `qs -c noctalia-shell ipc call toast send`.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `title` | string | Yes | Toast title |
+| `body` | string | No | Toast body/description |
+| `type` | string | No | `notice` (default), `warning`, or `error` |
+
+#### Legacy OSD
+
+:::caution
+The `osd` commands are deprecated. Use Toast Notifications instead.
+:::
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Show Text** | <IpcCommand command="osd showText $text" /> | Display text on OSD |
+
+### Appearance
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Bar** | <IpcCommand command="bar toggle" /> | Toggle bar visibility |
+| **Dock** | <IpcCommand command="dock toggle" /> | Toggle dock visibility |
+| **Widgets** | <IpcCommand command="desktopWidgets toggle" /> | Toggle desktop widgets |
+| **Dark Mode** | <IpcCommand command="darkMode toggle" /> | Toggle system theme |
+| **Wallpaper** | <IpcCommand command="wallpaper toggle" /> | Toggle wallpaper selector |
+
+### Plugin Controls
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Settings** | <IpcCommand command="plugin openSettings $pluginId" /> | Open plugin settings |
+| **Panel** | <IpcCommand command="plugin togglePanel $pluginId" /> | Toggle plugin panel |

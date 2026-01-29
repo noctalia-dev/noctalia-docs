@@ -1,232 +1,89 @@
 ---
 title: Keybinds
-description: Start here to set up and use Noctalia.
+description: Overview of available IPC commands and configuration examples.
 sidebar:
   order: 40
 ---
 
-import { Tabs, TabItem, Aside, Steps, Badge } from '@astrojs/starlight/components';
+import { LinkCard, CardGrid, Aside, Steps } from '@astrojs/starlight/components';
 
-Take full control of Noctalia with keyboard shortcuts and IPC (Inter-Process Communication). This page covers all available commands you can bind to your favorite keys.
+Take full control of Noctalia with keyboard shortcuts and IPC commands. This section covers all available commands you can bind to your favorite keys.
 
-<Aside type="tip" title="Quick Shell Command Prefix">
-Depending on your installation, the command prefix may vary:
-- **NixOS Flake**: Use `noctalia-shell` directly.
-- **Others**: Use `qs -c noctalia-shell`.
-- **Manual**: Use `qs` if you have Noctalia in `~/.config/quickshell/` if it is in a different directory you have to use `qs -c /path/to/noctalia-shell`.
-</Aside>
+:::tip[Installation-specific commands]
+- **NixOS Flake users**: Use `noctalia-shell` directly instead of `qs -c noctalia-shell`
+- **PikaOS**: Use `qs` instead of `qs -c noctalia-shell`
+- **Manual installation users**: If you have Noctalia in `~/.config/quickshell/`, you can use `qs ipc call...` directly
+:::
 
 ## Available Commands
 
-### Core Functions
+Every aspect of the shell can be controlled via IPC (Inter-Process Communication). Commands are grouped into the following categories:
 
-| Function | Command | Description |
-|----------|---------|-------------|
-| **Launcher** | `ipc call launcher toggle` | Open/close the application launcher |
-| **Control Center** | `ipc call controlCenter toggle` | Toggle the control center visibility |
-| **Settings** | `ipc call settings toggle` | Open/close the settings window |
+<Aside type="note">
+In the subpages below, commands are shown in their shortened form (e.g., `launcher toggle`). Hover over any command to see the full `ipc call` syntax, or use the copy icon to copy the full command to your clipboard.
+</Aside>
 
-### Quick Access
-
-| Function | Command | Description |
-|----------|---------|-------------|
-| **Clipboard** | `ipc call launcher clipboard` | Access your clipboard history |
-| **Emoji** | `ipc call launcher emoji` | Quick emoji selector access |
-| **Command** | `ipc call launcher command` | Quick command runner access |
-| **Calendar** | `ipc call calendar toggle` | Open/close the Calendar window |
-| **Session** | `ipc call sessionMenu toggle` | Logout, reboot, shutdown... |
-| **Lock & Suspend** | `ipc call sessionMenu lockAndSuspend` | Lock screen and suspend system |
-| **System Monitor** | `ipc call systemMonitor toggle` | Open/close system monitor |
-
-### System Controls
-
-<Tabs>
-  <TabItem label="Audio">
-    | Function | Command | Description |
-    |----------|---------|-------------|
-    | **Volume Up** | `ipc call volume increase` | Increase system volume |
-    | **Volume Down** | `ipc call volume decrease` | Decrease system volume |
-    | **Mute Output** | `ipc call volume muteOutput` | Toggle output audio mute |
-    | **Input Up** | `ipc call volume increaseInput` | Increase input volume |
-    | **Input Down** | `ipc call volume decreaseInput` | Decrease input volume |
-    | **Mute Input** | `ipc call volume muteInput` | Toggle input audio mute |
-    | **Audio Panel** | `ipc call volume togglePanel` | Toggle the audio panel |
-  </TabItem>
-
-  <TabItem label="Media">
-    | Function | Command | Description |
-    |----------|---------|-------------|
-    | **Play/Pause** | `ipc call media playPause` | Toggle play/pause |
-    | **Next** | `ipc call media next` | Next media track |
-    | **Previous** | `ipc call media previous` | Previous media track |
-    | **Seek Rel.** | `ipc call media seekRelative $offset` | Seek by seconds |
-    | **Media Panel** | `ipc call media toggle` | Toggle media panel |
-  </TabItem>
-
-  <TabItem label="Connectivity">
-    | Function | Command | Description |
-    |----------|---------|-------------|
-    | **WiFi Toggle** | `ipc call wifi toggle` | WiFi on/off |
-    | **WiFi Panel** | `ipc call wifi togglePanel` | Toggle WiFi panel |
-    | **BT Toggle** | `ipc call bluetooth toggle` | Bluetooth on/off |
-    | **BT Panel** | `ipc call bluetooth togglePanel` | Toggle Bluetooth panel |
-  </TabItem>
-
-  <TabItem label="Display / Power">
-    | Function | Command | Description |
-    |----------|---------|-------------|
-    | **Brightness Up** | `ipc call brightness increase` | Increase brightness |
-    | **Brightness Down** | `ipc call brightness decrease` | Decrease brightness |
-    | **NightLight** | `ipc call nightLight toggle` | Toggle night light |
-    | **Power Profile** | `ipc call powerProfile cycle` | Cycle power profiles |
-    | **Battery Panel** | `ipc call battery togglePanel` | Toggle battery panel |
-  </TabItem>
-</Tabs>
-
-### Security & Privacy
-
-| Function | Command | Description |
-|----------|---------|-------------|
-| **Lock Screen** | `ipc call lockScreen lock` | Lock your screen |
-| **Idle Inhibit** | `ipc call idleInhibitor toggle` | Toggle idle inhibitor |
-
-### Notifications
-
-| Function | Command | Description |
-|----------|---------|-------------|
-| **History** | `ipc call notifications toggleHistory` | View past notifications |
-| **Do Not Disturb** | `ipc call notifications toggleDND` | Toggle silence mode |
-| **Clear All** | `ipc call notifications clear` | Clear notification history |
-| **Dismiss All** | `ipc call notifications dismissAll` | Dismiss active notifications |
-
-### Feedback & UI
-
-#### Toast Notifications
-
-Display transient messages with a JSON payload.
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `title` | string | Yes | Toast title |
-| `body` | string | No | Toast body/description |
-| `type` | string | No | `notice` (default), `warning`, or `error` |
-
-**Example:**
-```bash
-qs -c noctalia-shell ipc call toast send '{"title": "Low battery", "type": "warning"}'
-```
-
-### Appearance
-
-| Function | Command | Description |
-|----------|---------|-------------|
-| **Bar** | `ipc call bar toggle` | Toggle bar visibility |
-| **Dock** | `ipc call dock toggle` | Toggle dock visibility |
-| **Widgets** | `ipc call desktopWidgets toggle` | Toggle desktop widgets |
-| **Edit Widgets** | `ipc call desktopWidgets edit` | Enter widget edit mode |
-| **Dark Mode** | `ipc call darkMode toggle` | Toggle system theme |
-| **Wallpaper** | `ipc call wallpaper toggle` | Toggle wallpaper selector |
-| **Automation** | `ipc call wallpaper toggleAutomation` | Toggle wallpaper automation |
-
-### Plugin Controls
-
-Control installed plugins via IPC. Replace `$pluginId` with the actual plugin identifier (e.g., `todo`, `pomodoro`).
-
-| Function | Command | Description |
-|----------|---------|-------------|
-| **Settings** | `ipc call plugin openSettings $pluginId` | Open plugin settings |
-| **Panel** | `ipc call plugin togglePanel $pluginId` | Toggle plugin panel |
-
-
-
-### Misc
-
-| Function | Command | Description |
-|----------|---------|-------------|
-| **State** | `ipc call state all` | Output current settings state |
-| **Location** | `ipc call location set $name` | Set geographic location |
-
+<CardGrid>
+  <LinkCard title="Core & Navigation" description="Launcher, Control Center, Settings and basic utilities." href="/getting-started/keybinds/core-and-navigation/" />
+  <LinkCard title="System Controls" description="Audio, Media, Connectivity, Display and Power management." href="/getting-started/keybinds/system-controls/" />
+  <LinkCard title="Interface & Plugins" description="Notifications, Appearance, Security and Plugin controls." href="/getting-started/keybinds/interface-and-plugins/" />
+</CardGrid>
 
 ## Example Configurations
 
 Apply these binds in your window manager configuration to integrate Noctalia.
 
-<Tabs>
-  <TabItem label="Niri">
-    <Steps>
-    1. Open `~/.config/niri/config.kdl`.
-    2. Add the following to your `binds` section:
+<details>
+<summary><strong>Niri Configuration</strong></summary>
 
-        ```kdl
-        // Core Noctalia binds
-        Mod+Space { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
-        Mod+S { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "controlCenter" "toggle"; }
-        Mod+Comma { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "settings" "toggle"; }
+Add these binds to your `~/.config/niri/config.kdl`:
 
-        // Audio & Brightness
-        XF86AudioRaiseVolume { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "increase"; }
-        XF86AudioLowerVolume { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "decrease"; }
-        XF86AudioMute { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "muteOutput"; }
-        XF86MonBrightnessUp { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "increase"; }
-        XF86MonBrightnessDown { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "decrease"; }
-        ```
-    </Steps>
-  </TabItem>
+```kdl
+binds {
+    // Core Noctalia binds
+    Mod+Space { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
+    Mod+S { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "controlCenter" "toggle"; }
+    Mod+Comma { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "settings" "toggle"; }
 
-  <TabItem label="Hyprland">
-    <Steps>
-    1. Open `~/.config/hypr/hyprland.conf`.
-    2. Add these binds:
+    // Audio & Brightness
+    XF86AudioRaiseVolume { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "increase"; }
+    XF86AudioLowerVolume { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "decrease"; }
+    XF86AudioMute { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "muteOutput"; }
+    XF86MonBrightnessUp { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "increase"; }
+    XF86MonBrightnessDown { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "decrease"; }
+}
+```
 
-        ```ini
-        $ipc = qs -c noctalia-shell ipc call
+</details>
 
-        # Core binds
-        bind = SUPER, SPACE, exec, $ipc launcher toggle
-        bind = SUPER, S, exec, $ipc controlCenter toggle
-        bind = SUPER, comma, exec, $ipc settings toggle
+<details>
+<summary><strong>Hyprland Configuration</strong></summary>
 
-        # Media keys
-        bindel = , XF86AudioRaiseVolume, exec, $ipc volume increase
-        bindel = , XF86AudioLowerVolume, exec, $ipc volume decrease
-        bindl = , XF86AudioMute, exec, $ipc volume muteOutput
-        bindel = , XF86MonBrightnessUp, exec, $ipc brightness increase
-        bindel = , XF86MonBrightnessDown, exec, $ipc brightness decrease
-        ```
-    </Steps>
-  </TabItem>
-</Tabs>
+Add these binds to your `hyprland.conf`:
+
+```ini
+$ipc = qs -c noctalia-shell ipc call
+
+# Core binds
+bind = SUPER, SPACE, exec, $ipc launcher toggle
+bind = SUPER, S, exec, $ipc controlCenter toggle
+bind = SUPER, comma, exec, $ipc settings toggle
+
+# Media keys
+bindel = , XF86AudioRaiseVolume, exec, $ipc volume increase
+bindel = , XF86AudioLowerVolume, exec, $ipc volume decrease
+bindl = , XF86AudioMute, exec, $ipc volume muteOutput
+bindel = , XF86MonBrightnessUp, exec, $ipc brightness increase
+bindel = , XF86MonBrightnessDown, exec, $ipc brightness decrease
+```
+
+</details>
 
 ## Discovering Commands
 
-Not sure what else you can control? Noctalia allows you to inspect available IPC targets and handlers directly from the terminal.
+Not sure what else you can control? You can see all IPC commands via this terminal command:
 
 **List all targets**:
     ```bash
     qs -c noctalia-shell ipc show
     ```
-
-### Commands with Arguments
-
-Some handlers require arguments. Provide them sequentially after the command name.
-
-```bash
-# Set specific wallpaper
-qs -c noctalia-shell ipc call wallpaper set "/path/to/image.jpg" "DP-1"
-
-# Seek media relative (5 seconds)
-qs -c noctalia-shell ipc call media seekRelative 5
-```
-
----
-
-<Aside type="tip" title="Custom Shell Scripts">
-Combine multiple IPC calls for complex automated workflows.
-
-```bash
-#!/bin/bash
-# High Performance Mode + Dark Theme
-qs -c noctalia-shell ipc call powerProfile set performance
-qs -c noctalia-shell ipc call darkMode setDark
-```
-</Aside>

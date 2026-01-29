@@ -1,0 +1,28 @@
+---
+title: Core & Navigation
+description: Essential commands for navigating and controlling the shell.
+---
+
+import IpcCommand from '../../../../components/IpcCommand.astro';
+
+These are the most common commands used for opening basic shell interfaces.
+
+### Core Functions
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Launcher** | <IpcCommand command="launcher toggle" /> | Open/close application launcher |
+| **Control Center** | <IpcCommand command="controlCenter toggle" /> | Toggle control center visibility |
+| **Settings** | <IpcCommand command="settings toggle" /> | Open/close settings window |
+
+### Quick Access
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Clipboard** | <IpcCommand command="launcher clipboard" /> | Access clipboard history |
+| **Emoji** | <IpcCommand command="launcher emoji" /> | Quick emoji selector access |
+| **Command** | <IpcCommand command="launcher command" /> | Quick command runner access |
+| **Calendar** | <IpcCommand command="calendar toggle" /> | Open/close Calendar window |
+| **Session** | <IpcCommand command="sessionMenu toggle" /> | Logout, reboot, shutdown... |
+| **Lock & Suspend** | <IpcCommand command="sessionMenu lockAndSuspend" /> | Lock screen and suspend system |
+| **System Monitor** | <IpcCommand command="systemMonitor toggle" /> | Open/close system monitor |

@@ -24,7 +24,6 @@ export default defineConfig({
       logo: {
         src: "./src/assets/noctalia-logo.svg",
         alt: "Noctalia",
-        href: "https://noctalia.dev"
       },
       social: [
         {
@@ -54,7 +53,15 @@ export default defineConfig({
                 { label: "Hyprland", link: "getting-started/compositor-settings/hyprland/" },
               ],
             },
-            { label: "Keybinds", link: "getting-started/keybinds/" },
+            {
+              label: "Keybinds",
+              items: [
+                { label: "Overview", link: "getting-started/keybinds/" },
+                { label: "Core & Navigation", link: "getting-started/keybinds/core-and-navigation/" },
+                { label: "System Controls", link: "getting-started/keybinds/system-controls/" },
+                { label: "Interface & Plugins", link: "getting-started/keybinds/interface-and-plugins/" },
+              ],
+            },
             { label: "FAQ", link: "getting-started/faq/" },
             { label: "Uninstall", link: "getting-started/uninstall/" },
           ],

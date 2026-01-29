@@ -1,0 +1,55 @@
+---
+title: System Controls
+description: Commands for controlling audio, media, network, and power.
+---
+
+import IpcCommand from '../../../../components/IpcCommand.astro';
+
+Manage your hardware and system state directly through the shell.
+
+### Audio Management
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Volume Up** | <IpcCommand command="volume increase" /> | Increase output volume |
+| **Volume Down** | <IpcCommand command="volume decrease" /> | Decrease output volume |
+| **Mute Output** | <IpcCommand command="volume muteOutput" /> | Toggle output mute |
+| **Input Up** | <IpcCommand command="volume increaseInput" /> | Increase input volume |
+| **Input Down** | <IpcCommand command="volume decreaseInput" /> | Decrease input volume |
+| **Mute Input** | <IpcCommand command="volume muteInput" /> | Toggle input mute |
+| **Toggle Panel** | <IpcCommand command="volume togglePanel" /> | Toggle audio panel |
+
+### Media Controls
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Play/Pause** | <IpcCommand command="media playPause" /> | Toggle playback |
+| **Next** | <IpcCommand command="media next" /> | Next track |
+| **Previous** | <IpcCommand command="media previous" /> | Previous track |
+| **Seek Rel.** | <IpcCommand command="media seekRelative $offset" /> | Seek by seconds |
+| **Toggle Panel** | <IpcCommand command="media toggle" /> | Toggle media panel |
+
+### Network & Connectivity
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **WiFi Toggle** | <IpcCommand command="wifi toggle" /> | Toggle WiFi |
+| **WiFi Panel** | <IpcCommand command="wifi togglePanel" /> | Toggle WiFi panel |
+| **BT Toggle** | <IpcCommand command="bluetooth toggle" /> | Toggle Bluetooth |
+| **BT Panel** | <IpcCommand command="bluetooth togglePanel" /> | Toggle Bluetooth panel |
+
+### Display & Brightness
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Brightness Up** | <IpcCommand command="brightness increase" /> | Increase brightness |
+| **Brightness Down** | <IpcCommand command="brightness decrease" /> | Decrease brightness |
+| **NightLight** | <IpcCommand command="nightLight toggle" /> | Toggle night light |
+
+### Battery & Power
+
+| Function | Command | Description |
+|----------|---------|-------------|
+| **Charging Modes** | <IpcCommand command="batteryManager cycle" /> | Cycle charging modes |
+| **Battery Panel** | <IpcCommand command="battery togglePanel" /> | Toggle battery panel |
+| **Power Profile** | <IpcCommand command="powerProfile cycle" /> | Cycle power profiles |
