@@ -93,6 +93,10 @@ exec-once = systemctl --user start hyprland-session.target
 ```sh
 systemctl --user add-wants hyprland-session.target noctalia.service
 ```
+Optionally bind xdg-desktop-autostart to it as well:
+```sh
+systemctl --user add-wants hyprland-session.target xdg-desktop-autostart.target
+```
 
 ##### 4. Lastly
 Reboot, re-log in, or simply run `systemctl --user start hyprland-session.target` (or however you named it for your compositor) and everything set to start with your compositor of choice (Hyprland in this case), including Noctalia, will start and stop when you log out or stop the target for whatever reason.
