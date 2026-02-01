@@ -275,12 +275,21 @@ With debug mode enabled:
 - Your changes appear instantly without restarting the shell
 - Console output shows reload events for debugging
 
+### Translation Hot Reload
+
+Translation files (`i18n/*.json`) are also watched for changes:
+- When you edit a translation file, only translations are reloaded (no full plugin reload)
+- This is faster and preserves your plugin's state
+- The watcher automatically tracks the current language file
+- When the user changes language, the watcher updates to watch the new language's file
+
 ### Usage Tips
 
 1. **Keep the terminal visible** - Watch for QML errors during reload
 2. **Save frequently** - Each save triggers a reload so you see changes immediately
 3. **Check for errors** - Syntax errors in QML will appear in the console
 4. **State is reset** - Plugin state resets on reload (settings persist to disk)
+5. **Translations preserve state** - Translation reloads don't reset plugin state
 
 :::caution
 Hot reload is for development only. Don't run with `NOCTALIA_DEBUG=1` in production as it adds overhead from file watching.

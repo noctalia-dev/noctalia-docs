@@ -462,6 +462,37 @@ Item {
 }
 ```
 
+## Hot Reload for Translations
+
+When developing with `NOCTALIA_DEBUG=1`, translation files are automatically watched for changes. This allows you to edit translations and see updates instantly without restarting Noctalia or reloading the entire plugin.
+
+### How It Works
+
+- Each plugin's translation file for the current language (e.g., `i18n/en.json`) is watched
+- When you save the file, only translations are reloaded (lightweight, preserves plugin state)
+- A toast notification confirms the reload
+- When the user changes language, the watcher automatically switches to the new language's file
+
+### Benefits Over Full Plugin Reload
+
+| Aspect | Translation Reload | Full Plugin Reload |
+|--------|-------------------|-------------------|
+| Speed | ~300ms debounce | ~500ms debounce |
+| Plugin state | Preserved | Reset |
+| Component instances | Preserved | Recreated |
+| Use case | Translation edits | QML code changes |
+
+### Workflow Tips
+
+1. **Test translations quickly**: Save your JSON file and see changes immediately
+2. **Switch languages to test**: The watcher follows the current language
+3. **No restart needed**: Keep editing while Noctalia runs
+4. **State preserved**: Your plugin's runtime state (counters, loaded data) stays intact
+
+:::tip
+Start Noctalia with `NOCTALIA_DEBUG=1 qs -c noctalia-shell` to enable hot reload for both QML files and translations.
+:::
+
 ## Best Practices
 
 1. **Always provide English**: The `en.json` file is required as the fallback
