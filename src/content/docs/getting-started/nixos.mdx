@@ -568,11 +568,11 @@ services.gnome.evolution-data-server.enable = true;
 
 2. **Override the Noctalia package**:
 ```nix
-pkgs.noctalia-shell.override { calendarSupport = true; }
+(pkgs.noctalia-shell.override { calendarSupport = true; })
 ```
 or
 ```nix
-inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override { calendarSupport = true; }
+(inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override { calendarSupport = true; })
 ```
 
 ---
