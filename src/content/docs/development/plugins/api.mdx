@@ -295,20 +295,24 @@ function closePanel(screen: ShellScreen): bool
 ```
 
 **Parameters**:
-- `screen` - The ShellScreen to close the panel on (usually same as opened)
+- `screen` - The ShellScreen to close the panel on
 
 **Returns**: `true` if panel closed successfully, `false` otherwise
 
 **Usage**:
 ```qml
-// In Panel.qml
+// In Panel.qml - use pluginApi.panelOpenScreen
 NButton {
   text: "Close"
   onClicked: {
-    pluginApi.closePanel(root.screen)
+    pluginApi.closePanel(pluginApi.panelOpenScreen)
   }
 }
 ```
+
+:::caution
+When calling `closePanel()` from within a Panel.qml, you must use `pluginApi.panelOpenScreen` instead of `root.screen`. The `screen` property is not injected into plugin Panel components, so `root.screen` will be undefined.
+:::
 
 ### `togglePanel(screen, buttonItem)`
 Toggle this plugin's panel open/closed state.

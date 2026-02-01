@@ -169,7 +169,7 @@ To close programmatically:
 NButton {
   text: "Close"
   onClicked: {
-    pluginApi.closePanel(root.screen)
+    pluginApi.closePanel(pluginApi.panelOpenScreen)
   }
 }
 ```
@@ -398,7 +398,7 @@ Item {
         NIconButton {
           icon: "x"
           onClicked: {
-            pluginApi.closePanel(root.screen)
+            pluginApi.closePanel(pluginApi.panelOpenScreen)
           }
         }
       }
@@ -486,7 +486,7 @@ Item {
             // Reset to saved values
             root.editMessage = pluginApi?.pluginSettings?.message || ""
             root.editBgColor = pluginApi?.pluginSettings?.backgroundColor || "#A9AEFE"
-            pluginApi.closePanel(root.screen)
+            pluginApi.closePanel(pluginApi.panelOpenScreen)
           }
         }
 
@@ -500,7 +500,7 @@ Item {
             pluginApi.saveSettings()
 
             ToastService.showNotice("Settings saved!")
-            pluginApi.closePanel(root.screen)
+            pluginApi.closePanel(pluginApi.panelOpenScreen)
           }
         }
       }
