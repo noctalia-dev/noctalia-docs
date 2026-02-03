@@ -51,22 +51,26 @@ Create a JSON file with the same name as your folder:
             "cursorText": "#272822",
             "selectionBackground": "#f8f8f2",
             "selectionForeground": "#272822",
-            "color0": "#272822",
-            "color1": "#f92672",
-            "color2": "#a6e22e",
-            "color3": "#f4bf75",
-            "color4": "#66d9ef",
-            "color5": "#ae81ff",
-            "color6": "#a1efe4",
-            "color7": "#f8f8f2",
-            "color8": "#75715e",
-            "color9": "#f92672",
-            "color10": "#a6e22e",
-            "color11": "#f4bf75",
-            "color12": "#66d9ef",
-            "color13": "#ae81ff",
-            "color14": "#a1efe4",
-            "color15": "#f9f8f5"
+            "normal": {
+                "black": "#272822",
+                "red": "#f92672",
+                "green": "#a6e22e",
+                "yellow": "#f4bf75",
+                "blue": "#66d9ef",
+                "magenta": "#ae81ff",
+                "cyan": "#a1efe4",
+                "white": "#f8f8f2"
+            },
+            "bright": {
+                "black": "#75715e",
+                "red": "#f92672",
+                "green": "#a6e22e",
+                "yellow": "#f4bf75",
+                "blue": "#66d9ef",
+                "magenta": "#ae81ff",
+                "cyan": "#a1efe4",
+                "white": "#f9f8f5"
+            }
         }
     },
     "light": {
@@ -93,22 +97,26 @@ Create a JSON file with the same name as your folder:
             "cursorText": "#f8f8f2",
             "selectionBackground": "#272822",
             "selectionForeground": "#f8f8f2",
-            "color0": "#f8f8f2",
-            "color1": "#f92672",
-            "color2": "#a6e22e",
-            "color3": "#f4bf75",
-            "color4": "#66d9ef",
-            "color5": "#ae81ff",
-            "color6": "#a1efe4",
-            "color7": "#272822",
-            "color8": "#d8d8d2",
-            "color9": "#f92672",
-            "color10": "#a6e22e",
-            "color11": "#f4bf75",
-            "color12": "#66d9ef",
-            "color13": "#ae81ff",
-            "color14": "#a1efe4",
-            "color15": "#1e1e19"
+            "normal": {
+                "black": "#f8f8f2",
+                "red": "#f92672",
+                "green": "#a6e22e",
+                "yellow": "#f4bf75",
+                "blue": "#66d9ef",
+                "magenta": "#ae81ff",
+                "cyan": "#a1efe4",
+                "white": "#272822"
+            },
+            "bright": {
+                "black": "#d8d8d2",
+                "red": "#f92672",
+                "green": "#a6e22e",
+                "yellow": "#f4bf75",
+                "blue": "#66d9ef",
+                "magenta": "#ae81ff",
+                "cyan": "#a1efe4",
+                "white": "#1e1e19"
+            }
         }
     }
 }
@@ -159,8 +167,8 @@ The `terminal` section defines colors for terminal emulators (Foot, Ghostty, Kit
 | `cursorText` | Text under cursor |
 | `selectionBackground` | Selection highlight |
 | `selectionForeground` | Selected text color |
-| `color0-7` | Normal colors (black, red, green, yellow, blue, magenta, cyan, white) |
-| `color8-15` | Bright variants of colors 0-7 |
+| `normal` | Normal colors |
+| `bright` | Bright variants of the normal colors |
 
 :::tip[Terminal Colors]
 Good terminal colors are essential for syntax highlighting. Test your scheme with code to ensure readability.
@@ -205,4 +213,4 @@ Submit it to the [noctalia-colorschemes](https://github.com/noctalia-dev/noctali
 | Scheme not appearing | Check folder/file naming match exactly |
 | Colors not applying | Validate JSON syntax |
 | Poor contrast | Use contrast checker tools |
-| Terminal colors wrong | Verify all `color0-15` are defined |
+| Terminal colors wrong | Verify all `normal` and `bright` colors are defined |
