@@ -100,6 +100,12 @@ systemctl --user add-wants hyprland-session.target xdg-desktop-autostart.target
 
 ##### 4. Lastly
 Reboot, re-log in, or simply run `systemctl --user start hyprland-session.target` (or however you named it for your compositor) and everything set to start with your compositor of choice (Hyprland in this case), including Noctalia, will start and stop when you log out or stop the target for whatever reason.
+
+Finally, go into `Settings -> Launcher -> Execute` and tick on `Enable custom launch prefix` with a value of:
+```sh
+systemd-run --user --scope --collect
+```
+You may want to additionally add everything that executes into a different slice, or a sub-slice or an existing slice or a sub-slice of an existing slice, by appending for example `--slice=desktop.slice` at the end to make up a new user slice called "desktop" or `--slice=app-desktop.slice` to add it to an existing user slice (app) under a made up slice "desktop".
 :::
 
 Alternatively, you can enable it more generally with:
