@@ -103,7 +103,7 @@ Reboot, re-log in, or simply run `systemctl --user start hyprland-session.target
 
 Finally, go into `Settings -> Launcher -> Execute` and tick on `Enable custom launch prefix` with a value of:
 ```sh
-systemd-run --user --scope
+systemd-run --user --scope --collect
 ```
 You may want to additionally add everything that executes into a different slice, or a sub-slice or an existing slice or a sub-slice of an existing slice, by appending for example `--slice=desktop.slice` at the end to make up a new user slice called "desktop" or `--slice=app-desktop.slice` to add it to an existing user slice (app) under a made up slice "desktop".
 :::
