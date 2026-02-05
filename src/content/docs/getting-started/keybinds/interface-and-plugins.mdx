@@ -81,6 +81,19 @@ qs -c noctalia-shell ipc call toast send '{"title": "Connection failed", "body":
 | **Set Dark** | <IpcCommand command="darkMode setDark" /> | Force dark theme |
 | **Set Light** | <IpcCommand command="darkMode setLight" /> | Force light theme |
 | **Color Scheme** | <IpcCommand command="colorScheme set <theme>" /> | Set scheme by name |
+| **Set Method** | <IpcCommand command="colorScheme setGenerationMethod <method>" /> | Set color generation method |
+
+:::note[Available Generation Methods]
+- `tonal-spot`
+- `content`
+- `fruit-salad`
+- `rainbow`
+- `monochrome`
+- `vibrant`
+- `faithful`
+- `dysfunctional`
+- `muted`
+:::
 
 #### Wallpaper Management
 
