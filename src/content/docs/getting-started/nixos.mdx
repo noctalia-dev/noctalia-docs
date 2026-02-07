@@ -161,12 +161,12 @@ To configure Noctalia settings, you can use the Noctalia home manager module:
 
 We don't have extensive documentation of Noctalia's configuration options; however, you can see an up-to-date list of [configuration defaults](#config-ref).
 
-Additionally, since `~/.config/noctalia/settings.json` is now a read-only symlink, you can get the latest (or GUI-modified) settings via: **Open Settings Panel** -> **General** -> **Copy Settings**, then use them to update your Nix config for a permanent change.
+Additionally, since `~/.config/noctalia/settings.json` is now a read-only symlink, you can get the latest (or GUI-modified) settings via: **Open Settings Panel** -> **General** -> **Copy Settings** or by running `noctalia-shell ipc call state all | jq .settings`, then use them to update your Nix config for a permanent change.
 
 :::tip
- To see the diff between your current build and the latest (or GUI-modified) settings, **copy settings** and run:
+ To see the diff between your current build and the latest (or GUI-modified) settings, run:
 ```sh
-nix shell nixpkgs#jq nixpkgs#colordiff nixpkgs#wl-clipboard -c bash -c "diff -u <(jq -S . ~/.config/noctalia/settings.json) <(wl-paste | jq -S .) | colordiff"
+nix shell nixpkgs#jq nixpkgs#colordiff -c bash -c "colordiff -u --nobanner <(jq -S . ~/.config/noctalia/settings.json) <(noctalia-shell ipc call state all | jq -S .settings)"
 ```
 :::
 
