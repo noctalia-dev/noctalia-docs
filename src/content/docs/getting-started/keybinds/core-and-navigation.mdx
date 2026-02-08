@@ -13,7 +13,16 @@ These are the most common commands used for opening basic shell interfaces.
 |----------|---------|-------------|
 | **Launcher** | <IpcCommand command="launcher toggle" /> | Open/close application launcher |
 | **Control Center** | <IpcCommand command="controlCenter toggle" /> | Toggle control center visibility |
-| **Settings** | <IpcCommand command="settings toggle" /> | Open/close settings window |
+| **Settings** | <IpcCommand command="settings toggle" /> | Toggle settings (General tab) |
+| **Settings Tab** | <IpcCommand command="settings toggleTab $tab" /> | Toggle settings on a specific tab |
+| **Open Settings** | <IpcCommand command="settings open" /> | Open settings (General tab) |
+| **Open Settings Tab** | <IpcCommand command="settings openTab $tab" /> | Open settings on a specific tab |
+
+:::note[Settings tab parameter]
+`$tab` is a tab name (case-insensitive, hyphens/underscores ignored): `general`, `bar`, `dock`, `wallpaper`, `color-scheme`, `user-interface`, `control-center`, `desktop-widgets`, `launcher`, `notifications`, `osd`, `lock-screen`, `session-menu`, `audio`, `display`, `network`, `location`, `system-monitor`, `plugins`, `hooks`, `about`.
+
+Append `/$subtab` to navigate to a specific subtab index, e.g. `settings openTab bar/2`.
+:::
 
 ### Quick Access
 
