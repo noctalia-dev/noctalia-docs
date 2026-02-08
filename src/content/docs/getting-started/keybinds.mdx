@@ -36,14 +36,16 @@ Apply these binds in your window manager configuration to integrate Noctalia.
 <details>
 <summary><strong>Niri Configuration</strong></summary>
 
+> Both `spawn-sh` and `spawn` are usable to run Noctalia keybinds.
+
 Add these binds to your `~/.config/niri/config.kdl`:
 
 ```kdl
 binds {
     // Core Noctalia binds
-    Mod+Space { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
-    Mod+S { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "controlCenter" "toggle"; }
-    Mod+Comma { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "settings" "toggle"; }
+    Mod+Space { spawn-sh "qs -c noctalia-shell ipc call launcher toggle"; }
+    Mod+S { spawn-sh "qs -c noctalia-shell ipc call controlCenter toggle"; }
+    Mod+Comma { spawn-sh "qs -c noctalia-shell ipc call settings toggle"; }
 
     // Audio & Brightness
     XF86AudioRaiseVolume { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "increase"; }
