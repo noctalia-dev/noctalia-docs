@@ -66,6 +66,7 @@ The `pluginApi` property is automatically injected by the plugin system and prov
 - **Settings**: `pluginApi.pluginSettings` - Read and write plugin settings
 - **Persistence**: `pluginApi.saveSettings()` - Save settings to disk
 - **Panels**: `pluginApi.openPanel(screen)` / `pluginApi.closePanel(screen)` - Control plugin panels
+- **Launcher**: `pluginApi.openLauncher(screen)` / `pluginApi.closeLauncher(screen)` / `pluginApi.toggleLauncher(screen)` - Control the launcher for provider plugins
 - **Translations**: `pluginApi.tr(key, interpolations)` - Translate text
 - **Metadata**: `pluginApi.manifest` - Access plugin manifest data
 
@@ -303,6 +304,11 @@ pluginApi.withCurrentScreen(screen => {
   pluginApi.closePanel(screen);
 });
 
+// Toggle launcher for provider plugins
+pluginApi.withCurrentScreen(screen => {
+  pluginApi.toggleLauncher(screen);
+});
+
 // Access translations
 var text = pluginApi.tr("settings.enabled");
 ```
@@ -327,63 +333,119 @@ Item {
 
   IpcHandler {
     target: "plugin:example-plugin"
-    
+
     // Toggle plugin state
     function toggle() {
       if (!pluginApi) return;
-      
+
       pluginApi.pluginSettings.enabled = !pluginApi.pluginSettings.enabled;
       pluginApi.saveSettings();
-      
+
       var status = pluginApi.pluginSettings.enabled ? "enabled" : "disabled";
       ToastService.showNotice("Plugin " + status);
       Logger.i("ExamplePlugin", "Toggled to:", status);
     }
-    
+
     // Enable plugin
     function enable() {
       if (!pluginApi) return;
-      
+
       pluginApi.pluginSettings.enabled = true;
       pluginApi.saveSettings();
       ToastService.showNotice("Plugin enabled");
     }
-    
+
     // Disable plugin
     function disable() {
       if (!pluginApi) return;
-      
+
       pluginApi.pluginSettings.enabled = false;
       pluginApi.saveSettings();
       ToastService.showNotice("Plugin disabled");
     }
-    
+
     // Set a numeric value
     function setValue(value: string) {
       if (!pluginApi) return;
-      
+
       var numValue = parseFloat(value);
       if (Number.isNaN(numValue)) {
         Logger.w("ExamplePlugin", "Invalid value:", value);
         ToastService.showError("Invalid value: " + value);
         return;
       }
-      
+
       pluginApi.pluginSettings.value = numValue;
       pluginApi.saveSettings();
       ToastService.showNotice("Value set to: " + numValue);
     }
-    
+
     // Open plugin panel
     function openPanel() {
-      if (!pluginApi || Quickshell.screens.length === 0) return;
-      
-      var screen = Quickshell.screens[0];
-      pluginApi.openPanel(screen);
+      if (!pluginApi) return;
+
+      pluginApi.withCurrentScreen(screen => {
+        pluginApi.openPanel(screen);
+      });
     }
   }
 }
 ```
+
+## Launcher Provider IPC
+
+If your plugin provides a launcher provider, you can use the launcher API methods to toggle the launcher from IPC. This works correctly in both normal and overlay launcher modes.
+
+```qml
+import QtQuick
+import Quickshell.Io
+
+Item {
+  property var pluginApi: null
+
+  IpcHandler {
+    target: "plugin:my-provider"
+
+    function toggle() {
+      if (!pluginApi) return;
+      pluginApi.withCurrentScreen(screen => {
+        pluginApi.toggleLauncher(screen);
+      });
+    }
+  }
+}
+```
+
+The `toggleLauncher` method uses the `commandPrefix` from your manifest's `metadata` to determine the search prefix. For example, with `"commandPrefix": "kaomoji"`, calling `toggle` will open the launcher with `>kaomoji ` pre-filled.
+
+```bash
+# Toggle the launcher with your plugin's command prefix
+qs -c noctalia-shell ipc call plugin:my-provider toggle
+```
+
+:::tip
+For plugins that have both a panel and a launcher provider, you can provide separate IPC methods for each:
+
+```qml
+IpcHandler {
+  target: "plugin:my-plugin"
+
+  // Toggle the panel
+  function togglePanel() {
+    pluginApi.withCurrentScreen(screen => {
+      pluginApi.togglePanel(screen);
+    });
+  }
+
+  // Toggle the launcher with the provider's command prefix
+  function toggle() {
+    pluginApi.withCurrentScreen(screen => {
+      pluginApi.toggleLauncher(screen);
+    });
+  }
+}
+```
+:::
 
 ## Testing
 

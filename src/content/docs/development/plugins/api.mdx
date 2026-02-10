@@ -343,6 +343,81 @@ NIconButtonHot {
 `togglePanel` is commonly used in bar widgets and control center widgets to open/close the plugin's panel with a single click. Pass `this` as the second parameter to have the panel open near the triggering button.
 :::
 
+### `openLauncher(screen)`
+Open the launcher with this plugin's command prefix pre-filled. Only available for plugins that provide a `launcherProvider` entry point.
+
+**Signature**:
+```qml
+function openLauncher(screen: ShellScreen): void
+```
+
+**Parameters**:
+- `screen` - The ShellScreen to open the launcher on
+
+**Usage**:
+```qml
+// In Main.qml IPC handler
+pluginApi.withCurrentScreen(screen => {
+  pluginApi.openLauncher(screen);
+});
+```
+
+:::note
+The command prefix is determined from the `commandPrefix` field in your manifest's `metadata`, falling back to the plugin ID if not specified. For example, a plugin with `"commandPrefix": "kaomoji"` will open the launcher with `>kaomoji ` pre-filled.
+:::
+
+### `closeLauncher(screen)`
+Close the launcher.
+
+**Signature**:
+```qml
+function closeLauncher(screen: ShellScreen): void
+```
+
+**Parameters**:
+- `screen` - The ShellScreen to close the launcher on
+
+**Usage**:
+```qml
+pluginApi.withCurrentScreen(screen => {
+  pluginApi.closeLauncher(screen);
+});
+```
+
+### `toggleLauncher(screen)`
+Toggle the launcher open/closed with this plugin's command prefix. If the launcher is already open with a different command, it switches to this plugin's prefix instead of closing.
+
+**Signature**:
+```qml
+function toggleLauncher(screen: ShellScreen): void
+```
+
+**Parameters**:
+- `screen` - The ShellScreen to toggle the launcher on
+
+**Usage**:
+```qml
+// In Main.qml IPC handler
+IpcHandler {
+  target: "plugin:my-provider"
+
+  function toggle() {
+    pluginApi.withCurrentScreen(screen => {
+      pluginApi.toggleLauncher(screen);
+    });
+  }
+}
+```
+
+**Behavior**:
+- If the launcher is closed: opens it with the plugin's command prefix (e.g., `>kaomoji `)
+- If the launcher is open with this plugin's prefix: closes the launcher
+- If the launcher is open with a different prefix: switches to this plugin's prefix
+
+:::tip
+`toggleLauncher` is the recommended way to handle IPC toggle commands for launcher provider plugins. It works correctly in both normal and overlay launcher modes.
+:::
+
 ### `tr(key, interpolations)`
 Translate a text key using plugin translations.
 

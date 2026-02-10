@@ -32,6 +32,7 @@ Every Noctalia plugin must include a `manifest.json` file that describes the plu
     "plugins": ["other-plugin"]
   },
   "metadata": {
+    "commandPrefix": "mycommand",
     "defaultSettings": {
       "enabled": true,
       "customValue": "hello"
@@ -227,9 +228,16 @@ See [Control Center Widget Guide](/development/plugins/control-center-widget/) f
 {
   "entryPoints": {
     "launcherProvider": "LauncherProvider.qml"
+  },
+  "metadata": {
+    "commandPrefix": "mycommand"
   }
 }
 ```
+
+:::tip
+When providing a launcher provider, set `commandPrefix` in `metadata` to define the `>prefix` command. This is also used by `pluginApi.toggleLauncher()` for IPC integration. See [IPC Guide](/development/plugins/ipc/#launcher-provider-ipc) for details.
+:::
 
 See [Launcher Provider Guide](/development/plugins/launcher-provider/) for details.
 
@@ -312,6 +320,7 @@ The `metadata` object contains additional plugin information.
 ```json
 {
   "metadata": {
+    "commandPrefix": "mycommand",
     "defaultSettings": {
       "message": "Hello World",
       "backgroundColor": "#A9AEFE",
@@ -321,6 +330,30 @@ The `metadata` object contains additional plugin information.
   }
 }
 ```
+
+### `commandPrefix`
+- **Type**: String
+- **Default**: Plugin ID
+- **Description**: The command prefix used to activate this plugin's launcher provider
+- **Purpose**:
+  - Defines the `>prefix` command that activates your launcher provider
+  - Used by `pluginApi.toggleLauncher()` to pre-fill the search text
+  - Falls back to the plugin ID if not specified
+
+**Usage**:
+```json
+{
+  "metadata": {
+    "commandPrefix": "kaomoji"
+  }
+}
+```
+
+With the above, the launcher command would be `>kaomoji` and `pluginApi.toggleLauncher()` would open the launcher with `>kaomoji ` pre-filled.
+
+:::tip
+Set `commandPrefix` when your desired command is shorter or different from your plugin ID. For example, the `calibre-provider` plugin uses `"commandPrefix": "cb"` so users type `>cb` instead of `>calibre-provider`.
+:::
 
 ### `defaultSettings`
 - **Type**: Object

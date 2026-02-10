@@ -480,6 +480,61 @@ Item {
 }
 ```
 
+## IPC Integration
+
+Launcher providers can be toggled via IPC using the `pluginApi.toggleLauncher()` method. This allows users to bind keyboard shortcuts to open your provider directly.
+
+### Setting Up IPC
+
+Add an IPC handler in your `Main.qml`:
+
+```qml
+import QtQuick
+import Quickshell.Io
+
+Item {
+  property var pluginApi: null
+
+  IpcHandler {
+    target: "plugin:my-provider"
+
+    function toggle() {
+      if (!pluginApi) return;
+      pluginApi.withCurrentScreen(screen => {
+        pluginApi.toggleLauncher(screen);
+      });
+    }
+  }
+}
+```
+
+### Command Prefix
+
+Set the `commandPrefix` in your `manifest.json` metadata to define the launcher command:
+
+```json
+{
+  "metadata": {
+    "commandPrefix": "mycommand"
+  }
+}
+```
+
+When `toggleLauncher()` is called, it opens the launcher with `>mycommand ` pre-filled. If not specified, the plugin ID is used as the prefix.
+
+### Usage
+
+```bash
+# Toggle the launcher with your provider's prefix
+qs -c noctalia-shell ipc call plugin:my-provider toggle
+```
+
+This can be bound to a keyboard shortcut in your compositor configuration for quick access.
+
+:::tip
+The `toggleLauncher` method works correctly in both normal and overlay launcher modes, unlike direct panel access which only works in normal mode.
+:::
+
 ## Best Practices
 
 1. **Use commands for discoverability** - Register commands so users can find your provider by typing `>`
