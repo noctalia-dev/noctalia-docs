@@ -67,11 +67,19 @@ qs -c noctalia-shell ipc call toast send '{"title": "Connection failed", "body":
 | **Toggle Bar** | <IpcCommand command="bar toggle" /> | Toggle bar visibility |
 | **Show Bar** | <IpcCommand command="bar showBar" /> | Show bar |
 | **Hide Bar** | <IpcCommand command="bar hideBar" /> | Hide bar |
+| **Bar DisplayMode** | <IpcCommand command="bar setDisplayMode <mode>" /> | Set bar display mode |
 | **Toggle Dock** | <IpcCommand command="dock toggle" /> | Toggle dock visibility |
 | **Show Widgets** | <IpcCommand command="desktopWidgets enable" /> | Enable desktop widgets |
 | **Hide Widgets** | <IpcCommand command="desktopWidgets disable" /> | Disable desktop widgets |
 | **Toggle Widgets** | <IpcCommand command="desktopWidgets toggle" /> | Toggle desktop widgets |
 | **Edit Widgets** | <IpcCommand command="desktopWidgets edit" /> | Toggle widget editing |
+
+:::note[Available Bar Display Mode]
+- `always_visible`
+- `non_exclusive`
+- `auto_hide`
+:::
+
 
 #### Theme Controls
 
