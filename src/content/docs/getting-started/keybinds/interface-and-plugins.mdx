@@ -68,6 +68,7 @@ qs -c noctalia-shell ipc call toast send '{"title": "Connection failed", "body":
 | **Show Bar** | <IpcCommand command="bar showBar" /> | Show bar |
 | **Hide Bar** | <IpcCommand command="bar hideBar" /> | Hide bar |
 | **Bar DisplayMode** | <IpcCommand command="bar setDisplayMode <mode>" /> | Set bar display mode |
+| **Bar Position** | <IpcCommand command="bar setPosition <position> <screen>" /> | Set bar position |
 | **Toggle Dock** | <IpcCommand command="dock toggle" /> | Toggle dock visibility |
 | **Show Widgets** | <IpcCommand command="desktopWidgets enable" /> | Enable desktop widgets |
 | **Hide Widgets** | <IpcCommand command="desktopWidgets disable" /> | Disable desktop widgets |
@@ -78,6 +79,15 @@ qs -c noctalia-shell ipc call toast send '{"title": "Connection failed", "body":
 - `always_visible`
 - `non_exclusive`
 - `auto_hide`
+:::
+
+:::note[Available Bar Positions]
+- `top`
+- `bottom`
+- `left`
+- `right`
+
+`<screen>`: Monitor identifier (e.g., `HDMI-A-1`). Use an empty string or `all` to set position on all monitors.
 :::
 
 
