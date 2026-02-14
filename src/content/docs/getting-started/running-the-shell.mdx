@@ -31,10 +31,7 @@ exec-once = qs -c noctalia-shell
 For more robust process management, you can configure Noctalia to run as a systemd user service. This approach provides automatic restarts on failure and centralizes logging with `journalctl`.
 
 :::tip[AUR Installation]
-If you installed `noctalia-shell` or `noctalia-shell-git` from the AUR, the service file is already included. You can skip to step 2 and simply run:
-```bash
-systemctl --user enable --now noctalia.service
-```
+If you installed `noctalia-shell` or `noctalia-shell-git` from the AUR, the service file is already included. You can skip to step 2.
 :::
 
 #### 1. Create the service file
@@ -60,13 +57,30 @@ WantedBy=graphical-session.target
 
 Next, enable the service to have it start automatically with your graphical session.
 
-If you use a compositor like Niri, it's best to tie Noctalia directly to it. This ensures they start and stop together.
+<details>
+<summary><strong>Niri</strong></summary>
+
+If you use a compositor like Niri, it's best to tie Noctalia directly to it. This ensures they start and stop together and passes critical environment variables to the service.
 
 ```bash
 # Example for Niri users
 systemctl --user add-wants niri.service noctalia.service
 ```
+
+```bash
+# Start the service
+systemctl --user start noctalia.service
+```
+
+</details>
+
+<details>
+<summary><strong>Other Compositors (no UWSM)</strong></summary>
 :::note
+Adjust for your compositor's syntax.
+
+:::
+
 If you use a compositor which doesn't provide services or targets to bind to (in this example Hyprland), then:
 
 To launch the provided AUR service file Noctalia ships (and any others which bind to `graphical-session.target`) without having to resort to using UWSM:
@@ -106,12 +120,8 @@ Finally, go into `Settings -> Launcher -> Execute` and tick on `Enable custom la
 systemd-run --user --scope --collect
 ```
 You may want to additionally add everything that executes into a different slice, or a sub-slice or an existing slice or a sub-slice of an existing slice, by appending for example `--slice=desktop.slice` at the end to make up a new user slice called "desktop" or `--slice=app-desktop.slice` to add it to an existing user slice (app) under a made up slice "desktop".
-:::
 
-Alternatively, you can enable it more generally with:
-```bash
-systemctl --user enable --now noctalia.service
-```
+</details>
 
 ### Manual Launch for Debugging
 The most direct way to run Noctalia for testing or debugging is to invoke it through Quickshell. Open a terminal and execute:
