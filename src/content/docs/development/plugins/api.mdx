@@ -706,7 +706,7 @@ var keyStr = Keybinds.getKeybindString(event);
 var conflict = Keybinds.getKeybindConflict(keyStr, "general.keybinds.keyEscape", Settings.data);
 ```
 
-Common action names for `checkKey` include `"up"`, `"down"`, `"left"`, `"right"`, `"enter"`, and `"escape"`. More keybinds may be available — check [`Settings.qml`](https://github.com/noctalia-dev/noctalia-shell/blob/main/Commons/Settings.qml) under `general.keybinds` for the full list.
+Common action names for `checkKey` include `"up"`, `"down"`, `"left"`, `"right"`, `"enter"`, and `"escape"`. More keybinds may be available - check [`Settings.qml`](https://github.com/noctalia-dev/noctalia-shell/blob/main/Commons/Settings.qml) under `general.keybinds` for the full list.
 
 :::tip
 Use `Keybinds` instead of hardcoding `Qt.Key_*` checks. This ensures your plugin respects the user's custom keybind configuration.
