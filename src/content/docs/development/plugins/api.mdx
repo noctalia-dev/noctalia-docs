@@ -684,6 +684,34 @@ Rectangle {
 }
 ```
 
+#### Keybinds
+```qml
+import qs.Commons
+
+// Check if a key event matches a configured keybind action
+Keys.onPressed: function(event) {
+  if (Keybinds.checkKey(event, "escape", Settings)) {
+    close();
+    event.accepted = true;
+  } else if (Keybinds.checkKey(event, "enter", Settings)) {
+    submit();
+    event.accepted = true;
+  }
+}
+
+// Convert a key event to a keybind string (e.g. "Ctrl+A", "Shift+F5")
+var keyStr = Keybinds.getKeybindString(event);
+
+// Check for keybind conflicts (returns conflicting action name or null)
+var conflict = Keybinds.getKeybindConflict(keyStr, "general.keybinds.keyEscape", Settings.data);
+```
+
+Common action names for `checkKey` include `"up"`, `"down"`, `"left"`, `"right"`, `"enter"`, and `"escape"`. More keybinds may be available — check [`Settings.qml`](https://github.com/noctalia-dev/noctalia-shell/blob/main/Commons/Settings.qml) under `general.keybinds` for the full list.
+
+:::tip
+Use `Keybinds` instead of hardcoding `Qt.Key_*` checks. This ensures your plugin respects the user's custom keybind configuration.
+:::
+
 ### UI Services
 
 #### ToastService
