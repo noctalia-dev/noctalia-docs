@@ -97,7 +97,7 @@ systemctl --user restart noctalia.service
 You can start noctalia-shell with a special environment variable, but this is **not recommended** on multi-monitor setups as it will likely break tooltips and other contextual menu positioning on monitors that don't have a (0,0) origin.
 
 ```bash
-QT_SCALE_FACTOR=2 qs -c noctalia-shell
+QT_SCALE_FACTOR=2 qs -c noctalia-shell --no-duplicate
 ```
 
 This can also be added to your compositor autostart.

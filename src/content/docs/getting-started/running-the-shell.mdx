@@ -13,12 +13,12 @@ This is the recommended method for launching noctalia-shell, as it integrates wi
 
 For the *Niri* compositor, add the following line to the end of your configuration file, typically located at `~/.config/niri/config.kdl`
 ```ini
-spawn-at-startup "qs" "-c" "noctalia-shell"
+spawn-at-startup "qs" "-c" "noctalia-shell" "--no-duplicate"
 ```
 
 For the *Hyprland* compositor, append this line to your configuration file, typically located at `~/.config/hypr/hyprland.conf`
 ```ini
-exec-once = qs -c noctalia-shell
+exec-once = qs -c noctalia-shell --no-duplicate
 ```
 
 :::tip[Important]
@@ -45,7 +45,7 @@ Requisite=graphical-session.target
 After=graphical-session.target
 
 [Service]
-ExecStart=qs -c noctalia-shell
+ExecStart=qs -c noctalia-shell --no-duplicate
 Restart=on-failure
 RestartSec=1
 
@@ -126,5 +126,9 @@ You may want to additionally add everything that executes into a different slice
 ### Manual Launch for Debugging
 The most direct way to run Noctalia for testing or debugging is to invoke it through Quickshell. Open a terminal and execute:
 ```bash
-qs -c noctalia-shell
+qs -c noctalia-shell --no-duplicate
 ```
+
+:::tip[Preventing Multiple Instances]
+The `--no-duplicate` flag prevents multiple instances of Noctalia from running simultaneously. If an instance is already running, the command will exit gracefully instead of starting a duplicate.
+:::

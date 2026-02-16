@@ -252,7 +252,7 @@ During plugin development, you can enable **hot reload** to automatically reload
 Start Noctalia with the `NOCTALIA_DEBUG` environment variable:
 
 ```bash
-NOCTALIA_DEBUG=1 qs -c noctalia-shell
+NOCTALIA_DEBUG=1 qs -c noctalia-shell --no-duplicate
 ```
 
 Or if using systemd, create an override:
@@ -300,7 +300,7 @@ Hot reload is for development only. Don't run with `NOCTALIA_DEBUG=1` in product
 ### View Logs
 Run Noctalia from the terminal to see logs:
 ```bash
-NOCTALIA_DEBUG=1 qs -c noctalia-shell
+NOCTALIA_DEBUG=1 qs -c noctalia-shell --no-duplicate
 ```
 
 Use `Logger` in your plugin:
