@@ -1,0 +1,47 @@
+---
+title: Desktop Widgets
+description: Add and configure floating widgets on your desktop background.
+sidebar:
+  order: 2
+---
+
+Desktop widgets are floating, draggable components that sit on top of your wallpaper. Noctalia ships four built-in widgets — Clock, Media Player, Weather, and System Stats — and plugins can add their own.
+
+## Enabling Desktop Widgets
+
+Desktop widgets are disabled by default. To turn them on:
+
+1. Open **Settings** → **Desktop Widgets**
+2. Toggle **Enable Desktop Widgets**
+
+## Adding and Managing Widgets
+
+All widget management is done from **Settings → Desktop Widgets**:
+
+- **Add a widget** — click **Add Widget** and pick from the list
+- **Remove a widget** — click the remove button on a widget entry
+- **Configure a widget** — click the gear icon to open its settings dialog
+
+Widgets are stored per-monitor, so each screen can have its own set.
+
+## Positioning and Scaling
+
+Enable **Edit Mode** to freely position and resize widgets:
+
+- **Drag** to move a widget anywhere on the desktop
+- **Right-click drag** to scale a widget up or down
+- **Grid Snap** — enable in settings to snap widgets to a grid while dragging
+
+Exit edit mode when you're done. Positions and scales are saved automatically.
+
+## Performance Considerations
+
+Some widgets continuously poll hardware counters or perform expensive rendering. Noctalia marks these as **CPU-intensive** and will warn you when adding them. The **System Stats** widget falls into this category.
+
+If you notice increased CPU usage or battery drain, consider removing CPU-intensive widgets or limiting how many are active at once.
+
+## Plugin Widgets
+
+Plugins can register their own desktop widgets. Once a plugin with a desktop widget is installed and enabled, it appears in the **Add Widget** picker alongside the built-in widgets.
+
+See the [Desktop Widget plugin guide](/development/plugins/desktop-widget/) for how to build one.
