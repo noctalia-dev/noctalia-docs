@@ -19,6 +19,13 @@ export default defineConfig({
             defer: true,
           },
         },
+        {
+          tag: 'script',
+          attrs: {
+            src: '/search-breadcrumb.js',
+            defer: true,
+          },
+        },
       ],
       title: "Noctalia",
       logo: {

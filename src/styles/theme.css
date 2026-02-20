@@ -265,4 +265,17 @@ snake-toc a[data-visible="true"] {
 	color: var(--sl-color-text-accent);
 }
 
+/* Search result breadcrumb — value injected via JS into --result-path custom property */
+#starlight__search .pagefind-ui__result-inner > .pagefind-ui__result-title {
+	line-height: 1.1rem;
+}
+
+#starlight__search .pagefind-ui__result-inner > .pagefind-ui__result-title::after {
+	content: var(--result-path, '');
+	display: block;
+	font-size: 0.78em;
+	font-weight: normal;
+	opacity: 0.5;
+}
+
 /* Global script to update logo link - injected via style tag */
