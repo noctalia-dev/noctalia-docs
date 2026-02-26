@@ -102,6 +102,12 @@ export default defineConfig({
             },
           ],
         },
+        {
+          label: "Deprecated",
+          items: [
+            { label: "Systemd Startup", link: "deprecated/systemd-startup/" },
+          ],
+        },
 
       ],
     }),

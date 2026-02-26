@@ -63,26 +63,7 @@ This is because Niri only overrides environment variables for processes it spawn
 
 <details>
 <summary>If you prefer systemd</summary>
-You can edit the noctalia.service.
-
-1. Edit the user service configuration:
-```bash
-systemctl edit --user noctalia.service
-```
-
-2. Add variables in the [Service] section:
-```ini
-[Service]
-Environment="QT_QPA_PLATFORM=wayland;xcb"
-Environment="QT_QPA_PLATFORMTHEME=qt6ct"
-Environment="QT_AUTO_SCREEN_SCALE_FACTOR=1"
-```
-
-3. Reload and restart the service:
-```bash
-systemctl --user daemon-reload
-systemctl --user restart noctalia.service
-```
+Systemd startup setup is now legacy-only and documented here: [Systemd Startup](/deprecated/systemd-startup/).
 </details>
 :::
 
@@ -174,7 +155,7 @@ workspace = 5, monitor:DP-1, persistent:true
 Common causes:
 
 1. **Wrong command syntax**: Make sure you're using the correct IPC command format
-2. **Window manager configuration**: Verify your keybind syntax matches your WM (Hyprland vs Niri)
+2. **Window manager configuration**: Verify your keybind syntax matches your WM (Hyprland, Niri etc)
 3. **Noctalia not running**: Keybinds only work when Noctalia is running
 4. **Necessary environment variables not visible to Noctalia at start-up**: This affects Niri Systemd/UWSM/people who do not set the contained environment variables:
    - Run:
@@ -184,14 +165,14 @@ Common causes:
    to confirm if this is indeed your issue; you should see `WAYLAND_DISPLAY` with a value of `wayland-1`, `XDG_SESSION_TYPE` `wayland` and `QT_QPA_PLATFORM` `wayland` (or `wayland;xcb`).
    - If you do not see any of these three you must make them available to Noctalia by adding them to a place where they can be seen in time:
       - `/etc/environment` for Niri Systemd/UWSM
-      - in-config of your compositor for Niri without Systemd/UWSM-less method outlined in [Running the Shell's Step 2 for Systemd](/getting-started/running-the-shell/#2-enable-and-start-the-service)
+      - in-config of your compositor for Niri without Systemd/UWSM-less method outlined in [Systemd Startup](/deprecated/systemd-startup/)
    - After setting the values re-log back in/reboot.
    - Confirm it worked by checking `qs list --all`, it should list under Display connection `wayland,wayland-1` (also see the note right below if it lists `unk` but IPC calls work).
    :::note[unk]
    A value of `wayland;xcb` for `QT_QPA_PLATFORM` is also valid and will let IPC calls work, the quickshell parser is simply bad, this is a fake 'issue'.
    :::
    :::note[Bypass]
-   If you don't want to do any of this, while I don't recommend it, you can keep using IPC calls by passing `--any-display` to them.
+   If you don't want to do any of this, while we don't recommend it, you can keep using IPC calls by passing `--any-display` to them.
    :::
 
 </details>

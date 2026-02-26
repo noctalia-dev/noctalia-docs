@@ -1,0 +1,235 @@
+---
+title: Systemd Startup
+description: Deprecated startup notes for Noctalia's legacy systemd setup.
+sidebar:
+  order: 1
+---
+
+:::danger[Deprecated]
+Systemd startup is deprecated for Noctalia and kept here for legacy setups only.
+
+This approach caused recurring technical issues, including delayed shell startup and unreliable IPC communication.
+
+Use [Running the shell](/getting-started/running-the-shell/) for the current guidance.
+:::
+
+### Running as a Systemd Service
+
+:::note[IPC Calls]
+If your IPC call keybinds don't work, please follow in the FAQ [Why aren't my keybinds working?](/getting-started/faq/#troubleshooting), specifically the fourth cause.
+:::
+
+For more robust process management, you can configure Noctalia to run as a systemd user service. This approach provides automatic restarts on failure and centralizes logging with `journalctl`.
+
+#### 1. Create the service file
+
+First, create a new service definition file at `~/.config/systemd/user/noctalia.service` with the following content:
+
+```toml
+[Unit]
+Description=Noctalia Shell Service
+PartOf=graphical-session.target
+Requisite=graphical-session.target
+After=graphical-session.target
+
+[Service]
+ExecStart=qs -c noctalia-shell --no-duplicate
+Restart=on-failure
+RestartSec=1
+
+[Install]
+WantedBy=graphical-session.target
+```
+
+#### 2. Enable and Start the Service
+
+Next, enable the service to have it start automatically with your graphical session.
+
+<details>
+<summary><strong>Niri</strong></summary>
+
+If you use a compositor like Niri, it's best to tie Noctalia directly to it. This ensures they start and stop together and passes critical environment variables to the service.
+
+```bash
+# Example for Niri users
+systemctl --user add-wants niri.service noctalia.service
+```
+
+```bash
+# Start the service
+systemctl --user start noctalia.service
+```
+
+</details>
+
+<details>
+<summary><strong>Other Compositors (no UWSM)</strong></summary>
+
+:::note
+Adjust for your compositor's syntax.
+:::
+
+If you use a compositor which doesn't provide services or targets to bind to (in this example Hyprland), then:
+
+To launch the provided AUR service file Noctalia ships (and any others which bind to `graphical-session.target`) without having to resort to using UWSM:
+
+##### 1. Create a target file
+
+At `~/.config/systemd/user/`, I called mine `hyprland-session.target`, with contents of:
+
+```ini
+[Unit]
+Description=Hyprland Session Target
+Requires=graphical-session.target
+After=graphical-session.target
+```
+
+(`Description` contents can be whatever you like.)
+
+##### 2. Adjust your compositor configuration file
+
+In the section that starts things, after any and all environment variables (where everything should be anyway), add the following <u>before anything else</u> (Hyprland syntax in this case again, adjust as needed):
+
+```ini
+exec-once = dbus-update-activation-environment --systemd --all
+exec-once = systemctl --user start hyprland-session.target
+```
+
+##### 3. Bind service to compositor target
+
+<u>Do not **enable** it, this will cause it to run on **any** DE/WM!</u> (If you already did so, just disable it.) This example is for Hyprland:
+
+```sh
+systemctl --user add-wants hyprland-session.target noctalia.service
+```
+
+Optionally bind xdg-desktop-autostart to it as well:
+
+```sh
+systemctl --user add-wants hyprland-session.target xdg-desktop-autostart.target
+```
+
+##### 4. Lastly
+
+Reboot, re-log in, or simply run `systemctl --user start hyprland-session.target` (or however you named it for your compositor) and everything set to start with your compositor of choice (Hyprland in this case), including Noctalia, will start and stop when you log out or stop the target for whatever reason.
+
+Finally, pick one of the following two categories:
+
+<details>
+<summary><strong>Raw systemd-run (unformatted scope names)</strong></summary>
+
+Go into `Settings -> Launcher -> Execute` and tick on `Enable custom launch prefix` with a value of:
+
+```sh
+systemd-run --user --scope --collect
+```
+
+You may want to additionally add everything that executes into a different slice, or a sub-slice or an existing slice or a sub-slice of an existing slice, by appending for example `--slice=desktop.slice` at the end to make up a new user slice called "desktop" or `--slice=app-desktop.slice` to add it to an existing user slice (app) under a made up slice "desktop".
+
+</details>
+
+<details>
+<summary><strong>Neatly formatted systemd-run script</strong></summary>
+
+:::note
+Untested for snaps.
+:::
+
+First, copy the following script:
+
+```bash
+#!/usr/bin/env bash
+
+# Usage:
+#
+# Modify the launcher and slice variables, optionally try your hand at filtering stuff
+# in appid before the grep, don't touch anything else
+# once done, save as exec-app (or whatever else you like, just make sure that the name isn't already some
+# other binary name that exists), place into ~/.local/bin/ and make executable
+# call by running "exec-app somebinary" (or whatever you named it)
+# and/or use it with noctalia's launcher/compositor binds as prefix, I suggest both everywhere
+#
+# NOTE:
+# If you had to create ~/.local/bin/ it will not be known to noctalia as part of $PATH if it's already running
+# you must restart it, or do the usual logout/reboot, as you prefer if restarting it doesn't work
+
+# Is it a flatpak? if so, there's no point in trying to wrap it into this, and we skip to the end
+flatpak=$(printf "$@" | grep flatpak)
+
+# Is it an appimage? If so, you may wish to uncomment what is right below flatpak,
+# as some appimages run as services, which are better than scopes, but you lose the formatting
+# and many appimages likely don't, I was using a cherrypicked appimage that did for testing;
+appimage=$(printf "$@" | grep appimage)
+if [ -n "$flatpak" ]; then
+  exec "$@"
+# elif [ -n "$appimage" ]; then
+#     exec "$@"
+else
+  # Modify the launcher prefix:
+  launcher="noctalia"
+
+  # Modify the slice, or sub-slice you want to launch it under:
+  # examples:
+  # app.slice - default slice, exists, standard convention
+  # desktop.slice - made-up slice that lives right under the user slice, doesn't exist and is made on call
+  # app-desktop.slice - creates the desktop slice under the app slice which is under the user slice
+  slice="app.slice"
+
+  # Try to guess a sensible ApplicationID, expected end format is:
+  #
+  # firstword-word-word-...-finalword - regular binaries
+  # firstword - appimages
+  #
+  appid=$(printf '%s\n' "$@"                                              \
+    | sed 's/^env\s*//'                                                 \
+    | sed '/^[A-Z_][A-Z0-9_]*=/d'                                       \
+    | sed 's|^\./||'                                                    \
+    | sed 's|[^a-zA-Z0-9].*\.appimage$||'                               \
+    | sed '/^--[^ ]/d'                                                  \
+    | sed -e "/^start$/d"                                               \
+        -e "/^\/unix$/d"                                              \
+        -e "/^%f$/d"                                                  \
+        -e 's|^'"$HOME"'/[^[:space:]]*\/\(.*\)\.[eE][xX][eE]$|\1|'    \
+    | grep -v '^$'                                                      \
+    | sed '$!s/\([^\-]\)$/\1-/'                                       \
+    | tr -cd '[:alnum:]-'                                               \
+    | tr '[:upper:]' '[:lower:]')
+
+  # Generate random instance id (collision-resistant)
+  random=$(openssl rand -hex 6)
+
+  unit="app-${launcher}-${appid}-${random}"
+
+  exec systemd-run --user \
+    --slice="$slice"    \
+    --unit="$unit"      \
+    --scope             \
+    --collect           \
+    -- "$@"
+fi
+```
+
+Read through the comments and save it under `~/.local/bin/` (if the folder doesn't exist, first make sure hidden folders are on, if it still doesn't exist in `~/.local/` make it) under whichever name you like without any extension,
+just be sure that a binary under the same name doesn't already exist. I will assume `exec-app` for the purposes of this guide. If you had to make the folder, be sure it is listed in `echo $PATH` under a new shell,
+if not, add it to $PATH and follow the standard reset procedure in the script's comments, specifically the `NOTE`.
+
+Then, go into `Settings -> Launcher -> Execute` and tick on `Enable custom launch prefix` with a value of:
+
+```sh
+exec-app
+```
+
+Lastly, here is an example usage in hyprland of it:
+
+```sh
+# Keyword section
+# ...
+$prefix = exec-app
+# ...
+# Keybinds section
+bind = $mainMod, E, exec, $prefix dolphin
+```
+
+</details>
+
+</details>
