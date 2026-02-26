@@ -107,16 +107,28 @@ Rectangle {
 }
 ```
 
-## Step 4: Restart Noctalia and Enable Your Plugin
+## Step 4: Register Your Plugin
 
-After creating these files, restart Noctalia:
+Before Noctalia can discover your plugin, you need to register it in `~/.config/noctalia/plugins.json`. Open that file and add an entry for your plugin:
+
+```json
+{
+  "my-plugin": {
+    "enabled": true,
+    "sourceUrl": "https://github.com/yourusername/noctalia-plugins"
+  }
+}
+```
+
+:::note
+The key (`"my-plugin"`) must match your plugin's directory name and the `id` field in your `manifest.json`.
+:::
+
+## Step 5: Restart Noctalia and Enable Your Plugin
+
+After registering the plugin, restart Noctalia:
 
 ```bash
-# Restart Noctalia (the method depends on your setup)
-# For systemd:
-systemctl --user restart noctalia
-
-# Or kill and restart manually
 killall qs && qs -p ~/.config/noctalia/noctalia-shell
 ```
 
@@ -127,7 +139,7 @@ Then:
 4. Click **Enable**
 5. Your widget should appear in the bar!
 
-## Step 5: Add Your Widget to the Bar
+## Step 6: Add Your Widget to the Bar
 
 After enabling the plugin, you need to add it to the bar:
 
@@ -249,22 +261,16 @@ During plugin development, you can enable **hot reload** to automatically reload
 
 ### Enabling Hot Reload
 
-Start Noctalia with the `NOCTALIA_DEBUG` environment variable:
+#### Method 1: 8 clicks on the Noctalia logo (recommended)
+
+Click the **Noctalia logo** in the About tab **8 times** in quick succession. This toggles debug mode on/off without needing to restart the shell.
+
+#### Method 2: Environment variable
+
+Alternatively, launch Noctalia with the `NOCTALIA_DEBUG` environment variable from a terminal:
 
 ```bash
-NOCTALIA_DEBUG=1 qs -c noctalia-shell --no-duplicate
-```
-
-Or if using systemd, create an override:
-
-```bash
-systemctl --user edit noctalia
-```
-
-Add:
-```ini
-[Service]
-Environment="NOCTALIA_DEBUG=1"
+NOCTALIA_DEBUG=1 qs -c noctalia-shell
 ```
 
 ### How It Works
@@ -292,7 +298,7 @@ Translation files (`i18n/*.json`) are also watched for changes:
 5. **Translations preserve state** - Translation reloads don't reset plugin state
 
 :::caution
-Hot reload is for development only. Don't run with `NOCTALIA_DEBUG=1` in production as it adds overhead from file watching.
+Hot reload is for development only. Disable debug mode in production as it adds overhead from file watching.
 :::
 
 ## Debugging Tips
@@ -326,8 +332,9 @@ cat ~/.config/noctalia/plugins/my-plugin/settings.json
 ### Common Issues
 
 **Plugin doesn't appear in settings:**
+- Make sure your plugin is registered in `~/.config/noctalia/plugins.json` with `"enabled": true` (this is required — plugins are not auto-discovered)
 - Check that `manifest.json` is valid JSON
-- Verify the plugin ID matches the directory name
+- Verify the plugin ID matches the directory name and the key in `plugins.json`
 - Restart Noctalia
 
 **Widget doesn't show in bar:**
