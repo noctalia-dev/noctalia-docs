@@ -28,6 +28,9 @@ exec-once = qs -c noctalia-shell --no-duplicate
 
 
 ### Running as a Systemd Service (Advanced)
+:::note[IPC Calls]
+If your IPC call keybinds don't work, please follow in the FAQ [Why aren't my keybinds working?](/getting-started/faq/#troubleshooting), specifically the fourth cause.
+:::
 For more robust process management, you can configure Noctalia to run as a systemd user service. This approach provides automatic restarts on failure and centralizes logging with `journalctl`.
 
 :::tip[AUR Installation]
@@ -207,9 +210,9 @@ else
         -- "$@"
 fi
 ```
-Read through the comments and save it under `~/.local/bin/` (if the folder doesn't exist, first make hidden folders are on, if it still doesn't exist in `~/.local/` make it) under whichever name you like without any extension, 
-just be sure a binary under the same name doesn't already exist. I will assume `exec-app` for the purposes of this guide. If you had to make the folder, be sure it is listed in `echo $PATH` under a new shell, 
-if not, add it to $PATH and follow the standard reset procedure in the script's comments.
+Read through the comments and save it under `~/.local/bin/` (if the folder doesn't exist, first make sure hidden folders are on, if it still doesn't exist in `~/.local/` make it) under whichever name you like without any extension, 
+just be sure that a binary under the same name doesn't already exist. I will assume `exec-app` for the purposes of this guide. If you had to make the folder, be sure it is listed in `echo $PATH` under a new shell, 
+if not, add it to $PATH and follow the standard reset procedure in the script's comments, specifically the `NOTE`.
 
 Then, go into `Settings -> Launcher -> Execute` and tick on `Enable custom launch prefix` with a value of:
 ```sh
