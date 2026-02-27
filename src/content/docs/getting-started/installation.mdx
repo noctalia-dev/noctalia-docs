@@ -5,7 +5,7 @@ sidebar:
   order: 10
 ---
 
-Noctalia is packaged for [Arch Linux](#arch), [NixOS](/getting-started/nixos/), and [Gentoo](#gentoo), but can also be [installed manually](#manual-install) in other distributions.
+Noctalia is packaged for [Arch Linux](#arch), [NixOS](/getting-started/nixos/), [Gentoo](#gentoo), [Fedora](#fedora), and [Debian/Ubuntu](#debian), but can also be [installed manually](#manual-install) in other distributions.
 
 ## Arch Linux {#arch}
 
@@ -76,6 +76,37 @@ sudo dnf install noctalia-shell
 ```
 
 Installing noctalia-shell from Terra will automatically install all runtime dependencies and display optional dependencies.
+
+## Debian / Ubuntu {#debian}
+
+Noctalia provides an APT repository for Debian-based distributions (Debian Trixie or newer, Ubuntu 24.10+). This requires a system with Qt6 >= 6.6.
+
+**Step 1**: Import the repository signing key
+
+```bash
+curl -fsSL https://pkg.noctalia.dev/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/noctalia.gpg
+```
+
+**Step 2**: Add the repository
+
+```bash
+echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt stable main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+```
+
+**Step 3**: Install noctalia-shell
+
+```bash
+sudo apt update
+sudo apt install noctalia-shell
+```
+
+This will automatically pull in `noctalia-qs` (the Quickshell runtime) as a dependency.
+
+:::note
+The APT repository currently only provides `amd64` packages. Debian Bookworm (12) and older are not supported as they ship Qt6 6.4 which is too old.
+:::
+
+---
 
 ## Manual Installation {#manual-install}
 
