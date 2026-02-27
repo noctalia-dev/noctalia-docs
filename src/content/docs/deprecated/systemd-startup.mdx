@@ -121,7 +121,7 @@ Finally, pick one of the following two categories:
 Go into `Settings -> Launcher -> Execute` and tick on `Enable custom launch prefix` with a value of:
 
 ```sh
-systemd-run --user --scope --collect
+systemd-run --user --collect --service-type=exec --property=ExitType=cgroup
 ```
 
 You may want to additionally add everything that executes into a different slice, or a sub-slice or an existing slice or a sub-slice of an existing slice, by appending for example `--slice=desktop.slice` at the end to make up a new user slice called "desktop" or `--slice=app-desktop.slice` to add it to an existing user slice (app) under a made up slice "desktop".
@@ -156,56 +156,62 @@ First, copy the following script:
 # Is it a flatpak? if so, there's no point in trying to wrap it into this, and we skip to the end
 flatpak=$(printf "$@" | grep flatpak)
 
-# Is it an appimage? If so, you may wish to uncomment what is right below flatpak,
-# as some appimages run as services, which are better than scopes, but you lose the formatting
-# and many appimages likely don't, I was using a cherrypicked appimage that did for testing;
+# Is it an appimage? If so, you may wish to uncomment what is right below flatpak, in case you ever see issues (unlikely)
 appimage=$(printf "$@" | grep appimage)
 if [ -n "$flatpak" ]; then
-  exec "$@"
+    exec "$@"
 # elif [ -n "$appimage" ]; then
 #     exec "$@"
 else
-  # Modify the launcher prefix:
-  launcher="noctalia"
+    # Modify the launcher prefix:
+    launcher="noctalia"
 
-  # Modify the slice, or sub-slice you want to launch it under:
-  # examples:
-  # app.slice - default slice, exists, standard convention
-  # desktop.slice - made-up slice that lives right under the user slice, doesn't exist and is made on call
-  # app-desktop.slice - creates the desktop slice under the app slice which is under the user slice
-  slice="app.slice"
+    # Modify the slice, or sub-slice you want to launch it under:
+    # examples:
+    # app.slice - default slice, exists, standard convention
+    # desktop.slice - made-up slice that lives right under the user slice, doesn't exist and is made on call
+    # app-desktop.slice - creates the desktop slice under the app slice which is under the user slice
+    slice="desktop.slice"
 
-  # Try to guess a sensible ApplicationID, expected end format is:
-  #
-  # firstword-word-word-...-finalword - regular binaries
-  # firstword - appimages
-  #
-  appid=$(printf '%s\n' "$@"                                              \
-    | sed 's/^env\s*//'                                                 \
-    | sed '/^[A-Z_][A-Z0-9_]*=/d'                                       \
-    | sed 's|^\./||'                                                    \
-    | sed 's|[^a-zA-Z0-9].*\.appimage$||'                               \
-    | sed '/^--[^ ]/d'                                                  \
-    | sed -e "/^start$/d"                                               \
-        -e "/^\/unix$/d"                                              \
-        -e "/^%f$/d"                                                  \
-        -e 's|^'"$HOME"'/[^[:space:]]*\/\(.*\)\.[eE][xX][eE]$|\1|'    \
-    | grep -v '^$'                                                      \
-    | sed '$!s/\([^\-]\)$/\1-/'                                       \
-    | tr -cd '[:alnum:]-'                                               \
-    | tr '[:upper:]' '[:lower:]')
+    # Try to guess a sensible ApplicationID, expected end format is:
+    #
+    # firstword-word-word-...-finalword - regular binaries
+    # firstword - appimages
+    #
+    appid=$(printf '%s\n' "$@"                                              \
+        | sed 's/^env\s*//'                                                 \
+        | sed '/^[A-Z_][A-Z0-9_]*=/d'                                       \
+        | sed 's|^\./||'                                                    \
+        | sed 's|^\/usr/bin/||'                                             \
+        | sed 's|[^a-zA-Z0-9].*\.appimage$||'                               \
+        | sed '/^--[^ ]/d'                                                  \
+        | sed -e "/^start$/d"                                               \
+              -e "/^\/unix$/d"                                              \
+              -e "/^%f$/d"                                                  \
+              -e 's|^'"$HOME"'/[^[:space:]]*\/\(.*\)\.[eE][xX][eE]$|\1|'    \
+        | grep -v '^$'                                                      \
+        | sed '$!s/\([^-\]\)$/\1-/'                                         \
+        | tr -cd '[:alnum:]-'                                               \
+        | tr '[:upper:]' '[:lower:]')
 
-  # Generate random instance id (collision-resistant)
-  random=$(openssl rand -hex 6)
+    # Generate random instance id (collision-resistant)
+    random=$(openssl rand -hex 6)
 
-  unit="app-${launcher}-${appid}-${random}"
+    # Give it a name, using the sensible ApplicationID
+    description="$appid"
 
-  exec systemd-run --user \
-    --slice="$slice"    \
-    --unit="$unit"      \
-    --scope             \
-    --collect           \
-    -- "$@"
+    # Structure it accordingly
+    unit="app-${launcher}-${appid}@${random}"
+
+    # Run it
+    exec systemd-run --user         \
+        --slice="$slice"            \
+        --unit="$unit"              \
+        --collect                   \
+        --description="$appid"      \
+        --service-type=exec         \
+        --property=ExitType=cgroup  \
+        -- "$@"
 fi
 ```
 
