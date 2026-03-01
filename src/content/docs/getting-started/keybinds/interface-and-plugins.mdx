@@ -122,14 +122,14 @@ qs -c noctalia-shell ipc call toast send '{"title": "Connection failed", "body":
 | **Selector** | <IpcCommand command="wallpaper toggle" /> | Toggle wallpaper selector |
 | **Get Wallpaper** | <IpcCommand command="wallpaper get $monitor" /> | Get path to  wallpaper on monitor |
 | **Set Wallpaper** | <IpcCommand command="wallpaper set $path $monitor" /> | Set wallpaper on monitor |
-| **Random** | <IpcCommand command="wallpaper random" /> | Apply random wallpaper |
+| **Random** | <IpcCommand command="wallpaper random $monitor" /> | Apply random wallpaper on monitor |
 | **Toggle Auto** | <IpcCommand command="wallpaper toggleAutomation" /> | Toggle automation |
 | **Enable Auto** | <IpcCommand command="wallpaper enableAutomation" /> | Enable automation |
 | **Disable Auto** | <IpcCommand command="wallpaper disableAutomation" /> | Disable automation |
 
 :::note[Wallpaper variables]
 - `$path`: Full path to your wallpaper image file
-- `$monitor`: Monitor identifier. Can be empty string to apply wallpaper to all monitors.
+- `$monitor`: Monitor identifier (e.g., `HDMI-A-1`). Use an empty string or `all` to apply to all monitors.
 :::
 
 ### Plugin Controls
