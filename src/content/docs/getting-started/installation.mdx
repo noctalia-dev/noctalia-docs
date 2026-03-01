@@ -5,7 +5,7 @@ sidebar:
   order: 10
 ---
 
-Noctalia is packaged for [Arch Linux](#arch), [NixOS](/getting-started/nixos/), [Gentoo](#gentoo), [Fedora](#fedora), and [Debian/Ubuntu](#debian), but can also be [installed manually](#manual-install) in other distributions.
+Noctalia is packaged for [Arch Linux](#arch), [NixOS](/getting-started/nixos/), [Gentoo](#gentoo), [Fedora](#fedora), [Debian/Ubuntu](#debian), and [Void Linux](#void), but can also be [installed manually](#manual-install) in other distributions.
 
 ## Arch Linux {#arch}
 
@@ -104,6 +104,45 @@ This will automatically pull in `noctalia-qs` (the Quickshell runtime) as a depe
 
 :::note
 The APT repository currently only provides `amd64` packages. Debian Bookworm (12) and older are not supported as they ship Qt6 6.4 which is too old.
+:::
+
+---
+
+## Void Linux {#void}
+
+Noctalia-shell is available through a custom XBPS repository.
+
+**Step 1**: Add the repository source
+
+```bash
+echo "repository=https://rxelelo.github.io/noctalia-void-repo" \
+  | sudo tee /etc/xbps.d/noctalia.conf
+```
+
+**Step 2**: Import the repository signing key
+
+Packages in this repository are signed. You need to trust the public key before installing:
+
+```bash
+sudo mkdir -p /var/db/xbps/keys
+curl -fsSL https://rxelelo.github.io/noctalia-void-repo/public.pem \
+  | sudo tee /var/db/xbps/keys/noctalia.pem
+```
+
+**Step 3**: Sync and install noctalia-shell
+
+```bash
+sudo xbps-install -S
+sudo xbps-install noctalia-shell
+```
+
+This will automatically pull in `noctalia-qs` (the Quickshell runtime) as a dependency. If you only want the Quickshell fork without the shell config, install `noctalia-qs` instead.
+
+:::note
+If you have an existing `quickshell` or `quickshell-git` package installed, you must remove it first as `noctalia-qs` conflicts with it:
+```bash
+sudo xbps-remove quickshell
+```
 :::
 
 ---
