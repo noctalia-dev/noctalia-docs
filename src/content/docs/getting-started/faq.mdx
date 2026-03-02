@@ -56,16 +56,11 @@ Ensure that you set environment variables properly.
 <summary>If you prefer to set these in Niri's config</summary>
 Ensure that you also launch Noctalia via Niri:
 ```ini
-spawn-at-startup "qs" "-c" "noctalia-shell"
+spawn-sh-at-startup "qs -c noctalia-shell"
 ```
 This is because Niri only overrides environment variables for processes it spawns.
 </details>
 
-<details>
-<summary>If you prefer systemd</summary>
-Systemd startup setup is now legacy-only and documented here: [Systemd Startup](/deprecated/systemd-startup/).
-</details>
-:::
 
 </details>
 
