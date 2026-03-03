@@ -53,10 +53,12 @@ First enable and sync the repository as described at [Guru Information for End U
 # emerge --sync guru
 ```
 
-Next, update the [/etc/portage/package.accept_keywords](https://wiki.gentoo.org/wiki//etc/portage/package.accept_keywords) file/folder to enable the unstable keyword on the noctalia-shell package:
+
+Next, update the /etc/portage/package.accept_keywords file/folder to enable the unstable keyword on the noctalia-shell and gui-apps/noctalia-qs packages:
 
 ```toml
 gui-apps/noctalia-shell ~amd64
+gui-apps/noctalia-qs ~amd64
 ```
 
 Now the package can be installed through emerge:
