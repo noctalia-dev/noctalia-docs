@@ -1,0 +1,5 @@
+[files]
+extend-exclude = [
+    # This file has a lot of non-English words that trigger false positives
+    "/src/content/docs/development/plugins/translations.mdx",
+]
