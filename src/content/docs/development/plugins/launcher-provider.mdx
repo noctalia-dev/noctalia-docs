@@ -109,7 +109,7 @@ Launcher providers require Noctalia Shell version 3.9.0 or later.
 |----------|------|---------|-------------|
 | `handleSearch` | `bool` | `false` | Participate in regular search (not just commands) |
 | `supportedLayouts` | `string` | `"both"` | Layout support: `"both"`, `"list"`, or `"grid"` |
-| `preferredGridColumns` | `int` | `5` | Number of columns in grid view |
+| `preferredGridColumns` | `int` | `5` | Number of columns in grid view. This is then scaled based on the density setting. |
 | `preferredGridCellRatio` | `real` | `1.0` | Cell aspect ratio (width/height) |
 | `supportsAutoPaste` | `bool` | `false` | Enable auto-paste feature |
 | `categories` | `var` | `[]` | Array of category IDs for browsing |
@@ -117,6 +117,7 @@ Launcher providers require Noctalia Shell version 3.9.0 or later.
 | `categoryIcons` | `var` | `{}` | Object mapping category IDs to icon names |
 | `selectedCategory` | `string` | `""` | Currently selected category |
 | `emptyBrowsingMessage` | `string` | `""` | Message when category has no items |
+| `ignoreDensity` | `bool` | `true` | Whether to use the density configured in the global launcher settings. If density is ignored, "comfortable" density is used instead. |
 
 ## Provider Functions
 
