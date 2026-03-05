@@ -129,27 +129,17 @@ The APT repository currently only provides `amd64` packages. Debian Bookworm (12
 
 Noctalia-shell is available through the [home:neifua](https://build.opensuse.org/package/show/home:neifua/noctalia-shell) repository on the openSUSE Build Service.
 
-#### openSUSE Tumbleweed
+| Build | Distros |
+|-------|---------|
+| `Tumbleweed` | openSUSE Tumbleweed |
+| `Leap 16.0` | openSUSE Leap |
 
 **Step 1**: Add the repository
 
-```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/openSUSE_Tumbleweed/home:neifua.repo
-```
-
-**Step 2**: Refresh and install
+Replace `CODENAME` with `openSUSE_Tumbleweed` or `16.0` depending on your distro:
 
 ```bash
-sudo zypper refresh
-sudo zypper install noctalia-shell
-```
-
-#### openSUSE Leap 16.0
-
-**Step 1**: Add the repository
-
-```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/16.0/home:neifua.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/CODENAME/home:neifua.repo
 ```
 
 **Step 2**: Refresh and install
