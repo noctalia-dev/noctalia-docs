@@ -12,7 +12,7 @@ Noctalia is available on the following distributions:
 - [Gentoo](#gentoo)
 - [Fedora](#fedora)
 - [Debian](#debian) (including Ubuntu, Pop!_OS, PikaOS)
-- [openSUSE Tumbleweed](#opensuse)
+- [openSUSE](#opensuse)
 - [Void Linux](#void)
 
 You can also [install manually](#manual-install) on any other Linux distribution.
@@ -125,14 +125,31 @@ The APT repository currently only provides `amd64` packages. Debian Bookworm (12
 
 ---
 
-## openSUSE Tumbleweed {#opensuse}
+## openSUSE {#opensuse}
 
 Noctalia-shell is available through the [home:neifua](https://build.opensuse.org/package/show/home:neifua/noctalia-shell) repository on the openSUSE Build Service.
+
+#### openSUSE Tumbleweed
 
 **Step 1**: Add the repository
 
 ```bash
 sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/openSUSE_Tumbleweed/home:neifua.repo
+```
+
+**Step 2**: Refresh and install
+
+```bash
+sudo zypper refresh
+sudo zypper install noctalia-shell
+```
+
+#### openSUSE Leap 16.0
+
+**Step 1**: Add the repository
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/16.0/home:neifua.repo
 ```
 
 **Step 2**: Refresh and install
