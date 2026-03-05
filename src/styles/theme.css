@@ -278,4 +278,19 @@ snake-toc a[data-visible="true"] {
 	opacity: 0.5;
 }
 
+/* Caution aside — bright yellow bg with dark text */
+:root[data-theme='dark'] .starlight-aside--caution {
+	--sl-color-asides-text-accent: #070722;
+	--sl-color-asides-border: #c4b200;
+	background-color: #fff59b;
+	color: #070722;
+}
+
+:root[data-theme='light'] .starlight-aside--caution {
+	--sl-color-asides-text-accent: #2a2a5a;
+	--sl-color-asides-border: #f5e000;
+	background-color: #fff59b;
+	color: #2a2a5a;
+}
+
 /* Global script to update logo link - injected via style tag */
