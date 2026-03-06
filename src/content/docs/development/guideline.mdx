@@ -46,7 +46,7 @@ Noctalia/
 
 #### Setup
 
-[lefthook](https://github.com/evilmartians/lefthook#install) and [qmlfmt](https://github.com/jesperhh/qmlfmt) are used to format QML files. After cloning the repo, install `lefthook` & `qmlfmt` ([`qmlfmt-git`](https://aur.archlinux.org/packages/qmlfmt-git) on the AUR), and run `lefthook install` to install the pre-commit hook.
+[lefthook](https://github.com/evilmartians/lefthook#install) is used to format QML files. After cloning the repo, install `lefthook` and run `lefthook install` to install the pre-commit hook.
 
 #### Code Organization
 
@@ -74,9 +74,6 @@ Noctalia/
 
 **Avoid Qt5Compat**: We don't use `Qt5Compat` since it's deprecated and will be removed in future Qt versions. Instead, use modern Qt6 alternatives like `QtQuick.Effects` (especially `MultiEffect` for visual effects).
 
-:::warning[Code Formatting]
-Always run `qmlfmt` on your QML files before submitting PRs. Modern JavaScript syntax may cause formatting errors or inconsistent output.
-:::
 
 :::tip[Tip]
 Don't worry about perfection - open an issue or start a discussion to iterate on ideas before or during implementation.
