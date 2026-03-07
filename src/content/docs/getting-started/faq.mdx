@@ -69,14 +69,8 @@ This is because Niri only overrides environment variables for processes it spawn
 
 **First things first**, you should increase your **compositor scaling** per monitor. This is the **best solution** and should give you a nice scaled up UI on HiDPI monitors.
 
-:::caution[Last Resort]
-You can start noctalia-shell with a special environment variable, but this is **not recommended** on multi-monitor setups as it will likely break tooltips and other contextual menu positioning on monitors that don't have a (0,0) origin.
-
-```bash
-QT_SCALE_FACTOR=2 qs -c noctalia-shell
-```
-
-This can also be added to your compositor autostart.
+:::danger[Avoid QT_SCALE_FACTOR and QT_AUTO_SCREEN_SCALE_FACTOR]
+Do **not** use `QT_SCALE_FACTOR` or `QT_AUTO_SCREEN_SCALE_FACTOR` to scale Noctalia. They cause numerous issues including misplaced tooltips, incorrect blur regions, and broken contextual menu positioning. Always use your compositor's per-monitor scaling instead.
 :::
 
 </details>
