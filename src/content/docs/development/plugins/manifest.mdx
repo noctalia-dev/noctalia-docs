@@ -23,7 +23,7 @@ Every Noctalia plugin must include a `manifest.json` file that describes the plu
     "main": "Main.qml",
     "barWidget": "BarWidget.qml",
     "desktopWidget": "DesktopWidget.qml",
-    "desktopWidgetSettings": "DesktopWidgetSettings.qml"
+    "desktopWidgetSettings": "DesktopWidgetSettings.qml",
     "controlCenterWidget": "ControlCenterWidget.qml",
     "launcherProvider": "LauncherProvider.qml",
     "panel": "Panel.qml",
@@ -199,9 +199,10 @@ See [Desktop Widget Guide](/development/plugins/desktop-widget/) for details.
 
 ### `desktopWidgetSettings`
 - **File**: DesktopWidgetSettings.qml
-- **Purpose**: Desktop widget specific data
+- **Purpose**: Per-instance settings UI for desktop widgets
 - **Use cases**:
-  - Change widget data of a specific desktop widget
+  - Configure individual widgets
+  - Per-instance options that differ from plugin-wide settings
 
 **Example**:
 ```json
@@ -211,6 +212,10 @@ See [Desktop Widget Guide](/development/plugins/desktop-widget/) for details.
   }
 }
 ```
+
+:::tip
+If `desktopWidgetSettings` is not defined, the system falls back to the `settings` entrypoint (if available) when the user opens the widget settings from the context menu.
+:::
 
 See [Desktop Widget Guide](/development/plugins/desktop-widget-settings/) for details.
 
@@ -470,6 +475,7 @@ The PluginRegistry validates manifests with these rules:
     "main": "Main.qml",
     "barWidget": "BarWidget.qml",
     "desktopWidget": "DesktopWidget.qml",
+    "desktopWidgetSettings": "DesktopWidgetSettings.qml",
     "controlCenterWidget": "ControlCenterWidget.qml",
     "panel": "Panel.qml",
     "settings": "Settings.qml"
@@ -491,6 +497,7 @@ The PluginRegistry validates manifests with these rules:
 - [Getting Started](/development/plugins/getting-started/) - Create your first plugin
 - [Bar Widget Guide](/development/plugins/bar-widget/) - Develop bar widgets
 - [Desktop Widget Guide](/development/plugins/desktop-widget/) - Create desktop widgets
+- [Desktop Widget Settings Guide](/development/plugins/desktop-widget-settings/) - Create desktop widgets settings
 - [Control Center Widget Guide](/development/plugins/control-center-widget/) - Add control center buttons
 - [Launcher Provider Guide](/development/plugins/launcher-provider/) - Extend the launcher
 - [Panel Guide](/development/plugins/panel/) - Create overlay panels
