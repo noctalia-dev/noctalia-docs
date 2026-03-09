@@ -5,9 +5,13 @@ sidebar:
   order: 41
 ---
 
-A Desktop Widget Settings component is a QML file that gives the ability to change the widgetData. 
-It is used when right clicking on a desktop widget and pressing "widget settings".
-It should follow the following structure:
+A dedicated configuration interface for their desktop widget. 
+Unlike the general [Settings UI](/development/plugins/settings-ui/) which configures plugin-wide settings.
+Desktop Widget Settings operate on **per-instance widget data**, the position, scale, and custom properties stored for each individual widget on the desktop.
+
+## Basic Structure
+
+A Desktop Widget Settings component is a QML file that receives a `pluginApi` and a `widgetSettings` object:
 
 ```qml
 import QtQuick
@@ -17,82 +21,79 @@ import qs.Widgets
 
 ColumnLayout {
   id: root
+  spacing: Style.marginM
 
-  // Required: Plugin API
+  // Plugin API (injected by the settings dialog system)
   property var pluginApi: null
+
+  // Widget settings object (injected by the settings dialog system)
   property var widgetSettings: null
 
-  // Local state for editing
-  property string editValue: widgetSettings?.data?.myValue ?? ""
-
-  spacing: Style.marginM
+  // Local state - initialize from widgetSettings.data with metadata fallback
+  property bool valueShowBackground:
+    widgetSettings?.data?.showBackground ??
+    widgetSettings?.metadata?.showBackground ??
+    true
 
   // Your settings controls here
 
-  // Optional: Save function to call when data is changed
+  NToggle {
+    Layout.fillWidth: true
+    label: "Show Background"
+    description: "Display the widget background container"
+    checked: root.valueShowBackground
+    onToggled: checked => {
+      root.valueShowBackground = checked;
+      saveSettings();
+    }
+  }
+
   function saveSettings() {
-    widgetSettings.data.value = editValue;
+    if (!widgetSettings) return;
+    widgetSettings.data.showBackground = root.valueShowBackground;
     widgetSettings.save();
   }
 }
 ```
 
-## Required Elements
+## How It Works
+
+When a user right-clicks a desktop widget and selects **Widget Settings** (or clicks the gear icon in the Desktop Widgets settings tab), Noctalia loads your `desktopWidgetSettings` component inside a `DesktopWidgetSettingsDialog`. The dialog injects two properties into your component:
 
 ### `pluginApi`
-Injected by the settings dialog system. Provides access to plugin settings and the save function.
+The standard [Plugin API](/development/plugins/api/) object. Use it to access plugin-wide settings, translations, manifest data, and more.
 
 ```qml
 property var pluginApi: null
 ```
 
 ### `widgetSettings`
-Injected by the desktop widget settings dialog system. Provides access to the widget data, metadata and the save function.
+An object that provides access to the current widget instance's data:
 
 ```qml
 property var widgetSettings: null
 ```
 
-#### `data` field
-The data field contains the variables you have saved. Each desktop widget has it's own data.
+The `widgetSettings` object contains two variables and one function:
 
-#### `metadata` field
-The metadata is shared between all widgets. 
-It's the same as the `pluginApi.metadata` field, with the following extra variables: `showBackground` and `roundedCorners`.
+#### `data`
+- **Type**: `object`
+- **Read-only**: no
+- **Description**: The current widget instance's stored settings (position, scale, and any custom keys you've added). Modify this object directly.
 
-The `showBackground` field when enabled shows a background behind the desktop widget. 
-When the `showBackground` is enabled, the `roundedCorners` variable decides if the desktop widget should have rounded corners.
+#### `metadata`
+- **Type**: object
+- **Read-only**: yes
+- **Description**: Read-only default metadata registered by the `DesktopWidgetRegistry` for your widget. Use as fallback values.
 
-#### `save` function
-When the save function is called, the data of the specific widget is updated.
+#### `save()`
+- **Type**: function
+- **Signature**: `function save(): void`
+- **Description**: Call this to persist the current `widgetSettings.data` to disk.
 
-```qml
-property var widgetSettings: null
-property bool myValue: widgetSettings?.data?.myValue ?? true
-
-function saveSettings() {
-  if(!widgetSettings || !widgetSettings.data) {
-    Logger.e("MyPlugin", "Error widgetSettings is null");
-    return;
-  }
-
-  widgetSettings.data.myValue = myValue;
-  // Saves the widgetData to the widget.
-  widgetSettings.save();
-}
-
-NToggle {
-  label: "My Toggle"
-  description: "My very nice and cool toggle!"
-  checked: myValue
-  onToggled: checked => {
-    myValue = checked;
-    // You can save when you have changed a value.
-    saveSettings();
-  }
-  defaultValue: true
-}
-```
+:::caution
+Always call `widgetSettings.save()` after modifying `widgetSettings.data` to persist changes. Unlike the general settings entry point, there is no separate `saveSettings()` function called by the dialog.
+:::
 
 ## Manifest Entry
 
@@ -116,6 +117,101 @@ Register the desktop widget settings in your plugin's `manifest.json`:
   }
 }
 ```
+
+:::note
+If `desktopWidgetSettings` is not defined but `settings` is, the desktop widget settings menu will load the `settings` component.
+:::
+
+:::note
+When both `desktopWidgetSettings` and `settings` are defined, the desktop widget settings menu will load `desktopWidgetSettings`. The general `settings` entry point is used for the plugin-wide configuration accessed from **Plugins > Your Plugin > Configure**.
+
+:::
+
+## Local State Pattern
+
+Follows the same local state pattern used in the Settings UI. 
+Initialize local properties from `widgetSettings.data` with fallbacks to `widgetSettings.metadata`, `pluginApi.pluginSettings` or `pluginApi.manifest.metadata.defaultSettings`:
+
+```qml
+ColumnLayout {
+  id: root
+  spacing: Style.marginM
+
+  property var pluginApi: null
+  property var widgetSettings: null
+
+  // Local state with metadata fallback
+  property bool valueShowBackground:
+    widgetSettings?.data?.showBackground ??
+    widgetSettings?.metadata?.showBackground ??
+    true
+
+  property bool valueRoundedCorners:
+    widgetSettings?.data?.roundedCorners ??
+    widgetSettings?.metadata?.roundedCorners ??
+    true
+
+  property string valueLayout:
+    widgetSettings?.data?.layout ??
+    pluginApi?.manifest?.metadata?.defaultSettings?.layout ??
+    "side"
+
+  function save() {
+    if (!widgetSettings) return;
+    widgetSettings.data.showBackground = root.valueShowBackground;
+    widgetSettings.data.roundedCorners = root.valueRoundedCorners;
+    widgetSettings.data.layout = root.valueLayout;
+    widgetSettings.save();
+  }
+}
+```
+
+:::tip
+Unlike the general Settings UI where `saveSettings()` is called by the dialog on "Save", Desktop Widget Settings use a **live-save** pattern. 
+Call `widgetSettings.save()` whenever a value changes.
+:::
+
+## `settingsChanged` signal
+
+As an alternative to calling `widgetSettings.save()`, your component can emit a `settingsChanged` signal. The settings dialog listens for this signal and handles persistence automatically:
+
+```qml
+ColumnLayout {
+  id: root
+
+  property var pluginApi: null
+  property var widgetSettings: null
+
+  signal settingsChanged(var settings)
+
+  property bool valueShowBackground:
+    widgetSettings?.data?.showBackground ??
+    widgetSettings?.manifest?.showBackground ??
+    true
+
+  function save() {
+    var settings = Object.assign({}, widgetSettings?.data || {});
+    settings.showBackground = root.valueShowBackground;
+    settingsChanged(settings);
+  }
+
+  NToggle {
+    Layout.fillWidth: true
+    label: "Show Background"
+    checked: root.valueShowBackground
+    onToggled: checked => {
+      root.valueShowBackground = checked;
+      root.save();
+    }
+  }
+}
+
+
+```
+
+:::note
+This is **not** the recommended way, this is only an alternative way to save the widget state.
+:::
 
 ## Complete Example
 
@@ -308,12 +404,12 @@ ColumnLayout {
 ```
 
 ## Best Practices
-
-1. **Provide fallbacks**: Always have default values for settings and data
-2. **Save frequently**: When some property changes, it's recommended to save the data so that the user can see the updated widget.
+1. **Use for per-instance options only**: Desktop widget settings should control appearance and behavior of a specific widget instance (background, colors, layout). Plugin-wide settings (API keys, global toggles) belong in the general `settings` entry point.
+2. **Provide metadata fallbacks**: Always fall back to `widgetSettings.metadata` values so widgets have sensible defaults before the user configures them.
+3. **Save on change**: Use the live-save pattern, call `widgetSettings.save()` immediately when values change. The system debounces writes automatically.
+4. **Use Noctalia widgets**: Use `NToggle`, `NDropdown`, `NTextInput`, and other Noctalia components for a consistent look.
 
 ## See Also
-
 - [Getting Started](/development/plugins/getting-started/) - Create your first plugin
 - [Bar Widget Development](/development/plugins/bar-widget/) - Create bar widgets
 - [Desktop Widget Development](/development/plugins/desktop-widget/) - Create desktop widgets
