@@ -23,6 +23,7 @@ Every Noctalia plugin must include a `manifest.json` file that describes the plu
     "main": "Main.qml",
     "barWidget": "BarWidget.qml",
     "desktopWidget": "DesktopWidget.qml",
+    "desktopWidgetSettings": "DesktopWidgetSettings.qml"
     "controlCenterWidget": "ControlCenterWidget.qml",
     "launcherProvider": "LauncherProvider.qml",
     "panel": "Panel.qml",
@@ -190,6 +191,23 @@ See [Bar Widget Guide](/development/plugins/bar-widget/) for details.
 {
   "entryPoints": {
     "desktopWidget": "DesktopWidget.qml"
+  }
+}
+```
+
+See [Desktop Widget Guide](/development/plugins/desktop-widget/) for details.
+
+### `desktopWidgetSettings`
+- **File**: DesktopWidgetSettings.qml
+- **Purpose**: Desktop widget specific data
+- **Use cases**:
+  - Change widget data of a specific desktop widget
+
+**Example**:
+```json
+{
+  "entryPoints": {
+    "desktopWidgetSettings": "DesktopWidgetSettings.qml"
   }
 }
 ```

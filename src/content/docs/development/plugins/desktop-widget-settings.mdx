@@ -1,0 +1,322 @@
+---
+title: Desktop Widget Settings
+description: Create desktop widget settings
+sidebar:
+  order: 41
+---
+
+A Desktop Widget Settings component is a QML file that gives the ability to change the widgetData. 
+It is used when right clicking on a desktop widget and pressing "widget settings".
+It should follow the following structure:
+
+```qml
+import QtQuick
+import QtQuick.Layouts
+import qs.Commons
+import qs.Widgets
+
+ColumnLayout {
+  id: root
+
+  // Required: Plugin API
+  property var pluginApi: null
+  property var widgetSettings: null
+
+  // Local state for editing
+  property string editValue: widgetSettings?.data?.myValue ?? ""
+
+  spacing: Style.marginM
+
+  // Your settings controls here
+
+  // Optional: Save function to call when data is changed
+  function saveSettings() {
+    widgetSettings.data.value = editValue;
+    widgetSettings.save();
+  }
+}
+```
+
+## Required Elements
+
+### `pluginApi`
+Injected by the settings dialog system. Provides access to plugin settings and the save function.
+
+```qml
+property var pluginApi: null
+```
+
+### `widgetSettings`
+Injected by the desktop widget settings dialog system. Provides access to the widget data, metadata and the save function.
+
+```qml
+property var widgetSettings: null
+```
+
+#### `data` field
+The data field contains the variables you have saved. Each desktop widget has it's own data.
+
+#### `metadata` field
+The metadata is shared between all widgets. 
+It's the same as the `pluginApi.metadata` field, with the following extra variables: `showBackground` and `roundedCorners`.
+
+The `showBackground` field when enabled shows a background behind the desktop widget. 
+When the `showBackground` is enabled, the `roundedCorners` variable decides if the desktop widget should have rounded corners.
+
+#### `save` function
+When the save function is called, the data of the specific widget is updated.
+
+```qml
+property var widgetSettings: null
+property bool myValue: widgetSettings?.data?.myValue ?? true
+
+function saveSettings() {
+  if(!widgetSettings || !widgetSettings.data) {
+    Logger.e("MyPlugin", "Error widgetSettings is null");
+    return;
+  }
+
+  widgetSettings.data.myValue = myValue;
+  // Saves the widgetData to the widget.
+  widgetSettings.save();
+}
+
+NToggle {
+  label: "My Toggle"
+  description: "My very nice and cool toggle!"
+  checked: myValue
+  onToggled: checked => {
+    myValue = checked;
+    // You can save when you have changed a value.
+    saveSettings();
+  }
+  defaultValue: true
+}
+```
+
+## Manifest Entry
+
+Register the desktop widget settings in your plugin's `manifest.json`:
+
+```json
+{
+  "id": "my-plugin",
+  "name": "My Plugin",
+  "version": "1.0.0",
+  "entryPoints": {
+    "desktopWidget": "DesktopWidget.qml",
+    "desktopWidgetSettings": "DesktopWidgetSettings.qml"
+  },
+  "metadata": {
+    "defaultSettings": {
+      "message": "Hello World",
+      "enabled": true,
+      "count": 0
+    }
+  }
+}
+```
+
+## Complete Example
+
+Here's a complete desktop widget settings example:
+
+```qml
+import QtQuick
+import QtQuick.Layouts
+import qs.Commons
+import qs.Widgets
+
+ColumnLayout {
+  id: root
+
+  property var pluginApi: null
+  property var widgetSettings: null
+
+  // Local state
+  property string editMessage:
+    widgetSettings?.data?.message ??
+    pluginApi?.manifest?.metadata?.defaultSettings?.message ??
+    "Hello World"
+
+  property color editBgColor:
+    widgetSettings?.data?.backgroundColor ??
+    pluginApi?.manifest?.metadata?.defaultSettings?.backgroundColor ??
+    "#A9AEFE"
+
+  property bool editShowIcon:
+    widgetSettings?.data?.showIcon ??
+    pluginApi?.manifest?.metadata?.defaultSettings?.showIcon ??
+    true
+
+  property int editRefreshRate:
+    widgetSettings?.data?.refreshRate ??
+    pluginApi?.manifest?.metadata?.defaultSettings?.refreshRate ??
+    30
+
+  // Have a toggle for the built-in showBackground value as well
+  property bool showBackground:
+    widgetSettings?.data?.showBackground ??
+    widgetSettings?.metadata?.showBackground ??
+    true
+
+  spacing: Style.marginM
+
+  Component.onCompleted: {
+    Logger.i("MyPlugin", "Desktop Widget Settings loaded")
+  }
+
+  // Text input
+  NTextInput {
+    Layout.fillWidth: true
+    label: "Display Message"
+    description: "The message shown in the bar widget"
+    placeholderText: "Enter a message..."
+    text: root.editMessage
+    onTextChanged: {
+      root.editMessage = text;
+      root.saveSettings();
+    }
+  }
+
+  // Color picker
+  ColumnLayout {
+    Layout.fillWidth: true
+    spacing: Style.marginS
+
+    NLabel {
+      label: "Background Color"
+      description: "Widget background color"
+    }
+
+    NColorPicker {
+      Layout.preferredWidth: Style.sliderWidth
+      Layout.preferredHeight: Style.baseWidgetSize
+      selectedColor: root.editBgColor
+      onColorSelected: function(color) {
+        root.editBgColor = color;
+        root.saveSettings();
+      }
+    }
+  }
+
+  NDivider {
+    Layout.fillWidth: true
+    Layout.topMargin: Style.marginS
+    Layout.bottomMargin: Style.marginS
+  }
+
+  // Toggle
+  NToggle {
+    Layout.fillWidth: true
+    label: "Show Icon"
+    description: "Display an icon next to the message"
+    checked: root.editShowIcon
+    onCheckedChanged: {
+      root.editShowIcon = checked;
+      root.saveSettings();
+    }
+  }
+
+  // Slider with label
+  ColumnLayout {
+    Layout.fillWidth: true
+    spacing: Style.marginS
+
+    NLabel {
+      label: "Refresh Rate"
+      description: "Update interval in seconds: " + root.editRefreshRate
+    }
+
+    NSlider {
+      Layout.fillWidth: true
+      from: 5
+      to: 120
+      stepSize: 5
+      value: root.editRefreshRate
+      onValueChanged: {
+        root.editRefreshRate = value;
+        root.saveSettings();
+      }
+    }
+  }
+
+  // Show background toggle
+  NToggle {
+    Layout.fillWidth: true
+    label: "Show Background"
+    description: "Show the background of the desktop widget"
+    checked: root.showBackground
+    onCheckedChanged: {
+      root.showBackground = checked;
+      root.saveSettings();
+    }
+  }
+  // Preview section
+  NDivider {
+    Layout.fillWidth: true
+    Layout.topMargin: Style.marginS
+    Layout.bottomMargin: Style.marginS
+  }
+
+  NLabel {
+    label: "Preview"
+  }
+
+  Rectangle {
+    Layout.fillWidth: true
+    Layout.preferredHeight: 50
+    color: root.editBgColor
+    radius: Style.radiusM
+
+    RowLayout {
+      anchors.centerIn: parent
+      spacing: Style.marginS
+
+      NIcon {
+        icon: "heart"
+        visible: root.editShowIcon
+        color: Color.mOnPrimary
+      }
+
+      NText {
+        text: root.editMessage
+        color: Color.mOnPrimary
+        pointSize: Style.fontSizeM
+      }
+    }
+  }
+
+  // Save function - called by the dialog
+  function saveSettings() {
+    if (!widgetSettings || !widgetSettings.data) {
+      Logger.e("MyPlugin", "Cannot save: widgetSettings is null")
+      return
+    }
+
+    widgetSettings.data.message = root.editMessage
+    widgetSettings.data.backgroundColor = root.editBgColor.toString()
+    widgetSettings.data.showIcon = root.editShowIcon
+    widgetSettings.data.refreshRate = root.editRefreshRate
+    widgetSettings.data.showBackground = root.showBackground;
+
+    widgetSettings.save();
+
+    Logger.i("MyPlugin", "Settings saved successfully")
+  }
+}
+```
+
+## Best Practices
+
+1. **Provide fallbacks**: Always have default values for settings and data
+2. **Save frequently**: When some property changes, it's recommended to save the data so that the user can see the updated widget.
+
+## See Also
+
+- [Getting Started](/development/plugins/getting-started/) - Create your first plugin
+- [Bar Widget Development](/development/plugins/bar-widget/) - Create bar widgets
+- [Desktop Widget Development](/development/plugins/desktop-widget/) - Create desktop widgets
+- [Panel Development](/development/plugins/panel/) - Create overlay panels
+- [Plugin API](/development/plugins/api/) - Full API reference
+- [Manifest Reference](/development/plugins/manifest/) - Plugin configuration
