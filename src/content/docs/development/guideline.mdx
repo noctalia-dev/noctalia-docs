@@ -11,20 +11,22 @@ We welcome contributions of any size - bug fixes, new features, documentation im
 
 ### Project Structure
 
+Last updated March 09, 2026
+
 ```
 Noctalia/
 ├── shell.qml                   # Main shell entry point
 ├── Modules/                    # UI components and panels
 │   ├── Bar/                    # Status bar and widgets
-│   ├── ControlCenter/          # Control center panel
+│   ├── Desktop Widgets/        # Desktop widgets panel
 │   ├── Dock/                   # Application dock
 │   ├── Launcher/               # Application launcher
 │   ├── Settings/               # Settings panel
+│   ├── Panels/                 # Other panels
 │   └── ...                     # Other UI modules
 ├── Services/                   # Backend services
-│   ├── AudioService.qml        # Audio management
-│   ├── BatteryService.qml      # Battery monitoring
-│   ├── IPCService.qml          # Inter-process communication
+│   ├── Compositor/             # Compositor
+│   ├── UI/                     # UI services
 │   └── ...                     # Other services
 ├── Widgets/                    # Reusable UI components
 │   ├── NButton.qml             # Custom button component
@@ -38,9 +40,8 @@ Noctalia/
 │   ├── ColorScheme/            # Predefined color schemes
 │   ├── Translations/           # Internationalization files
 │   └── ...                     # Other assets
-└── Bin/                        # Development scripts
+└── Scripts/                    # Development scripts
 ```
-
 
 ### Development Guidelines
 
