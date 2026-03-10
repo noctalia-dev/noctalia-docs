@@ -161,6 +161,24 @@ readonly property string message:
   "Default Message"
 ```
 
+
+## Desktop Widget Settings
+
+You can provide a dedicated settings UI for your desktop widget that allows users to configure per-instance options (like show/hide background, layout mode, colors) directly from the widget's settings menu.
+
+Register a `desktopWidgetSettings` entrypoint in your `manifest.json`:
+
+```json
+{
+    "entryPoints": {
+        "desktopWidget": "DesktopWidget.qml",
+        "desktopWidgetSettings": "DesktopWidgetSettings.qml"
+    }
+}
+```
+
+For a complete guide, see [Desktop Widget Settings](/development/plugins/desktop-widget-settings/).
+
 ## Using widgetData
 
 Widget-specific configuration is available through `widgetData`. This is useful for per-instance settings:
