@@ -5,7 +5,7 @@ sidebar:
   order: 41
 ---
 
-A dedicated configuration interface for their desktop widget. 
+A dedicated configuration interface for their desktop widget.
 Unlike the general [Settings UI](/development/plugins/settings-ui/) which configures plugin-wide settings.
 Desktop Widget Settings operate on **per-instance widget data**, the position, scale, and custom properties stored for each individual widget on the desktop.
 
@@ -92,7 +92,7 @@ The `widgetSettings` object contains two variables and one function:
 - **Description**: Call this to persist the current `widgetSettings.data` to disk.
 
 :::caution
-Always call `widgetSettings.save()` after modifying `widgetSettings.data` to persist changes. Unlike the general settings entry point, there is no separate `saveSettings()` function called by the dialog.
+Always call `widgetSettings.save()` after modifying `widgetSettings.data` to persist changes. The dialog also calls `saveSettings()` on your component when closing, so implement that function to ensure any pending changes are saved.
 :::
 
 ## Manifest Entry
@@ -129,7 +129,7 @@ When both `desktopWidgetSettings` and `settings` are defined, the desktop widget
 
 ## Local State Pattern
 
-Follows the same local state pattern used in the Settings UI. 
+Follows the same local state pattern used in the Settings UI.
 Initialize local properties from `widgetSettings.data` with fallbacks to `widgetSettings.metadata`, `pluginApi.pluginSettings` or `pluginApi.manifest.metadata.defaultSettings`:
 
 ```qml
@@ -173,7 +173,7 @@ Call `widgetSettings.save()` whenever a value changes.
 
 ## `settingsChanged` signal
 
-As an alternative to calling `widgetSettings.save()`, your component can emit a `settingsChanged` signal. The settings dialog listens for this signal and handles persistence automatically:
+As an alternative to calling `widgetSettings.save()`, your component can emit a `settingsChanged` signal. The settings dialog listens for this signal (debounced at 150ms) and handles persistence automatically. You can also emit `settingsSaved` for immediate (non-debounced) persistence:
 
 ```qml
 ColumnLayout {
@@ -186,7 +186,7 @@ ColumnLayout {
 
   property bool valueShowBackground:
     widgetSettings?.data?.showBackground ??
-    widgetSettings?.manifest?.showBackground ??
+    widgetSettings?.metadata?.showBackground ??
     true
 
   function save() {
@@ -205,8 +205,6 @@ ColumnLayout {
     }
   }
 }
-
-
 ```
 
 :::note
@@ -308,7 +306,7 @@ ColumnLayout {
     label: "Show Icon"
     description: "Display an icon next to the message"
     checked: root.editShowIcon
-    onCheckedChanged: {
+    onToggled: checked => {
       root.editShowIcon = checked;
       root.saveSettings();
     }
@@ -343,7 +341,7 @@ ColumnLayout {
     label: "Show Background"
     description: "Show the background of the desktop widget"
     checked: root.showBackground
-    onCheckedChanged: {
+    onToggled: checked => {
       root.showBackground = checked;
       root.saveSettings();
     }
