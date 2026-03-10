@@ -56,9 +56,14 @@ Ensure that you set environment variables properly.
 <summary>If you prefer to set these in Niri's config</summary>
 Ensure that you also launch Noctalia via Niri:
 ```ini
-spawn-sh-at-startup "qs -c noctalia-shell"
+spawn-at-startup "qs" "-c" "noctalia-shell"
 ```
 This is because Niri only overrides environment variables for processes it spawns.
+</details>
+
+<details>
+<summary>If you prefer systemd</summary>
+Systemd startup setup is now legacy-only and documented here: [Systemd Startup](/deprecated/systemd-startup/).
 </details>
 :::
 
@@ -69,8 +74,14 @@ This is because Niri only overrides environment variables for processes it spawn
 
 **First things first**, you should increase your **compositor scaling** per monitor. This is the **best solution** and should give you a nice scaled up UI on HiDPI monitors.
 
-:::danger[Avoid QT_SCALE_FACTOR and QT_AUTO_SCREEN_SCALE_FACTOR]
-Do **not** use `QT_SCALE_FACTOR` or `QT_AUTO_SCREEN_SCALE_FACTOR` to scale Noctalia. They cause numerous issues including misplaced tooltips, incorrect blur regions, and broken contextual menu positioning. Always use your compositor's per-monitor scaling instead.
+:::caution[Last Resort]
+You can start noctalia-shell with a special environment variable, but this is **not recommended** on multi-monitor setups as it will likely break tooltips and other contextual menu positioning on monitors that don't have a (0,0) origin.
+
+```bash
+QT_SCALE_FACTOR=2 qs -c noctalia-shell --no-duplicate
+```
+
+This can also be added to your compositor autostart.
 :::
 
 </details>
@@ -141,20 +152,39 @@ workspace = 5, monitor:DP-1, persistent:true
 <details>
 <summary><strong>Why aren't my keybinds working?</strong></summary>
 
+<details>
+
+<summary><strong>Why is my battery not being detected?</strong></summary>
+
+<strong>UPower is required for battery status to be displayed in Noctalia.</strong> If your battery indicator is missing, make sure <code>upower</code> is installed.
+
+**How to fix:**
+
+1. Install UPower using your package manager. For example:
+   - On Arch: <code>sudo pacman -S upower</code>
+   - On Debian/Ubuntu: <code>sudo apt install upower</code>
+   - On NixOS: add <code>upower</code> to your system packages
+2. Log out and back in, or reboot, after installing. On most systems, UPower will start automatically.
+3. Restart Noctalia to check if the battery now appears.
+
+If you still do not see a battery indicator after installing and starting UPower, please check your system logs or ask for help in the community.
+
+</details>
+
 Common causes:
 
 1. **Wrong command syntax**: Make sure you're using the correct IPC command format
 2. **Window manager configuration**: Verify your keybind syntax matches your WM (Hyprland, Niri etc)
 3. **Noctalia not running**: Keybinds only work when Noctalia is running
-4. **Necessary environment variables not visible to Noctalia at start-up**: This affects people who do not set the contained environment variables:
+4. **Necessary environment variables not visible to Noctalia at start-up**: This affects Niri Systemd/UWSM/people who do not set the contained environment variables:
    - Run:
    ```sh
    tr '\0' '\n' < /proc/$(pidof qs)/environ
    ```
    to confirm if this is indeed your issue; you should see `WAYLAND_DISPLAY` with a value of `wayland-1`, `XDG_SESSION_TYPE` `wayland` and `QT_QPA_PLATFORM` `wayland` (or `wayland;xcb`).
    - If you do not see any of these three you must make them available to Noctalia by adding them to a place where they can be seen in time:
-      - `/etc/environment`
-      - in-config of your compositor
+      - `/etc/environment` for Niri Systemd/UWSM
+      - in-config of your compositor for Niri without Systemd/UWSM-less method outlined in [Systemd Startup](/deprecated/systemd-startup/)
    - After setting the values re-log back in/reboot.
    - Confirm it worked by checking `qs list --all`, it should list under Display connection `wayland,wayland-1` (also see the note right below if it lists `unk` but IPC calls work).
    :::note[unk]
