@@ -152,25 +152,6 @@ workspace = 5, monitor:DP-1, persistent:true
 <details>
 <summary><strong>Why aren't my keybinds working?</strong></summary>
 
-<details>
-
-<summary><strong>Why is my battery not being detected?</strong></summary>
-
-<strong>UPower is required for battery status to be displayed in Noctalia.</strong> If your battery indicator is missing, make sure <code>upower</code> is installed.
-
-**How to fix:**
-
-1. Install UPower using your package manager. For example:
-   - On Arch: <code>sudo pacman -S upower</code>
-   - On Debian/Ubuntu: <code>sudo apt install upower</code>
-   - On NixOS: add <code>upower</code> to your system packages
-2. Log out and back in, or reboot, after installing. On most systems, UPower will start automatically.
-3. Restart Noctalia to check if the battery now appears.
-
-If you still do not see a battery indicator after installing and starting UPower, please check your system logs or ask for help in the community.
-
-</details>
-
 Common causes:
 
 1. **Wrong command syntax**: Make sure you're using the correct IPC command format
@@ -193,6 +174,24 @@ Common causes:
    :::note[Bypass]
    If you don't want to do any of this, while we don't recommend it, you can keep using IPC calls by passing `--any-display` to them.
    :::
+
+</details>
+
+<details>
+<summary><strong>Why is my battery not showing?</strong></summary>
+
+<strong>UPower is required for battery status to be displayed in Noctalia.</strong> If your battery indicator is missing, make sure <code>upower</code> is installed.
+
+**How to fix:**
+
+1. Install UPower using your package manager. For example:
+   - On Arch: <code>sudo pacman -S upower</code>
+   - On Debian/Ubuntu: <code>sudo apt install upower</code>
+   - On NixOS: add <code>upower</code> to your system packages
+2. Log out and back in, or reboot, after installing. On most systems, UPower will start automatically.
+3. Restart Noctalia to check if the battery now appears.
+
+If you still do not see a battery indicator after installing and starting UPower, please check your system logs or ask for help in the community.
 
 </details>
 
@@ -232,36 +231,13 @@ Make sure only a single instance is started:
 
 </details>
 
+
 <details>
 <summary><strong>Why can't I unlock my lock screen??</strong></summary>
 
 openSUSE in particular does not provide the required /etc/pam.d/login.
 You must create an /etc/pam.d/login manually.
 Execute:
-```bash
-sudo tee /etc/pam.d/login <<'EOF'
-```
-And enter:
-```
-#%PAM-1.0
-auth       include      common-auth
-account    include      common-account
-password   include      common-password
-session    include      common-session
-EOF
-```
-
-</details>
-
-<details>
-<summary><strong>Why won't my screen recorder start recording?</strong></summary>
-
-Common causes:
-
-1. **Missing package**: Make sure you have installed the proper package or flatpak
-2. **Portal crashed**: Verify the status of your xdg-desktop-portal-xxx service and/or restart it. On Niri the gnome portal is recommended and can be restarted using the following command: ```systemctl --user restart xdg-desktop-portal-gnome.service```
-3. **Change the video source**: In Noctalia's settings, switch the source from portal to screen. And try recording.
-4. **Check output in terminal**: ```gpu-screen-recorder -w screen -f 60 -a default_output -o video.mp4```
 
 </details>
 
