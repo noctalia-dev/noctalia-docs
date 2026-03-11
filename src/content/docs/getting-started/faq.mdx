@@ -224,6 +224,36 @@ If you have previously used a custom PAM configuration for fingerprint authentic
 </details>
 
 <details>
+<summary><strong>How to enable Yubikey for Noctalia Lockscreen?</strong></summary>
+
+Noctalia lock screen pulls it's authentication info from <code>/etc/pam.d/system-login</code> this is where we will need to add our PAM info for our Yubikey
+Please Note: This instruction assumes your Yubikey is already configured for this consult your distros documentation.
+
+we're going to need to edit <code>/etc/pam.d/system-login</code>, so use whichever text editor you like. <code> sudo nvim /etc/pam.d/system-login </code>  find the last instance of a line that starts with "auth" and make a new line after that
+
+in the new line, type (or copy and paste) in the following: auth required pam_u2f.so
+
+write and quit the file
+
+If you want to require ONLY the yubikey to unlock your screen:
+1. Open the file back up with your text editor
+2. Find the line that contains: auth include system-auth
+
+comment out the line so that it looks like: #auth include system-auth
+
+Example once completed
+<code>
+auth       required   pam_shells.so
+auth       requisite  pam_nologin.so
+#auth       include    system-auth
+auth       required   pam_u2f.so
+</code>
+
+write and quit the file
+
+</details>
+
+<details>
 <summary><strong>Why are my tray icons missing after (re)starting Noctalia?</strong></summary>
 
 This typically happens when KDE is installed alongside your window manager. KDE's tray daemon (`kded6`) can interfere with Noctalia's system tray, though it usually doesn't autostart at cold boot.
