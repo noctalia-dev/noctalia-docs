@@ -104,12 +104,12 @@ Item {
 
   NText {
     // Simple translation
-    text: pluginApi?.tr("widget.title") || "My Widget"
+    text: pluginApi?.tr("widget.title")
   }
 
   NText {
     // Nested key access
-    text: pluginApi?.tr("panel.header") || "Settings"
+    text: pluginApi?.tr("panel.header")
   }
 }
 ```
@@ -121,7 +121,7 @@ Pass dynamic values using interpolations:
 ```qml
 // Translation file: "welcome": "Welcome, {name}!"
 NText {
-  text: pluginApi?.tr("messages.welcome", { name: userName }) || ""
+  text: pluginApi?.tr("messages.welcome", { name: userName })
   // Result: "Welcome, John!"
 }
 
@@ -130,7 +130,7 @@ NText {
   text: pluginApi?.tr("connection.status", {
     server: serverName,
     port: portNumber
-  }) || ""
+  })
   // Result: "Connected to localhost on port 8080"
 }
 ```
@@ -150,7 +150,7 @@ NText {
     itemCount,           // Count for plural logic
     "1 item",            // Fallback singular
     "{count} items"      // Fallback plural
-  ) || ""
+  )
 }
 ```
 
@@ -190,17 +190,7 @@ The translation system uses this fallback order:
 
 1. Current language translation (e.g., `i18n/de.json`)
 2. English translation (`i18n/en.json`)
-3. The key itself wrapped in `## ##` (e.g., `## widget.title ##`)
-
-Always provide fallback values in your QML:
-
-```qml
-// Good - provides fallback
-text: pluginApi?.tr("widget.title") || "My Widget"
-
-// Also good - uses default from tr()
-text: pluginApi?.tr("widget.title") ?? "My Widget"
-```
+3. The key itself wrapped in `!! !!` (e.g., `!! widget.title !!`)
 
 ## Supported Languages
 
@@ -303,7 +293,7 @@ Rectangle {
 
     NText {
       text: root.loading
-        ? (pluginApi?.tr("widget.loading") || "Loading...")
+        ? pluginApi?.tr("widget.loading")
         : root.temperature
       color: Color.mOnSurface
       pointSize: Style.fontSizeS
@@ -315,7 +305,7 @@ Rectangle {
     hoverEnabled: true
 
     onEntered: {
-      var tooltip = pluginApi?.tr("widget.title") || "Weather"
+      var tooltip = pluginApi?.tr("widget.title")
       TooltipService.show(root, tooltip)
     }
 
@@ -366,7 +356,7 @@ Item {
 
       // Header with translated title
       NText {
-        text: pluginApi?.tr("panel.header") || "Weather Details"
+        text: pluginApi?.tr("panel.header")
         pointSize: Style.fontSizeL
         font.weight: Font.Bold
         color: Color.mOnSurface
@@ -374,7 +364,7 @@ Item {
 
       // Location with interpolation
       NText {
-        text: pluginApi?.tr("status.location", { city: root.city }) || ""
+        text: pluginApi?.tr("status.location", { city: root.city })
         pointSize: Style.fontSizeM
         color: Color.mOnSurfaceVariant
       }
@@ -398,7 +388,7 @@ Item {
             Layout.fillWidth: true
 
             NText {
-              text: pluginApi?.tr("panel.temperature") || "Temperature"
+              text: pluginApi?.tr("panel.temperature")
               color: Color.mOnSurfaceVariant
               Layout.fillWidth: true
             }
@@ -414,7 +404,7 @@ Item {
             Layout.fillWidth: true
 
             NText {
-              text: pluginApi?.tr("panel.humidity") || "Humidity"
+              text: pluginApi?.tr("panel.humidity")
               color: Color.mOnSurfaceVariant
               Layout.fillWidth: true
             }
@@ -432,7 +422,7 @@ Item {
 
           // Plural example
           NText {
-            text: pluginApi?.tr("panel.forecast") || "Forecast"
+            text: pluginApi?.tr("panel.forecast")
             pointSize: Style.fontSizeM
             font.weight: Font.Medium
             color: Color.mOnSurface
@@ -452,7 +442,7 @@ Item {
 
       // Last update with interpolation
       NText {
-        text: pluginApi?.tr("status.updated", { time: root.lastUpdate }) || ""
+        text: pluginApi?.tr("status.updated", { time: root.lastUpdate })
         pointSize: Style.fontSizeS
         color: Color.mOnSurfaceVariant
         Layout.alignment: Qt.AlignRight
@@ -496,13 +486,12 @@ Start Noctalia with `NOCTALIA_DEBUG=1 qs -c noctalia-shell` to enable hot reload
 ## Best Practices
 
 1. **Always provide English**: The `en.json` file is required as the fallback
-2. **Use fallback values**: Always provide a fallback with `|| "default"`
-3. **Organize with nesting**: Group related translations (widget, panel, messages)
-4. **Keep keys consistent**: Use the same structure across all language files
-5. **Use interpolations**: For dynamic content like names, numbers, dates
-6. **Handle plurals properly**: Use `trp()` and `_plural` suffix keys
-7. **Test all languages**: Verify translations display correctly
-8. **Consider text length**: Some languages have longer text than English
+2. **Organize with nesting**: Group related translations (widget, panel, messages)
+3. **Keep keys consistent**: Use the same structure across all language files
+4. **Use interpolations**: For dynamic content like names, numbers, dates
+5. **Handle plurals properly**: Use `trp()` and `_plural` suffix keys
+6. **Test all languages**: Verify translations display correctly
+7. **Consider text length**: Some languages have longer text than English
 
 ## Translating Settings UI
 
@@ -516,15 +505,15 @@ ColumnLayout {
 
   NTextInput {
     Layout.fillWidth: true
-    label: pluginApi?.tr("settings.message.label") || "Message"
-    description: pluginApi?.tr("settings.message.description") || "Display message"
+    label: pluginApi?.tr("settings.message.label")
+    description: pluginApi?.tr("settings.message.description")
     // ...
   }
 
   NToggle {
     Layout.fillWidth: true
-    label: pluginApi?.tr("settings.enabled.label") || "Enabled"
-    description: pluginApi?.tr("settings.enabled.description") || "Enable feature"
+    label: pluginApi?.tr("settings.enabled.label")
+    description: pluginApi?.tr("settings.enabled.description")
     // ...
   }
 }
