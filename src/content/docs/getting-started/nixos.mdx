@@ -172,7 +172,7 @@ Additionally, since `~/.config/noctalia/settings.json` is now a read-only symlin
 :::tip
  To see the diff between your current build and the latest (or GUI-modified) settings, run:
 ```sh
-nix shell nixpkgs#jq nixpkgs#colordiff -c bash -c "colordiff -u --nobanner <(jq -S . ~/.config/noctalia/settings.json) <(noctalia-shell ipc call state all | jq -S .settings)"
+nix shell nixpkgs#json-diff -c bash -c "json-diff <(jq -S . ~/.config/noctalia/settings.json) <(noctalia-shell ipc call state all | jq -S .settings)"
 ```
 :::
 
