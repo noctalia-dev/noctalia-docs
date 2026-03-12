@@ -99,3 +99,48 @@ overview {
 :::note
 Option 3 requires "Enable overview wallpaper" to be turned OFF in Noctalia's settings on the Wallpaper tab.
 :::
+
+## Blur
+
+:::caution
+As of March 2026, Niri's blur support is still in development and has not been merged yet. You will need a custom build of Niri that includes the `background-effect` feature. If your version of Niri does not support it, adding these rules will result in configuration errors.
+:::
+
+You can enable blur behind windows and Noctalia's bar, panels, and dock.
+
+```ini
+/* Apps: blur them all without xray for a better look */
+window-rule {
+  background-effect {
+    blur true
+    xray false
+  }
+}
+
+/* Noctalia: blur everywhere without xray for a better look */
+layer-rule {
+  match namespace="^noctalia-(background|launcher-overlay|dock)-.*$"
+  background-effect {
+    xray false
+  }
+}
+```
+
+You can also fine-tune the blur effect globally:
+
+```ini
+blur {
+  passes 2        // more passes = stronger blur (default: 3)
+  offset 3.0      // sample distance per pass (default: 3.0)
+  noise 0.03      // grain overlay (default: 0.02)
+  saturation 1.0  // color saturation boost (default: 1.5)
+}
+```
+
+:::tip[Fine-tuning the blur effect]
+Adjust the blur parameters above alongside these Noctalia transparency settings to achieve your desired look:
+
+- **Panel background opacity** — Controls panel transparency
+- **Bar background opacity** — Controls bar transparency (optional)
+- **Translucent widgets** — Controls widget transparency within panels
+:::
