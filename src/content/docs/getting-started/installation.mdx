@@ -93,8 +93,10 @@ Noctalia provides an APT repository for Debian-based distributions. Two builds a
 
 | Build | Qt6 | Distros |
 |-------|-----|---------|
-| `trixie` | 6.8 | Debian Trixie, Ubuntu 24.04, Pop!_OS 24.04 |
+| `trixie` | 6.8 | Debian Trixie |
 | `sid` | 6.9 | Debian Sid, PikaOS |
+| `plucky` | 6.8 | Ubuntu 25.04, Pop!_OS 25.04 |
+| `questing` | 6.9 | Ubuntu 25.10 |
 
 **Step 1**: Import the repository signing key
 
@@ -120,7 +122,7 @@ sudo apt install noctalia-shell
 This will automatically pull in `noctalia-qs` (the Quickshell runtime) as a dependency.
 
 :::note
-The APT repository currently only provides `amd64` packages. Debian Bookworm (12) and older are not supported as they ship Qt6 6.4 which is too old.
+The APT repository currently only provides `amd64` packages. Debian Bookworm (12), Ubuntu 24.04 and older are not supported as they ship Qt6 6.4 which is too old (minimum required: Qt6 6.6).
 :::
 
 :::caution[PikaOS Users]
