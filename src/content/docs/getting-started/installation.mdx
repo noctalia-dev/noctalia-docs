@@ -125,20 +125,6 @@ This will automatically pull in `noctalia-qs` (the Quickshell runtime) as a depe
 The APT repository currently only provides `amd64` packages. Debian Bookworm (12), Ubuntu 24.04 and older are not supported as they ship Qt6 6.4 which is too old (minimum required: Qt6 6.6).
 :::
 
-:::caution[PikaOS Users]
-PikaOS ships its own `noctalia-shell` package that does not include `noctalia-qs` as a dependency. If you add the Noctalia APT repository, APT may still pull `noctalia-shell` from PikaOS instead of ours. To ensure you get the correct packages, create a pinning file:
-
-```bash
-sudo tee /etc/apt/preferences.d/noctalia << 'EOF'
-Package: noctalia-shell noctalia-qs
-Pin: origin pkg.noctalia.dev
-Pin-Priority: 1001
-EOF
-```
-
-Then run `sudo apt update && sudo apt install noctalia-shell` to switch to the Noctalia repository version.
-:::
-
 ---
 
 ## openSUSE {#opensuse}
