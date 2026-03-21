@@ -10,14 +10,18 @@ Find answers to common questions about Noctalia installation, configuration, and
 ## Installation & Compatibility
 
 <details>
-<summary><strong>How can I run Noctalia on distributions other than Arch and NixOS?</strong></summary>
+<summary>
+### How can I run Noctalia on distributions other than Arch and NixOS?
+</summary>
 
 Most distributions offer `quickshell`. If you can install either, you can use Noctalia. If your distro doesn't provide Quickshell, you can build it from source.
 
 </details>
 
 <details>
-<summary><strong>What window managers does Noctalia support?</strong></summary>
+<summary>
+### What window managers does Noctalia support?
+</summary>
 
 Noctalia is designed for and tested with Niri, Hyprland, Sway, Scroll, Labwc and MangoWC. While it may work with other compositors, we currently only support workspace indicators for Niri and Hyprland.
 
@@ -26,7 +30,9 @@ Noctalia is designed for and tested with Niri, Hyprland, Sway, Scroll, Labwc and
 ## Configuration
 
 <details>
-<summary><strong>Why are some of my app icons missing?</strong></summary>
+<summary>
+### Why are some of my app icons missing?
+</summary>
 
 The issue is most likely that your environment variables and icons theme are not set properly.
 
@@ -70,7 +76,9 @@ Systemd startup setup is now legacy-only and documented here: [Systemd Startup](
 </details>
 
 <details>
-<summary><strong>How can I make the UI bigger?</strong></summary>
+<summary>
+### How can I make the UI bigger?
+</summary>
 
 **First things first**, you should increase your **compositor scaling** per monitor. This is the **best solution** and should give you a nice scaled up UI on HiDPI monitors.
 
@@ -87,7 +95,9 @@ This can also be added to your compositor autostart.
 </details>
 
 <details>
-<summary><strong>How can I get Noctalia to display in my language?</strong></summary>
+<summary>
+### How can I get Noctalia to display in my language?
+</summary>
 
 Noctalia automatically uses your operating system's language settings. If the application appears in English, it's likely because a translation for your language isn't available yet, causing it to use English as a fallback.
 
@@ -114,7 +124,9 @@ If Noctalia doesn't support your language yet, consider contributing a translati
 ## Window Manager Integration
 
 <details>
-<summary><strong>How can I make empty or unused workspaces always show up in Hyprland?</strong></summary>
+<summary>
+### How can I make empty or unused workspaces always show up in Hyprland?
+</summary>
 
 To make workspaces always visible, even when empty, you need to set them as persistent in your hyprland.conf file. You can find the specific syntax and examples in the official documentation for [Workspace Rules](https://wiki.hypr.land/Configuring/Workspace-Rules/#rules).
 ```
@@ -129,7 +141,9 @@ workspace = 5, monitor:DP-1, persistent:true
 ## Troubleshooting
 
 <details>
-<summary><strong>Why aren't my keybinds working?</strong></summary>
+<summary>
+### Why aren't my keybinds working?
+</summary>
 
 Common causes:
 
@@ -157,7 +171,9 @@ Common causes:
 </details>
 
 <details>
-<summary><strong>Why is my battery not showing?</strong></summary>
+<summary>
+### Why is my battery not showing?
+</summary>
 
 <strong>UPower is required for battery status to be displayed in Noctalia.</strong> If your battery indicator is missing, make sure <code>upower</code> is installed.
 
@@ -175,7 +191,9 @@ If you still do not see a battery indicator after installing and starting UPower
 </details>
 
 <details>
-<summary><strong>Why won't some applications appear in the launcher?</strong></summary>
+<summary>
+### Why won't some applications appear in the launcher?
+</summary>
 
 The launcher looks for `.desktop` files in standard locations. If an application doesn’t appear:
 
@@ -190,7 +208,9 @@ The launcher looks for `.desktop` files in standard locations. If an application
 </details>
 
 <details>
-<summary><strong>Why does Noctalia crash on startup?</strong></summary>
+<summary>
+### Why does Noctalia crash on startup?
+</summary>
 
 1. **Check the error output** by running Noctalia from the terminal
 2. **Update dependencies** - outdated Quickshell versions can cause issues
@@ -199,7 +219,9 @@ The launcher looks for `.desktop` files in standard locations. If an application
 </details>
 
 <details>
-<summary><strong>Why do I have a weird gap?</strong></summary>
+<summary>
+### Why do I have a weird gap?
+</summary>
 
 This usually means `noctalia-shell` is running more than once (for example, launched by both your compositor autostart and the systemd service). Multiple instances fight over layout space and leave blank gaps.
 
@@ -212,7 +234,9 @@ Make sure only a single instance is started:
 
 
 <details>
-<summary><strong>Why can't I unlock my lock screen?</strong></summary>
+<summary>
+### Why can't I unlock my lock screen?
+</summary>
 
 Noctalia now uses the standard <code>/etc/pam.d/login</code> for authentication. If you are unable to unlock your lock screen, make sure this file exists and is properly configured on your system.
 
@@ -224,7 +248,9 @@ If you have previously used a custom PAM configuration for fingerprint authentic
 </details>
 
 <details>
-<summary><strong>How to enable Yubikey for Noctalia Lockscreen?</strong></summary>
+<summary>
+### How to enable Yubikey for Noctalia Lockscreen?
+</summary>
 
 Noctalia lock screen pulls it's authentication info from <code>/etc/pam.d/system-login</code> this is where we will need to add our PAM info for our Yubikey
 Please Note: This instruction assumes your Yubikey is already configured for this consult your distros documentation.
@@ -254,7 +280,9 @@ write and quit the file
 </details>
 
 <details>
-<summary><strong>Why are my tray icons missing after (re)starting Noctalia?</strong></summary>
+<summary>
+### Why are my tray icons missing after (re)starting Noctalia?
+</summary>
 
 This typically happens when KDE is installed alongside your window manager. KDE's tray daemon (`kded6`) can interfere with Noctalia's system tray, though it usually doesn't autostart at cold boot.
 
@@ -284,7 +312,9 @@ exec-once = pkill kded6
 </details>
 
 <details>
-<summary><strong>Audio Sample Rate Not Switching</strong></summary>
+<summary>
+### Audio Sample Rate Not Switching
+</summary>
 
 If you have followed instructions for How to allow Sample Rate Switching in your Distro of choice and notice it does not work 
 
@@ -300,7 +330,9 @@ Options are:
 ## Appearance & UI
 
 <details>
-<summary><strong>Why does the shell look different than expected?</strong></summary>
+<summary>
+### Why does the shell look different than expected?
+</summary>
 
 1. **Check your theme settings** in the settings panel
 2. **Verify your display settings** - scaling and resolution can affect appearance
@@ -309,7 +341,9 @@ Options are:
 </details>
 
 <details>
-<summary><strong>Why does my clipboard history preview look weird?</strong></summary>
+<summary>
+### Why does my clipboard history preview look weird?
+</summary>
 **How to fix:**
 
 1. Open Noctalia's Settings -> Color Scheme -> Generate templates for predefined schemes -> UI -> Check the Qt checkbox (skip this part if you have your own Qt theme).

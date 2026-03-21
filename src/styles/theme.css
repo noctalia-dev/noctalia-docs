@@ -294,3 +294,18 @@ snake-toc a[data-visible="true"] {
 }
 
 /* Global script to update logo link - injected via style tag */
+
+/* Allow inlining headers in details summary tab to support table of contents generation */
+details>summary {
+	&>.sl-heading-wrapper {
+		font-size: var(--sl-text);
+		display: inline;
+		line-height: var(--sl-line-height);
+
+		&>* {
+			font-size: inherit;
+			color: inherit;
+			font-weight: 900;
+		}
+	}
+}
