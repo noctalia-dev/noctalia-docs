@@ -16,6 +16,8 @@ import Default from '@astrojs/starlight/components/TableOfContents.astro';
     connectedCallback() {
       this.initScrollSpy();
       document.addEventListener('astro:page-load', () => this.initScrollSpy());
+      // Re-init after FAQ items inject TOC entries
+      document.addEventListener('faq-toc-ready', () => this.initScrollSpy());
     }
 
     disconnectedCallback() {
@@ -54,7 +56,7 @@ import Default from '@astrojs/starlight/components/TableOfContents.astro';
         }
       });
 
-      // Find the content area and get all headings
+      // Find the content area and get all headings + FAQ items
       const content = document.querySelector('.sl-markdown-content, main article, main');
       if (content) {
         const headings = content.querySelectorAll('h1, h2, h3, h4, h5, h6');
@@ -62,6 +64,14 @@ import Default from '@astrojs/starlight/components/TableOfContents.astro';
           const id = heading.id;
           if (id && idToLinkIndex.has(id)) {
             this.headingToLinkIndex.set(heading, idToLinkIndex.get(id)!);
+          }
+        });
+        // Also track FAQ items (injected into TOC by FaqItem script)
+        const faqItems = content.querySelectorAll('.faq-item[id]');
+        faqItems.forEach((item) => {
+          const id = item.id;
+          if (id && idToLinkIndex.has(id)) {
+            this.headingToLinkIndex.set(item, idToLinkIndex.get(id)!);
           }
         });
       }

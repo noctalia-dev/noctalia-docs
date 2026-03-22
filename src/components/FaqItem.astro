@@ -44,11 +44,91 @@ const slug =
     });
   }
 
+  function populateToc() {
+    const toc = document.querySelector("snake-toc nav > ul");
+    if (!toc) return;
+
+    const faqItems = document.querySelectorAll<HTMLDetailsElement>(".faq-item");
+    if (faqItems.length === 0) return;
+
+    // Group FAQ items by their preceding h2 section
+    const sections = new Map<string, HTMLDetailsElement[]>();
+    for (const item of faqItems) {
+      // Walk backwards through siblings to find the parent h2
+      let el: Element | null = item;
+      let sectionId = "";
+      while (el) {
+        el = el.previousElementSibling;
+        if (!el) break;
+        // Starlight wraps h2 in .sl-heading-wrapper
+        const heading = el.matches(".sl-heading-wrapper")
+          ? el.querySelector("h2")
+          : el.matches("h2") ? el : null;
+        if (heading) {
+          sectionId = heading.id;
+          break;
+        }
+      }
+      if (!sectionId) continue;
+      if (!sections.has(sectionId)) sections.set(sectionId, []);
+      sections.get(sectionId)!.push(item);
+    }
+
+    // Inject TOC entries under each section
+    for (const [sectionId, items] of sections) {
+      const sectionLink = toc.querySelector<HTMLAnchorElement>(`a[href="#${sectionId}"]`);
+      if (!sectionLink) continue;
+      const sectionLi = sectionLink.closest("li");
+      if (!sectionLi) continue;
+
+      // Clone structure from existing TOC entries
+      const refLi = sectionLi;
+      const refA = refLi.querySelector(":scope > a");
+      if (!refA) continue;
+
+      const subUl = document.createElement("ul");
+      // Copy classes and depth style from the parent ul
+      const parentUl = refLi.parentElement;
+      if (parentUl) {
+        subUl.className = parentUl.className;
+        subUl.style.setProperty("--depth", "1");
+      }
+
+      for (const item of items) {
+        const summary = item.querySelector("summary strong");
+        if (!summary) continue;
+
+        const li = document.createElement("li");
+        li.className = refLi.className;
+        li.style.setProperty("--depth", "1");
+
+        const a = document.createElement("a");
+        a.href = `#${item.id}`;
+        a.className = refA.className;
+        a.style.setProperty("--depth", "1");
+
+        const span = document.createElement("span");
+        span.className = refA.querySelector("span")?.className ?? "";
+        span.style.setProperty("--depth", "1");
+        span.textContent = summary.textContent;
+
+        a.appendChild(span);
+        li.appendChild(a);
+        subUl.appendChild(li);
+      }
+      sectionLi.appendChild(subUl);
+    }
+
+    document.dispatchEvent(new CustomEvent("faq-toc-ready"));
+  }
+
   openHashTarget();
   initFaqAnchors();
+  populateToc();
   window.addEventListener("hashchange", openHashTarget);
   document.addEventListener("astro:page-load", () => {
     openHashTarget();
     initFaqAnchors();
+    populateToc();
   });
 </script>
