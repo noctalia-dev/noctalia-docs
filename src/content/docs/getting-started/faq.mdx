@@ -11,9 +11,11 @@ Find answers to common questions about Noctalia installation, configuration, and
 
 ## Installation & Compatibility
 
-<FaqItem question="How can I run Noctalia on distributions other than Arch and NixOS?">
+<FaqItem question="How can I run Noctalia on unsupported distributions?">
 
-Most distributions offer `quickshell`. If you can install either, you can use Noctalia. If your distro doesn't provide Quickshell, you can build it from source.
+Noctalia is officially packaged for Arch, NixOS, Gentoo, Fedora, Debian (including Ubuntu and PikaOS), openSUSE, and Void Linux. See the [Installation guide](/getting-started/installation/) for details.
+
+For other distributions, you can install manually but will need to build **[noctalia-qs](https://github.com/noctalia-dev/noctalia-qs)** (our custom fork of Quickshell) from source — the upstream `quickshell` package from your distro's repositories will not work. See the [manual installation instructions](/getting-started/installation/#manual-install) for steps.
 
 </FaqItem>
 
@@ -71,16 +73,6 @@ Systemd startup setup is now legacy-only and documented here: [Systemd Startup](
 <FaqItem question="How can I make the UI bigger?">
 
 **First things first**, you should increase your **compositor scaling** per monitor. This is the **best solution** and should give you a nice scaled up UI on HiDPI monitors.
-
-:::caution[Last Resort]
-You can start noctalia-shell with a special environment variable, but this is **not recommended** on multi-monitor setups as it will likely break tooltips and other contextual menu positioning on monitors that don't have a (0,0) origin.
-
-```bash
-QT_SCALE_FACTOR=2 qs -c noctalia-shell --no-duplicate
-```
-
-This can also be added to your compositor autostart.
-:::
 
 </FaqItem>
 
