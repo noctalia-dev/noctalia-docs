@@ -81,6 +81,8 @@ Rectangle {
   property ShellScreen screen
   property string widgetId: ""
   property string section: ""
+  property int sectionWidgetIndex: -1
+  property int sectionWidgetsCount: 0
 
   implicitWidth: row.implicitWidth + Style.marginM * 2
   implicitHeight: Style.barHeight
@@ -206,6 +208,8 @@ Rectangle {
   property ShellScreen screen
   property string widgetId: ""
   property string section: ""
+  property int sectionWidgetIndex: -1
+  property int sectionWidgetsCount: 0
 
   property int count: pluginApi?.pluginSettings?.count || 0
 

@@ -28,6 +28,8 @@ Item {
   property ShellScreen screen
   property string widgetId: ""
   property string section: ""
+  property int sectionWidgetIndex: -1
+  property int sectionWidgetsCount: 0
 
   // Per-screen bar properties (for multi-monitor and vertical bar support)
   readonly property string screenName: screen?.name ?? ""
@@ -112,6 +114,20 @@ The bar section this widget is in: `"left"`, `"center"`, or `"right"`.
 
 ```qml
 property string section: ""
+```
+
+### `sectionWidgetIndex`
+The zero-based index of this widget within its bar section. Used to access per-instance settings and to build unique identifiers for service registration.
+
+```qml
+property int sectionWidgetIndex: -1
+```
+
+### `sectionWidgetsCount`
+The total number of widgets in this widget's bar section.
+
+```qml
+property int sectionWidgetsCount: 0
 ```
 
 ## Sizing
@@ -628,6 +644,8 @@ Item {
   property ShellScreen screen
   property string widgetId: ""
   property string section: ""
+  property int sectionWidgetIndex: -1
+  property int sectionWidgetsCount: 0
 
   // Per-screen bar properties
   readonly property string screenName: screen?.name ?? ""
@@ -689,6 +707,8 @@ Item {
   property ShellScreen screen
   property string widgetId: ""
   property string section: ""
+  property int sectionWidgetIndex: -1
+  property int sectionWidgetsCount: 0
 
   // Per-screen bar properties
   readonly property string screenName: screen?.name ?? ""
@@ -766,6 +786,8 @@ Item {
   property ShellScreen screen
   property string widgetId: ""
   property string section: ""
+  property int sectionWidgetIndex: -1
+  property int sectionWidgetsCount: 0
 
   // Per-screen bar properties
   readonly property string screenName: screen?.name ?? ""
@@ -845,6 +867,8 @@ Item {
   property ShellScreen screen
   property string widgetId: ""
   property string section: ""
+  property int sectionWidgetIndex: -1
+  property int sectionWidgetsCount: 0
 
   // Per-screen bar properties
   readonly property string screenName: screen?.name ?? ""
