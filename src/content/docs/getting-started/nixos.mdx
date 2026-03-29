@@ -6,6 +6,7 @@ sidebar:
 ---
 
 import SettingsReference from '../../../components/SettingsReference.astro';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 
 For NixOS users, a [Nix package](https://search.nixos.org/packages?channel=unstable&show=noctalia-shell) for Noctalia is available.
@@ -42,12 +43,6 @@ Add the required inputs to your flake configuration:
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.noctalia-qs.follows = "noctalia-qs";
-    };
-
-    noctalia-qs = {
-      url = "github:noctalia-dev/noctalia-qs";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -82,6 +77,39 @@ If you don't use Noctalia's NixOS or home-manager modules, you need to manually 
 ```
 
 Rebuild with `sudo nixos-rebuild switch --flake .`.
+
+---
+
+### Binary Cache {#binary-cache}
+
+Pre-built binaries are available on [Cachix](https://app.cachix.org/cache/noctalia), so you can skip compiling locally.
+
+You can add the cache either to your flake, nixos configuration, or `/etc/nix/nix.conf`.
+
+<Tabs>
+  <TabItem label="flake.nix">
+    ```nix
+    nixConfig = {
+      extra-substituters = [ "https://noctalia.cachix.org" ];
+      extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ];
+    };
+    ```
+  </TabItem>
+  <TabItem label="configuration.nix"> 
+    ```nix
+    nix.settings = { 
+      extra-substituters = [ "https://noctalia.cachix.org" ]; 
+      extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ]; 
+    };
+    ``` 
+  </TabItem>
+  <TabItem label="nix.conf"> 
+    ```conf
+    extra-substituters = https://noctalia.cachix.org
+    extra-trusted-public-keys = noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=
+    ``` 
+  </TabItem>
+</Tabs>
 
 ---
 

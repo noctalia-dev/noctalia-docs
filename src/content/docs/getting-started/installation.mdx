@@ -94,7 +94,7 @@ Noctalia provides an APT repository for Debian-based distributions. Two builds a
 | Build | Qt6 | Distros |
 |-------|-----|---------|
 | `trixie` | 6.8 | Debian Trixie |
-| `sid` | 6.9 | Debian Sid, PikaOS |
+| `sid` | 6.10 | Debian Sid, PikaOS |
 | `plucky` | 6.8 | Ubuntu 25.04 |
 | `questing` | 6.9 | Ubuntu 25.10 |
 
@@ -175,7 +175,7 @@ sudo xbps-install noctalia-shell
 This will automatically pull in `noctalia-qs` (the Quickshell runtime) as a dependency. If you only want the Quickshell fork without the shell config, install `noctalia-qs` instead.
 
 :::note
-If you have an existing `quickshell` or `quickshell-git` package installed, you must remove it first as `noctalia-qs` conflicts with it:
+If you already have the `quickshell` or `quickshell-git` package installed, you must remove it first as `noctalia-qs` conflicts with it:
 ```bash
 sudo xbps-remove quickshell
 ```
@@ -228,13 +228,13 @@ mkdir -p ~/.config/quickshell/noctalia-shell && curl -sL https://github.com/noct
 **Hardware-specific:**
 
 - `ddcutil` - Desktop monitor brightness control (⚠️ may introduce system instability with certain monitors)
+- `power-profiles-daemon` - Enables power profile selection
 
 **Optional but recommended:**
 
 - `cliphist` - Clipboard history support
-- `cava` - Audio visualizer component
 - `wlsunset` - Night light functionality
-- `xdg-desktop-portal` - Enables "Portal" option in screen recorder
+- `xdg-desktop-portal` - Enables screen sharing and file picker functionality
 - `python3`, `evolution-data-server` - Calendar events
 
 :::tip
