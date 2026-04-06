@@ -14,7 +14,7 @@ Add the following settings to your Niri configuration file (usually located at `
 
 These settings are for general window appearance and functionality.
 
-```ini
+```kdl
 window-rule {
   // Rounded corners for a modern look.
   geometry-corner-radius 20
@@ -43,7 +43,7 @@ This minimal configuration allows you to have a blurred and dimmed copy of your 
 
 <ImageLightbox src={option1} alt="Blurred Overview Wallpaper" />
 
-```ini
+```kdl
 // Set the overview wallpaper on the backdrop.
 layer-rule {
   match namespace="^noctalia-overview*"
@@ -60,7 +60,7 @@ If you prefer a stationary wallpaper that is visible at all times and does not s
 
 <ImageLightbox src={option2} alt="Stationary Wallpaper" />
 
-```ini
+```kdl
 // Set the regular wallpaper on the backdrop.
 layer-rule {
   match namespace="^noctalia-wallpaper*"
@@ -89,7 +89,7 @@ If you prefer a more productivity-oriented look, you can use this minimal config
 
 <ImageLightbox src={option3} alt="Flat colored overview" />
 
-```
+```kdl
 overview {
   // Choose your favorite color.
   backdrop-color "#26233a"
@@ -108,7 +108,7 @@ As of March 2026, Niri's blur support is still in development and has not been m
 
 You can enable blur behind windows and Noctalia's bar, panels, and dock.
 
-```ini
+```kdl
 /* Apps: blur them all without xray for a better look */
 window-rule {
   background-effect {
@@ -128,7 +128,7 @@ layer-rule {
 
 You can also fine-tune the blur effect globally:
 
-```ini
+```kdl
 blur {
   passes 2        // more passes = stronger blur (default: 3)
   offset 3.0      // sample distance per pass (default: 3.0)

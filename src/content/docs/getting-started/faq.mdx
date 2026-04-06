@@ -64,7 +64,7 @@ Ensure that you set environment variables properly.
 <details>
 <summary>If you prefer to set these in Niri's config</summary>
 Ensure that you also launch Noctalia via Niri:
-```ini
+```kdl
 spawn-at-startup "qs" "-c" "noctalia-shell"
 ```
 This is because Niri only overrides environment variables for processes it spawns.
@@ -256,7 +256,7 @@ pkill kded6
 You can also add this to your compositor's autostart configuration if needed:
 
 :::note[Niri]
-```ini
+```kdl
 spawn-sh-at-startup "pkill kded6"
 ```
 :::
