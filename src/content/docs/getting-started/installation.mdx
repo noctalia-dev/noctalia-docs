@@ -5,6 +5,8 @@ sidebar:
   order: 10
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 Noctalia is available on the following distributions:
 
 - [Arch Linux](#arch)
@@ -106,11 +108,28 @@ curl -fsSL https://pkg.noctalia.dev/gpg.key | sudo gpg --dearmor -o /etc/apt/key
 
 **Step 2**: Add the repository
 
-Replace `CODENAME` with `trixie` or `sid` depending on your distro (see table above):
-
-```bash
-echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt CODENAME main" | sudo tee /etc/apt/sources.list.d/noctalia.list
-```
+<Tabs>
+  <TabItem label="Debian Trixie">
+    ```bash
+    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt trixie main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    ```
+  </TabItem>
+  <TabItem label="Debian Sid">
+    ```bash
+    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt sid main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    ```
+  </TabItem>
+  <TabItem label="Ubuntu 25.04">
+    ```bash
+    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt plucky main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    ```
+  </TabItem>
+  <TabItem label="Ubuntu 25.10">
+    ```bash
+    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt questing main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    ```
+  </TabItem>
+</Tabs>
 
 **Step 3**: Install noctalia-shell
 
@@ -131,19 +150,25 @@ The APT repository currently only provides `amd64` packages. Debian Bookworm (12
 
 Noctalia-shell is available through the [home:neifua](https://build.opensuse.org/package/show/home:neifua/noctalia-shell) repository on the openSUSE Build Service.
 
-| Build | Distros |
-|-------|---------|
-| `Tumbleweed` | openSUSE Tumbleweed |
-| `Slowroll` | openSUSE Slowroll |
-| `Leap 16.0` | openSUSE Leap |
-
 **Step 1**: Add the repository
 
-Replace `CODENAME` with `openSUSE_Tumbleweed`, `openSUSE_Slowroll` or `16.0` depending on your distro:
-
-```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/CODENAME/home:neifua.repo
-```
+<Tabs>
+  <TabItem label="Tumbleweed">
+    ```bash
+    sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/openSUSE_Tumbleweed/home:neifua.repo
+    ```
+  </TabItem>
+  <TabItem label="Slowroll">
+    ```bash
+    sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/openSUSE_Slowroll/home:neifua.repo
+    ```
+  </TabItem>
+  <TabItem label="Leap 16.0">
+    ```bash
+    sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/16.0/home:neifua.repo
+    ```
+  </TabItem>
+</Tabs>
 
 **Step 2**: Refresh and install
 
