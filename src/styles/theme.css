@@ -293,4 +293,29 @@ snake-toc a[data-visible="true"] {
 	color: #2a2a5a;
 }
 
+/* FAQ item anchor links */
+.faq-item .faq-anchor {
+	display: inline-flex;
+	vertical-align: middle;
+	margin-left: 0.25em;
+	cursor: pointer;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.faq-item .faq-anchor > svg {
+	width: 0.85em;
+	height: 0.85em;
+}
+
+@media (hover: hover) {
+	.faq-item .faq-anchor {
+		opacity: 0;
+	}
+
+	.faq-item summary:hover .faq-anchor {
+		opacity: 1;
+	}
+}
+
 /* Global script to update logo link - injected via style tag */

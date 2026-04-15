@@ -5,13 +5,15 @@ sidebar:
   order: 10
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 Noctalia is available on the following distributions:
 
 - [Arch Linux](#arch)
 - [NixOS](/getting-started/nixos/)
 - [Gentoo](#gentoo)
 - [Fedora](#fedora)
-- [Debian](#debian) (including Ubuntu, Pop!_OS, PikaOS)
+- [Debian](#debian) (including Ubuntu, PikaOS)
 - [openSUSE](#opensuse)
 - [Void Linux](#void)
 
@@ -93,8 +95,10 @@ Noctalia provides an APT repository for Debian-based distributions. Two builds a
 
 | Build | Qt6 | Distros |
 |-------|-----|---------|
-| `trixie` | 6.8 | Debian Trixie, Ubuntu 24.04, Pop!_OS 24.04 |
-| `sid` | 6.9 | Debian Sid, PikaOS |
+| `trixie` | 6.8 | Debian Trixie |
+| `sid` | 6.10 | Debian Sid, PikaOS |
+| `plucky` | 6.8 | Ubuntu 25.04 |
+| `questing` | 6.9 | Ubuntu 25.10 |
 
 **Step 1**: Import the repository signing key
 
@@ -104,11 +108,28 @@ curl -fsSL https://pkg.noctalia.dev/gpg.key | sudo gpg --dearmor -o /etc/apt/key
 
 **Step 2**: Add the repository
 
-Replace `CODENAME` with `trixie` or `sid` depending on your distro (see table above):
-
-```bash
-echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt CODENAME main" | sudo tee /etc/apt/sources.list.d/noctalia.list
-```
+<Tabs>
+  <TabItem label="Debian Trixie">
+    ```bash
+    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt trixie main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    ```
+  </TabItem>
+  <TabItem label="Debian Sid">
+    ```bash
+    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt sid main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    ```
+  </TabItem>
+  <TabItem label="Ubuntu 25.04">
+    ```bash
+    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt plucky main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    ```
+  </TabItem>
+  <TabItem label="Ubuntu 25.10">
+    ```bash
+    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt questing main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    ```
+  </TabItem>
+</Tabs>
 
 **Step 3**: Install noctalia-shell
 
@@ -120,21 +141,7 @@ sudo apt install noctalia-shell
 This will automatically pull in `noctalia-qs` (the Quickshell runtime) as a dependency.
 
 :::note
-The APT repository currently only provides `amd64` packages. Debian Bookworm (12) and older are not supported as they ship Qt6 6.4 which is too old.
-:::
-
-:::caution[PikaOS Users]
-PikaOS ships its own `noctalia-shell` package that does not include `noctalia-qs` as a dependency. If you add the Noctalia APT repository, APT may still pull `noctalia-shell` from PikaOS instead of ours. To ensure you get the correct packages, create a pinning file:
-
-```bash
-sudo tee /etc/apt/preferences.d/noctalia << 'EOF'
-Package: noctalia-shell noctalia-qs
-Pin: origin pkg.noctalia.dev
-Pin-Priority: 1001
-EOF
-```
-
-Then run `sudo apt update && sudo apt install noctalia-shell` to switch to the Noctalia repository version.
+The APT repository currently only provides `amd64` packages. Debian Bookworm (12), Ubuntu 24.04 and older are not supported as they ship Qt6 6.4 which is too old (minimum required: Qt6 6.6).
 :::
 
 ---
@@ -143,18 +150,25 @@ Then run `sudo apt update && sudo apt install noctalia-shell` to switch to the N
 
 Noctalia-shell is available through the [home:neifua](https://build.opensuse.org/package/show/home:neifua/noctalia-shell) repository on the openSUSE Build Service.
 
-| Build | Distros |
-|-------|---------|
-| `Tumbleweed` | openSUSE Tumbleweed |
-| `Leap 16.0` | openSUSE Leap |
-
 **Step 1**: Add the repository
 
-Replace `CODENAME` with `openSUSE_Tumbleweed` or `16.0` depending on your distro:
-
-```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/CODENAME/home:neifua.repo
-```
+<Tabs>
+  <TabItem label="Tumbleweed">
+    ```bash
+    sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/openSUSE_Tumbleweed/home:neifua.repo
+    ```
+  </TabItem>
+  <TabItem label="Slowroll">
+    ```bash
+    sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/openSUSE_Slowroll/home:neifua.repo
+    ```
+  </TabItem>
+  <TabItem label="Leap 16.0">
+    ```bash
+    sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/16.0/home:neifua.repo
+    ```
+  </TabItem>
+</Tabs>
 
 **Step 2**: Refresh and install
 
@@ -172,8 +186,8 @@ Noctalia-shell is available through a custom XBPS repository.
 **Step 1**: Add the repository source
 
 ```bash
-echo "repository=https://rxelelo.github.io/noctalia-void-repo" \
-  | sudo tee /etc/xbps.d/noctalia.conf
+echo "repository=https://universalrepo.r1xelelo.workers.dev/void" \
+  | sudo tee /etc/xbps.d/10-noctalia.conf
 ```
 
 **Step 2**: Sync and install noctalia-shell
@@ -186,7 +200,7 @@ sudo xbps-install noctalia-shell
 This will automatically pull in `noctalia-qs` (the Quickshell runtime) as a dependency. If you only want the Quickshell fork without the shell config, install `noctalia-qs` instead.
 
 :::note
-If you have an existing `quickshell` or `quickshell-git` package installed, you must remove it first as `noctalia-qs` conflicts with it:
+If you already have the `quickshell` or `quickshell-git` package installed, you must remove it first as `noctalia-qs` conflicts with it:
 ```bash
 sudo xbps-remove quickshell
 ```
@@ -239,13 +253,13 @@ mkdir -p ~/.config/quickshell/noctalia-shell && curl -sL https://github.com/noct
 **Hardware-specific:**
 
 - `ddcutil` - Desktop monitor brightness control (⚠️ may introduce system instability with certain monitors)
+- `power-profiles-daemon` - Enables power profile selection
 
 **Optional but recommended:**
 
 - `cliphist` - Clipboard history support
-- `cava` - Audio visualizer component
 - `wlsunset` - Night light functionality
-- `xdg-desktop-portal` - Enables "Portal" option in screen recorder
+- `xdg-desktop-portal` - Enables screen sharing and file picker functionality
 - `python3`, `evolution-data-server` - Calendar events
 
 :::tip

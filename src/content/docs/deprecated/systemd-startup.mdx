@@ -28,6 +28,7 @@ First, create a new service definition file at `~/.config/systemd/user/noctalia.
 ```toml
 [Unit]
 Description=Noctalia Shell Service
+BindsTo=graphical-session.target
 PartOf=graphical-session.target
 Requisite=graphical-session.target
 After=graphical-session.target

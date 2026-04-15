@@ -93,32 +93,24 @@ export const GET: APIRoute = async () => {
         // This is content for the previous category
         const content = sections[i];
         
-        // Extract all <details> blocks
-        const detailsRegex = /<details>([\s\S]*?)<\/details>/g;
+        // Extract all <FaqItem> blocks
+        const faqItemRegex = /<FaqItem\s+question="([^"]+)"(?:\s+id="([^"]+)")?[^>]*>([\s\S]*?)<\/FaqItem>/g;
         let match;
-        
-        while ((match = detailsRegex.exec(content)) !== null) {
-          const detailsContent = match[1];
-          
-          // Extract question from <summary>
-          const summaryMatch = detailsContent.match(/<summary>([\s\S]*?)<\/summary>/);
-          if (!summaryMatch) continue;
-          
-          const questionHtml = summaryMatch[1];
-          const question = extractText(questionHtml);
-          
-          // Extract answer (everything after </summary>)
-          const answerHtml = detailsContent.replace(/<summary>[\s\S]*?<\/summary>/, '').trim();
-          
+
+        while ((match = faqItemRegex.exec(content)) !== null) {
+          const question = match[1];
+          const customId = match[2];
+          const answerContent = match[3].trim();
+
           // Convert markdown in answer to plain text (remove HTML tags, keep content)
-          let answer = extractText(answerHtml);
-          
+          let answer = extractText(answerContent);
+
           // Clean up the answer - remove excessive whitespace
           answer = answer.replace(/\n\s*\n\s*\n/g, '\n\n').trim();
-          
+
           if (question && answer) {
             faqs.push({
-              id: generateId(question),
+              id: customId ?? generateId(question),
               question,
               answer,
               category: currentCategory,
@@ -131,26 +123,21 @@ export const GET: APIRoute = async () => {
 
     // If no FAQs were found with the category approach, try a simpler approach
     if (faqs.length === 0) {
-      // Fallback: extract all details blocks without category grouping
-      const detailsRegex = /<details>([\s\S]*?)<\/details>/g;
+      // Fallback: extract all FaqItem blocks without category grouping
+      const faqItemRegex = /<FaqItem\s+question="([^"]+)"(?:\s+id="([^"]+)")?[^>]*>([\s\S]*?)<\/FaqItem>/g;
       let match;
-      
-      while ((match = detailsRegex.exec(body)) !== null) {
-        const detailsContent = match[1];
-        
-        const summaryMatch = detailsContent.match(/<summary>([\s\S]*?)<\/summary>/);
-        if (!summaryMatch) continue;
-        
-        const questionHtml = summaryMatch[1];
-        const question = extractText(questionHtml);
-        
-        const answerHtml = detailsContent.replace(/<summary>[\s\S]*?<\/summary>/, '').trim();
-        let answer = extractText(answerHtml);
+
+      while ((match = faqItemRegex.exec(body)) !== null) {
+        const question = match[1];
+        const customId = match[2];
+        const answerContent = match[3].trim();
+
+        let answer = extractText(answerContent);
         answer = answer.replace(/\n\s*\n\s*\n/g, '\n\n').trim();
-        
+
         if (question && answer) {
           faqs.push({
-            id: generateId(question),
+            id: customId ?? generateId(question),
             question,
             answer,
             category: 'general',
