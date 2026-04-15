@@ -148,8 +148,7 @@ NText {
   text: pluginApi?.trp(
     "messages.items",    // Base key
     itemCount,           // Count for plural logic
-    "1 item",            // Fallback singular
-    "{count} items"      // Fallback plural
+    {}                   // Interpolations
   )
 }
 ```
@@ -431,10 +430,8 @@ Item {
           NText {
             text: pluginApi?.trp(
               "days.count",
-              root.forecastDays,
-              "1 day",
-              "{count} days"
-            ) || ""
+              root.forecastDays
+            )
             color: Color.mOnSurfaceVariant
           }
         }
