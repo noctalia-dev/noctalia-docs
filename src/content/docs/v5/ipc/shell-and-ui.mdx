@@ -1,6 +1,6 @@
 ---
 title: Shell & UI
-description: IPC commands for status, config reload, bar, panels, dock, desktop widgets, notifications, theme mode, and lock.
+description: IPC commands for status, config reload, bar, panels, dock, desktop widgets, notifications, media controls, theme mode, and lock.
 ---
 
 These commands open, close, or toggle Noctalia UI surfaces.
@@ -56,6 +56,14 @@ These commands open, close, or toggle Noctalia UI surfaces.
 | Disable Do Not Disturb | `noctalia msg notification-dnd-set off` | Show notification toasts again. |
 | Toggle Do Not Disturb | `noctalia msg notification-dnd-toggle` | Toggle notification toast visibility. Notification history still fills. |
 | Show Do Not Disturb status | `noctalia msg notification-dnd-status` | Print the current Do Not Disturb state. |
+
+## Media
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Previous track | `noctalia msg media previous` | Ask the active MPRIS player to go to the previous item. |
+| Play/pause toggle | `noctalia msg media playPause` | Toggle play/pause on the active MPRIS player. |
+| Next track | `noctalia msg media next` | Ask the active MPRIS player to go to the next item. |
 
 ## Theme
 
