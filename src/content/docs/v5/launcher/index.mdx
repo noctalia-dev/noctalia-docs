@@ -1,0 +1,67 @@
+---
+title: Launcher
+description: Searching applications, calculating expressions, and picking emojis or wallpapers.
+sidebar:
+  order: 5
+---
+
+The Noctalia launcher is a centralized search interface that provides quick access to your applications, system actions, and utility providers.
+
+## How search works
+
+As you type, Noctalia queries all active **Launcher Providers**. Providers can either be "global" (always searching) or "prefixed" (triggered by a specific keyword).
+
+- **Global providers** (like Applications and Calculator) results are merged and sorted by a relevance score.
+- **Prefixed providers** (like Emoji and Wallpaper) take over the search results when their prefix is detected at the start of your query.
+
+### Usage-based boosting
+
+The launcher tracks how often you activate specific results (applications and wallpapers). Frequently used items receive a score boost, surfacing them at the top of the results list even with partial queries.
+
+---
+
+## Providers
+
+### Applications
+
+The primary provider for finding and launching your installed apps.
+
+- **Source**: Reads `.desktop` entries from standard XDG directories (e.g., `/usr/share/applications`, `~/.local/share/applications`).
+- **Search**: Matches against the application name, generic name, keywords, and categories.
+- **Scoring**: Uses fuzzy matching with weights. Activation count boosts the score.
+
+### Calculator
+
+A built-in expression evaluator powered by `tinyexpr`.
+
+- **Prefix**: None (Global).
+- **Trigger**: Automatically activates when the query looks like a mathematical expression (contains digits and operators like `+`, `-`, `*`, `/`, `^`, `%`).
+- **Functionality**: Supports standard arithmetic and functions like `sin`, `cos`, `sqrt`, `pi`, `e`. Pressing **Enter** copies the result to your clipboard.
+
+### Emoji
+
+A quick way to find and copy emojis.
+
+- **Prefix**: `/emo `
+- **Functionality**: Searches `emoji.json` by name, category, and keywords. Activating a result copies the emoji character directly to your clipboard.
+
+Example: `/emo heart`
+
+### Wallpaper
+
+Quickly browse and apply wallpapers from your configured directories.
+
+- **Prefix**: `/wall `
+- **Source**: Searches the directories defined in your `[wallpaper]` config.
+- **Functionality**: Filters by filename and parent directory name. Activating a result immediately applies the wallpaper to all monitors and updates your theme if using `wallpaper` as the theme source.
+- **Scoring**: Activation count boosts the score.
+
+---
+
+## Configuration
+
+The launcher itself is mostly automatic, but its behavior is influenced by other sections of your config:
+
+- **[Keybinds](/v5/shell/#keybinds)**: Customize navigation (`up`, `down`) and activation (`validate`, `cancel`).
+- **[Shell](/v5/shell/#shell-settings)**: `ui_scale` and `font_family` affect the launcher's appearance.
+- **[Wallpaper](/v5/desktop/wallpaper/)**: Defines the search paths for the Wallpaper provider.

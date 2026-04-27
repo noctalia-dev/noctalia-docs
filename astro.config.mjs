@@ -180,6 +180,12 @@ export default defineConfig({
                   ],
                 },
                 {
+                  label: "Launcher",
+                  items: [
+                    { label: "Launcher", link: "v5/launcher/" },
+                  ],
+                },
+                {
                   label: "Desktop",
                   items: [
                     { label: "Desktop Widgets", link: "v5/desktop/widgets/" },
