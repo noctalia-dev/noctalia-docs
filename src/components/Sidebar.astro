@@ -1,0 +1,333 @@
+---
+import MobileMenuFooter from 'virtual:starlight/components/MobileMenuFooter';
+import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro';
+import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro';
+import { Icon } from '@astrojs/starlight/components';
+import { isV5Path, pickVersionSidebarEntries } from '../lib/versioning';
+
+const { sidebar } = Astro.locals.starlightRoute;
+const pathname = Astro.url.pathname;
+const docVersion = isV5Path(pathname) ? 'v5' : 'v4';
+
+const labels: Record<string, string> = {
+  v4: 'Noctalia v4',
+  v5: 'Noctalia v5',
+};
+
+const sublist = pickVersionSidebarEntries(sidebar, pathname);
+---
+
+<SidebarPersister>
+  <div class="sidebar-version" id="docs-version-switch">
+    <label class="sidebar-version-label" for="sidebar-docs-version-btn">Documentation</label>
+    <div class="sidebar-version-field">
+      <button
+        type="button"
+        class="sidebar-version-trigger"
+        id="sidebar-docs-version-btn"
+        aria-haspopup="listbox"
+        aria-expanded="false"
+        aria-controls="sidebar-docs-version-panel"
+      >
+        <span class="sidebar-version-trigger-text">{labels[docVersion]}</span>
+        <span class="sidebar-version-caret" aria-hidden="true">
+          <Icon name="down-caret" size="1.25rem" />
+        </span>
+      </button>
+    </div>
+    <div
+      id="sidebar-docs-version-panel"
+      class="sidebar-version-panel"
+      role="listbox"
+      aria-labelledby="sidebar-docs-version-btn"
+      hidden
+    >
+      <button
+        type="button"
+        class:list={['sidebar-version-option', { 'is-active': docVersion === 'v4' }]}
+        role="option"
+        aria-selected={docVersion === 'v4'}
+        data-version="v4"
+        tabindex="-1"
+      >
+        {labels.v4}
+      </button>
+      <button
+        type="button"
+        class:list={['sidebar-version-option', { 'is-active': docVersion === 'v5' }]}
+        role="option"
+        aria-selected={docVersion === 'v5'}
+        data-version="v5"
+        tabindex="-1"
+      >
+        {labels.v5}
+      </button>
+    </div>
+  </div>
+  <SidebarSublist sublist={sublist} />
+</SidebarPersister>
+
+<div class="md:sl-hidden">
+  <MobileMenuFooter />
+</div>
+
+<script>
+  function getRoot() {
+    return document.getElementById('docs-version-switch');
+  }
+
+  function getPanel() {
+    return document.getElementById('sidebar-docs-version-panel');
+  }
+
+  function placePanel(/** @type {HTMLElement} */ root, /** @type {HTMLElement} */ panel) {
+    const trigger = root.querySelector('.sidebar-version-trigger');
+    if (!trigger) return;
+    const r = trigger.getBoundingClientRect();
+    panel.style.top = `${Math.round(r.bottom + 4)}px`;
+    panel.style.left = `${Math.round(r.left)}px`;
+    panel.style.width = `${Math.round(r.width)}px`;
+  }
+
+  function isOpen(/** @type {HTMLButtonElement} */ trigger) {
+    return trigger.getAttribute('aria-expanded') === 'true';
+  }
+
+  function setOpen(
+    /** @type {HTMLElement} */ root,
+    /** @type {HTMLButtonElement} */ trigger,
+    /** @type {HTMLElement} */ panel,
+    /** @type {boolean} */ open
+  ) {
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) {
+      panel.hidden = false;
+      placePanel(root, panel);
+      requestAnimationFrame(function () {
+        placePanel(root, panel);
+      });
+    } else {
+      panel.hidden = true;
+    }
+    root.classList.toggle('is-open', open);
+  }
+
+  function closeIfOpen() {
+    const root = getRoot();
+    const panel = getPanel();
+    if (!root || !panel) return;
+    const trigger = root.querySelector('.sidebar-version-trigger');
+    if (!(trigger instanceof HTMLButtonElement)) return;
+    if (isOpen(trigger)) setOpen(root, trigger, panel, false);
+  }
+
+  function go(/** @type {'v4' | 'v5'} */ v) {
+    window.location.pathname = v === 'v5' ? '/v5/' : '/v4/';
+  }
+
+  if (!window['__noctaliaDocsVersionSwitch']) {
+    window['__noctaliaDocsVersionSwitch'] = true;
+
+    document.addEventListener('click', function (e) {
+      const t = e.target;
+      if (!(t instanceof Node)) return;
+      const el = t instanceof Element ? t : t.parentElement;
+      if (!el) return;
+
+      const option = el.closest('.sidebar-version-option');
+      if (option instanceof HTMLButtonElement && option.dataset.version) {
+        const v = option.dataset.version;
+        if (v === 'v4' || v === 'v5') go(v);
+        return;
+      }
+
+      const trigger = el.closest('.sidebar-version-trigger');
+      if (trigger instanceof HTMLButtonElement) {
+        e.stopPropagation();
+        const root = getRoot();
+        const panel = getPanel();
+        if (!root || !panel) return;
+        setOpen(root, trigger, panel, !isOpen(trigger));
+        return;
+      }
+
+      if (!getRoot()?.contains(t)) closeIfOpen();
+    });
+
+    document.addEventListener(
+      'keydown',
+      function (e) {
+        if (e.key !== 'Escape') return;
+        const root = getRoot();
+        if (!root || !root.contains(document.activeElement)) return;
+        const panel = getPanel();
+        const trigger = root.querySelector('.sidebar-version-trigger');
+        if (!(panel && trigger instanceof HTMLButtonElement)) return;
+        if (!isOpen(trigger)) return;
+        e.stopPropagation();
+        setOpen(root, trigger, panel, false);
+        trigger.focus();
+      },
+      true
+    );
+
+    function onReposition() {
+      const root = getRoot();
+      const panel = getPanel();
+      if (!root || !panel) return;
+      const trigger = root.querySelector('.sidebar-version-trigger');
+      if (!(trigger instanceof HTMLButtonElement)) return;
+      if (!isOpen(trigger)) return;
+      placePanel(root, panel);
+    }
+
+    window.addEventListener('resize', onReposition);
+    window.addEventListener('scroll', onReposition, true);
+  }
+</script>
+
+<style>
+  .sidebar-version {
+    position: relative;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--sl-color-hairline-light);
+  }
+
+  .sidebar-version-label {
+    display: block;
+    font-size: var(--sl-text-xs);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--sl-color-gray-3);
+    margin-bottom: 0.35rem;
+  }
+
+  .sidebar-version-field {
+    position: relative;
+  }
+
+  .sidebar-version-trigger {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0.5rem 0.5rem 0.5rem 0.65rem;
+    font-size: var(--sl-text-sm);
+    font-weight: 500;
+    font-family: var(--sl-font, inherit);
+    line-height: 1.35;
+    text-align: start;
+    color: var(--sl-color-text);
+    background-color: var(--sl-color-bg-sidebar);
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: var(--sl-border-radius, 0.5rem);
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .sidebar-version-trigger:hover {
+    border-color: var(--sl-color-gray-3);
+  }
+
+  .sidebar-version-trigger:focus {
+    outline: none;
+  }
+
+  .sidebar-version-trigger:focus-visible {
+    border-color: var(--sl-color-accent);
+    box-shadow: 0 0 0 1px var(--sl-color-accent);
+  }
+
+  .sidebar-version.is-open .sidebar-version-trigger {
+    border-color: var(--sl-color-accent);
+    box-shadow: 0 0 0 1px var(--sl-color-accent);
+  }
+
+  .sidebar-version-trigger-text {
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sidebar-version-caret {
+    flex-shrink: 0;
+    display: flex;
+    color: var(--sl-color-gray-3);
+    transform-origin: 50% 50%;
+    transition:
+      color 0.15s ease,
+      transform 0.2s ease;
+  }
+
+  .sidebar-version-caret :global(svg) {
+    display: block;
+  }
+
+  .sidebar-version.is-open .sidebar-version-caret {
+    color: var(--sl-color-accent);
+    transform: rotate(180deg);
+  }
+
+  .sidebar-version-panel {
+    position: fixed;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0.4rem;
+    list-style: none;
+    background-color: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: var(--sl-border-radius, 0.5rem);
+    box-shadow: var(--sl-shadow-md, 0 4px 6px -1px rgb(0 0 0 / 0.2));
+  }
+
+  .sidebar-version-panel[hidden] {
+    display: none;
+  }
+
+  .sidebar-version-option {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0.5rem 0.6rem;
+    font-size: var(--sl-text-sm);
+    font-weight: 500;
+    font-family: var(--sl-font, inherit);
+    line-height: 1.35;
+    text-align: start;
+    color: var(--sl-color-text);
+    background: transparent;
+    border: none;
+    border-radius: calc(var(--sl-border-radius, 0.5rem) - 2px);
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+  }
+
+  .sidebar-version-option:hover,
+  .sidebar-version-option:focus {
+    outline: none;
+    background-color: var(--sl-color-hairline);
+  }
+
+  .sidebar-version-option:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--sl-color-accent);
+  }
+
+  .sidebar-version-option.is-active {
+    color: var(--sl-color-text-accent, var(--sl-color-accent));
+    background-color: var(--sl-color-hairline);
+  }
+</style>

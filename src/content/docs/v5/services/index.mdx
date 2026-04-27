@@ -1,0 +1,145 @@
+---
+title: Services
+description: Audio, brightness, night light, weather, idle behaviors, and notifications.
+sidebar:
+  order: 7
+---
+
+Services are the background features Noctalia can control for you: audio behavior, brightness, night light, weather, idle actions, and notifications.
+
+These sections live at the top level of your Noctalia config, for example `~/.config/noctalia/config.toml`.
+
+```toml
+[weather]
+enabled = true
+address = "Toronto, ON"
+
+[notification]
+enable_daemon = true
+```
+
+Notification daemon ownership is here, not under `[shell]`: use `[notification].enable_daemon`.
+
+## Audio
+
+```toml
+[audio]
+enable_overdrive     = false
+enable_sounds        = false
+sound_volume         = 0.5
+volume_change_sound  = ""
+notification_sound   = ""
+```
+
+- `enable_overdrive` - When `false`, Control Center output and mic sliders cap at 100%. When `true`, they can go up to 150% (and volume commands follow; see [IPC system controls](/v5/ipc/system-controls/#volume)).
+- `enable_sounds` - Master toggle for UI sounds.
+- `sound_volume` - Global gain for UI sounds (0.0-1.0).
+- `volume_change_sound` and `notification_sound` - Absolute paths, `~` paths, or asset-relative paths. Empty string uses bundled defaults.
+
+## Brightness
+
+Default control uses the **kernel backlight** interface. **DDC/CI** via `ddcutil` is opt-in for external monitors that expose DDC brightness.
+
+```toml
+[brightness]
+enable_ddcutil = false
+ignore_mmids   = []
+
+[brightness.monitor.eDP-1]
+backend = "backlight"   # auto | none | backlight | ddcutil
+
+[brightness.monitor.DP-1]
+backend = "ddcutil"
+```
+
+- `enable_ddcutil` - Only enables DDC/CI **discovery**; it does not force every monitor to use `ddcutil`.
+- `ignore_mmids` - List of monitor model id strings passed as `--ignore-mmid` to every `ddcutil` run. Use `ddcutil --verbose detect` to find ids.
+- Per-monitor tables use the same connector / description rules as [Bar](/v5/bar/) monitor overrides.
+- `backend = "auto"` prefers kernel backlight, then falls back to `ddcutil`.
+- `backend = "none"` hides brightness control for that display.
+- `ddcutil` is best-effort: repeated DDC failures **cool down** that display to avoid hammering the bus.
+
+Brightness commands are listed under [IPC system controls](/v5/ipc/system-controls/#brightness).
+
+## Night light
+
+Uses **wlsunset** for color temperature. 
+
+```toml
+[nightlight]
+enabled              = false
+force                = false
+use_weather_location = true
+
+temperature_day   = 6500
+temperature_night = 4000
+
+start_time = "20:30"
+stop_time  = "07:30"
+# latitude  = 52.5200
+# longitude = 13.4050
+```
+
+**Priority:** explicit `start_time` and `stop_time` beat manual `latitude` / `longitude`, which beat WeatherService coordinates when `use_weather_location` is relevant. If only one of latitude or longitude is set, night light refuses to start.
+
+Night light commands are listed under [IPC system controls](/v5/ipc/system-controls/#night-light). The [nightlight](/v5/bar/widgets/) bar widget cycles Off / On / Forced.
+
+## Weather
+
+```toml
+[weather]
+enabled         = true
+auto_locate     = false
+address         = "Toronto, ON"
+refresh_minutes = 30
+unit            = "celsius"   # celsius | fahrenheit
+```
+
+- `auto_locate = false` - Geocode `address` to coordinates and fetch current weather plus a 6-day forecast.
+- `auto_locate = true` - Ignore `address` and resolve location from IP.
+
+Enabling weather adds a **Weather** tab to Control Center. The bar [weather](/v5/bar/widgets/) widget and [desktop weather](/v5/desktop/widgets/) also require `enabled = true`.
+
+## Idle
+
+Behaviors are named entries under `[idle.behavior.*]`. When no `config.toml` exists, Noctalia ships a built-in default (the lock behavior is off in the default set).
+
+```toml
+[idle.behavior.lock]
+timeout = 660
+command = "noctalia:screen-lock"
+enabled = false
+
+[idle.behavior.dnd]
+timeout = 32
+command = "noctalia:notification-dnd-set on"
+
+[idle.behavior.custom]
+timeout = 48
+command = "notify-send 'Idle' 'Going idle'"
+```
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `enabled` | bool | `true` | Whether this behavior runs. |
+| `timeout` | int | `0` | Seconds of idle time before it fires. |
+| `command` | string | `""` | Shell command or `noctalia:` IPC shorthand. |
+
+The `noctalia:` prefix sends the rest through the same command registry used by IPC. See the [IPC overview](/v5/ipc/) for examples.
+
+Idle uses `ext_idle_notifier_v1` and honors **idle inhibitors** (see the [idle_inhibitor](/v5/bar/widgets/) widget and [IPC system controls](/v5/ipc/system-controls/#idle-inhibitor)).
+
+## Notifications
+
+```toml
+[notification]
+enable_daemon      = true
+background_opacity = 0.97
+background_blur    = true
+```
+
+- `enable_daemon` - When `false`, Noctalia does **not** register `org.freedesktop.Notifications`. In-app toasts and history can still work; an external notification daemon can own the name instead.
+- `background_opacity` - Toast card background alpha; lower values let compositor blur show through.
+- `background_blur` - Request background blur behind toasts when the compositor supports it.
+
+Do Not Disturb commands are listed under [IPC shell and UI](/v5/ipc/shell-and-ui/#notifications).

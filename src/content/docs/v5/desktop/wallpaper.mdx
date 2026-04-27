@@ -1,0 +1,81 @@
+---
+title: Wallpaper and overview
+description: Wallpaper fill modes, automation, per-monitor directories, and overview backdrop.
+sidebar:
+  order: 9
+---
+
+## Wallpaper
+
+Noctalia can manage your wallpaper, pick images from folders, use different folders per monitor, and change wallpapers automatically.
+
+The simplest setup points Noctalia at one folder:
+
+```toml
+[wallpaper]
+enabled = true
+directory = "/home/user/Wallpapers"
+fill_mode = "crop"
+```
+
+Use the full example below when you want light and dark wallpaper folders, automation, or per-monitor overrides.
+
+```toml
+[wallpaper]
+enabled             = true
+fill_mode           = "crop"    # center | crop | fit | stretch | repeat
+fill_color          = "#111111"
+transition          = ["fade", "wipe", "disc", "stripes", "zoom", "honeycomb"]
+transition_duration = 1500
+edge_smoothness     = 0.3
+
+directory       = "/home/user/Wallpapers"
+directory_light = "/home/user/Wallpapers/Light"
+directory_dark  = "/home/user/Wallpapers/Dark"
+
+[wallpaper.automation]
+enabled          = false
+interval_minutes = 30
+order            = "random"   # random | alphabetical
+recursive        = true
+
+[wallpaper.monitor.DP-2]
+enabled         = false
+directory       = "/home/user/Wallpapers/Vertical"
+directory_light = "/home/user/Wallpapers/Vertical/Light"
+directory_dark  = "/home/user/Wallpapers/Vertical/Dark"
+```
+
+**Picker UI** - The wallpaper panel lists images from `directory` in a grid. Picking a monitor in the toolbar switches to that monitor's **override** directory, falling back to the base `directory`. Choosing a tile writes the path to state and applies it. If **ALL** is selected, the choice applies to every connected output.
+
+**`fill_color`** - Hex (`#RGB`, `#RGBA`, `#RRGGBB`, `#RRGGBBAA`) or a **theme role** such as `surface` or `primary`. Used behind image wallpapers, in gaps for `center` or `fit`, and as the full wallpaper when no image is selected. See [Theme](/v5/theming/) for roles.
+
+**Automation** - When enabled, Noctalia picks one image from `directory` on the interval and applies it to **all** outputs in sync. `order = "random"` picks a random file each cycle. `order = "alphabetical"` sorts paths case-insensitively and advances one step each cycle (wraps at the end). `interval_minutes = 0` disables the timer.
+
+**Per-monitor** - `[wallpaper.monitor.<name>]` uses the same match idea as [Bar](/v5/bar/) monitor overrides: connector name and optional per-output directories.
+
+## Overview backdrop
+
+A blurred, tinted copy of the current wallpaper can be shown as a layer-shell backdrop for **compositor overview** modes (for example Niri's overview). Off by default.
+
+**Niri** - To show the surface during overview, add a layer rule, for example:
+
+```kdl
+layer-rule {
+    match namespace="^noctalia-overview"
+    place-within-backdrop true
+}
+```
+
+```toml
+[overview]
+enabled                = false
+unload_when_not_in_use = true
+blur_intensity         = 0.5
+tint_intensity         = 0.3
+```
+
+- `unload_when_not_in_use` - When `true`, release resources while closed. When `false`, keep them warm in VRAM.
+- `blur_intensity` - `0.0` to `1.0`.
+- `tint_intensity` - `0.0` to `1.0` opacity of the tint.
+- Tint color is `palette.surface` in the current theme and is not separately configurable in this table.

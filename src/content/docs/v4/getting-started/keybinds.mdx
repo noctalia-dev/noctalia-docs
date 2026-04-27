@@ -1,0 +1,135 @@
+---
+title: Keybinds
+description: Overview of available IPC commands and configuration examples.
+sidebar:
+  order: 40
+---
+
+import { LinkCard, CardGrid, Aside, Steps } from '@astrojs/starlight/components';
+
+Take full control of Noctalia with keyboard shortcuts and IPC commands. This section covers all available commands you can bind to your favorite keys.
+
+:::tip[Installation-specific commands]
+- **NixOS Flake users**: Use `noctalia-shell` directly instead of `qs -c noctalia-shell`
+- **PikaOS**: Use `qs` instead of `qs -c noctalia-shell`
+- **Manual installation users**: If you have Noctalia in `~/.config/quickshell/`, you can use `qs ipc call...` directly
+:::
+
+## Available Commands
+
+Every aspect of the shell can be controlled via IPC (Inter-Process Communication). Commands are grouped into the following categories:
+
+<Aside type="note">
+In the subpages below, commands are shown in their shortened form (e.g., `launcher toggle`). Hover over any command to see the full `ipc call` syntax, or use the copy icon to copy the full command to your clipboard.
+</Aside>
+
+<CardGrid>
+  <LinkCard title="Core & Navigation" description="Launcher, Control Center, Settings and basic utilities." href="/v4/getting-started/keybinds/core-and-navigation/" />
+  <LinkCard title="System Controls" description="Audio, Media, Connectivity, Display and Power management." href="/v4/getting-started/keybinds/system-controls/" />
+  <LinkCard title="Interface & Plugins" description="Notifications, Appearance, Security and Plugin controls." href="/v4/getting-started/keybinds/interface-and-plugins/" />
+</CardGrid>
+
+## Example Configurations
+
+Apply these binds in your window manager configuration to integrate Noctalia.
+
+<details open>
+<summary><strong>Niri Configuration</strong></summary>
+
+> Both `spawn-sh` and `spawn` are usable to run Noctalia keybinds.
+
+Add these binds to your `~/.config/niri/config.kdl`:
+
+```kdl
+binds {
+    // Core Noctalia binds
+    Mod+Space { spawn-sh "qs -c noctalia-shell ipc call launcher toggle"; }
+    Mod+S { spawn-sh "qs -c noctalia-shell ipc call controlCenter toggle"; }
+    Mod+Comma { spawn-sh "qs -c noctalia-shell ipc call settings toggle"; }
+
+    // Audio & Brightness
+    XF86AudioRaiseVolume { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "increase"; }
+    XF86AudioLowerVolume { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "decrease"; }
+    XF86AudioMute { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "muteOutput"; }
+    XF86MonBrightnessUp { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "increase"; }
+    XF86MonBrightnessDown { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "decrease"; }
+}
+```
+
+</details>
+
+<details open>
+<summary><strong>Hyprland Configuration</strong></summary>
+
+Add these binds to your `hyprland.conf`:
+
+```ini
+$ipc = qs -c noctalia-shell ipc call
+
+# Core binds
+bind = SUPER, SPACE, exec, $ipc launcher toggle
+bind = SUPER, S, exec, $ipc controlCenter toggle
+bind = SUPER, comma, exec, $ipc settings toggle
+
+# Media keys
+bindel = , XF86AudioRaiseVolume, exec, $ipc volume increase
+bindel = , XF86AudioLowerVolume, exec, $ipc volume decrease
+bindl = , XF86AudioMute, exec, $ipc volume muteOutput
+bindel = , XF86MonBrightnessUp, exec, $ipc brightness increase
+bindel = , XF86MonBrightnessDown, exec, $ipc brightness decrease
+```
+
+</details>
+
+<details open>
+<summary><strong>Sway / Scroll Configuration</strong></summary>
+
+Add these binds to your `~/.config/sway/config` (or equivalent for your compositor):
+
+```bash
+set $ipc qs -c noctalia-shell ipc call
+
+# Core binds
+bindsym $mod+space exec $ipc launcher toggle
+bindsym $mod+s exec $ipc controlCenter toggle
+bindsym $mod+comma exec $ipc settings toggle
+
+# Media keys
+bindsym --locked XF86AudioRaiseVolume exec $ipc volume increase
+bindsym --locked XF86AudioLowerVolume exec $ipc volume decrease
+bindsym --locked XF86AudioMute exec $ipc volume muteOutput
+bindsym --locked XF86MonBrightnessUp exec $ipc brightness increase
+bindsym --locked XF86MonBrightnessDown exec $ipc brightness decrease
+```
+
+</details>
+
+<details open>
+<summary><strong>MangoWC Configuration</strong></summary>
+
+Add these binds to your `~/.config/mango/config.conf`:
+
+```bash
+# Core binds
+bind=SUPER,space,spawn,qs -c noctalia-shell ipc call launcher toggle
+bind=SUPER,s,spawn,qs -c noctalia-shell ipc call controlCenter toggle
+bind=SUPER,comma,spawn,qs -c noctalia-shell ipc call settings toggle
+
+# Media keys
+bind=NONE,XF86AudioRaiseVolume,spawn,qs -c noctalia-shell ipc call volume increase
+bind=NONE,XF86AudioLowerVolume,spawn,qs -c noctalia-shell ipc call volume decrease
+bind=NONE,XF86AudioMute,spawn,qs -c noctalia-shell ipc call volume muteOutput
+bind=NONE,XF86MonBrightnessUp,spawn,qs -c noctalia-shell ipc call brightness increase
+bind=NONE,XF86MonBrightnessDown,spawn,qs -c noctalia-shell ipc call brightness decrease
+```
+
+</details>
+
+## Discovering Commands
+
+Not sure what else you can control? You can see all IPC commands via this terminal command:
+
+**List all targets**:
+    ```bash
+    qs -c noctalia-shell ipc show
+    ```

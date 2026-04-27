@@ -1,0 +1,544 @@
+---
+title: NixOS
+description: Start here to set up and use Noctalia.
+sidebar:
+  order: 15
+---
+
+import SettingsReference from '../../../../components/SettingsReference.astro';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+
+For NixOS users, a [Nix package](https://search.nixos.org/packages?channel=unstable&show=noctalia-shell) for Noctalia is available.
+You can also get the Git version, NixOS module and Home Manager module via flakes.
+
+:::caution
+To make Noctalia's wifi, bluetooth, power-profile, and battery feature available, please ensure the following NixOS options are enabled:
+- `networking.networkmanager.enable`
+- `hardware.bluetooth.enable`
+- `services.power-profiles-daemon.enable` or `services.tuned.enable`
+- `services.upower.enable`
+:::
+
+## Nix flakes
+
+To install Noctalia, you need to [add a flake input](#add-flake-input) and [install the package](#install-package).
+
+:::note
+The Noctalia flake requires **nixpkgs unstable**, since we depend on the latest Quickshell version.
+:::
+
+### Adding the flake input {#add-flake-input}
+
+Add the required inputs to your flake configuration:
+
+```nix
+# flake.nix
+{
+  description = "NixOS configuration with Noctalia";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = inputs@{ self, nixpkgs, ... }: {
+    nixosConfigurations.awesomebox = nixpkgs.lib.nixosSystem {
+      specialArgs = { inherit inputs; };
+      modules = [
+        # ... other modules
+        ./noctalia.nix
+      ];
+    };
+  };
+}
+```
+
+With the flake installed, we can access Noctalia packages and modules in our configuration.
+
+### Installing the package {#install-package}
+
+If you don't use Noctalia's NixOS or home-manager modules, you need to manually install the default Noctalia package from the new `noctalia` input:
+
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  # install package
+  environment.systemPackages = with pkgs; [
+    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+    # ... maybe other stuff
+  ];
+}
+```
+
+Rebuild with `sudo nixos-rebuild switch --flake .`.
+
+---
+
+### Binary Cache {#binary-cache}
+
+Pre-built binaries are available on [Cachix](https://app.cachix.org/cache/noctalia), so you can skip compiling locally.
+
+You can add the cache either to your flake, nixos configuration, or `/etc/nix/nix.conf`.
+
+<Tabs>
+  <TabItem label="flake.nix">
+    ```nix
+    nixConfig = {
+      extra-substituters = [ "https://noctalia.cachix.org" ];
+      extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ];
+    };
+    ```
+  </TabItem>
+  <TabItem label="configuration.nix"> 
+    ```nix
+    nix.settings = { 
+      extra-substituters = [ "https://noctalia.cachix.org" ]; 
+      extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ]; 
+    };
+    ``` 
+  </TabItem>
+  <TabItem label="nix.conf"> 
+    ```properties
+    extra-substituters = https://noctalia.cachix.org
+    extra-trusted-public-keys = noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=
+    ``` 
+  </TabItem>
+</Tabs>
+
+---
+
+## Config with home-manager
+
+If you have [home manager](https://github.com/nix-community/home-manager) installed, you can configure your Noctalia shell in Nix.
+
+### Noctalia settings
+
+To configure Noctalia settings, you can use the Noctalia home manager module:
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  home-manager.users.drfoobar = {
+    # import the home manager module
+    imports = [
+      inputs.noctalia.homeModules.default
+    ];
+
+    # configure options
+    programs.noctalia-shell = {
+      enable = true;
+      settings = {
+        # configure noctalia here
+        bar = {
+          density = "compact";
+          position = "right";
+          showCapsule = false;
+          widgets = {
+            left = [
+              {
+                id = "ControlCenter";
+                useDistroLogo = true;
+              }
+              {
+                id = "Network";
+              }
+              {
+                id = "Bluetooth";
+              }
+            ];
+            center = [
+              {
+                hideUnoccupied = false;
+                id = "Workspace";
+                labelMode = "none";
+              }
+            ];
+            right = [
+              {
+                alwaysShowPercentage = false;
+                id = "Battery";
+                warningThreshold = 30;
+              }
+              {
+                formatHorizontal = "HH:mm";
+                formatVertical = "HH mm";
+                id = "Clock";
+                useMonospacedFont = true;
+                usePrimaryColor = true;
+              }
+            ];
+          };
+        };
+        colorSchemes.predefinedScheme = "Monochrome";
+        general = {
+          avatarImage = "/home/drfoobar/.face";
+          radiusRatio = 0.2;
+        };
+        location = {
+          monthBeforeDay = true;
+          name = "Marseille, France";
+        };
+      };
+      # this may also be a string or a path to a JSON file.
+    };
+  };
+}
+```
+
+
+
+We don't have extensive documentation of Noctalia's configuration options; however, you can see an up-to-date list of [configuration defaults](#config-ref).
+
+Additionally, since `~/.config/noctalia/settings.json` is now a read-only symlink, you can get the latest (or GUI-modified) settings via: **Open Settings Panel** -> **General** -> **Copy Settings** or by running `noctalia-shell ipc call state all | jq .settings`, then use them to update your Nix config for a permanent change.
+
+:::tip
+ To see the diff between your current build and the latest (or GUI-modified) settings, run:
+```sh
+nix shell nixpkgs#json-diff -c bash -c "json-diff <(jq -S . ~/.config/noctalia/settings.json) <(noctalia-shell ipc call state all | jq -S .settings)"
+```
+:::
+
+
+### Theme colors
+
+
+To configure Noctalia settings, you can use the Noctalia home manager module. Be sure to set every Material 3 color, including hover-state values, when overriding the defaults:
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  home-manager.users.drfoobar = {
+    # import the home manager module
+    imports = [
+      inputs.noctalia.homeModules.default
+    ];
+
+    # configure options
+    programs.noctalia-shell = {
+      enable = true;
+      colors = {
+        # you must set ALL of these
+        mError = "#dddddd";
+        mOnError = "#111111";
+        mOnPrimary = "#111111";
+        mOnSecondary = "#111111";
+        mOnSurface = "#828282";
+        mOnSurfaceVariant = "#5d5d5d";
+        mOnTertiary = "#111111";
+        mOnHover = "#ffffff";
+        mOutline = "#3c3c3c";
+        mPrimary = "#aaaaaa";
+        mSecondary = "#a7a7a7";
+        mShadow = "#000000";
+        mSurface = "#111111";
+        mHover = "#1f1f1f";
+        mSurfaceVariant = "#191919";
+        mTertiary = "#cccccc";
+      };
+      # this may also be a string or a path to a JSON file.
+    };
+  };
+}
+```
+
+### User Templates
+
+The `user-templates` option allows you to define custom templates.
+This is useful for theming other applications that are not supported by default.
+
+It can be a string, a path, or an attribute set.
+
+As a string:
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  home-manager.users.drfoobar = {
+    # ...
+    programs.noctalia-shell = {
+      enable = true;
+      settings = {
+        templates = {
+          enableUserTemplates = true;
+        };
+      };
+      user-templates = ''
+        [config]
+        # General template settings
+        [templates.myapp]
+        input_path = "~/.config/noctalia/templates/myapp.css"
+        output_path = "~/.config/myapp/theme.css"
+        post_hook = "myapp --reload-theme"
+      '';
+    };
+  };
+}
+```
+
+As a path:
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  home-manager.users.drfoobar = {
+    # ...
+    programs.noctalia-shell = {
+      enable = true;
+      settings = {
+        templates = {
+          enableUserTemplates = true;
+        };
+      };
+      user-templates = ./path/to/user-templates.toml;
+    };
+  };
+}
+```
+
+As an attribute set:
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  home-manager.users.drfoobar = {
+    # ...
+    programs.noctalia-shell = {
+      enable = true;
+      settings = {
+        templates = {
+          enableUserTemplates = true;
+        };
+      };
+      user-templates = {
+        config = {
+          # General template settings
+        };
+        templates = {
+          myapp = {
+            input_path = "~/.config/noctalia/templates/myapp.css";
+            output_path = "~/.config/myapp/theme.css";
+            post_hook = "myapp --reload-theme";
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+### Plugins
+
+You can configure plugins in a declarative way. If an enabled plugin isn’t installed in the plugin directory, Noctalia will automatically install it when starts up.
+
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  home-manager.users.drfoobar = {
+    # import the home manager module
+    imports = [
+      inputs.noctalia.homeModules.default
+    ];
+
+    # configure options
+    programs.noctalia-shell = {
+      enable = true;
+      plugins = {
+        sources = [
+          {
+            enabled = true;
+            name = "Official Noctalia Plugins";
+            url = "https://github.com/noctalia-dev/noctalia-plugins";
+          }
+        ];
+        states = {
+          catwalk = {
+            enabled = true;
+            sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
+          };
+        };
+        version = 2;
+      };
+      # this may also be a string or a path to a JSON file.
+
+      pluginSettings = {
+        catwalk = {
+          minimumThreshold = 25;
+          hideBackground = true;
+        };
+        # this may also be a string or a path to a JSON file.
+      };
+    };
+  };
+}
+```
+
+### Wallpapers
+
+Wallpapers are configured in `~/.cache/noctalia/wallpapers.json`. You can set them declaratively:
+
+```nix
+# noctalia.nix
+{ pkgs, inputs, ... }:
+{
+  home-manager.users.drfoobar = {
+    # ... other config ...
+    
+    home.file.".cache/noctalia/wallpapers.json" = {
+      text = builtins.toJSON {
+        defaultWallpaper = "/path/to/default/wallpaper.png";
+        wallpapers = {
+          "DP-1" = "/path/to/monitor/wallpaper.png";
+        };
+      };
+    };
+  };
+}
+```
+
+### Keybinds
+
+Keybindings are configured in your compositor. You make IPC calls to Noctalia [as explained in the keybinds section](/v4/getting-started/keybinds/). The only difference is that you can call `noctalia-shell` instead of `qs -c noctalia-shell`.
+
+To safely configure noctalia keybindings in the Niri flake, be sure to pass a list:
+```nix
+# niri.nix
+{ pkgs, inputs, ... }:
+{
+  # ...
+  home-manager.users.drfoobar =
+    { config, ... }:
+    {
+      # ...
+      programs.niri = {
+        settings = {
+          # ...
+          binds = with config.lib.niri.actions; {
+            "Mod+Space".action.spawn = [
+              "noctalia-shell" "ipc" "call" "launcher" "toggle" # ✅
+            ];
+            "Mod+P".action.spawn =
+              "noctalia-shell ipc call sessionMenu toggle"; # ❌
+        };
+      };
+    };
+}
+
+```
+
+It may be convenient to define a utility function to allow you to use simple strings:
+
+```nix
+# niri.nix
+{ pkgs, inputs, ... }:
+
+let
+  noctalia = cmd: [
+    "noctalia-shell" "ipc" "call"
+  ] ++ (pkgs.lib.splitString " " cmd);
+in
+{
+  # ...
+  home-manager.users.drfoobar =
+    { config, lib, ... }:
+    {
+      # ...
+      programs = {
+        niri = {
+          # ...
+          settings = {
+            binds = with config.lib.niri.actions; {
+              # ...
+              "Mod+L".action.spawn = noctalia "lockScreen lock";
+              "XF86AudioLowerVolume".action.spawn = noctalia "volume decrease";
+              "XF86AudioRaiseVolume".action.spawn = noctalia "volume increase";
+              "XF86AudioMute".action.spawn = noctalia "volume muteOutput";
+              # etc
+          };
+        };
+      };
+    };
+}
+
+```
+---
+
+## Running the shell
+
+:::danger[Systemd startup deprecation]
+Systemd startup is deprecated for Noctalia.
+
+This approach caused recurring technical issues, including delayed shell startup and unreliable IPC communication.
+
+The old documentation is preserved for existing users [here](/v4/deprecated/systemd-startup).
+
+Please use the way shown below instead.
+:::
+
+To run Noctalia using the flake, run:
+
+```bash
+noctalia-shell
+```
+
+With the [Niri flake](https://github.com/sodiboo/niri-flake), you can then spawn Noctalia on startup like this:
+
+```nix
+# niri.nix
+{ pkgs, inputs, ... }:
+{
+  # ...
+
+  home-manager.users.drfoobar = {
+    # ...
+    programs.niri = {
+      package = niri;
+      settings = {
+        # ...
+        spawn-at-startup = [
+          {
+            command = [
+              "noctalia-shell"
+            ];
+          }
+        ];
+      };
+    };
+  };
+}
+
+```
+
+---
+
+## Calendar events support
+
+To add support for events in the calendar via evolution-data-server.
+
+1. **Enable the evolution-data-server**:
+```nix
+services.gnome.evolution-data-server.enable = true;
+```
+
+2. **Override the Noctalia package**:
+```nix
+(pkgs.noctalia-shell.override { calendarSupport = true; })
+```
+or
+```nix
+(inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override { calendarSupport = true; })
+```
+
+---
+
+## Configuration Defaults {#config-ref}
+
+There is no comprehensive documentation of all configuration options, but the default values are autogenerated and placed in a [`settings-default.json`](https://github.com/noctalia-dev/noctalia-shell/blob/main/Assets/settings-default.json) in the Noctalia shell repository. We retrieve a live Nixified version of these here for your convenience:
+
+<SettingsReference />

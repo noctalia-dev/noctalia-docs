@@ -1,0 +1,12 @@
+/getting-started   /v4/getting-started/   301
+/getting-started/* /v4/getting-started/:splat  301
+/configuration   /v4/configuration/   301
+/configuration/* /v4/configuration/:splat  301
+/theming   /v4/theming/   301
+/theming/* /v4/theming/:splat  301
+/development   /v4/development/   301
+/development/* /v4/development/:splat  301
+/deprecated   /v4/deprecated/   301
+/deprecated/* /v4/deprecated/:splat  301
+/projects   /v4/projects/   301
+/projects/* /v4/projects/:splat  301

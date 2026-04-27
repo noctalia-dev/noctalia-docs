@@ -5,24 +5,34 @@ import { remarkHeadingId } from "remark-custom-heading-id";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://noctalia.dev",
+  vite: {
+    logLevel: "error",
+  },
+  redirects: {
+    /** Default landing (v4 = current production shell docs) */
+    "/": "/v4/",
+  },
   integrations: [
     starlight({
       components: {
-        Header: './src/components/Header.astro',
-        TableOfContents: './src/components/TableOfContents.astro',
+        Header: "./src/components/Header.astro",
+        TableOfContents: "./src/components/TableOfContents.astro",
+        Sidebar: "./src/components/Sidebar.astro",
+        Pagination: "./src/components/Pagination.astro",
       },
       head: [
         {
-          tag: 'script',
+          tag: "script",
           attrs: {
-            src: '/logo-link.js',
+            src: "/logo-link.js",
             defer: true,
           },
         },
         {
-          tag: 'script',
+          tag: "script",
           attrs: {
-            src: '/search-breadcrumb.js',
+            src: "/search-breadcrumb.js",
             defer: true,
           },
         },
@@ -48,67 +58,157 @@ export default defineConfig({
       tableOfContents: true,
       sidebar: [
         {
-          label: "Getting started",
+          label: "Noctalia v4",
           items: [
-            { label: "Installation", link: "getting-started/installation/" },
-            { label: "NixOS", link: "getting-started/nixos/" },
-            { label: "Running the Shell", link: "getting-started/running-the-shell/" },
             {
-              label: "Compositor Settings",
+              label: "Getting started",
               items: [
-                { label: "Niri", link: "getting-started/compositor-settings/niri/" },
-                { label: "Hyprland", link: "getting-started/compositor-settings/hyprland/" },
+                {
+                  label: "Installation",
+                  link: "v4/getting-started/installation/",
+                },
+                { label: "NixOS", link: "v4/getting-started/nixos/" },
+                {
+                  label: "Running the Shell",
+                  link: "v4/getting-started/running-the-shell/",
+                },
+                {
+                  label: "Compositor Settings",
+                  items: [
+                    {
+                      label: "Niri",
+                      link: "v4/getting-started/compositor-settings/niri/",
+                    },
+                    {
+                      label: "Hyprland",
+                      link: "v4/getting-started/compositor-settings/hyprland/",
+                    },
+                  ],
+                },
+                {
+                  label: "Keybinds",
+                  items: [
+                    { label: "Overview", link: "v4/getting-started/keybinds/" },
+                    {
+                      label: "Core & Navigation",
+                      link: "v4/getting-started/keybinds/core-and-navigation/",
+                    },
+                    {
+                      label: "System Controls",
+                      link: "v4/getting-started/keybinds/system-controls/",
+                    },
+                    {
+                      label: "Interface & Plugins",
+                      link: "v4/getting-started/keybinds/interface-and-plugins/",
+                    },
+                  ],
+                },
+                { label: "FAQ", link: "v4/getting-started/faq/" },
+                { label: "Uninstall", link: "v4/getting-started/uninstall/" },
               ],
             },
             {
-              label: "Keybinds",
+              label: "Configuration",
+              autogenerate: { directory: "v4/configuration" },
+            },
+            {
+              label: "Theming",
               items: [
-                { label: "Overview", link: "getting-started/keybinds/" },
-                { label: "Core & Navigation", link: "getting-started/keybinds/core-and-navigation/" },
-                { label: "System Controls", link: "getting-started/keybinds/system-controls/" },
-                { label: "Interface & Plugins", link: "getting-started/keybinds/interface-and-plugins/" },
+                {
+                  label: "Basic App Theming",
+                  link: "v4/theming/basic-app-theming/",
+                },
+                {
+                  label: "Program Specific",
+                  autogenerate: { directory: "v4/theming/program-specific" },
+                },
+                { label: "User Templates", link: "v4/theming/user-templates/" },
+                { label: "User Color Schemes", link: "v4/theming/color-schemes/" },
               ],
             },
-            { label: "FAQ", link: "getting-started/faq/" },
-            { label: "Uninstall", link: "getting-started/uninstall/" },
-          ],
-        },
-        {
-          label: "Configuration",
-          autogenerate: { directory: "configuration" },
-        },
-        {
-          label: "Theming",
-          items: [
-            { label: "Basic App Theming", link: "theming/basic-app-theming/" },
             {
-              label: "Program Specific",
-              autogenerate: { directory: "theming/program-specific" },
+              label: "Development",
+              items: [
+                { label: "Guidelines", link: "v4/development/guideline/" },
+                { label: "IPC", link: "v4/development/ipc/" },
+                { label: "Widgets", link: "v4/development/widget/" },
+                { label: "Templates", link: "v4/development/templates/" },
+                {
+                  label: "Plugins",
+                  autogenerate: { directory: "v4/development/plugins" },
+                },
+              ],
             },
-            { label: "User Templates", link: "theming/user-templates/" },
-            { label: "User Color Schemes", link: "theming/color-schemes/" },
-          ],
-        },
-        {
-          label: "Development",
-          items: [
-            { label: "Guidelines", link: "development/guideline/" },
-            { label: "IPC", link: "development/ipc/" },
-            { label: "Widgets", link: "development/widget/" },
-            { label: "Templates", link: "development/templates/" },
             {
-              label: "Plugins",
-              autogenerate: { directory: "development/plugins" },
+              label: "Deprecated",
+              items: [
+                {
+                  label: "Systemd Startup",
+                  link: "v4/deprecated/systemd-startup/",
+                },
+              ],
             },
           ],
         },
         {
-          label: "Deprecated",
+          label: "Noctalia v5",
           items: [
-            { label: "Systemd Startup", link: "deprecated/systemd-startup/" },
+            {
+              label: "Configuration",
+              items: [
+                {
+                  label: "Basics",
+                  items: [
+                    { label: "How Configuration Works", link: "v5/configuration/" },
+                    { label: "Shell", link: "v5/shell/" },
+                  ],
+                },
+                {
+                  label: "Bar",
+                  items: [
+                    { label: "Bars", link: "v5/bar/" },
+                    { label: "Widgets", link: "v5/bar/widgets/" },
+                    { label: "Scripted Widgets", link: "v5/bar/scripted-widgets/" },
+                  ],
+                },
+                {
+                  label: "Dock",
+                  items: [
+                    { label: "Dock", link: "v5/dock/" },
+                  ],
+                },
+                {
+                  label: "Desktop",
+                  items: [
+                    { label: "Desktop Widgets", link: "v5/desktop/widgets/" },
+                    { label: "Wallpaper & Overview", link: "v5/desktop/wallpaper/" },
+                  ],
+                },
+                {
+                  label: "Theming",
+                  items: [
+                    { label: "Theme", link: "v5/theming/" },
+                    { label: "Theming Templates", link: "v5/theming/templates/" },
+                  ],
+                },
+                {
+                  label: "Services",
+                  items: [
+                    { label: "Services", link: "v5/services/" },
+                  ],
+                },
+              ],
+            },
+            {
+              label: "IPC",
+              items: [
+                { label: "Overview", link: "v5/ipc/" },
+                { label: "Shell & UI", link: "v5/ipc/shell-and-ui/" },
+                { label: "System Controls", link: "v5/ipc/system-controls/" },
+              ],
+            },
           ],
         },
-
       ],
     }),
   ],
@@ -116,4 +216,3 @@ export default defineConfig({
     remarkPlugins: [remarkHeadingId],
   },
 });
-

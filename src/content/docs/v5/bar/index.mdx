@@ -1,0 +1,214 @@
+---
+title: Bar
+description: Add and customize Noctalia bars, choose their widgets, and adjust them per monitor.
+sidebar:
+  order: 2
+---
+
+A bar is the strip of controls you usually place at the top, bottom, or side of the screen. It can show widgets such as workspaces, the clock, volume, network, battery, tray icons, and session controls.
+
+Most setups only need one bar named `main`:
+
+```toml
+[bar.main]
+position = "top"
+start = ["launcher", "wallpaper", "workspaces"]
+center = ["clock"]
+end = ["media", "tray", "network", "volume", "battery", "control-center", "session"]
+```
+
+The three lists decide where widgets appear:
+
+- `start` is the left side on a horizontal bar, or the top of a vertical bar.
+- `center` is the middle.
+- `end` is the right side on a horizontal bar, or the bottom of a vertical bar.
+
+Widget names are explained on the [Widgets](/v5/bar/widgets/) page.
+
+## Common changes
+
+Move the bar to another edge:
+
+```toml
+[bar.main]
+position = "bottom" # top | bottom | left | right
+```
+
+Make the bar float away from the screen edge:
+
+```toml
+[bar.main]
+margin_h = 180
+margin_v = 10
+radius = 12
+```
+
+Hide the bar until your pointer touches the screen edge:
+
+```toml
+[bar.main]
+auto_hide = true
+reserve_space = false
+```
+
+Give every widget a capsule background:
+
+```toml
+[bar.main]
+capsule = true
+capsule_fill = "surface_variant"
+capsule_opacity = 0.9
+```
+
+## Multiple bars
+
+Bars are named under `[bar.<name>]`. The name can be anything simple, such as `main`, `top`, or `side`.
+
+```toml
+[bar.top]
+position = "top"
+start = ["workspaces"]
+center = ["clock"]
+end = ["tray", "volume"]
+
+[bar.left]
+position = "left"
+start = ["launcher"]
+center = []
+end = ["session"]
+```
+
+If you create more than one bar, top-level `[bar]` can set creation order:
+
+```toml
+[bar]
+order = ["top", "left"]
+```
+
+This mostly matters when bars reserve space. Any bar not listed is created after the listed ones.
+
+## Per-monitor changes
+
+Every bar appears on every connected monitor by default. Use monitor overrides when one screen needs a different layout.
+
+```toml
+[bar.main]
+position = "top"
+start = ["launcher", "workspaces"]
+center = ["clock"]
+end = ["network", "volume", "battery"]
+
+[bar.main.monitor.DP-1]
+end = ["volume", "clock"]
+thickness = 44
+
+[bar.main.monitor.HDMI-A-1]
+enabled = false
+```
+
+Noctalia matches monitors by exact connector name, such as `eDP-1`, `DP-1`, or `HDMI-A-1`. It can also match a case-sensitive token inside the monitor description, as long as that token is separated by whitespace. For example, `DELL` can match a description like `DELL U2723QE`, but `2723` will not match inside `U2723QE`.
+
+Only the settings you write inside the monitor block change. Everything else inherits from the main bar.
+
+## Auto-hide
+
+When `auto_hide = true`, the bar slides out after the pointer leaves it and slides back in when your pointer reaches the matching screen edge.
+
+`reserve_space` decides whether normal windows should leave room for the bar:
+
+- `reserve_space = true` pushes windows away from the bar.
+- `reserve_space = false` lets the bar overlay windows.
+
+## Widget capsules
+
+A capsule is the small pill-shaped background behind a widget. You can turn it on for the whole bar, then override individual widgets.
+
+```toml
+[bar.main]
+capsule = true
+capsule_fill = "surface_variant"
+capsule_opacity = 0.9
+capsule_border = "outline"
+
+[widget.volume]
+capsule_fill = "secondary"
+capsule_border = ""
+
+[widget.spacer]
+type = "spacer"
+capsule = false
+```
+
+Capsule color fields accept theme role names such as `primary`, `on_primary`, `surface_variant`, and `outline`, or hex colors such as `#89b4fa`. See [Theme](/v5/theming/) for the full role list.
+
+The capsule hides automatically when a widget has no visible content, such as an empty tray or a missing battery.
+
+## Full example
+
+```toml
+[bar.main]
+position = "top"
+enabled = true
+auto_hide = false
+reserve_space = true
+
+thickness = 34
+background_opacity = 1.0
+background_blur = true
+shadow = true
+radius = 12
+margin_h = 180
+margin_v = 10
+padding = 14
+widget_spacing = 6
+scale = 1.0
+
+capsule = false
+capsule_fill = "surface_variant"
+capsule_opacity = 1.0
+
+start = ["launcher", "wallpaper", "workspaces"]
+center = ["clock"]
+end = ["media", "tray", "notifications", "network", "bluetooth", "volume", "brightness", "battery", "control-center", "session"]
+```
+
+## Bar fields
+
+| Field | Meaning |
+|-------|---------|
+| `position` | `top`, `bottom`, `left`, or `right`. |
+| `enabled` | Set to `false` to disable this bar. |
+| `auto_hide` | Hide the bar until the pointer reaches its screen edge. |
+| `reserve_space` | Ask the compositor to keep windows away from the bar. |
+| `thickness` | Bar height for horizontal bars, or width for vertical bars. |
+| `background_opacity` | `0.0` is transparent, `1.0` is opaque. |
+| `background_blur` | Ask the compositor to blur behind the bar when supported. |
+| `shadow` | Use the global `[shell.shadow]` settings. |
+| `radius` / `radius_*` | Corner rounding. Per-corner keys override `radius`. |
+| `margin_h` / `margin_v` | Gap between the bar and the screen edge. |
+| `padding` | Space from the bar edge to the first or last widget. |
+| `widget_spacing` | Gap between widgets in the same section. |
+| `scale` | Icon and text scale for this bar. |
+| `start` / `center` / `end` | Widget lists. See [Widgets](/v5/bar/widgets/). |
+
+## Capsule fields
+
+Capsule defaults live on the bar. Per-widget keys in `[widget.<name>]` override them.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `capsule` | bool | `false` | Give every widget a capsule unless a widget turns it off. |
+| `color` | string | unset | Default icon and label color for every widget on this bar. Accepts a theme role or hex color. |
+| `capsule_fill` | string | `surface_variant` | Default capsule background. Accepts a theme role or hex color. |
+| `capsule_foreground` | string | unset | Default icon and label color when capsules are shown. Accepts a theme role or hex color. |
+| `capsule_padding` | number | `6` | Inner padding in logical pixels before `scale`. |
+| `capsule_opacity` | number | `1.0` | Capsule background opacity. |
+| `capsule_border` | string | omitted | Optional border color. Accepts a theme role or hex color. If omitted, no border by default. Empty string disables the border for that widget. |
+
+Per-widget overrides:
+
+| Setting | Notes |
+|---------|-------|
+| `capsule` | Omit to inherit; `false` disables; `true` forces on. |
+| `capsule_fill`, `capsule_foreground`, `capsule_padding`, `capsule_opacity`, `capsule_border` | Override bar defaults. |
+| `color` | Icon and label color with or without capsule. |

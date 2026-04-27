@@ -1,0 +1,69 @@
+---
+title: Shell & UI
+description: IPC commands for status, config reload, bar, panels, dock, desktop widgets, notifications, theme mode, and lock.
+---
+
+These commands open, close, or toggle Noctalia UI surfaces.
+
+## General
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Print status | `noctalia msg status` | Print basic shell state as JSON. |
+| Reload config | `noctalia msg config-reload` | Reload config files immediately. |
+
+## Bar
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Show bar | `noctalia msg bar-show` | Show the bar. |
+| Hide bar | `noctalia msg bar-hide` | Hide the bar. |
+| Toggle bar | `noctalia msg bar-toggle` | Toggle bar visibility. |
+
+## Panels
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Toggle launcher | `noctalia msg panel-toggle launcher` | Open or close the app launcher. |
+| Toggle session menu | `noctalia msg panel-toggle session` | Open or close the logout, reboot, and shutdown menu. |
+| Toggle clipboard | `noctalia msg panel-toggle clipboard` | Open or close clipboard history. |
+| Toggle wallpaper panel | `noctalia msg panel-toggle wallpaper` | Open or close wallpaper picker. |
+| Toggle control center | `noctalia msg panel-toggle control-center` | Open or close Control Center. |
+
+## Dock
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Show dock | `noctalia msg dock-show` | Show all dock instances and save that override. |
+| Hide dock | `noctalia msg dock-hide` | Hide all dock instances and save that override. |
+| Toggle dock | `noctalia msg dock-toggle` | Toggle dock visibility and save the new state. |
+| Reload dock | `noctalia msg dock-reload` | Reload dock configuration. |
+
+## Desktop widgets
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Enter edit mode | `noctalia msg desktop-widgets-edit` | Start moving, resizing, rotating, and removing desktop widgets. |
+| Exit edit mode | `noctalia msg desktop-widgets-exit` | Leave desktop widget edit mode. |
+| Toggle edit mode | `noctalia msg desktop-widgets-toggle-edit` | Switch edit mode on or off. |
+
+## Notifications
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Enable Do Not Disturb | `noctalia msg notification-dnd-set on` | Hide notification toasts. Notification history still fills. |
+| Disable Do Not Disturb | `noctalia msg notification-dnd-set off` | Show notification toasts again. |
+| Toggle Do Not Disturb | `noctalia msg notification-dnd-toggle` | Toggle notification toast visibility. Notification history still fills. |
+| Show Do Not Disturb status | `noctalia msg notification-dnd-status` | Print the current Do Not Disturb state. |
+
+## Theme
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Toggle theme mode | `noctalia msg theme-mode-toggle` | Switch between dark and light theme mode. |
+
+## Session
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Lock session | `noctalia msg screen-lock` | Lock the current session. |

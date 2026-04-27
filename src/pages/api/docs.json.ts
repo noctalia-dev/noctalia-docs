@@ -3,12 +3,13 @@ import type { APIRoute } from 'astro';
 export const GET: APIRoute = async () => {
   return new Response(
     JSON.stringify({
-      main: 'https://docs.noctalia.dev/',
-      gettingStarted: 'https://docs.noctalia.dev/getting-started/',
-      configuration: 'https://docs.noctalia.dev/configuration/',
-      theming: 'https://docs.noctalia.dev/theming/',
-      development: 'https://docs.noctalia.dev/development/',
-      faq: 'https://docs.noctalia.dev/getting-started/faq/',
+      main: 'https://docs.noctalia.dev/v4/',
+      gettingStarted: 'https://docs.noctalia.dev/v4/getting-started/',
+      configuration: 'https://docs.noctalia.dev/v4/configuration/',
+      theming: 'https://docs.noctalia.dev/v4/theming/',
+      development: 'https://docs.noctalia.dev/v4/development/',
+      v5: 'https://docs.noctalia.dev/v5/',
+      faq: 'https://docs.noctalia.dev/v4/getting-started/faq/',
     }),
     {
       status: 200,

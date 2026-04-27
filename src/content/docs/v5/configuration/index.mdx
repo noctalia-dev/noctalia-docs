@@ -1,0 +1,76 @@
+---
+title: How configuration works
+description: Where Noctalia v5 reads config from, how files are merged, and when GUI settings win.
+sidebar:
+  order: 0
+---
+
+Noctalia can be configured in two ways: files you write yourself, and settings the app saves for you.
+
+For most people, the important rule is simple: put your own configuration in `~/.config/noctalia/`. If something changed in the GUI and now seems to ignore your file, check `~/.local/state/noctalia/settings.toml`.
+
+## The two layers
+
+Your hand-written config lives in:
+
+- `$XDG_CONFIG_HOME/noctalia/`
+- or `~/.config/noctalia/`
+
+Noctalia reads every `*.toml` file in that folder, sorts them alphabetically, and merges them into one config. A single `config.toml` is the easiest setup:
+
+```toml
+# ~/.config/noctalia/config.toml
+[theme]
+mode = "dark"
+
+[bar.main]
+position = "top"
+```
+
+You can also split things up if you like tidy dotfiles:
+
+```text
+~/.config/noctalia/
+├── bar.toml
+├── theme.toml
+└── widgets.toml
+```
+
+GUI-managed overrides live in:
+
+- `$XDG_STATE_HOME/noctalia/settings.toml`
+- or `~/.local/state/noctalia/settings.toml`
+
+Noctalia writes this file when you change settings through the UI, setup flows, IPC-backed controls, and other runtime actions that need to persist.
+
+## Which value wins?
+
+Noctalia loads configuration in this order:
+
+1. Built-in defaults
+2. Your `*.toml` files in `~/.config/noctalia/`
+3. GUI-managed overrides in `settings.toml`
+
+Because `settings.toml` loads last, it wins when it contains the same setting as your config file.
+
+:::tip
+If you are confused about why a value from `config.toml` is not taking effect, inspect or temporarily move `~/.local/state/noctalia/settings.toml`.
+:::
+
+## Where should I edit?
+
+Use `~/.config/noctalia/` for curated config: the things you want to keep in dotfiles, copy to another machine, or manage declaratively.
+
+Treat `settings.toml` as an app-managed override file. It is useful to inspect when debugging GUI changes, and safe to delete when you want to clear those overrides. Keeping it outside `~/.config` also lets the GUI save changes when your config directory is read-only, for example on NixOS.
+
+Both layers are watched for changes and hot-reloaded. If neither layer exists, Noctalia uses its built-in defaults.
+
+## Where next?
+
+- [Shell](/v5/shell/) covers global behavior like fonts, scale, shadows, OSD, keybinds, and hooks.
+- [Bars](/v5/bar/) and [Widgets](/v5/bar/widgets/) cover the top or side bar and everything inside it.
+- [Dock](/v5/dock/) covers the optional app dock.
+- [Theme](/v5/theming/) and [Theming templates](/v5/theming/templates/) cover colors and generated app themes.
+- [Wallpaper & overview](/v5/desktop/wallpaper/) covers wallpapers, per-monitor folders, automation, and overview backdrop.
+- [Services](/v5/services/) covers audio, brightness, night light, weather, idle, and notifications.
+- [IPC](/v5/ipc/) lists commands for keybinds, scripts, automation, and hooks.

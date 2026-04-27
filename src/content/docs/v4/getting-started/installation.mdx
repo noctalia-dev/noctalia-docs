@@ -1,0 +1,287 @@
+---
+title: Installation
+description: Start here to set up and use Noctalia.
+sidebar:
+  order: 10
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Noctalia is available on the following distributions:
+
+- [Arch Linux](#arch)
+- [NixOS](/v4/getting-started/nixos/)
+- [Gentoo](#gentoo)
+- [Fedora](#fedora)
+- [Debian](#debian) (including Ubuntu, PikaOS)
+- [openSUSE](#opensuse)
+- [Void Linux](#void)
+
+You can also [install manually](#manual-install) on any other Linux distribution.
+
+## Arch Linux {#arch}
+
+### Using AUR (Recommended)
+
+The simplest way to install Noctalia on Arch Linux is through the Arch User Repository (AUR). This method installs the shell system-wide and handles dependencies automatically.
+
+Please replace with your AUR helper of choice.
+
+```bash
+paru -S noctalia-shell
+```
+
+### Development Version
+
+For the latest features and fixes, you can install the development version directly from the Git repository:
+
+```bash
+paru -S noctalia-shell-git
+```
+
+:::caution
+The development version may be less stable than the official release. Use this version if you want to test the latest features or contribute to development.
+:::
+---
+
+## Gentoo {#gentoo}
+
+Noctalia-shell is available in the Gentoo [Guru](https://wiki.gentoo.org/wiki/Project:GURU) repository.
+
+First enable and sync the repository as described at [Guru Information for End Users](https://wiki.gentoo.org/wiki/Project:GURU/Information_for_End_Users):
+
+```bash
+# eselect repository enable guru
+# emerge --sync guru
+```
+
+
+Next, update the /etc/portage/package.accept_keywords file/folder to enable the unstable keyword on the noctalia-shell and gui-apps/noctalia-qs packages:
+
+```toml
+gui-apps/noctalia-shell ~amd64
+gui-apps/noctalia-qs ~amd64
+```
+
+Now the package can be installed through emerge:
+
+```bash
+# emerge gui-apps/noctalia-shell
+```
+
+Read the post-install emerge messages for information on optional dependencies and emerge them as well if desired.
+
+## Fedora {#fedora}
+
+Noctalia-shell is available in the [Terra](https://terra.fyralabs.com) repository.
+
+First install the repository as described on the website:
+
+```bash
+sudo dnf install --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
+```
+
+Next, install the noctalia-shell package:
+
+```bash
+sudo dnf install noctalia-shell
+```
+
+Installing noctalia-shell from Terra will automatically install all runtime dependencies and display optional dependencies.
+
+## Debian {#debian}
+
+Noctalia provides an APT repository for Debian-based distributions. Two builds are available depending on your distro's Qt6 version:
+
+| Build | Qt6 | Distros |
+|-------|-----|---------|
+| `trixie` | 6.8 | Debian Trixie |
+| `sid` | 6.10 | Debian Sid, PikaOS |
+| `plucky` | 6.8 | Ubuntu 25.04 |
+| `questing` | 6.9 | Ubuntu 25.10 |
+
+**Step 1**: Import the repository signing key
+
+```bash
+curl -fsSL https://pkg.noctalia.dev/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/noctalia.gpg
+```
+
+**Step 2**: Add the repository
+
+<Tabs>
+  <TabItem label="Debian Trixie">
+    ```bash
+    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt trixie main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    ```
+  </TabItem>
+  <TabItem label="Debian Sid">
+    ```bash
+    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt sid main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    ```
+  </TabItem>
+  <TabItem label="Ubuntu 25.04">
+    ```bash
+    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt plucky main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    ```
+  </TabItem>
+  <TabItem label="Ubuntu 25.10">
+    ```bash
+    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt questing main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    ```
+  </TabItem>
+</Tabs>
+
+**Step 3**: Install noctalia-shell
+
+```bash
+sudo apt update
+sudo apt install noctalia-shell
+```
+
+This will automatically pull in `noctalia-qs` (the Quickshell runtime) as a dependency.
+
+:::note
+The APT repository currently only provides `amd64` packages. Debian Bookworm (12), Ubuntu 24.04 and older are not supported as they ship Qt6 6.4 which is too old (minimum required: Qt6 6.6).
+:::
+
+---
+
+## openSUSE {#opensuse}
+
+Noctalia-shell is available through the [home:neifua](https://build.opensuse.org/package/show/home:neifua/noctalia-shell) repository on the openSUSE Build Service.
+
+**Step 1**: Add the repository
+
+<Tabs>
+  <TabItem label="Tumbleweed">
+    ```bash
+    sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/openSUSE_Tumbleweed/home:neifua.repo
+    ```
+  </TabItem>
+  <TabItem label="Slowroll">
+    ```bash
+    sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/openSUSE_Slowroll/home:neifua.repo
+    ```
+  </TabItem>
+  <TabItem label="Leap 16.0">
+    ```bash
+    sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/16.0/home:neifua.repo
+    ```
+  </TabItem>
+</Tabs>
+
+**Step 2**: Refresh and install
+
+```bash
+sudo zypper refresh
+sudo zypper install noctalia-shell
+```
+
+---
+
+## Void Linux {#void}
+
+Noctalia-shell is available through a custom XBPS repository.
+
+**Step 1**: Add the repository source
+
+```bash
+echo "repository=https://universalrepo.r1xelelo.workers.dev/void" \
+  | sudo tee /etc/xbps.d/10-noctalia.conf
+```
+
+**Step 2**: Sync and install noctalia-shell
+
+```bash
+sudo xbps-install -S
+sudo xbps-install noctalia-shell
+```
+
+This will automatically pull in `noctalia-qs` (the Quickshell runtime) as a dependency. If you only want the Quickshell fork without the shell config, install `noctalia-qs` instead.
+
+:::note
+If you already have the `quickshell` or `quickshell-git` package installed, you must remove it first as `noctalia-qs` conflicts with it:
+```bash
+sudo xbps-remove quickshell
+```
+:::
+
+---
+
+## Manual Installation {#manual-install}
+
+:::caution[Not Recommended]
+Manual installation has **no easy upgrade path**. You will need to manually download and replace files for each update. We strongly recommend using a package manager ([Arch](#arch), [NixOS](/v4/getting-started/nixos/), [Gentoo](#gentoo), [Fedora](#fedora)) whenever possible.
+:::
+
+If you prefer to install Noctalia locally or want more control over the installation process, you can install it manually to your user configuration directory. This method works on any Linux distribution.
+
+**Step 1**: Install required dependencies
+
+For Arch Linux:
+
+```bash
+# Core dependencies (required)
+paru -S noctalia-qs brightnessctl git imagemagick python
+
+# Desktop monitor brightness (may cause instability with some monitors)
+paru -S ddcutil
+
+# Optional dependencies
+paru -S cliphist wlsunset xdg-desktop-portal python3 evolution-data-server
+
+```
+
+For other distributions, install the equivalent packages using your package manager.
+
+**Step 2**: Download and install Noctalia
+
+```bash
+mkdir -p ~/.config/quickshell/noctalia-shell && curl -sL https://github.com/noctalia-dev/noctalia-shell/releases/latest/download/noctalia-latest.tar.gz | tar -xz --strip-components=1 -C ~/.config/quickshell/noctalia-shell
+```
+
+### Dependencies Explained
+
+**Required:**
+
+- `noctalia-qs` - Core shell framework
+- `brightnessctl` - Internal/laptop monitor brightness control
+- `imagemagick` - Required for template processing & wallpaper resizing
+- `python` - Required for template processing
+- `git` - Required for update checking and the plugin system
+
+**Hardware-specific:**
+
+- `ddcutil` - Desktop monitor brightness control (⚠️ may introduce system instability with certain monitors)
+- `power-profiles-daemon` - Enables power profile selection
+- `nmcli` - Network connection management[^1]
+- `upower` - Battery state[^1]
+- `bluez` - Bluetooth support[^1]
+
+[^1]:this dependency comes from quickshell
+
+**Optional but recommended:**
+
+- `cliphist` - Clipboard history support
+- `wlsunset` - Night light functionality
+- `xdg-desktop-portal` - Enables screen sharing and file picker functionality
+- `python3`, `evolution-data-server` - Calendar events
+
+:::tip
+Manual installation keeps Noctalia contained within your user directory, making it easy to remove without affecting system packages.
+:::
+
+:::note
+The configuration files are saved in `~/.config/noctalia/` and the cache files are saved in `~/.cache/noctalia/`.
+:::
+
+---
+
+
+## Getting Help
+
+If you encounter issues during installation:
+
+- Check our [FAQ](/v4/getting-started/faq/) for common problems
+- Visit our [GitHub Issues](https://github.com/noctalia-dev/noctalia-shell/issues) page
+- Join our community on [Discord](https://discord.noctalia.dev) for real-time support

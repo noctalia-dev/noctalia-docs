@@ -1,0 +1,146 @@
+---
+title: Desktop widgets
+description: On-desktop widgets, edit mode, state file layout, and per-type settings.
+sidebar:
+  order: 5
+---
+
+Desktop widgets are small widgets that sit directly on the desktop instead of inside the bar. They can show a clock, weather, media player, system monitor, audio visualizer, or an image sticker.
+
+Make sure the feature is enabled in your config:
+
+```toml
+[desktop_widgets]
+enabled = true
+```
+
+After that, use edit mode to add, move, resize, rotate, or remove widgets.
+
+Set `enabled = false` if you want to turn desktop widgets off completely.
+
+- **Config:** `~/.config/noctalia/config.toml` (or any merged `*.toml` in that directory).
+- **State:** `$XDG_STATE_HOME/noctalia/desktop_widgets.toml`, or `~/.local/state/noctalia/desktop_widgets.toml`.
+
+Widget positions and per-instance choices are saved to the state file, not to your main config. That means your curated config only decides whether desktop widgets are enabled; the editor manages the exact layout.
+
+## Edit mode
+
+Open or close edit mode from the UI, or with the [desktop widget IPC commands](/v5/ipc/shell-and-ui/#desktop-widgets).
+
+**Mouse and keyboard**
+
+| Action | Effect |
+|--------|--------|
+| Drag widget body | Move |
+| Drag outer selection ring | Rotate |
+| Drag bottom-right handle | Uniform scale |
+| Drag toolbar handle | Move the editor toolbar on that output |
+| `G` | Toggle snap grid |
+| `Shift` + drag | Temporarily disable snapping |
+| `Delete` / `Backspace` | Remove selected widget |
+| `Escape` or **Done** | Exit edit mode |
+
+## State file format
+
+Definitions are **not** read from `config.toml`. Edit mode writes them to the state file.
+
+```toml
+schema_version = 1
+
+[grid]
+visible        = true
+cell_size      = 16
+major_interval = 4
+
+[[widget]]
+id       = "desktop-widget-0000000000000001"
+type     = "clock"
+output   = "DP-1"
+cx       = 960.0
+cy       = 540.0
+scale    = 1.5
+rotation = 0.0
+
+[widget.settings]
+format = "{:%H:%M}"
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Required, unique. |
+| `type` | string | `clock`, `weather`, `media_player`, etc. |
+| `output` | string | Monitor name (for example `DP-1`). |
+| `cx`, `cy` | float | Center in logical pixels. |
+| `scale` | float | Default `1.0`. |
+| `rotation` | float | Radians. Default `0.0`. |
+| `enabled` | bool | Default `true`. Set `false` to hide without deleting. |
+
+## Common background and text
+
+All types can use an optional rounded background:
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `background` | bool | `false` | Filled rounded rectangle behind content. |
+| `background_color` | string | `surface` at 80% opacity | Fill [theme role](/v5/theming/) or hex color. |
+| `background_radius` | float | `12.0` | Corner radius in logical pixels. |
+| `background_padding` | float | `10.0` | Padding inside the background. |
+
+`clock`, `weather`, `media_player`, and `sysmon` also support:
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `color` | string | `on_surface` | Text and glyph theme role or hex color. |
+| `shadow` | bool | `true` | Drop shadow for readability on wallpapers. |
+
+## `clock`
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `format` | string | `"{:%H:%M}"` | `std::chrono` format string. |
+
+## `audio_visualizer`
+
+`scale` sets overall size; `aspect_ratio` sets shape. Optional `mirrored`, `low_color`, `high_color`, and `min_value` tune the bars.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `bands` | int | `32` | Number of bands. |
+| `aspect_ratio` | float | `2.5` | Width to height. |
+| `mirrored` | bool | `true` | Mirror spectrum horizontally. |
+| `low_color` / `high_color` | string | `primary` | Gradient theme roles or hex colors. |
+| `min_value` | float | `0.0` | Minimum normalized bar value, clamped from `0.0` to `1.0`. |
+
+## `weather`
+
+Needs `[weather] enabled = true` in TOML (see [Services](/v5/services/)). Otherwise the widget shows a placeholder.
+
+## `media_player`
+
+MPRIS: art, title, artist, and prev / play-pause / next. Needs an active MPRIS player.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `layout` | string | `horizontal` | `horizontal` (cover on left) or `vertical` (cover on top). |
+
+## `sticker`
+
+Image on the desktop. PNG, JPEG, WebP, SVG, and GIF. Animated GIFs use per-frame timing and loop.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `image_path` | string | required | Absolute path. |
+| `opacity` | float | `1.0` | `0.0` to `1.0`. |
+
+## `sysmon`
+
+System monitor line graph; uses `SystemMonitorService`.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `stat` | string | `cpu_usage` | `cpu_usage`, `cpu_temp`, `ram_pct`, `swap_pct`. |
+| `stat2` | string | *(omitted)* | Optional second line (same values as `stat`). |
+| `color` / `color2` | string | `primary` / `secondary` | Line theme roles or hex colors. |
+| `show_label` | bool | `true` | Value text next to the icon. |
+| `shadow` | bool | `true` | |
+| `background` | bool | `true` | |

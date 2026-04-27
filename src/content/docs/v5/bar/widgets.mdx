@@ -1,0 +1,243 @@
+---
+title: Widgets
+description: Bar widget types, named widget tables, and common widget settings.
+sidebar:
+  order: 4
+---
+
+Widgets are the individual pieces you put inside a [bar](/v5/bar/): clock, workspaces, volume, network, battery, tray, and so on.
+
+You add widgets by putting their names in a bar section:
+
+```toml
+[bar.main]
+start = ["launcher", "workspaces"]
+center = ["clock"]
+end = ["network", "volume", "battery"]
+```
+
+If the name is a built-in widget type, that is all you need. If you want to customize a widget, add a matching `[widget.<name>]` table.
+
+```toml
+[widget.clock-seconds]
+type   = "clock"
+format = "{:%H:%M:%S}"
+
+[bar.main]
+end = ["clock", "clock-seconds", "volume"]
+```
+
+This lets you use the same widget type more than once with different settings.
+
+## `clock`
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `format` | string | `{:%H:%M}` | `std::format`-style chrono string (horizontal and vertical fallback). |
+| `vertical_format` | string | `""` | When the bar is vertical, use this. If empty, `format` is used with `:` replaced by line breaks. |
+
+```toml
+[widget.clock]
+format = "{:%H:%M}"
+vertical_format = "{:%H\n%M}"
+```
+
+## `active_window`
+
+Focused window title and icon.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `max_length` | number | `260` | Max title width in pixels. |
+| `icon_size` | number | body font size | App icon size in pixels before bar `scale`. |
+
+## `spacer`
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `length` | number | `8` | Length in screen pixels. |
+
+## `workspaces`
+
+Workspace switcher with dots or pills and optional labels.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `display` | string | `id` | `none`, `id`, or `name`. |
+
+## `sysmon`
+
+One stat per instance; multiple `sysmon` entries can share a bar with different `stat` values.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `stat` | string | `cpu_usage` | See table below. |
+| `path` | string | `/` | Mount path for `disk_pct` only. |
+| `display` | string | `gauge` | `gauge` (icon + fill bar), `graph` (icon + sparkline), or `text` (icon + value). |
+| `show_label` | bool | `true` | For `graph` and `gauge`; `text` always shows a value. |
+
+| `stat` | Example | Meaning |
+|-------|---------|---------|
+| `cpu_usage` | `75%` | CPU use across all cores. |
+| `cpu_temp` | `65°C` | CPU package temperature. |
+| `ram_used` | `4.2G` | RAM used, human readable. |
+| `ram_pct` | `26%` | RAM used percent. |
+| `swap_pct` | `12%` | Swap used percent. |
+| `disk_pct` | `45%` | Disk use for `path`. |
+
+## `volume`
+
+Default PipeWire **sink** volume and mute. No per-widget options. Volume and microphone commands are listed under [IPC system controls](/v5/ipc/system-controls/#volume).
+
+## `audio_visualizer`
+
+Horizontal spectrum from the current PipeWire monitor stream.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `width` | number | `56` | Widget width in pixels. |
+| `height` | number | `16` | Widget height. |
+| `bands` | number | `16` | Spectrum band count. |
+| `mirrored` | bool | `false` | Mirror around the center line. |
+| `low_color` | string | `primary` | Theme role or hex color for the low end. |
+| `high_color` | string | `primary` | Theme role or hex color for the high end. |
+
+## `media`
+
+MPRIS artwork and title.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `max_length` | number | `220` | Max title length. |
+| `art_size` | number | `16` | Art size in pixels before bar `scale`. |
+
+## `battery`
+
+UPower state. Hides when there is no battery. No options.
+
+## `brightness`
+
+Current brightness, scroll wheel adjusts (about 5% per step). Hides when no controllable display. Click opens the display tab in Control Center. Backends: [Brightness](/v5/services/).
+
+## `bluetooth`
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `show_label` | bool | `false` | Show connected device name. |
+
+## `network`
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `show_label` | bool | `true` | Show SSID or interface name. |
+
+## `keyboard_layout`
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `display` | string | `short` | `short` or `full` layout name. |
+| `cycle_command` | string | `""` | Optional command for left click instead of the compositor backend. |
+
+## `lock_keys`
+
+Caps, Num, Scroll lock from XKB.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `display` | string | `short` | `short` or `full` text. |
+| `show_caps_lock` / `show_num_lock` / `show_scroll_lock` | bool | caps and num on, scroll off | Per-lock visibility. |
+| `hide_when_off` | bool | `false` | Hide each key when it is off. |
+
+## `launcher`
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `glyph` | string | `search` | Tabler-backed bar glyph id. |
+
+## `control-center`
+
+Opens Control Center.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `glyph` | string | `noctalia` | Bar glyph id. |
+
+## `settings`
+
+Opens the settings panel.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `glyph` | string | `settings` | Bar glyph id. |
+
+## `weather`
+
+Needs [Weather](/v5/services/) enabled.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `max_length` | number | `160` | Max text length. |
+| `show_condition` | bool | `true` | Show conditions such as `Overcast` next to temperature. |
+
+## `notifications`
+
+Pending count; **right-click** toggles **Do Not Disturb** (toasts off, history still fills). Notification commands are listed under [IPC shell and UI](/v5/ipc/shell-and-ui/#notifications).
+
+## `tray`
+
+StatusNotifierItem host.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `hidden` | string array | `[]` | Hide items by id, name, bus, or path token. |
+
+```toml
+[widget.tray]
+hidden = ["nm-applet", "blueman", "org.kde.StatusNotifierItem-1-1"]
+```
+
+## `power_profiles`
+
+Current power profile; click cycles. No options.
+
+## `idle_inhibitor`
+
+Toggles `zwp_idle_inhibit_manager_v1` on click.
+
+Idle inhibitor commands are listed under [IPC system controls](/v5/ipc/system-controls/#idle-inhibitor).
+
+## `nightlight`
+
+Three states on click: off, on (schedule or location), forced on. [Night light](/v5/services/) has the matching IPC and config.
+
+## `theme_mode`
+
+Toggles dark or light. The matching command is listed under [IPC shell and UI](/v5/ipc/shell-and-ui/#theme).
+
+## `session`
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `glyph` | string | `shutdown` | Bar glyph id. |
+
+## `wallpaper`
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `glyph` | string | `wallpaper-selector` | Bar glyph id. |
+
+## `scripted`
+
+Luau-driven custom widget. Full API, callbacks, and the bundled `screen_recorder` example are in [Scripted widgets](/v5/bar/scripted-widgets/).
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `script` | string | `""` | Path to `.lua`; a leading `~` is expanded to your home directory. |
+| `hot_reload` | bool | `false` | Watch file and reload (handy in development). |
+
+```toml
+[widget.my_widget]
+type       = "scripted"
+script     = "~/.config/noctalia/scripts/my_widget.lua"
+hot_reload = true
+```

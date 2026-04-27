@@ -1,0 +1,58 @@
+---
+title: System Controls
+description: IPC commands for volume, microphone, brightness, night light, and idle inhibitor.
+---
+
+These commands are useful for media keys, compositor binds, scripts, and custom widgets.
+
+## Volume
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Set output volume | `noctalia msg volume-set 65` | Set output volume. Accepts `65`, `65%`, or normalized values such as `0.65`. |
+| Raise output volume | `noctalia msg volume-up` | Raise output volume by the default step. |
+| Raise output by amount | `noctalia msg volume-up 10` | Raise output volume by a custom step. |
+| Lower output volume | `noctalia msg volume-down` | Lower output volume by the default step. |
+| Mute output | `noctalia msg volume-mute` | Toggle output mute. |
+
+Default step is 5% when not specified. Output volume is clamped to 100% unless `[audio] enable_overdrive = true`, which allows up to 150%.
+
+## Microphone
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Set mic volume | `noctalia msg mic-volume-set 0.5` | Set microphone volume. Accepts normalized or percent values. |
+| Raise mic volume | `noctalia msg mic-volume-up` | Raise microphone volume by the default step. |
+| Raise mic by amount | `noctalia msg mic-volume-up 5%` | Raise microphone volume by a custom step. |
+| Lower mic volume | `noctalia msg mic-volume-down` | Lower microphone volume by the default step. |
+| Mute mic | `noctalia msg mic-mute` | Toggle microphone mute. |
+
+## Brightness
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Set current brightness | `noctalia msg brightness-set 65` | Set brightness on the current display. |
+| Set one display | `noctalia msg brightness-set DP-1 0.65` | Set brightness for a specific display or monitor selector. |
+| Set all displays | `noctalia msg brightness-set * 40%` | Set brightness on every display. |
+| Raise current brightness | `noctalia msg brightness-up` | Raise brightness by the default step. |
+| Raise one display | `noctalia msg brightness-up DP-1 10` | Raise brightness for one display. |
+| Lower all displays | `noctalia msg brightness-down * 5%` | Lower brightness on every display. |
+
+Targets can be `current`, `all`, `*`, a display id such as `eDP-1` or `DP-1`, or a monitor selector token. Values accept normalized `0.0` to `1.0` or percentage form such as `65`, `65%`, and `5%`.
+
+## Night light
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Enable schedule | `noctalia msg nightlight-enable` | Enable scheduled night light. |
+| Disable schedule | `noctalia msg nightlight-disable` | Disable scheduled night light. |
+| Toggle schedule | `noctalia msg nightlight-toggle` | Toggle scheduled night light. |
+| Toggle forced mode | `noctalia msg nightlight-force-toggle` | Force night light on or return to schedule behavior. |
+
+## Idle inhibitor
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Enable inhibitor | `noctalia msg idle-inhibitor-enable` | Prevent idle actions while enabled. |
+| Disable inhibitor | `noctalia msg idle-inhibitor-disable` | Allow idle actions again. |
+| Toggle inhibitor | `noctalia msg idle-inhibitor-toggle` | Switch idle inhibitor on or off. |

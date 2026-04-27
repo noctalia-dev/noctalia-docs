@@ -1,0 +1,134 @@
+---
+title: Theming templates
+description: TemplateEngine syntax, theme tokens, filters, and TOML batch rendering.
+sidebar:
+  order: 10
+---
+
+Theming templates are for sending Noctalia colors into other apps. For example, you can generate config files for terminals, launchers, or GTK whenever the Noctalia theme changes.
+
+Most users only need the toggle on the [Theme](/v5/theming/) page:
+
+```toml
+[theme.templates]
+enable_builtins = true
+builtin_ids = ["foot", "walker", "gtk3", "gtk4"]
+```
+
+This page documents the advanced template syntax for people writing their own templates.
+
+`TemplateEngine` turns theme tokens into text and files. It supports inline `{{ }}` expressions, block control flow, color and string filters, and TOML-driven batch processing. It does not load images or extract palettes; that happens earlier in the theme pipeline.
+
+See [Theme](/v5/theming/) for when templates run from `[theme.templates]`.
+
+## Syntax
+
+**Expressions** (inline):
+
+```text
+{{ colors.primary.default.hex }}
+{{ mode }}
+```
+
+**Blocks** (control flow):
+
+```text
+<* for name, value in colors *>
+{{ name }}={{ value.default.hex }}
+<* endfor *>
+
+<* if {{ loop.first }} *>
+first
+<* else *>
+not first
+<* endif *>
+```
+
+Block tags: `for`, `else`, `endfor`, `if`, `endif`.
+
+**Line trimming** - If a block tag sits **alone** on a line (only whitespace around it), the whole line is removed from the output. Useful for whitespace-sensitive targets.
+
+## Theme colors in templates
+
+Path form:
+
+```text
+{{ colors.<name>.<mode>.<format> }}
+```
+
+Examples: `{{ colors.primary.default.hex }}`, `{{ colors.surface.light.hsl }}`, `{{ colors.terminal_foreground.default.hex_stripped }}`.
+
+**Modes:** `dark`, `light`, `default` (resolves to the configured default mode).
+
+**Top-level values:** `mode`, `image` (source image path in image-driven theme passes), `closest_color` (when `compare_to` and `colors_to_compare` are used in TOML processing).
+
+**Aliases inside the engine:** `hover` maps to `surface_container_high`, `on_hover` maps to `on_surface`.
+
+## Formats
+
+`hex`, `hex_stripped`, `rgb`, `rgb_csv`, `rgba`, `hsl`, `hsla`, and channel helpers (`red`, `green`, `blue`, `alpha`, `hue`, `saturation`, `lightness`). `hex` is `#rrggbb`; `hex_stripped` is `rrggbb`; `rgb` and `rgb_csv` are self-explanatory; `hsl` / `hsla` use percentage lightness and saturation as implemented by the engine.
+
+## Filters
+
+Chain with `|`:
+
+```text
+{{ colors.primary.default.hex | grayscale }}
+{{ colors.primary.default.hex | set_alpha 0.5 }}
+{{ colors.primary.default.hex | blend: "#ff0000", 0.5 }}
+```
+
+**Color filters** include `grayscale`, `invert`, `set_alpha`, `set_lightness`, `set_hue`, `set_saturation`, `set_red`, `set_green`, `set_blue`, `lighten`, `darken`, `saturate`, `desaturate`, `auto_lightness`.
+
+**Two-argument color filters** include `blend`, `harmonize`, `to_color`.
+
+**String filters** include `replace`, `lower_case`, `camel_case`, `pascal_case`, `snake_case`, `kebab_case`.
+
+## Control flow
+
+**For loops** - `for item in iterable` or `for key, value in colors`.
+
+**Conditionals** - `if`, `if not`, `else`, `endif`. Falsy: `false`, numeric `0`, empty string, case-insensitive `false` / `0` / `none`, empty collections. Everything else is true.
+
+**Iterables** - `colors`, `palettes.primary` (and `secondary`, `tertiary`, `error`, `neutral`, `neutral_variant`), numeric ranges `0..10` and `-5..5`, arrays and maps in scope. Palette families expose tone steps `0`, `5`, `10`, ... `100`.
+
+**Loop object** - `loop.index` (0-based), `loop.first`, `loop.last`.
+
+## File rendering
+
+When rendering a file, the engine reads the template, writes output, **creates parent directories** if needed, and **skips** rewriting if the output is unchanged to avoid timestamp churn and reload loops.
+
+## TOML template configs
+
+Top-level: `[config]` and `[templates]`.
+
+**`[config.custom_colors]`** - Either `brand = "#ff0000"` or a table with `color` and optional `blend`. Generated tokens per mode include `{name}_source`, `{name}_value`, `{name}`, `on_{name}`, `{name}_container`, `on_{name}_container`.
+
+**Each `templates` entry** can set:
+
+- `input_path` / `output_path` (string or array of strings)
+- `input_path_modes` - `{ dark = "...", light = "..." }` for per-mode inputs
+- `colors_to_compare` / `compare_to` - drive `{{ closest_color }}` (compare is rendered first; closest candidate becomes `closest_color`)
+- `pre_hook` / `post_hook` - commands rendered through the engine; `pre_hook` before writes, `post_hook` after, only if at least one file changed
+- `index` - sort order, default 0
+
+Relative paths are resolved from the **config file directory**.
+
+**Hooks** also see `{{ config_dir }}` and `{{ config_file }}`.
+
+## Terminal token names
+
+Flattened names such as `terminal_foreground`, `terminal_background`, `terminal_cursor`, `terminal_normal_red`, `terminal_bright_cyan`, and the rest of the usual 16+16 set. Use them like any other color: `{{ colors.terminal_background.default.hex }}`.
+
+## CLI
+
+```sh
+noctalia theme <image> -r input.txt:output.txt
+noctalia theme <image> -c templates.toml
+noctalia theme --list-builtins
+noctalia theme <image> --builtin-config
+noctalia theme --theme-json theme.json -r input.txt:output.txt
+noctalia theme <image> --default-mode light -r input.txt:output.txt
+```
+
+The built-in catalog path in the repo is `assets/templates/builtin.toml` for developers building from source; end users use `noctalia theme` as above.

@@ -1,0 +1,128 @@
+---
+title: Scripted widgets
+description: Luau bar widgets, configuration, API, and the bundled screen recorder example.
+sidebar:
+  order: 6
+---
+
+Scripted widgets are advanced custom widgets for the bar. Use them when the built-in widgets are not enough and you want a small script to decide what the widget shows or does when clicked.
+
+They are written in [Luau](https://luau.org). A script can set text and icons, use theme colors, run shell commands, show notifications, and read extra settings from your widget config.
+
+:::note
+You do not need scripted widgets for normal bar setup. Start with [Widgets](/v5/bar/widgets/) unless you specifically want to write custom logic.
+:::
+
+## Configuration
+
+Add a normal bar widget with `type = "scripted"`, then point it at a script file:
+
+```toml
+[widget.my_widget]
+type   = "scripted"
+script = "~/.config/noctalia/scripts/my_widget.lua"
+my_setting = "value"
+```
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `script` | string | `""` | Path to the Luau file. Absolute paths are used directly, `~` expands to your home directory, and relative paths resolve from the **assets** bundle (for example `scripts/screen_recorder.lua`). |
+| `hot_reload` | bool | `false` | Watch the script with inotify and reload on change. |
+
+Any extra keys are readable in Lua with `barWidget.getConfig()`.
+
+## `noctalia.*` (general)
+
+| Function | Returns | Description |
+|----------|---------|-------------|
+| `noctalia.log(msg)` | (none) | Log to shell debug output. |
+| `noctalia.runAsync(cmd)` | bool | Fire-and-forget shell command. |
+| `noctalia.runSync(cmd)` | exit, stdout, stderr | Synchronous run. |
+| `noctalia.commandExists(name)` | bool | True if the command is on `PATH`. |
+| `noctalia.notify(title, body?)` | (none) | Internal notification, normal urgency. |
+| `noctalia.notifyError(title, body?)` | (none) | Internal notification, critical. |
+| `noctalia.getenv(name)` | string or nil | Environment lookup. |
+
+## `barWidget.*` (display)
+
+| Function | Returns | Description |
+|----------|---------|-------------|
+| `barWidget.setText(text)` | (none) | Label text. |
+| `barWidget.setGlyph(name)` | (none) | Tabler icon by name. |
+| `barWidget.setGlyphCodepoint(cp)` | (none) | Icon by Unicode codepoint. |
+| `barWidget.setColor(role)` | (none) | Label color by theme role. |
+| `barWidget.setGlyphColor(role)` | (none) | Glyph color. |
+| `barWidget.setVisible(visible)` | (none) | Show or hide the whole widget. |
+| `barWidget.setUpdateInterval(ms)` | (none) | Update tick; default 250 ms, minimum 16. |
+| `barWidget.isVertical()` | bool | True if the bar is vertical. |
+| `barWidget.getConfig(key, default?)` | any | TOML value for `key`, or default / nil. |
+
+**Theme roles:** `primary`, `on_primary`, `secondary`, `on_secondary`, `tertiary`, `on_tertiary`, `error`, `on_error`, `surface`, `on_surface`, `surface_variant`, `on_surface_variant`, `outline`, `shadow`, `hover`, `on_hover` (see [Theme](/v5/theming/)).
+
+## Callbacks
+
+| Callback | When |
+|----------|------|
+| `update()` | About every 250 ms by default after the script loads. Use `barWidget.setUpdateInterval(ms)` to change the interval. |
+| `onClick()` | Left click. |
+| `onRightClick()` | Right click. |
+| `onMiddleClick()` | Middle click. |
+| `onHover(isHovering)` | Pointer enter (`true`) or leave (`false`). |
+
+## Scene graph
+
+Each scripted widget is roughly:
+
+- `InputArea` (clicks)
+  - `Flex` (horizontal, centered)
+    - `Glyph` (hidden until you set a glyph)
+    - `Label`
+
+`setVisible(false)` hides the `InputArea` root.
+
+## Example: `screen_recorder`
+
+The repo bundles `assets/scripts/screen_recorder.lua` (path `scripts/screen_recorder.lua` from a bundle-relative config) around **gpu-screen-recorder**: left click toggles recording, right click toggles replay buffer or saves replay, middle click saves the replay buffer.
+
+```toml
+[widget.screen_recorder]
+type              = "scripted"
+script            = "scripts/screen_recorder.lua"
+directory         = ""
+filename_pattern  = "recording_%Y%m%d_%H%M%S"
+video_source      = "portal"
+video_codec       = "h264"
+audio_codec       = "opus"
+audio_source      = "default_output"
+quality           = "very_high"
+frame_rate        = 60
+color_range       = "limited"
+resolution        = "original"
+show_cursor       = true
+copy_to_clipboard = false
+restore_portal    = false
+replay_enabled    = false
+replay_duration   = 30
+replay_storage    = "ram"
+hide_inactive     = false
+```
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `directory` | string | `""` | Output dir; empty = `~/Videos`. |
+| `filename_pattern` | string | strftime pattern | Output filename. |
+| `video_source` | string | `portal` | `portal`, `screen`, or `focused-monitor` (Hyprland). |
+| `video_codec` | string | `h264` | `h264`, `hevc`, `av1`, `vp8`, `vp9`. |
+| `audio_codec` | string | `opus` | `opus` or `aac`. |
+| `audio_source` | string | `default_output` | `none`, `default_output`, `default_input`, `both`. |
+| `quality` | string | `very_high` | `medium`, `high`, `very_high`, `ultra`. |
+| `frame_rate` | number | `60` | |
+| `color_range` | string | `limited` | `limited` or `full`. |
+| `resolution` | string | `original` | `original` or `1920x1080`, `2560x1440`, and similar. |
+| `show_cursor` | bool | `true` | |
+| `copy_to_clipboard` | bool | `false` | Copy file URI after recording. |
+| `restore_portal` | bool | `false` | Restore previous XDG portal session. |
+| `replay_enabled` | bool | `false` | |
+| `replay_duration` | number | `30` | Replay buffer length in seconds. |
+| `replay_storage` | string | `ram` | `ram` or `disk`. |
+| `hide_inactive` | bool | `false` | Hide when not recording or replaying. |

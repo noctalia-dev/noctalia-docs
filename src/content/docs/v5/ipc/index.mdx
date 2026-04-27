@@ -1,0 +1,50 @@
+---
+title: IPC
+description: Commands you can run with noctalia msg for keybinds, scripts, and automation.
+sidebar:
+  order: 20
+---
+
+import { LinkCard, CardGrid, Aside } from '@astrojs/starlight/components';
+
+IPC commands let you control Noctalia from a terminal, a compositor keybind, a script, or a hook.
+
+All commands use this shape:
+
+```sh
+noctalia msg <command>
+```
+
+For example:
+
+```sh
+noctalia msg dock-toggle
+noctalia msg volume-up
+noctalia msg panel-toggle launcher
+```
+
+<Aside type="note">
+These pages list the command exactly as you run it. If you use the same command inside an idle behavior or hook with the `noctalia:` prefix, remove `noctalia msg` and keep the rest. For example, `noctalia msg screen-lock` becomes `noctalia:screen-lock`.
+</Aside>
+
+## Command lists
+
+<CardGrid>
+  <LinkCard title="Shell & UI" description="Status, config reload, bar, panels, dock, desktop widgets, notifications, theme mode, and lock." href="/v5/ipc/shell-and-ui/" />
+  <LinkCard title="System Controls" description="Volume, microphone, brightness, night light, and idle inhibitor commands." href="/v5/ipc/system-controls/" />
+</CardGrid>
+
+## Using IPC in config
+
+Some config fields accept normal shell commands. Idle behaviors and hooks also accept the `noctalia:` shorthand:
+
+```toml
+[idle.behavior.lock]
+timeout = 660
+command = "noctalia:screen-lock"
+
+[hooks]
+started = "noctalia msg panel-toggle launcher"
+```
+
+Both styles call the same command registry. Use `noctalia msg ...` in a terminal or compositor keybind, and `noctalia:...` where a Noctalia config field documents that shorthand.

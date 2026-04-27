@@ -30,7 +30,7 @@ export const GET: APIRoute = async () => {
   try {
     // Get the FAQ page from the docs collection
     const faqPages = await getCollection('docs', ({ id }) => {
-      return id === 'getting-started/faq';
+      return id === 'v4/getting-started/faq';
     });
 
     if (faqPages.length === 0) {
@@ -48,7 +48,7 @@ export const GET: APIRoute = async () => {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
     const projectRoot = path.resolve(__dirname, '../../..');
-    const filePath = path.join(projectRoot, 'src', 'content', 'docs', 'getting-started', 'faq.mdx');
+    const filePath = path.join(projectRoot, 'src', 'content', 'docs', 'v4', 'getting-started', 'faq.mdx');
     
     let body: string;
     try {
@@ -56,7 +56,7 @@ export const GET: APIRoute = async () => {
     } catch (fileError) {
       // Fallback: try using process.cwd() if available
       try {
-        const altPath = path.join(process.cwd(), 'src', 'content', 'docs', 'getting-started', 'faq.mdx');
+        const altPath = path.join(process.cwd(), 'src', 'content', 'docs', 'v4', 'getting-started', 'faq.mdx');
         body = await fs.readFile(altPath, 'utf-8');
       } catch {
         return new Response(
