@@ -1,0 +1,9 @@
+---
+import Default from '@astrojs/starlight/components/Head.astro';
+
+const pathname = Astro.url.pathname;
+const version = pathname.startsWith('/v5/') || pathname === '/v5' ? 'v5' : 'v4';
+---
+
+<Default {...Astro.props}><slot /></Default>
+<meta data-pagefind-filter={`version:${version}`} />

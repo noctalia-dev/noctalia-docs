@@ -16,7 +16,9 @@ export default defineConfig({
   integrations: [
     starlight({
       components: {
+        Head: "./src/components/Head.astro",
         Header: "./src/components/Header.astro",
+        Search: "./src/components/Search.astro",
         TableOfContents: "./src/components/TableOfContents.astro",
         Sidebar: "./src/components/Sidebar.astro",
         Pagination: "./src/components/Pagination.astro",

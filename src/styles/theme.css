@@ -278,6 +278,11 @@ snake-toc a[data-visible="true"] {
 	opacity: 0.5;
 }
 
+/* Search is automatically scoped to the current docs version. */
+#starlight__search .pagefind-ui__filter-panel {
+	display: none;
+}
+
 /* Caution aside — bright yellow bg with dark text */
 :root[data-theme='dark'] .starlight-aside--caution {
 	--sl-color-asides-text-accent: #070722;
