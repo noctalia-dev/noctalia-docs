@@ -134,12 +134,16 @@ Idle uses `ext_idle_notifier_v1` and honors **idle inhibitors** (see the [idle_i
 ```toml
 [notification]
 enable_daemon      = true
+position           = "top_right" # top_right | top_left | top_center | bottom_right | bottom_left | bottom_center
 background_opacity = 0.97
 background_blur    = true
 ```
 
 - `enable_daemon` - When `false`, Noctalia does **not** register `org.freedesktop.Notifications`. In-app toasts and history can still work; an external notification daemon can own the name instead.
+- `position` - Toast anchor position on screen.
 - `background_opacity` - Toast card background alpha; lower values let compositor blur show through.
 - `background_blur` - Request background blur behind toasts when the compositor supports it.
+
+Noctalia accepts both `[notification]` and `[notifications]` as section names.
 
 Do Not Disturb commands are listed under [IPC shell and UI](/v5/ipc/shell-and-ui/#notifications).
