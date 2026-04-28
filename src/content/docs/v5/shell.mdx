@@ -1,6 +1,6 @@
 ---
 title: Shell
-description: Global shell settings, animation, shadow, OSD, keybinds, and hooks in Noctalia.
+description: Global shell settings, animation, shadow, MPRIS filtering, OSD, keybinds, and hooks in Noctalia.
 sidebar:
   order: 1
 ---
@@ -23,6 +23,9 @@ blur = 12
 offset_x = 2
 offset_y = 2
 alpha = 0.55
+
+[shell.mpris]
+blacklist = []
 ```
 
 Use this page when you want to change the overall feel of the shell. Bar layout, bar widgets, themes, and service settings have their own pages.
@@ -68,10 +71,13 @@ alpha    = 0.55
 | `password_style` | `default` or `random` for polkit and lock input glyph shapes. |
 | `show_location` | When `false`, hides weather location text in shell UI. |
 | `clipboard_auto_paste` | `off`, `auto`, `ctrl_v`, `ctrl_shift_v`, or `shift_insert`. `auto` uses `Ctrl+V` for image entries and `Ctrl+Shift+V` for text. |
+| `mpris.blacklist` | List of MPRIS players to hide from media UI and active-player selection. Matching is case-insensitive against bus name, identity, desktop entry, and bus-name substring tokens (for example `"spotify"`). |
 
 **`[shell.animation]`** - `enabled` turns all animated transitions on or off. `speed` is a multiplier (`1.0` normal, `0.5` half speed, `2.0` double).
 
 **`[shell.shadow]`** - Shared shadow for shell surfaces: `blur` radius (0 disables drawn shadows), `offset_x` / `offset_y`, and `alpha` multiplied by each surface's background opacity. Bars and the dock only set `shadow = true|false`; they do not define their own blur or offset.
+
+**`[shell.mpris]`** - `blacklist` excludes matching players from media widgets and control center media surfaces.
 
 ## OSD
 
