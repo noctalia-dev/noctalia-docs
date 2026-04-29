@@ -87,7 +87,11 @@ One stat per instance; multiple `sysmon` entries can share a bar with different 
 
 ## `volume`
 
-Default PipeWire **sink** volume and mute. No per-widget options. Volume and microphone commands are listed under [IPC system controls](/v5/ipc/system-controls/#volume).
+Default PipeWire **sink** volume and mute. Volume and microphone commands are listed under [IPC system controls](/v5/ipc/system-controls/#volume).
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `show_label` | bool | `true` | Show the volume percentage next to the glyph. |
 
 ## `audio_visualizer`
 
@@ -118,6 +122,10 @@ UPower state. Hides when there is no battery. No options.
 ## `brightness`
 
 Current brightness, scroll wheel adjusts (about 5% per step). Hides when no controllable display. Click opens the display tab in Control Center. Backends: [Brightness](/v5/services/).
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `show_label` | bool | `true` | Show the brightness percentage next to the glyph. |
 
 ## `bluetooth`
 
