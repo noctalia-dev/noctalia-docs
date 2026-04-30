@@ -135,12 +135,14 @@ Idle uses `ext_idle_notifier_v1` and honors **idle inhibitors** (see the [idle_i
 [notification]
 enable_daemon      = true
 position           = "top_right" # top_right | top_left | top_center | bottom_right | bottom_left | bottom_center
+layer              = "top"       # top | overlay
 background_opacity = 0.97
 monitors           = []          # empty = all displays; otherwise monitor selectors like ["eDP-1", "DP-1"]
 ```
 
 - `enable_daemon` - When `false`, Noctalia does **not** register `org.freedesktop.Notifications`. In-app toasts and history can still work; an external notification daemon can own the name instead.
 - `position` - Toast anchor position on screen.
+- `layer` - Wayland layer-shell layer for toasts. `top` is the default; `overlay` draws above top-layer surfaces.
 - `background_opacity` - Toast card background alpha; lower values let compositor blur show through.
 - `monitors` - Optional output filter for where toasts appear. Empty (default) means all displays. Values match by exact connector name (`eDP-1`) or by a word-boundary token in output description.
 
