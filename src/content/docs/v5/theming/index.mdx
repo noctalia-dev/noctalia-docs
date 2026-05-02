@@ -1,6 +1,6 @@
 ---
 title: Theme
-description: Color sources, built-in schemes, wallpaper-driven palettes, and shell color roles.
+description: Color sources, built-in palettes, wallpaper-driven palettes, and shell color roles.
 sidebar:
   order: 8
 ---
@@ -13,12 +13,12 @@ Controls the colors used across the shell — bars, panels, widgets, OSD, backdr
 [theme]
 mode              = "dark"        # dark | light | auto
 source            = "builtin"     # builtin | wallpaper | community
-builtin           = "Noctalia"    # bundled scheme name
+builtin           = "Noctalia"    # bundled palette name
 community_palette = "Noctalia"    # community palette name when source = "community"
 wallpaper_scheme  = "m3-content"  # generator used when source = "wallpaper"
 ```
 
-Theme changes apply live when you edit `config.toml`. Wallpaper-derived themes re-resolve automatically when the default wallpaper changes.
+Pallette changes apply live when you edit `config.toml`. Wallpaper-derived themes re-resolve automatically when the default wallpaper changes.
 
 ---
 
@@ -26,7 +26,7 @@ Theme changes apply live when you edit `config.toml`. Wallpaper-derived themes r
 
 | Value | Description |
 |-------|-------------|
-| `builtin` | Use one of the schemes compiled into the binary. |
+| `builtin` | Use one of the palette compiled into the binary. |
 | `wallpaper` | Generate a palette from the current default wallpaper each time it changes. |
 | `community` | Fetch a palette by name from `https://api.noctalia.dev/palette/<name>`. |
 
@@ -34,9 +34,9 @@ Theme changes apply live when you edit `config.toml`. Wallpaper-derived themes r
 
 ## `builtin`
 
-Names which bundled scheme to load when `source = "builtin"`. Unknown names fall back to `Noctalia`.
+Names which bundled palette to load when `source = "builtin"`. Unknown names fall back to `Noctalia`.
 
-Available schemes: `Ayu`, `Catppuccin`, `Dracula`, `Eldritch`, `Gruvbox`, `Kanagawa`, `Noctalia`, `Nord`, `Rosé Pine`, `Tokyo-Night`
+Available palettes: `Ayu`, `Catppuccin`, `Dracula`, `Eldritch`, `Gruvbox`, `Kanagawa`, `Noctalia`, `Nord`, `Rosé Pine`, `Tokyo-Night`
 
 ---
 
