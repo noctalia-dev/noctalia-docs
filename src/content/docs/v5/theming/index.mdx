@@ -5,94 +5,117 @@ sidebar:
   order: 8
 ---
 
-Themes control the colors used across Noctalia: bars, panels, widgets, the OSD, overview, and notifications.
+# Theme
 
-For a simple setup, choose dark or light mode and one built-in palette:
+Controls the colors used across the shell — bars, panels, widgets, OSD, backdrop, and notifications.
 
 ```toml
 [theme]
-mode              = "dark"
-source            = "builtin"
-builtin           = "Noctalia"
+mode              = "dark"        # dark | light | auto
+source            = "builtin"     # builtin | wallpaper | community
+builtin           = "Noctalia"    # bundled scheme name
+community_palette = "Noctalia"    # community palette name when source = "community"
+wallpaper_scheme  = "m3-content"  # generator used when source = "wallpaper"
 ```
 
-You can also generate colors from the current wallpaper, or use a community palette.
+Theme changes apply live when you edit `config.toml`. Wallpaper-derived themes re-resolve automatically when the default wallpaper changes.
 
-Theme changes apply when you edit config. Wallpaper-derived themes re-resolve when the default wallpaper changes.
+---
 
 ## `source`
 
 | Value | Description |
 |-------|-------------|
-| `builtin` | Use a scheme compiled into the binary. |
-| `wallpaper` | Generate a palette from the current default wallpaper whenever it changes. |
-| `community` | Download a named palette from `https://api.noctalia.dev/palette/<name>`. |
+| `builtin` | Use one of the schemes compiled into the binary. |
+| `wallpaper` | Generate a palette from the current default wallpaper each time it changes. |
+| `community` | Fetch a palette by name from `https://api.noctalia.dev/palette/<name>`. |
+
+---
 
 ## `builtin`
 
-Used when `source = "builtin"`. Unknown names fall back to `Noctalia`.
+Names which bundled scheme to load when `source = "builtin"`. Unknown names fall back to `Noctalia`.
 
-**Bundled names:** `Ayu`, `Catppuccin`, `Dracula`, `Eldritch`, `Gruvbox`, `Kanagawa`, `Noctalia`, `Nord`, `Rosé Pine`, `Tokyo-Night`
+Available schemes: `Ayu`, `Catppuccin`, `Dracula`, `Eldritch`, `Gruvbox`, `Kanagawa`, `Noctalia`, `Nord`, `Rosé Pine`, `Tokyo-Night`
+
+---
 
 ## `community_palette`
 
-Names a palette from the community API. First use downloads and caches under `~/.cache/noctalia/community-palettes/` (respecting `XDG_CACHE_HOME`). Later launches read the cache only, so it works **offline** after the first download.
+Names a palette served by `https://api.noctalia.dev/palette/<name>`. The shell downloads the palette on first use and caches it in `~/.cache/noctalia/community-palettes/` (honoring `XDG_CACHE_HOME`). Subsequent launches load the cached file and never touch the network, so community palettes work offline.
 
-While download is in flight or on failure, the UI falls back to the **Noctalia** built-in and can cross-fade when the real palette arrives. Delete the cache file for a palette name to force a re-fetch.
+While the initial download is in flight — or if it fails — the shell falls back to `Noctalia` built-in and cross-fades once the download arrives.
+
+To refresh a palette, delete the corresponding file under `~/.cache/noctalia/community-palettes/`.
+
+---
 
 ## `wallpaper_scheme`
 
-Used when `source = "wallpaper"`.
+Picks the generator when `source = "wallpaper"`:
 
 | Value | Description |
 |-------|-------------|
-| `m3-tonal-spot` | M3 default - balanced tones on the seed color. |
-| `m3-content` | M3 tuned for content-heavy UIs with higher chroma. |
-| `m3-fruit-salad` | M3 with playful cross-hue accents. |
-| `m3-rainbow` | M3 spanning the wheel for multi-accent layouts. |
-| `m3-monochrome` | M3 collapsed to a single hue. |
-| `vibrant` | Custom, saturated, high-contrast. |
-| `faithful` | Custom, stays close to the source image. |
-| `dysfunctional` | Custom, deliberately off-kilter. |
-| `muted` | Custom, low saturation. |
+| `m3-tonal-spot` | M3 default — balanced tones anchored on the seed color |
+| `m3-content` | M3 for content-forward UIs — higher chroma |
+| `m3-fruit-salad` | M3 with playful cross-hue accents |
+| `m3-rainbow` | M3 spanning the full wheel for multi-accent layouts |
+| `m3-monochrome` | M3 collapsed to a single hue |
+| `vibrant` | Custom — saturated and high-contrast |
+| `faithful` | Custom — stays close to the source image |
+| `dysfunctional` | Custom — deliberately off-kilter |
+| `muted` | Custom — low-saturation |
+
+---
 
 ## `mode`
 
-`dark` or `light` selects the variant. `auto` is treated as `dark` until system light or dark tracking is implemented.
+`dark` or `light` selects the palette variant. `auto` is treated as `dark` until system light/dark tracking lands.
 
-## Shell color roles
+## Shell Color Roles
 
-User-facing color settings in shell and widget config use these **16 theme roles** (lowercase `snake_case`):
+User-facing shell color settings can reference these 16 color roles:
 
 `primary`, `on_primary`, `secondary`, `on_secondary`, `tertiary`, `on_tertiary`, `error`, `on_error`, `surface`, `on_surface`, `surface_variant`, `on_surface_variant`, `outline`, `shadow`, `hover`, `on_hover`
 
-Some config fields also accept hex colors such as `#89b4fa`; those fields say so on their own pages. If a field says it wants a theme role, use one of the names above.
+Role names are lowercase `snake_case`. Config fields parsed as palette colors may also accept hex colors where a fixed
+color is needed; Settings role pickers expose the 16 roles.
 
-## Theme command
+### IPC
 
-The theme mode command is listed under [IPC shell and UI](/v5/ipc/shell-and-ui/#theme). The [theme_mode](/v5/bar/widgets/) bar widget does the same on click.
-
-## External app templates
-
-Noctalia can write generated colors into other apps whenever the resolved theme changes. Full template **syntax** (expressions, filters, TOML batch processing) is in [Theming templates](/v5/theming/templates/). Activation lives under `[theme.templates]`:
-
-```toml
-[theme.templates]
-enable_builtins         = true
-builtin_ids             = []
-enable_user_templates  = false
-user_config            = "~/.config/noctalia/user-templates.toml"
+```sh
+noctalia msg toggle-theme-mode
 ```
 
-- `enable_builtins` - Turn on the shipped built-in template catalog.
-- `builtin_ids` - Which built-in template ids to run. Empty means none until you opt in. List ids with: `noctalia theme --list-builtins`
-- `enable_user_templates` - Load an extra TOML from `user_config`.
-- `user_config` - Path to that file. When enabled, a stub is created if missing.
+---
+
+## External App Templates
+
+Noctalia can apply generated colors to external app config files whenever the resolved theme changes.
 
 ```toml
 [theme.templates]
-enable_builtins        = true
-builtin_ids            = ["foot", "walker", "gtk3", "gtk4"]
-enable_user_templates  = true
-user_config            = "~/.config/noctalia/user-templates.toml"
+enable_builtins       = true
+builtin_ids           = []        # opt-in; run: noctalia theme --list-builtins
+enable_user_templates = false
+user_config           = "~/.config/noctalia/user-templates.toml"
+```
+
+- `enable_builtins` enables the shipped built-in template catalog.
+- `builtin_ids` selects which built-in templates run. Empty array = nothing applied until you opt in.
+- `enable_user_templates` enables loading your own template file.
+- `user_config` points at that extra file. When enabled, Noctalia creates a stub if it does not already exist.
+
+```toml
+[theme.templates]
+enable_builtins       = true
+builtin_ids           = ["foot", "walker", "gtk3", "gtk4"]
+enable_user_templates = true
+user_config           = "~/.config/noctalia/user-templates.toml"
+```
+
+List available built-in template ids:
+
+```sh
+noctalia theme --list-builtins
 ```
