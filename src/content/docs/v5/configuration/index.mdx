@@ -49,9 +49,9 @@ Noctalia loads configuration in this order:
 
 1. Built-in defaults
 2. Your `*.toml` files in `~/.config/noctalia/`
-3. GUI-managed overrides in `settings.toml`
+3. GUI-managed overrides in `~/.local/state/noctalia/settings.toml`
 
-Because `settings.toml` loads last, it wins when it contains the same setting as your config file.
+Because `~/.local/state/noctalia/settings.toml` loads last, it wins when it contains the same setting as your config file.
 
 :::tip
 If you are confused about why a value from `config.toml` is not taking effect, inspect or temporarily move `~/.local/state/noctalia/settings.toml`.
@@ -61,7 +61,7 @@ If you are confused about why a value from `config.toml` is not taking effect, i
 
 Use `~/.config/noctalia/` for curated config: the things you want to keep in dotfiles, copy to another machine, or manage declaratively.
 
-Treat `settings.toml` as an app-managed override file. It is useful to inspect when debugging GUI changes, and safe to delete when you want to clear those overrides. Keeping it outside `~/.config` also lets the GUI save changes when your config directory is read-only, for example on NixOS.
+Treat `~/.local/state/noctalia/settings.toml` as an app-managed override file. It is useful to inspect when debugging GUI changes, and safe to delete when you want to clear those overrides. Keeping it outside `~/.config` also lets the GUI save changes when your config directory is read-only, for example on NixOS.
 
 Both layers are watched for changes and hot-reloaded. If neither layer exists, Noctalia uses its built-in defaults.
 
@@ -71,6 +71,6 @@ Both layers are watched for changes and hot-reloaded. If neither layer exists, N
 - [Bars](/v5/bar/) and [Widgets](/v5/bar/widgets/) cover the top or side bar and everything inside it.
 - [Dock](/v5/dock/) covers the optional app dock.
 - [Theme](/v5/theming/) and [Theming templates](/v5/theming/templates/) cover colors and generated app themes.
-- [Wallpaper & overview](/v5/desktop/wallpaper/) covers wallpapers, per-monitor folders, automation, and overview backdrop.
+- [Wallpaper & backdrop](/v5/desktop/wallpaper/) covers wallpapers, per-monitor folders, automation, and overview backdrop.
 - [Services](/v5/services/) covers audio, brightness, night light, weather, idle, and notifications.
 - [IPC](/v5/ipc/) lists commands for keybinds, scripts, automation, and hooks.

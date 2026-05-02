@@ -189,7 +189,7 @@ export default defineConfig({
                   label: "Desktop",
                   items: [
                     { label: "Desktop Widgets", link: "v5/desktop/widgets/" },
-                    { label: "Wallpaper & Overview", link: "v5/desktop/wallpaper/" },
+                    { label: "Wallpaper & Backdrop", link: "v5/desktop/wallpaper/" },
                   ],
                 },
                 {
