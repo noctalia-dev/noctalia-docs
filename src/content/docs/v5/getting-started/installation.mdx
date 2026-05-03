@@ -1,0 +1,223 @@
+---
+title: Installation
+description: Start here to set up and use Noctalia.
+sidebar:
+  order: 10
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+:::caution
+The development version may be less stable than the official release. Use this version if you want to test the latest features or contribute to development.
+:::
+
+Noctalia is available on the following distributions:
+
+- [Arch Linux](#arch)
+- [NixOS](/v5/getting-started/nixos/)
+- [Fedora](#fedora)
+- [Void Linux](#void)
+
+You can also [install manually](#manual-install) on any other Linux distribution.
+
+## Arch Linux {#arch}
+
+### Using AUR (Recommended)
+
+The simplest way to install Noctalia on Arch Linux is through the Arch User Repository (AUR). This method installs the shell system-wide and handles dependencies automatically.
+
+Please replace with your AUR helper of choice.
+
+<Tabs>
+  <TabItem label="AUR Helper">
+    ```bash
+    paru -S noctalia-git
+    ```
+  </TabItem>
+  <TabItem label="Non-AUR Helper">
+    ```bash
+    git clone https://aur.archlinux.org/noctalia-git
+    cd noctalia-git
+    makepkg -is
+    ```
+  </TabItem>
+</Tabs>
+---
+
+## Fedora {#fedora}
+
+Noctalia-shell is available in the [Terra](https://terra.fyralabs.com) repository.
+
+First install the repository as described on the website:
+
+```bash
+sudo dnf copr enable lionheartp/Hyprland 
+```
+
+Next, install the noctalia-shell package:
+
+```bash
+sudo dnf install noctalia-shell-v5
+```
+
+Installing noctalia-shell from Terra will automatically install all runtime dependencies and display optional dependencies.
+
+---
+
+## Void Linux {#void}
+
+Noctalia is available through a custom XBPS repository.
+
+**Step 1**: Add the repository source
+
+```bash
+echo "repository=https://universalrepository.pages.dev/void" \
+  | sudo tee /etc/xbps.d/10-noctalia.conf
+```
+
+**Step 2**: Sync and install noctalia
+
+```bash
+sudo xbps-install -S
+sudo xbps-install noctalia
+```
+
+---
+
+## Manual Installation {#manual-install}
+
+:::caution[Not Recommended]
+Manual installation has **no easy upgrade path**. You will need to manually download and replace files for each update. We strongly recommend using a package manager ([Arch](#arch), [Fedora](#fedora)) whenever possible.
+:::
+
+If you prefer to install Noctalia locally or want more control over the installation process, you can install it manually to your user configuration directory. This method works on any Linux distribution.
+
+**Step 1**: Sync and install dependencies
+
+<Tabs>
+  <TabItem label="Arch">
+    ```bash
+    sudo pacman -S meson gcc just \
+      wayland wayland-protocols \
+      libglvnd freetype2 fontconfig \
+      cairo pango \
+      libxkbcommon glib2 \
+      sdbus-cpp libpipewire polkit \
+      pam curl libwebp
+    ```
+  </TabItem>
+  <TabItem label="Fedora">
+    ```bash
+    sudo dnf install meson gcc-c++ just \
+      wayland-devel wayland-protocols-devel \
+      libEGL-devel mesa-libGLES-devel \
+      freetype-devel fontconfig-devel \
+      cairo-devel pango-devel \
+      libxkbcommon-devel glib2-devel \
+      sdbus-cpp-devel pipewire-devel \
+      pam-devel polkit-devel libcurl-devel libwebp-devel
+    ```
+  </TabItem>
+  <TabItem label="Debian/Ubuntu">
+    ```bash
+    sudo apt install meson g++ just \
+      libwayland-dev wayland-protocols \
+      libegl-dev libgles-dev \
+      libfreetype-dev libfontconfig-dev \
+      libcairo2-dev libpango1.0-dev \
+      libxkbcommon-dev libglib2.0-dev \
+      libsdbus-c++-dev libpipewire-0.3-dev \
+      libpam0g-dev libpolkit-agent-1-dev libpolkit-gobject-1-dev \
+      libcurl4-openssl-dev libwebp-dev
+    ```
+  </TabItem>
+</Tabs>
+
+Vendored dependencies, with no system package needed: `Wuffs`, `nanosvg`, `tomlplusplus`, `tinyexpr`,
+`nlohmann/json`, `Luau`, `dr_wav`, `fzy`, `stb_image_resize2`, and Material Color Utilities.
+
+System packages required beyond the Wayland/GL stack: `libwebp` handles WebP decoding and thumbnail encoding. Wuffs
+handles the other supported raster image formats.
+
+Polkit agent support requires development files that provide the `polkit-agent-1` and `polkit-gobject-1` pkg-config
+modules. Some distros ship these in the runtime `polkit` package, while split-package distros use names such as
+`polkit-devel`, `polkit-dev`, or `libpolkit-agent-1-dev` / `libpolkit-gobject-1-dev`.
+
+Sanitizer runtime packages are only needed for ASan/UBSan builds configured with `just configure asan`.
+
+**Step 2**: Prepear directory
+
+```bash
+git clone https://github.com/noctalia-dev/noctalia-shell --branch v5
+cd noctalia-shell
+```
+
+**Step 3**: Build noctalia
+
+Requires [just](https://github.com/casey/just) and [meson](https://mesonbuild.com/).
+
+```bash
+# Debug build in build-debug/
+just configure
+just build
+just run
+
+# Optimized release build in build-release/
+just configure release
+just build release
+just run release
+
+# Clean rebuild
+just rebuild
+just rebuild release
+```
+
+**Step 4**: Installation
+
+After building, install with `just`:
+
+<Tabs>
+  <TabItem label="Release Mode">
+    ```bash
+    sudo just install release
+    ```
+  </TabItem>
+  <TabItem label="Debug Mode">
+    ```bash
+    sudo just install release
+    ```
+  </TabItem>
+</Tabs>
+
+Meson installs the binary and shipped assets using the normal prefix layout:
+
+```text
+/usr/local/bin/noctalia
+/usr/local/share/noctalia/assets/...
+```
+
+Noctalia needs the shipped `assets/` tree at runtime. Copying only the `noctalia` binary is not enough.
+
+Portable bundle layouts are also supported:
+
+```text
+bundle/
+  noctalia
+  assets/
+```
+
+```text
+bundle/
+  bin/noctalia
+  share/noctalia/assets/
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md#runtime-assets) for the full runtime asset lookup order.
+
+## Getting Help
+
+If you encounter issues during installation:
+
+- Check our [FAQ](/v4/getting-started/faq/) for common problems
+- Visit our [GitHub Issues](https://github.com/noctalia-dev/noctalia-shell/issues) page
+- Join our community on [Discord](https://discord.noctalia.dev) for real-time support
