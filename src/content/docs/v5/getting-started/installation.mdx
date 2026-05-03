@@ -16,6 +16,7 @@ Noctalia is available on the following distributions:
 - [Arch Linux](#arch)
 - [NixOS](/v5/getting-started/nixos/)
 - [Fedora](#fedora)
+- [openSUSE](#opensuse)
 - [Void Linux](#void)
 
 You can also [install manually](#manual-install) on any other Linux distribution.
@@ -60,6 +61,31 @@ sudo dnf install noctalia-shell-v5
 ```
 
 Installing noctalia-shell from Terra will automatically install all runtime dependencies and display optional dependencies.
+
+---
+
+## openSUSE {#opensuse}
+
+Noctalia is available in the [home:neifua](https://build.opensuse.org/package/show/home:neifua/noctalia) repository on the openSUSE Build Service.
+
+First add the repository
+
+```bash
+sudo zypper addrepo --refresh https://download.opensuse.org/repositories/home:neifua/openSUSE_Tumbleweed/home:neifua.repo
+```
+
+Next, refresh and install the v5 package:
+
+```bash
+sudo zypper refresh
+sudo zypper install noctalia
+```
+
+:::note
+The package is currently only available on `Tumbleweed`, `Slowroll` and `Leap` users might need to wait for the official release.
+
+The `--refresh` flag is to enable auto refresh for the repo because everytime there's a new commit `noctalia` will be rebuild on the OBS.
+:::
 
 ---
 
