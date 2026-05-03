@@ -95,23 +95,29 @@ Noctalia can apply generated colors to external app config files whenever the re
 
 ```toml
 [theme.templates]
-enable_builtins       = true
-builtin_ids           = []        # opt-in; run: noctalia theme --list-builtins
-enable_user_templates = false
-user_config           = "~/.config/noctalia/user-templates.toml"
+enable_builtin_templates   = true
+enable_community_templates = true
+builtin_ids                = []        # opt-in; run: noctalia theme --list-builtins
+community_ids              = []        # opt-in; fetched from api.noctalia.dev/templates
+enable_user_templates      = false
+user_config                = "~/.config/noctalia/user-templates.toml"
 ```
 
-- `enable_builtins` enables the shipped built-in template catalog.
+- `enable_builtin_templates` enables the shipped built-in template catalog.
 - `builtin_ids` selects which built-in templates run. Empty array = nothing applied until you opt in.
+- `enable_community_templates` enables fetching and applying templates from `https://api.noctalia.dev/templates`.
+- `community_ids` selects which community templates run. Metadata and files are cached in `~/.cache/noctalia/community-templates/` (honoring `XDG_CACHE_HOME`).
 - `enable_user_templates` enables loading your own template file.
 - `user_config` points at that extra file. When enabled, Noctalia creates a stub if it does not already exist.
 
 ```toml
 [theme.templates]
-enable_builtins       = true
-builtin_ids           = ["foot", "walker", "gtk3", "gtk4"]
-enable_user_templates = true
-user_config           = "~/.config/noctalia/user-templates.toml"
+enable_builtin_templates   = true
+builtin_ids                = ["foot", "gtk3", "gtk4"]
+enable_community_templates = true
+community_ids              = ["discord", "walker", "vscode"]
+enable_user_templates      = true
+user_config                = "~/.config/noctalia/user-templates.toml"
 ```
 
 List available built-in template ids:
