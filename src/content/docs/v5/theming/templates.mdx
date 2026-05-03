@@ -394,6 +394,7 @@ Each template entry supports:
 
 - `input_path`
 - `output_path`
+- `output_path_dynamic`
 - `colors_to_compare`
 - `compare_to`
 - `pre_hook`
@@ -411,6 +412,8 @@ output_path = [
   "~/.config/qt6ct/colors/noctalia.conf",
 ]
 ```
+
+`output_path_dynamic` is optional. It is a shell command string (same templating as hooks: `{{ config_dir }}`, `{{ mode }}`, etc.). After rendering, the shell runs it; on exit status `0`, each non-empty line of stdout is appended as an output path (after `resolveConfigPath`). Lines starting with `#` are ignored. Use this when destinations depend on the machine (for example Emacs config layout) without hard-coding app-specific logic in the engine. Static `output_path` entries, if any, are kept; dynamic lines are added after them.
 
 `input_path_modes` selects a different template input for dark and light mode:
 
