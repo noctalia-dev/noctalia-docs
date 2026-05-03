@@ -156,6 +156,13 @@ export default defineConfig({
           label: "Noctalia v5",
           items: [
             {
+              label: "Getting started",
+              items: [
+                { label: "Installation", link: "v5/getting-started/installation/"},
+                { label: "NixOS", link: "v5/getting-started/nixos/"},
+              ], 
+            },
+            { 
               label: "Configuration",
               items: [
                 {
