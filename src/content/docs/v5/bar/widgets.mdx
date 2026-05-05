@@ -79,10 +79,16 @@ Workspace switcher with solid dots/pills and optional labels.
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `display` | string | `"id"` | Label mode: `"none"`, `"id"`, or `"name"` |
+| `focused_color` | string | `"primary"` | Color role or hex color for the focused workspace pill |
+| `occupied_color` | string | `"secondary"` | Color role or hex color for occupied (non-focused) workspace pills |
+| `empty_color` | string | `"secondary"` | Color role or hex color for empty workspace pills |
 
 ```toml
 [widget.workspaces]
 display = "id"   # none | id | name
+focused_color = "primary"
+occupied_color = "secondary"
+empty_color = "surface_variant"
 ```
 
 ---
