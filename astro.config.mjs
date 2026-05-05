@@ -160,6 +160,7 @@ export default defineConfig({
               items: [
                 { label: "Installation", link: "v5/getting-started/installation/"},
                 { label: "NixOS", link: "v5/getting-started/nixos/"},
+                { label: "Running Noctalia", link: "v5/getting-started/running-the-shell/"},
                 {
                   label: "Compositor Settings",
                   items: [
