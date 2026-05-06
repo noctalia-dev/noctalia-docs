@@ -52,6 +52,8 @@ Noctalia loads configuration in this order:
 3. GUI-managed overrides in `~/.local/state/noctalia/settings.toml`
 
 Because `~/.local/state/noctalia/settings.toml` loads last, it wins when it contains the same setting as your config file.
+When Settings writes a value that matches the parsed value from the lower layers, Noctalia removes that redundant key
+instead of keeping it as a GUI override.
 
 :::tip
 If you are confused about why a value from `config.toml` is not taking effect, inspect or temporarily move `~/.local/state/noctalia/settings.toml`.
