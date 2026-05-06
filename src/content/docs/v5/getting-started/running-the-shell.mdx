@@ -1,0 +1,30 @@
+---
+title: Running Noctalia
+description: This page gives you a basic example on how to run the shell.
+sidebar:
+  order: 30
+---
+
+:::tip[Method]
+Use compositor autostart as the primary method.
+:::
+### Autostart by your Wayland compositor
+This is the recommended method for launching noctalia, as it integrates with your window manager.
+
+For the *Niri* compositor, add the following line to the end of your configuration file, typically located at `~/.config/niri/config.kdl`
+```ini
+spawn-at-startup "noctalia"
+```
+
+For the *Hyprland* compositor, append this line to your configuration file, typically located at `~/.config/hypr/hyprland.conf`
+```ini
+exec-once = noctalia
+```
+
+---
+
+### Manual Launch for Debugging
+The most direct way to run Noctalia for testing or debugging. Open a terminal and execute:
+```bash
+noctalia
+```
