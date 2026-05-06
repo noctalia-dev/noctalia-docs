@@ -111,11 +111,11 @@ Opens the control center panel on click.
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `glyph` | string | `"noctalia"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint |
-| `use_distro_logo` | bool | `false` | Use the distribution's logo image instead of the font glyph |
+| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Leave empty to use the glyph |
 
 ```toml
 [widget.control-center]
-use_distro_logo = true
+custom_image = "/path/to/image.png"
 ```
 
 ---
@@ -354,7 +354,7 @@ Opens the launcher panel on click.
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `glyph` | string | `"search"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint |
-| `use_distro_logo` | bool | `false` | Use the distribution's logo image instead of the font glyph |
+| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Leave empty to use the glyph |
 
 ```toml
 [widget.launcher]
