@@ -36,12 +36,12 @@ Displays the current time.
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `format` | string | `{:%H:%M}` | `std::format`-style chrono format string (horizontal bars and vertical fallback). Bare chrono specs such as `%H:%M` are also accepted. Numeric specifiers support the strftime-style no-pad modifier, e.g. `{:%-I:%M %p}`. |
+| `format` | string | `{:%H:%M}` | `std::format`-style chrono format string (horizontal bars and vertical fallback). Use `\n` for multiple lines; multiple chrono fields such as `{:%H:%M}\n{:%d/%m}` are supported. Bare chrono specs such as `%H:%M` are also accepted. Numeric specifiers support the strftime-style no-pad modifier, e.g. `{:%-I:%M %p}`. |
 | `vertical_format` | string | `""` | Format used when the bar is vertical. When empty, falls back to `format` with `:` replaced by line breaks. Supports the same chrono syntax as `format`. |
 
 ```toml
 [widget.clock]
-format = "{:%H:%M}"
+format = "{:%H:%M}\n{:%d/%m}"
 vertical_format = "{:%H\n%M}"
 
 [widget.clock-12h]
