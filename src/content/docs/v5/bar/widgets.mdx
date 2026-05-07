@@ -198,15 +198,25 @@ path = "/"
 
 ## `volume`
 
-Shows the default audio sink volume and mute state via PipeWire.
+Shows PipeWire output (speaker) or input (microphone) volume and mute state.
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
+| `device` | string | `"output"` | Audio target: `"output"` (default sink) or `"input"` (default source / microphone) |
 | `show_label` | bool | `true` | Show the volume percentage next to the glyph (horizontal and vertical bars) |
 
 ```toml
 [widget.volume]
+device = "output"   # output | input
 show_label = false
+
+[widget.input-volume]
+type = "volume"
+device = "input"
+
+[widget.output-volume]
+type = "volume"
+device = "output"
 ```
 
 ### IPC
