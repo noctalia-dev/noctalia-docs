@@ -52,3 +52,34 @@ Add the package to your system packages or equivalent:
   ];
 }
 ```
+
+### Binary Cache {#binary-cache}
+
+Pre-built binaries are available on [Cachix](https://app.cachix.org/cache/noctalia), so you can skip compiling locally.
+
+You can add the cache either to your flake, nixos configuration, or `/etc/nix/nix.conf`.
+
+<Tabs>
+  <TabItem label="flake.nix">
+    ```nix
+    nixConfig = {
+      extra-substituters = [ "https://noctalia.cachix.org" ];
+      extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ];
+    };
+    ```
+  </TabItem>
+  <TabItem label="configuration.nix"> 
+    ```nix
+    nix.settings = { 
+      extra-substituters = [ "https://noctalia.cachix.org" ]; 
+      extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ]; 
+    };
+    ``` 
+  </TabItem>
+  <TabItem label="nix.conf"> 
+    ```properties
+    extra-substituters = https://noctalia.cachix.org
+    extra-trusted-public-keys = noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=
+    ``` 
+  </TabItem>
+</Tabs>
