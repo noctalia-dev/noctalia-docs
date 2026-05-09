@@ -180,6 +180,7 @@ export default defineConfig({
                   items: [
                     { label: "How Configuration Works", link: "v5/configuration/" },
                     { label: "Shell", link: "v5/shell/" },
+                    { label: "Date Format Tokens", link: "v5/configuration/date-format-tokens/" },
                   ],
                 },
                 {
