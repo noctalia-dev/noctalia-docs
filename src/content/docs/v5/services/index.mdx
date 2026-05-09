@@ -79,7 +79,7 @@ Values and steps accept normalized (`0.0`–`1.0`) or percentage-style (`65`, `6
 
 ## Night Light
 
-Uses `wlsunset` to apply color temperature shifts.
+Applies color temperature shifts using the Wayland `wlr-gamma-control` protocol. Supported on compositors that implement gamma control (Hyprland, Sway, etc.).
 
 ```toml
 [nightlight]
@@ -87,7 +87,7 @@ enabled              = false
 force                = false   # force night mode from startup
 use_weather_location = true    # use weather coordinates when no manual schedule or location is set
 
-temperature_day   = 6500       # Kelvin
+temperature_day   = 6500       # Kelvin (must be > temperature_night by at least 100)
 temperature_night = 4000       # Kelvin
 
 # Option A: explicit schedule
@@ -134,7 +134,7 @@ enabled         = false
 auto_locate     = false         # resolve coordinates from IP address when true
 address         = "Toronto, ON" # geocoded when auto_locate = false
 refresh_minutes = 30
-unit            = "celsius"     # celsius | fahrenheit
+unit            = "metric"      # metric | imperial
 ```
 
 When `auto_locate = false`, Noctalia geocodes `address` to latitude/longitude and fetches current weather plus a 6-day forecast. When `auto_locate = true`, the `address` field is ignored and location is resolved via IP.
