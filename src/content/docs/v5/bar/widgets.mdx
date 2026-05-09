@@ -11,6 +11,8 @@ sidebar:
 
 Widget definitions are optional. When a name in a widget list matches a `[widget.<name>]` entry, that entry's `type` and settings are used. When there is no match, the name itself is treated as the widget type with default settings.
 
+Middle-click a bar widget to open Settings directly to that widget's configuration. Disable `[shell].middle_click_opens_widget_settings` if you want middle-click to remain available to scripted widgets.
+
 ```toml
 [widget.<name>]
 type = "<widget-type>"   # defaults to <name> when omitted
