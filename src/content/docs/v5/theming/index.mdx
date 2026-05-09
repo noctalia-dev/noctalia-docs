@@ -12,9 +12,10 @@ Controls the colors used across the shell — bars, panels, widgets, OSD, backdr
 ```toml
 [theme]
 mode              = "dark"        # dark | light | auto
-source            = "builtin"     # builtin | wallpaper | community
+source            = "builtin"     # builtin | wallpaper | community | custom
 builtin           = "Noctalia"    # bundled palette name
 community_palette = "Oxocarbon"   # community palette name when source = "community"
+custom_palette    = "MyPalette"   # file name (without .json) when source = "custom"
 wallpaper_scheme  = "m3-content"  # generator used when source = "wallpaper"
 ```
 
@@ -29,6 +30,7 @@ Pallette changes apply live when you edit `config.toml`. Wallpaper-derived theme
 | `builtin` | Use one of the palette compiled into the binary. |
 | `wallpaper` | Generate a palette from the current default wallpaper each time it changes. |
 | `community` | Fetch a palette by name from `https://api.noctalia.dev/palette/<name>`. |
+| `custom` | Load a palette JSON file from `~/.config/noctalia/palettes/`. |
 
 ---
 
@@ -49,6 +51,18 @@ The Settings GUI lists palette names from the cached `https://api.noctalia.dev/p
 While the initial download is in flight — or if it fails — the shell falls back to `Noctalia` built-in and cross-fades once the download arrives.
 
 To refresh a palette, delete the corresponding file under `~/.cache/noctalia/community-palettes/`.
+
+---
+
+## `custom_palette`
+
+Names a palette file in `~/.config/noctalia/palettes/` (honoring `XDG_CONFIG_HOME`). The value is the file name without the `.json` extension — for example, `custom_palette = "MyPalette"` loads `~/.config/noctalia/palettes/MyPalette.json`.
+
+The JSON format is identical to community palettes: a root object with `"dark"` and `"light"` keys, each containing the 16 semantic color roles and a `"terminal"` object. If the `"light"` key is omitted, the dark variant is used for both modes.
+
+If the file is missing or invalid, the shell falls back to the `Noctalia` built-in palette.
+
+The Settings GUI lists palette files found in the directory when `source = "custom"` is selected.
 
 ---
 
