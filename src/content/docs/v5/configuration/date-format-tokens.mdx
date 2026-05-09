@@ -5,7 +5,7 @@ sidebar:
   order: 1
 ---
 
-Noctalia date and time settings render the current local time. Clock widgets use this format today, and other date-format settings should use the same token set when they need user-configurable date or time output.
+Noctalia date and time settings render the current local time. Clock widgets, `shell.time_format`, `shell.date_format`, and other date-format settings use the same token set when they need user-configurable date or time output.
 
 You can write either a bare `strftime` pattern such as `%H:%M`, or wrap the same pattern in a C++ chrono field such as `{:%H:%M}`. Literal text is copied through, `\n` becomes a line break, `%%` prints a literal percent sign, and `{{` / `}}` print literal braces when a format uses brace fields.
 
