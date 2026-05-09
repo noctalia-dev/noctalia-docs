@@ -295,9 +295,37 @@ title_scroll = "on_hover"
 
 ## `battery`
 
-Shows battery charge level and state via UPower. Hides itself when no battery is present — safe to include on desktops.
+Shows battery charge level and state via UPower. Hides itself when the selected battery is missing or not present.
 
-No configurable settings.
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `device` | string | `auto` | UPower device selector. `auto` monitors the system power-supply battery only; explicit selectors can target any present battery-capable UPower device. |
+
+`device = "auto"` is safe on desktops: it will not use gamepads, mice, headsets, or other peripherals as the default battery widget. Use an explicit selector for those devices.
+
+Selectors can be a full UPower object path, a native path/name, a stable suffix such as `BAT0`, or available device metadata such as model, serial, or vendor.
+
+```toml
+# Default system/laptop battery
+[widget.battery]
+type = "battery"
+device = "auto"
+
+# Internal battery by native name/suffix
+[widget.internal_battery]
+type = "battery"
+device = "BAT0"
+
+# Second battery by full UPower object path
+[widget.second_battery]
+type = "battery"
+device = "/org/freedesktop/UPower/devices/battery_BAT1"
+
+# Explicit peripheral battery
+[widget.gamepad_battery]
+type = "battery"
+device = "/org/freedesktop/UPower/devices/gaming_input_hid_001"
+```
 
 ---
 
