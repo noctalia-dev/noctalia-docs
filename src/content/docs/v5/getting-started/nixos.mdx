@@ -8,8 +8,9 @@ sidebar:
 import SettingsReference from '../../../../components/SettingsReference.astro';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-
-For NixOS users, Noctalia available only using Flakes
+:::note
+Currently noctalia v5 is only available using nix flakes.
+:::
 
 :::caution
 To make Noctalia's wifi, bluetooth, power-profile, and battery feature available, please ensure the following NixOS options are enabled:
@@ -19,82 +20,66 @@ To make Noctalia's wifi, bluetooth, power-profile, and battery feature available
 - `services.upower.enable`
 :::
 
-## Nix flakes
+## Nix Flakes
 
-To install Noctalia, you need to [add a flake input](#add-flake-input) and [install the package](#install-package).
+To install Noctalia using flakes, you first need to [add the flake input](#add-flake-input) and then [install the package](#install-package).
 
-:::note
-The Noctalia flake requires **nixpkgs unstable**, since we depend on the latest Quickshell version.
-:::
+### Adding the Flake input {#add-flake-input}
 
-### Adding the flake input {#add-flake-input}
-
-Add the required inputs to your flake configuration:
+Add Noctalia to your flake inputs:
 
 ```nix
 # flake.nix
 {
-  description = "NixOS configuration with Noctalia";
-
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell/v5";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-
-  outputs = inputs@{ self, nixpkgs, ... }: {
-    nixosConfigurations.awesomebox = nixpkgs.lib.nixosSystem {
-      specialArgs = { inherit inputs; };
-      modules = [
-        # ... other modules
-        ./noctalia.nix
-      ];
-    };
-  };
 }
 ```
 
-With the flake installed, we can access Noctalia packages and modules in our configuration.
+### Installing the Package {#install-package}
 
-### Installing the package {#install-package}
-
-If you don't use Noctalia's NixOS or home-manager modules, you need to manually install the default Noctalia package from the new `noctalia` input:
-
+Add the package to your system packages or equivalent:
 ```nix
-# noctalia.nix
-{ pkgs, inputs, ... }:
+# configuration.nix
+{ inputs, pkgs, ... }:
 {
-  # install package
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = [
     inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
-    # ... maybe other stuff
   ];
 }
 ```
 
-Rebuild with `sudo nixos-rebuild switch --flake .`.
+### Binary Cache {#binary-cache}
 
----
+Pre-built binaries are available on [Cachix](https://app.cachix.org/cache/noctalia), so you can skip compiling locally.
 
-## Calendar events support
+You can add the cache either to your flake, nixos configuration, or `/etc/nix/nix.conf`.
 
-To add support for events in the calendar via evolution-data-server.
-
-1. **Enable the evolution-data-server**:
-```nix
-services.gnome.evolution-data-server.enable = true;
-```
-
-2. **Override the Noctalia package**:
-```nix
-(pkgs.noctalia-shell.override { calendarSupport = true; })
-```
-or
-```nix
-(inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override { calendarSupport = true; })
-```
-
----
+<Tabs>
+  <TabItem label="flake.nix">
+    ```nix
+    nixConfig = {
+      extra-substituters = [ "https://noctalia.cachix.org" ];
+      extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ];
+    };
+    ```
+  </TabItem>
+  <TabItem label="configuration.nix"> 
+    ```nix
+    nix.settings = { 
+      extra-substituters = [ "https://noctalia.cachix.org" ]; 
+      extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ]; 
+    };
+    ``` 
+  </TabItem>
+  <TabItem label="nix.conf"> 
+    ```properties
+    extra-substituters = https://noctalia.cachix.org
+    extra-trusted-public-keys = noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=
+    ``` 
+  </TabItem>
+</Tabs>

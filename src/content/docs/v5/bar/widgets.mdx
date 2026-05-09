@@ -11,6 +11,8 @@ sidebar:
 
 Widget definitions are optional. When a name in a widget list matches a `[widget.<name>]` entry, that entry's `type` and settings are used. When there is no match, the name itself is treated as the widget type with default settings.
 
+Middle-click a bar widget to open Settings directly to that widget's configuration. Disable `[shell].middle_click_opens_widget_settings` if you want middle-click to remain available to scripted widgets.
+
 ```toml
 [widget.<name>]
 type = "<widget-type>"   # defaults to <name> when omitted
@@ -36,12 +38,12 @@ Displays the current time.
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `format` | string | `{:%H:%M}` | `std::format`-style chrono format string (horizontal bars and vertical fallback). Bare chrono specs such as `%H:%M` are also accepted. Numeric specifiers support the strftime-style no-pad modifier, e.g. `{:%-I:%M %p}`. |
+| `format` | string | `{:%H:%M}` | `std::format`-style chrono format string (horizontal bars and vertical fallback). Use `\n` for multiple lines; multiple chrono fields such as `{:%H:%M}\n{:%d/%m}` are supported. Bare chrono specs such as `%H:%M` are also accepted. Numeric specifiers support the strftime-style no-pad modifier, e.g. `{:%-I:%M %p}`. |
 | `vertical_format` | string | `""` | Format used when the bar is vertical. When empty, falls back to `format` with `:` replaced by line breaks. Supports the same chrono syntax as `format`. |
 
 ```toml
 [widget.clock]
-format = "{:%H:%M}"
+format = "{:%H:%M}\n{:%d/%m}"
 vertical_format = "{:%H\n%M}"
 
 [widget.clock-12h]
@@ -106,6 +108,27 @@ Left-click an icon to focus that window. The active window shows a small primary
 ```toml
 [widget.taskbar]
 group_by_workspace = true
+```
+
+---
+
+## `active_window`
+
+Shows the active window icon and title for the current output.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `min_length` | number | `80` | Minimum widget length in pixels |
+| `max_length` | number | `260` | Maximum widget length in pixels |
+| `icon_size` | number | `14` | Icon size in pixels |
+| `title_scroll` | string | `"none"` | Title scrolling mode: `"none"`, `"always"`, or `"on_hover"` |
+
+```toml
+[widget.active_window]
+min_length = 80
+max_length = 260
+icon_size = 14
+title_scroll = "on_hover"
 ```
 
 ---
@@ -177,15 +200,25 @@ path = "/"
 
 ## `volume`
 
-Shows the default audio sink volume and mute state via PipeWire.
+Shows PipeWire output (speaker) or input (microphone) volume and mute state.
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
+| `device` | string | `"output"` | Audio target: `"output"` (default sink) or `"input"` (default source / microphone) |
 | `show_label` | bool | `true` | Show the volume percentage next to the glyph (horizontal and vertical bars) |
 
 ```toml
 [widget.volume]
+device = "output"   # output | input
 show_label = false
+
+[widget.input-volume]
+type = "volume"
+device = "input"
+
+[widget.output-volume]
+type = "volume"
+device = "output"
 ```
 
 ### IPC
@@ -245,15 +278,17 @@ Shows the current media artwork and track title from MPRIS.
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `min_length` | number | `80` | Minimum length for the title text |
-| `max_length` | number | `220` | Maximum length for the title text |
+| `min_length` | number | `80` | Minimum widget length in pixels |
+| `max_length` | number | `220` | Maximum widget length in pixels |
 | `art_size` | number | `16` | Artwork size in pixels before scale |
+| `title_scroll` | string | `"none"` | Media title scrolling mode: `"none"`, `"always"`, or `"on_hover"` |
 
 ```toml
 [widget.media]
 min_length = 80
 max_length = 220
 art_size   = 24
+title_scroll = "on_hover"
 ```
 
 ---

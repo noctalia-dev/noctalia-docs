@@ -116,6 +116,7 @@ Set under `[bar.<name>]` or `[bar.<name>.monitor.*]`:
 |---------|------|---------|-------------|
 | `capsule` | bool | `false` | `true` gives every widget a capsule unless `[widget.*]` sets `capsule = false`. |
 | `color` | string | *(unset)* | Default icon + label color role or hex color for every widget on this bar. |
+| `capsule_groups` | array of string | `[]` | Managed capsule group names for nearby widgets on this bar. |
 | `capsule_fill` | string | `surface_variant` | Default capsule background color role or hex color. |
 | `capsule_foreground` | string | *(unset)* | Default icon + label color role or hex color for capped widgets. |
 | `capsule_padding` | number | `6` | Inner padding in logical pixels before `scale` is applied (clamped 0–48). |
@@ -129,6 +130,7 @@ Set under `[widget.<name>]`:
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `capsule` | bool | *(from bar)* | Omit to inherit bar flag; `false` disables; `true` forces on. |
+| `capsule_group` | string | *(unset)* | Select one of the bar's managed capsule group names. Nearby widgets in the same section with the same non-empty value and matching capsule styling share one capsule. |
 | `capsule_fill` | string | *(from bar)* | Capsule background color role or hex color. |
 | `capsule_foreground` | string | *(from bar)* | Icon + label color role or hex color when capsule is visible. `color` takes priority over this. |
 | `capsule_padding` | number | *(from bar)* | Per-widget inner padding (0–48). |
@@ -143,6 +145,7 @@ The capsule is hidden automatically when a widget reports no visible ink (empty 
 ```toml
 [bar.main]
 capsule         = true
+capsule_groups  = ["status", "media"]
 capsule_fill    = "surface_variant"
 capsule_opacity = 0.9
 capsule_border  = "outline"
@@ -157,6 +160,12 @@ capsule_padding    = 10
 [widget.volume]
 capsule_fill   = "secondary"
 capsule_border = ""          # no border on this widget
+
+[widget.network]
+capsule_group = "status"
+
+[widget.bluetooth]
+capsule_group = "status"
 
 [widget.spacer]
 type    = "spacer"

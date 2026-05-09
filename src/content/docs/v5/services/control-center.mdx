@@ -10,6 +10,7 @@ sidebar:
 ## Shortcuts
 
 The overview tab displays a row of shortcut buttons at the bottom. Up to 6 shortcuts are shown.
+You can also edit this list from **Settings → Panels → Control Center**.
 
 ```toml
 [[control_center.shortcuts]]
@@ -36,8 +37,6 @@ type = "session"
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `type` | string | *required* | Shortcut type from the list below |
-| `label` | string | (per type) | Override the default label |
-| `icon` | string | (per type) | Override the default glyph with a Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint |
 
 ### Available shortcut types
 
@@ -62,4 +61,5 @@ type = "session"
 
 Toggle shortcuts show an active/inactive visual state. `power_profile`, `weather`, and `keyboard_layout` display dynamic labels (current profile, temperature, or layout name).
 
-When no `[[control_center.shortcuts]]` entries are defined, the default set is: `wifi`, `bluetooth`, `nightlight`, `notification`, `wallpaper`, `caffeine`.
+When no `[[control_center.shortcuts]]` entries are defined, the default set is: `wifi`, `bluetooth`, `caffeine`, `nightlight`, `notification`, `power_profile`.
+Set `shortcuts = []` under `[control_center]` to hide all overview shortcut buttons.
