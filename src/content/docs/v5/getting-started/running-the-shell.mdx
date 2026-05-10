@@ -21,6 +21,12 @@ For the *Hyprland* compositor, append this line to your configuration file, typi
 exec-once = noctalia
 ```
 
+If your compositor expects startup commands to return after the shell has initialized, run Noctalia in daemon mode:
+```bash
+noctalia --daemon
+```
+Daemon mode returns after the shell has initialized. The optional polkit authentication agent starts asynchronously after the UI is up.
+
 ---
 
 ### Manual Launch for Debugging
