@@ -120,6 +120,49 @@ Each action accepts a single string chord or an array of chords.
 
 ---
 
+## Session panel
+
+The session (power) menu opened from the bar **Session** widget or Control Center lists **Lock**, **Log out**, **Reboot**, and **Shut down** by default. You can change which buttons appear, their order, whether each is enabled, and optionally replace the implementation with a **shell command** (still run after `logging_out` / `rebooting` / `shutting_down` hooks when the action is one of those three).
+
+Configure under **`[shell.session]`** in TOML, or use **Settings → Panels → Session menu**: entries, reorder, and **Show** are listed inline; use the **settings** (cog) control on a row for behavior, label, command, icon, and style. **Add action** appends a custom-command entry by default.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `action` | string | *required* | `lock`, `logout`, `reboot`, `shutdown`, or `command` (custom entry). |
+| `enabled` | bool | `true` | When `false`, the button is hidden. |
+| `command` | string | *unset* | Optional. If set, the string is run with `/bin/sh -c` instead of the built-in handler. For `action = "command"`, this field is required. |
+| `label` | string | *unset* | Optional button label (otherwise translated defaults). |
+| `glyph` | string | *unset* | Optional bar-style icon id (otherwise defaults per action). Under **Session menu** in Settings → Panels, open a row’s settings (cog) editor and use the icon preview to pick a glyph. |
+| `destructive` | bool | `false` | Use the destructive (warning) button style. |
+
+Omitting `[[shell.session.actions]]` entirely keeps the default four actions. To define your own list, declare one or more tables. An explicit empty array hides all session buttons:
+
+```toml
+[shell.session]
+actions = []
+
+# Example: reorder, disable reboot, custom suspend, override lock
+[[shell.session.actions]]
+action = "lock"
+command = "swaylock -f"
+
+[[shell.session.actions]]
+action = "logout"
+enabled = true
+
+[[shell.session.actions]]
+action = "command"
+label = "Sleep"
+glyph = "bedtime"
+command = "systemctl suspend"
+
+[[shell.session.actions]]
+action = "shutdown"
+destructive = true
+```
+
+---
+
 ## Hooks
 
 Optional shell hooks run extra commands when specific events happen. Define them under `[hooks]` in `config.toml`.
