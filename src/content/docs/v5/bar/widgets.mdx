@@ -97,17 +97,19 @@ empty_color = "surface_variant"
 
 ## `taskbar`
 
-Icon-only running application list for the current output.
+Icon-only running application list. By default it follows the bar’s output (only windows the compositor associates with that monitor). Enable **Show all monitors** when you use one bar for everything but still want to see and focus apps on other displays.
 
 Left-click an icon to focus that window. The active window shows a small primary dot under the icon.
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `group_by_workspace` | bool | `false` | Group icons into workspace capsules when backend workspace-app mapping is available. |
+| `show_all_outputs` | bool | `false` | Include windows from all displays. With `group_by_workspace`, workspaces from every monitor are merged; capsule badges use `tag·n` (workspace tag, middle dot, monitor index in bar output order) when there is more than one output. |
 
 ```toml
 [widget.taskbar]
 group_by_workspace = true
+show_all_outputs = true
 ```
 
 ---
