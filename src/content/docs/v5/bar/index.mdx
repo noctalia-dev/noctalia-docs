@@ -144,6 +144,8 @@ Set under `[widget.<name>]`:
 Color role names use **snake_case** (e.g. `on_surface`, `surface_variant`, `secondary`). Hex colors may use `#RGB`, `#RGBA`, `#RRGGBB`, or `#RRGGBBAA`.
 
 The capsule is hidden automatically when a widget reports no visible ink (empty tray, absent battery, invisible root). Subclasses may override `Widget::shouldShowBarCapsule()`.
+The taskbar also reuses its resolved `capsule_radius` for workspace group capsules when `group_by_workspace = true`,
+even if the taskbar's outer widget capsule is disabled.
 
 ```toml
 [bar.main]

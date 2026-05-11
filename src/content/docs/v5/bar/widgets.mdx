@@ -101,6 +101,9 @@ Icon-only running application list. By default it follows the bar’s output (on
 
 Left-click an icon to focus that window. The active window shows a small primary dot under the icon.
 
+When `group_by_workspace` is enabled, workspace group capsules use the taskbar widget's resolved `capsule_radius`.
+Set `[widget.taskbar].capsule_radius` for just the taskbar, or `[bar.<name>].capsule_radius` as the bar default.
+
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `group_by_workspace` | bool | `false` | Group icons into workspace capsules when backend workspace-app mapping is available. |
