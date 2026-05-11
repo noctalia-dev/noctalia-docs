@@ -38,6 +38,7 @@ scale              = 1.0         # content scale multiplier for icons and text
 # Default capsule style for all widgets on this bar (see Widget Capsule section)
 capsule            = false
 capsule_fill       = "surface_variant"
+capsule_radius     = 8.0            # omit for automatic pill radius
 capsule_opacity    = 1.0
 # capsule_border   = "outline"   # omit this key for no border by default
 
@@ -120,6 +121,7 @@ Set under `[bar.<name>]` or `[bar.<name>.monitor.*]`:
 | `capsule_fill` | string | `surface_variant` | Default capsule background color role or hex color. |
 | `capsule_foreground` | string | *(unset)* | Default icon + label color role or hex color for capped widgets. |
 | `capsule_padding` | number | `6` | Inner padding in logical pixels before `scale` is applied (clamped 0–48). |
+| `capsule_radius` | number | *(auto pill)* | Default capsule corner radius in logical pixels before `scale` is applied (clamped 0–80). Omit to use automatic pill radius. |
 | `capsule_opacity` | number | `1.0` | Capsule background opacity (0.0–1.0). |
 | `capsule_border` | string | *(omitted)* | Color role or hex color for the capsule border. If omitted, no border by default. If present as `""`, no border. |
 
@@ -134,6 +136,7 @@ Set under `[widget.<name>]`:
 | `capsule_fill` | string | *(from bar)* | Capsule background color role or hex color. |
 | `capsule_foreground` | string | *(from bar)* | Icon + label color role or hex color when capsule is visible. `color` takes priority over this. |
 | `capsule_padding` | number | *(from bar)* | Per-widget inner padding (0–48). |
+| `capsule_radius` | number | *(from bar)* | Per-widget corner radius (0–80). Omit to inherit; omit at every level for automatic pill radius. |
 | `capsule_opacity` | number | *(from bar)* | Per-widget capsule background opacity. |
 | `capsule_border` | string | *(from bar)* | Color role or hex color for the capsule border. Omit to inherit bar policy. Present but empty/whitespace-only = no border. |
 | `color` | string | *(unset)* | Icon + label color role or hex color with or without capsule. Resolution order: `color` → `capsule_foreground` → built-in defaults. |
@@ -156,9 +159,11 @@ capsule            = true
 capsule_fill       = "primary"
 capsule_foreground = "on_primary"
 capsule_padding    = 10
+capsule_radius     = 8.0
 
 [widget.volume]
 capsule_fill   = "secondary"
+capsule_radius = 0.0         # square this widget's capsule
 capsule_border = ""          # no border on this widget
 
 [widget.network]
