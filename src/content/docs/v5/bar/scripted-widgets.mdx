@@ -46,14 +46,19 @@ my_setting = "value"
 |----------|---------|-------------|
 | `barWidget.setText(text)` | — | Set the label text |
 | `barWidget.setGlyph(name)` | — | Set the icon by Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint string |
-| `barWidget.setColor(role)` | — | Set the label color by color role |
-| `barWidget.setGlyphColor(role)` | — | Set the glyph color by color role |
+| `barWidget.setColor(role, mode?)` | — | Set the label color by color role |
+| `barWidget.setGlyphColor(role, mode?)` | — | Set the glyph color by color role |
 | `barWidget.setVisible(visible)` | — | Show or hide the entire widget |
 | `barWidget.setUpdateInterval(ms)` | — | Set the `update()` tick interval in milliseconds (default 250, minimum 16) |
 | `barWidget.isVertical()` | `boolean` | Whether the bar is in vertical orientation |
 | `barWidget.getConfig(key, default?)` | `any` | Read a TOML config setting. Returns the typed value or default/nil. |
 
 **Color roles:** `primary`, `on_primary`, `secondary`, `on_secondary`, `tertiary`, `on_tertiary`, `error`, `on_error`, `surface`, `on_surface`, `surface_variant`, `on_surface_variant`, `outline`, `shadow`, `hover`, `on_hover`.
+
+Color mode is optional. The default `"auto"` mode lets Settings styling apply to neutral content: unset colors and
+`"on_surface"` use the widget foreground resolver, including `color` and `capsule_foreground`. Other roles such as
+`"error"` or `"primary"` are treated as script state colors. Pass `"script"` as the second argument to force the script
+role even for `"on_surface"`; Settings `color` still has final precedence.
 
 ### Lua callbacks
 
