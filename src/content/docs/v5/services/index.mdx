@@ -85,21 +85,21 @@ Applies color temperature shifts using the Wayland `wlr-gamma-control` protocol.
 [nightlight]
 enabled              = false
 force                = false   # force night mode from startup
-use_weather_location = true    # use weather coordinates instead of a manual schedule/location
+use_weather_location = true    # prefer weather coordinates; requires weather auto_locate or address
 
 temperature_day   = 6500       # Kelvin (must be > temperature_night by at least 100)
 temperature_night = 4000       # Kelvin
 
-# Option A: explicit schedule (used when use_weather_location = false)
+# Option A: explicit schedule (used when weather location is off or unavailable)
 start_time = "20:30"           # HH:MM — sunset / night starts
 stop_time  = "07:30"           # HH:MM — sunrise / day starts
 
-# Option B: manual geolocation schedule (used when start/stop are missing and use_weather_location = false)
+# Option B: manual geolocation schedule (fallback when start/stop are missing)
 # latitude  = 52.5200
 # longitude = 13.4050
 ```
 
-When `use_weather_location = true`, Night Light uses WeatherService coordinates for sunrise/sunset. When `use_weather_location = false`, Night Light uses `start_time` + `stop_time`, then falls back to explicit `latitude`/`longitude`. If weather location is disabled, Night Light needs fixed times or a complete latitude/longitude pair. If only one coordinate is provided, Night Light refuses to start.
+When `use_weather_location = true`, Night Light uses WeatherService coordinates for sunrise/sunset once weather has a configured location (`[weather].auto_locate = true` or `[weather].address`). While weather coordinates are unavailable, and whenever `use_weather_location = false`, Night Light uses `start_time` + `stop_time`, then falls back to explicit `latitude`/`longitude`. If only one coordinate is provided, Night Light refuses to start.
 
 ### IPC
 
