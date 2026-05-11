@@ -64,6 +64,38 @@ my_setting = "value"
 | `onRightClick()` | Right mouse button clicked |
 | `onMiddleClick()` | Middle mouse button clicked when `[shell].middle_click_opens_widget_settings = false` |
 | `onHover(isHovering)` | Mouse enters (`true`) or leaves (`false`) the widget |
+| `onIpc(event, payload)` | `noctalia msg scripted-widget ...` dispatches an event to the widget |
+
+---
+
+## IPC
+
+Scripted widgets can receive named events from Noctalia IPC:
+
+```sh
+noctalia msg scripted-widget <widget-name> <target[:bar-name]> <event> [payload]
+```
+
+`<widget-name>` is the `[widget.<name>]` config key. `<target>` is required so side-effectful scripts do not accidentally run once per monitor or once per bar. If the target matches more than one live scripted widget instance, the command fails instead of picking one arbitrarily.
+
+| Target | Description |
+|--------|-------------|
+| `focused` | Dispatch to one matching widget on the preferred interactive output |
+| monitor selector | Dispatch to one matching widget on a matching connector, such as `DP-1` |
+| `all` | Broadcast to every live matching instance |
+| `<target>:<bar-name>` | Narrow any target to a named bar, such as `focused:top` or `DP-1:default` |
+
+The script receives the event through:
+
+```lua
+function onIpc(event, payload)
+    if event == "toggle" then
+        -- ...
+    end
+end
+```
+
+`payload` is the remaining command text after the event, or an empty string when omitted.
 
 ---
 
@@ -89,6 +121,7 @@ A `screen_recorder.lua` script is bundled in `assets/scripts/` that wraps `gpu-s
 - **Left click** — toggle recording
 - **Right click** — toggle replay buffer (if enabled) or save replay (if active)
 - **Middle click** — save replay buffer
+- **IPC** — `start`, `stop`, `toggle`, `replay-start`, `replay-stop`, `replay-toggle`, and `replay-save`
 
 ```toml
 [widget.screen_recorder]
@@ -111,6 +144,13 @@ replay_enabled   = false
 replay_duration  = 30
 replay_storage   = "ram"
 hide_inactive    = false
+```
+
+```sh
+noctalia msg scripted-widget screen_recorder focused start
+noctalia msg scripted-widget screen_recorder focused stop
+noctalia msg scripted-widget screen_recorder DP-1 toggle
+noctalia msg scripted-widget screen_recorder focused:default start
 ```
 
 | Setting | Type | Default | Description |

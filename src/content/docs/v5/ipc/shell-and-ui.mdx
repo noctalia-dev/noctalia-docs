@@ -21,6 +21,12 @@ These commands open, close, or toggle Noctalia UI surfaces.
 | Hide bar | `noctalia msg bar-hide` | Hide the bar. |
 | Toggle bar | `noctalia msg bar-toggle` | Toggle bar visibility. |
 
+## Scripted widgets
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Send event | `noctalia msg scripted-widget <widget-name> <target[:bar-name]> <event> [payload]` | Dispatch an event to a scripted bar widget. Target can be `focused`, `all`, a monitor selector such as `DP-1`, or a bar-qualified target such as `focused:default`. |
+
 ## Panels
 
 | Action | Command | Description |
