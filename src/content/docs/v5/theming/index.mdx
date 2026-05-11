@@ -113,7 +113,7 @@ Noctalia can apply generated colors to external app config files whenever the re
 [theme.templates]
 enable_builtin_templates   = true
 enable_community_templates = true
-builtin_ids                = []        # opt-in; run: noctalia theme --list-builtins
+builtin_ids                = []        # opt-in; run: noctalia theme --list-templates
 community_ids              = []        # opt-in; fetched from api.noctalia.dev/templates
 enable_user_templates      = false
 user_config                = "~/.config/noctalia/user-templates.toml"
@@ -136,8 +136,8 @@ enable_user_templates      = true
 user_config                = "~/.config/noctalia/user-templates.toml"
 ```
 
-List available built-in template ids:
+List available template ids:
 
 ```sh
-noctalia theme --list-builtins
+noctalia theme --list-templates
 ```
