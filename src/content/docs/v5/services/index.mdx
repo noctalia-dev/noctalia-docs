@@ -145,18 +145,19 @@ Enabling weather adds a `Weather` tab to the control center. The bar `weather` w
 
 ## Idle
 
-Idle behaviors are named entries under `[idle.behavior.*]`. When no `config.toml` exists, Noctalia uses a built-in default with the lock behavior disabled.
+Idle behaviors are named entries under `[idle.behavior.*]`. When no `config.toml` exists, Noctalia seeds built-in Lock and Monitor off behaviors, both disabled by default.
 
 ```toml
 [idle.behavior.lock]
-timeout = 660
+timeout = 600
 command = "noctalia:screen-lock"
 enabled = false             # explicitly disabled in the default config
 
 [idle.behavior.screen-off]
-timeout = 600
+timeout = 660
 command = "noctalia:dpms-off"
 resume_command = "noctalia:dpms-on"
+enabled = false             # explicitly disabled in the default config
 
 [idle.behavior.custom]
 timeout = 48
