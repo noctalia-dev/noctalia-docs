@@ -164,6 +164,7 @@ System resource monitor. Shows an icon and value for one configurable stat. Mult
 | `path` | string | `"/"` | Mount path for `disk_pct` (ignored otherwise) |
 | `display` | string | `"gauge"` | `"gauge"` = icon + vertical fill bar; `"graph"` = icon + sparkline; `"text"` = icon + value |
 | `show_label` | bool | `true` | Show the text value next to the graph or gauge (always shown in `"text"` mode) |
+| `label_min_width` | float | `0` | Minimum label width in pixels to prevent resizing as values change. Only relevant when `show_label` is enabled. |
 
 **`stat` values:**
 
