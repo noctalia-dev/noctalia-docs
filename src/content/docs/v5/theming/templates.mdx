@@ -510,11 +510,13 @@ Process a TOML config:
 noctalia theme <image> -c templates.toml
 ```
 
-List shipped built-in templates:
+List available templates:
 
 ```sh
-noctalia theme --list-builtins
+noctalia theme --list-templates
 ```
+
+Pass `-c <file>` with `--list-templates` to include entries from a specific user or template TOML config.
 
 Process the shipped built-in template catalog:
 
