@@ -101,18 +101,27 @@ Icon-only running application list. By default it follows the bar’s output (on
 
 Left-click an icon to focus that window. The active window shows a small primary dot under the icon.
 
+**Only active workspace** limits the list to windows the shell can place on a workspace that is currently active on its monitor (same idea as the v4 taskbar option). It works with or without `group_by_workspace`; with grouping, inactive workspace capsules are omitted.
+
 When `group_by_workspace` is enabled, workspace group capsules use the taskbar widget's resolved `capsule_radius`.
 Set `[widget.taskbar].capsule_radius` for just the taskbar, or `[bar.<name>].capsule_radius` as the bar default.
+Set `show_workspace_label = false` to hide the small workspace tag on each group (icons only).
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `group_by_workspace` | bool | `false` | Group icons into workspace capsules when backend workspace-app mapping is available. |
 | `show_all_outputs` | bool | `false` | Include windows from all displays. With `group_by_workspace`, workspaces from every monitor are merged; capsule badges use `tag·n` (workspace tag, middle dot, monitor index in bar output order) when there is more than one output. |
+| `only_active_workspace` | bool | `false` | Show only windows on the active workspace for each relevant monitor. Depends on compositor workspace data; if a window’s workspace cannot be resolved, it is still shown. |
+| `show_workspace_label` | bool | `true` | When `group_by_workspace` is on, show the workspace tag pill on each capsule. Set `false` for groups without the label. |
+| `hide_empty_workspaces` | bool | `false` | When `group_by_workspace` is on, do not show capsules for workspaces that have no windows in the taskbar list. |
 
 ```toml
 [widget.taskbar]
 group_by_workspace = true
 show_all_outputs = true
+only_active_workspace = true
+show_workspace_label = false
+hide_empty_workspaces = true
 ```
 
 ---

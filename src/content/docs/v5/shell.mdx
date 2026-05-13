@@ -118,6 +118,17 @@ Each action accepts a single string chord or an array of chords.
 
 **Supported actions:** `validate`, `cancel`, `left`, `right`, `up`, `down`
 
+### Recording from the GUI
+
+Open **Settings → Keybinds** to bind chords interactively. Each action shows the current chord(s) and a trailing slot reading *"Click to add keybind"*.
+
+- Click a slot, then press the key combination. The recorder previews held modifiers (e.g. `Ctrl + Shift + …`) and commits as soon as a non-modifier key is pressed.
+- Press a modifier-only chord (no regular key) and click away to abort the recording without changing the binding.
+- Pressing **Super / Windows** - either alone or as a modifier - cancels the recording and surfaces a transient toast explaining that compositor-reserved keys cannot be bound. Click the slot again to retry with a different chord.
+- Use the **×** next to a row to remove that specific binding. Removing every binding falls back to the value from your TOML config, or the built-in default if none is set.
+
+Chords recorded in the GUI are serialized as `ctrl+shift+Return`-style strings under `[keybinds]` in `~/.local/state/noctalia/settings.toml` and follow the same parsing rules as hand-written config.
+
 ---
 
 ## Session panel
