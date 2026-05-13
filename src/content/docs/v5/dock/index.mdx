@@ -21,6 +21,10 @@ item_spacing        = 6          # gap between items in pixels
 background_opacity  = 0.88
 shadow              = true       # cast the global [shell.shadow]
 radius              = 16
+radius_top_left     = 16         # optional per-corner overrides
+radius_top_right    = 16
+radius_bottom_left  = 16
+radius_bottom_right = 16
 margin_ends         = 0          # inset from each end of the dock along its main axis
 margin_edge         = 8          # distance from the nearest screen edge (positive values float the dock)
 
@@ -37,6 +41,8 @@ show_instance_count = true       # badge with window count when an app has 2+ wi
 # Desktop entry IDs, StartupWMClass, or human-readable names
 pinned = ["firefox", "code", "kitty"]
 ```
+
+`radius` sets all four corners at once. Any `radius_*` key overrides just that corner.
 
 Shadow blur, offset, and alpha are global under `[shell.shadow]`. The dock only exposes `shadow = true|false`.
 
