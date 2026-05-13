@@ -13,6 +13,7 @@ For most people, the important rule is simple: put your own configuration in `~/
 
 Your hand-written config lives in:
 
+- `$NOCTALIA_CONFIG_HOME/noctalia/`
 - `$XDG_CONFIG_HOME/noctalia/`
 - or `~/.config/noctalia/`
 
@@ -38,25 +39,28 @@ You can also split things up if you like tidy dotfiles:
 
 GUI-managed overrides live in:
 
+- `$NOCTALIA_STATE_HOME/noctalia/settings.toml`
 - `$XDG_STATE_HOME/noctalia/settings.toml`
 - or `~/.local/state/noctalia/settings.toml`
 
 Noctalia writes this file when you change settings through the UI, setup flows, IPC-backed controls, and other runtime actions that need to persist.
+
+`NOCTALIA_CONFIG_HOME` and `NOCTALIA_STATE_HOME` have the same "home root" shape as the XDG variables. For example, `NOCTALIA_CONFIG_HOME=/tmp/profile` reads `/tmp/profile/noctalia/`. Use these Noctalia-specific variables when you want a separate shell profile without changing the environment inherited by apps launched from Noctalia.
 
 ## Which value wins?
 
 Noctalia loads configuration in this order:
 
 1. Built-in defaults
-2. Your `*.toml` files in `~/.config/noctalia/`
-3. GUI-managed overrides in `~/.local/state/noctalia/settings.toml`
+2. Your `*.toml` files in the resolved config directory
+3. GUI-managed overrides in the resolved state directory's `settings.toml`
 
-Because `~/.local/state/noctalia/settings.toml` loads last, it wins when it contains the same setting as your config file.
+Because `settings.toml` loads last, it wins when it contains the same setting as your config file.
 When Settings writes a value that matches the parsed value from the lower layers, Noctalia removes that redundant key
 instead of keeping it as a GUI override.
 
 :::tip
-If you are confused about why a value from `config.toml` is not taking effect, inspect or temporarily move `~/.local/state/noctalia/settings.toml`.
+If you are confused about why a value from `config.toml` is not taking effect, inspect or temporarily move `settings.toml` from the resolved state directory.
 :::
 
 ## Where should I edit?

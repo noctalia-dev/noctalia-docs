@@ -21,6 +21,7 @@ Global UI settings that apply across all shell surfaces.
 ```toml
 [shell]
 ui_scale              = 1.0             # content scale for panels and non-bar shell UI
+corner_radius_scale   = 1.0             # scale semantic UI corner radii; 0 = square, 2 = extra rounded
 font_family           = "sans-serif"    # Pango family string; Fontconfig handles fallback
 lang                  = "en"            # override language detection
 time_format           = "{:%H:%M}"      # default time format for shell UI without its own setting
@@ -64,10 +65,11 @@ blacklist = []           # optional list of players to hide from media widgets/c
 
 Notes:
 - `ui_scale` is completely separate from `bar.scale`: `bar.scale` only affects bar widget content; `ui_scale` covers the control center, launcher, clipboard, and other non-bar surfaces. Neither changes Wayland output / HiDPI buffer scale.
+- `corner_radius_scale` scales shared UI corner radii for generic controls, cards, panels, popups, and toasts. Existing bar, dock, capsule, and screen-corner radius settings remain separate.
 - `font_family` sets the primary Pango family for all shell text. Can be a concrete family like `Inter` or a generic like `sans-serif`.
 - `time_format` and `date_format` are fallbacks for shell-owned displays such as the home tab, calendar tab, and lock screen. Widget-specific clock formats still use their own widget settings. See [Date format tokens](/v5/configuration/date-format-tokens/).
 - `offline_mode` prevents the shell from making any outgoing HTTP requests (weather, community palettes, community templates, album art, remote notification icons). Distro packagers can default to `true` to comply with policies requiring explicit user consent for network access.
-- `telemetry_enabled` sends a single anonymous POST to `api.noctalia.dev/ping` on each startup containing: a random instance ID, shell version, compositor name, OS name, RAM, monitor resolutions, and UI scale. No personal data is collected. The instance ID is a random UUID stored in `~/.local/state/noctalia/instance.id`.
+- `telemetry_enabled` sends a single anonymous POST to `api.noctalia.dev/ping` on each startup containing: a random instance ID, shell version, compositor name, OS name, RAM, monitor resolutions, and UI scale. No personal data is collected. The instance ID is a random UUID stored in the Noctalia state directory as `instance.id`.
 - `polkit_agent` controls registration on `org.freedesktop.PolicyKit1`. Keep disabled if another desktop agent handles auth prompts.
 - Notification daemon ownership moved out of `[shell]`: use `[notification].enable_daemon` in [Services](/v5/services/#notifications).
 - `password_style`: `default` uses `circle-filled`; `random` cycles through multiple filled glyph shapes on polkit and lock screen inputs.
