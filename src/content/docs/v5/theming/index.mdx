@@ -30,7 +30,7 @@ Pallette changes apply live when you edit `config.toml`. Wallpaper-derived theme
 | `builtin` | Use one of the palette compiled into the binary. |
 | `wallpaper` | Generate a palette from the current default wallpaper each time it changes. |
 | `community` | Fetch a palette by name from `https://api.noctalia.dev/palette/<name>`. |
-| `custom` | Load a palette JSON file from `~/.config/noctalia/palettes/`. |
+| `custom` | Load a palette JSON file from the Noctalia config directory's `palettes/` folder. |
 
 ---
 
@@ -56,7 +56,7 @@ To refresh a palette, delete the corresponding file under `~/.cache/noctalia/com
 
 ## `custom_palette`
 
-Names a palette file in `~/.config/noctalia/palettes/` (honoring `XDG_CONFIG_HOME`). The value is the file name without the `.json` extension — for example, `custom_palette = "MyPalette"` loads `~/.config/noctalia/palettes/MyPalette.json`.
+Names a palette file in the Noctalia config directory's `palettes/` folder (honoring `NOCTALIA_CONFIG_HOME`, then `XDG_CONFIG_HOME`). The value is the file name without the `.json` extension — for example, `custom_palette = "MyPalette"` loads `~/.config/noctalia/palettes/MyPalette.json` with the default config location.
 
 The JSON format is identical to community palettes: a root object with `"dark"` and `"light"` keys, each containing the 16 semantic color roles and a `"terminal"` object. If the `"light"` key is omitted, the dark variant is used for both modes.
 

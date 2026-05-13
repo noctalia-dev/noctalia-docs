@@ -10,7 +10,7 @@ sidebar:
 Desktop widgets are enabled from `config.toml`. Widget instances and edit-mode grid settings are stored in a separate state file.
 
 - Config toggle: `[desktop_widgets]` in `~/.config/noctalia/config.toml`
-- State file: `$XDG_STATE_HOME/noctalia/desktop_widgets.toml` (falls back to `~/.local/state/noctalia/desktop_widgets.toml`)
+- State file: `$NOCTALIA_STATE_HOME/noctalia/desktop_widgets.toml`, `$XDG_STATE_HOME/noctalia/desktop_widgets.toml`, or `~/.local/state/noctalia/desktop_widgets.toml`
 
 ```toml
 [desktop_widgets]
