@@ -20,7 +20,8 @@ edge_smoothness     = 0.3       # 0.0 – 1.0
 
 # Directory browsed by the wallpaper picker panel
 directory           = "/home/user/Wallpapers"
-# Optional per-mode directories
+# When separate_light_dark_directories is true, Light/Dark theme modes use these (Auto uses directory):
+separate_light_dark_directories = false
 directory_light     = "/home/user/Wallpapers/Light"
 directory_dark      = "/home/user/Wallpapers/Dark"
 
@@ -39,13 +40,17 @@ directory_light = "/home/user/Wallpapers/Vertical/Light"
 directory_dark  = "/home/user/Wallpapers/Vertical/Dark"
 ```
 
-The wallpaper picker panel lists images in `directory` as a grid of thumbnails. Selecting a monitor in the panel toolbar switches to that monitor's override directory (falling back to the base `directory`). Clicking a tile writes the path to `state.toml` and applies it immediately. Picking a wallpaper while **ALL** is selected applies it to every connected output. Picking a solid color stores it as a wallpaper source path such as `color:#FF00FF`, so it uses the same transition shader pipeline as image wallpapers.
+The wallpaper picker panel lists images from the resolved browse folder as a grid of thumbnails. When `separate_light_dark_directories` is **false** (the default), that folder is always `directory` (or a monitor override’s `directory` when you pick that monitor). When **true**, Light theme mode uses `directory_light` when set, Dark mode uses `directory_dark` when set, and **Auto** uses `directory`; missing per-mode paths fall back to `directory`. The same rule applies to per-monitor overrides that define `directory`, including optional `directory_light` / `directory_dark` on the override.
+
+Selecting a monitor in the panel toolbar switches to that monitor’s resolved directory (falling back to the global browse folder). Clicking a tile writes the path to `state.toml` and applies it immediately. Picking a wallpaper while **ALL** is selected applies it to every connected output. Picking a solid color stores it as a wallpaper source path such as `color:#FF00FF`, so it uses the same transition shader pipeline as image wallpapers.
+
+The launcher’s wallpaper provider and **automatic rotation** use the same browse-folder resolution so they stay aligned with the picker.
 
 `fill_color` accepts hex colors (`#RGB`, `#RGBA`, `#RRGGBB`, `#RRGGBBAA`) or color role names such as `surface` and `primary`. It is used behind image wallpapers and in uncovered areas for `center`/`fit`.
 
 Monitor overrides may also set `fill_color`.
 
-When automation is enabled, Noctalia picks one image from `directory` on the configured interval and applies it to all connected outputs in sync.
+When automation is enabled, Noctalia picks one image from the resolved browse folder on the configured interval and applies it to all connected outputs in sync.
 `order = "random"` chooses a random image each cycle.
 `order = "alphabetical"` sorts paths case-insensitively and advances to the next image each cycle (wrapping at the end).
 
