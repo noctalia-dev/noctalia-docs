@@ -185,12 +185,16 @@ System resource monitor. Shows an icon and value for one configurable stat. Mult
 | `cpu_usage` | `75%` | CPU utilisation (all cores) |
 | `cpu_temp` | `65°C` | CPU package temperature |
 | `gpu_temp` | `72°C` | GPU temperature |
+| `gpu_vram` | `42%` | GPU VRAM usage |
 | `ram_used` | `4.2G` | RAM used (human-readable) |
 | `ram_pct` | `26%` | RAM used % |
 | `swap_pct` | `12%` | Swap used % |
 | `disk_pct` | `45%` | Disk used % for `path` |
 | `net_rx` | `1.2M` | Network download speed (auto-scaled) |
 | `net_tx` | `256K` | Network upload speed (auto-scaled) |
+
+GPU temperature is read from Linux hwmon when available, with an NVML fallback for NVIDIA proprietary drivers.
+GPU VRAM is read from AMDGPU DRM sysfs when available, with an NVML fallback for NVIDIA proprietary drivers.
 
 ```toml
 [widget.cpu]
@@ -510,7 +514,8 @@ noctalia msg notification-clear-active
 noctalia msg notification-clear-history
 ```
 
-When DND is enabled, incoming notifications are stored in history/control center but toast popups are suppressed.
+When DND is enabled, external incoming notifications are stored in history/control center but toast popups are
+suppressed. Internal Noctalia notifications are not stored in history.
 
 ---
 
