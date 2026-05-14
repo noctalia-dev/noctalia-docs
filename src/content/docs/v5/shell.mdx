@@ -182,9 +182,9 @@ Optional shell hooks run extra commands when specific events happen. Define them
 Each event is a string (one command) or an array of strings (run in order). The same `noctalia:` prefix rules apply as
 in [idle behaviors](/v5/services/#idle).
 
-Hooks do not replace Noctalia's built-in behavior. For example, Wi-Fi and Bluetooth power changes made outside
-Noctalia still create internal Noctalia notifications even when `wifi_*` / `bluetooth_*` hooks are not configured.
-`notify-send` can be useful while testing that a hook fires, but it is not required for Noctalia's own notifications.
+Hooks do not replace Noctalia's built-in behavior. For example, Wi-Fi, Bluetooth, and power profile changes made outside
+Noctalia still create transient internal Noctalia notifications. `notify-send` can be useful while testing that a hook
+fires, but it is not required for Noctalia's own notifications.
 
 | Key | When it fires |
 |-----|---------------|
