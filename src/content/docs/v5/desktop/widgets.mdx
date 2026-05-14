@@ -277,8 +277,11 @@ background = true
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `stat` | string | `"cpu_usage"` | Primary stat: `"cpu_usage"`, `"cpu_temp"`, `"gpu_temp"`, `"ram_pct"`, `"swap_pct"`, `"net_rx"`, `"net_tx"` |
+| `stat` | string | `"cpu_usage"` | Primary stat: `"cpu_usage"`, `"cpu_temp"`, `"gpu_temp"`, `"gpu_vram"`, `"ram_pct"`, `"swap_pct"`, `"net_rx"`, `"net_tx"` |
 | `stat2` | string | — | Optional secondary stat (same values as `stat`). Omit for single curve. |
 | `color` | string | `"primary"` | Primary line color role or hex color |
 | `color2` | string | `"secondary"` | Secondary line color role or hex color (used when `stat2` is set) |
 | `show_label` | bool | `true` | Show the current value as text next to the icon |
+
+GPU temperature is read from Linux hwmon when available, with an NVML fallback for NVIDIA proprietary drivers.
+GPU VRAM is read from AMDGPU DRM sysfs when available, with an NVML fallback for NVIDIA proprietary drivers.
