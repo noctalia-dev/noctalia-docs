@@ -84,6 +84,31 @@ Picks the generator when `source = "wallpaper"`:
 
 ---
 
+## Using an external wallpaper app
+
+If you manage wallpapers with an external tool (waypaper, awww, swww, etc.) you can still use noctalia's wallpaper-driven palette generation. Disable noctalia's own wallpaper rendering so it does not compete with your app, then point noctalia at each new image so it can extract colors from it.
+
+```toml
+# Disable noctalia wallpaper display
+[wallpaper]
+enabled = false
+
+# Generate colors from wallpaper with your preferred scheme
+[theme]
+source           = "wallpaper"
+wallpaper_scheme = "m3-content"   # or any scheme from the table above
+```
+
+After your external app sets a new wallpaper, tell noctalia which image to derive colors from:
+
+```sh
+noctalia msg wallpaper-set ~/Pictures/Wallpapers/new-wallpaper.png
+```
+
+Noctalia will extract colors from that image, generate a palette with the configured scheme, and cross-fade the shell to the new colors — even though it is not displaying the wallpaper itself. The path is persisted across restarts.
+
+---
+
 ## `mode`
 
 `dark` or `light` selects the palette variant. `auto` is treated as `dark` until system light/dark tracking lands.
