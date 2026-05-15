@@ -88,11 +88,13 @@ Set `[widget.workspaces].capsule_radius` for just the workspace switcher, or `[b
 | `focused_color` | string | `"primary"` | Color role or hex color for the focused workspace pill |
 | `occupied_color` | string | `"secondary"` | Color role or hex color for occupied (non-focused) workspace pills |
 | `empty_color` | string | `"secondary"` | Color role or hex color for empty workspace pills |
+| `hide_when_empty` | bool | `false` | Hide workspace pills with no open windows. |
 
 ```toml
 [widget.workspaces]
 display = "id"          # none | id | name
 max_label_chars = 2     # truncate long workspace names (e.g. "VESKTOP" → "VE")
+hide_when_empty = true
 focused_color = "primary"
 occupied_color = "secondary"
 empty_color = "surface_variant"
