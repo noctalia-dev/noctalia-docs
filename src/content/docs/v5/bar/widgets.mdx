@@ -84,13 +84,15 @@ Set `[widget.workspaces].capsule_radius` for just the workspace switcher, or `[b
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `display` | string | `"id"` | Label mode: `"none"`, `"id"`, or `"name"` |
+| `max_label_chars` | int | `1` | Maximum characters for workspace name labels; longer names are truncated. Only affects non-numeric labels (workspace IDs like `10`, `11` are never truncated). |
 | `focused_color` | string | `"primary"` | Color role or hex color for the focused workspace pill |
 | `occupied_color` | string | `"secondary"` | Color role or hex color for occupied (non-focused) workspace pills |
 | `empty_color` | string | `"secondary"` | Color role or hex color for empty workspace pills |
 
 ```toml
 [widget.workspaces]
-display = "id"   # none | id | name
+display = "id"          # none | id | name
+max_label_chars = 2     # truncate long workspace names (e.g. "VESKTOP" → "VE")
 focused_color = "primary"
 occupied_color = "secondary"
 empty_color = "surface_variant"
