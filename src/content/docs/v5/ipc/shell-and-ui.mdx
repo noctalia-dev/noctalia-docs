@@ -41,7 +41,8 @@ These commands open, close, or toggle Noctalia UI surfaces.
 
 | Action | Command | Description |
 |--------|---------|-------------|
-| Random wallpaper now | `noctalia msg wallpaper-random` | Switch to a random wallpaper immediately. |
+| Random wallpaper now | `noctalia msg wallpaper-random` | Switch to a random wallpaper immediately on all outputs. |
+| Random wallpaper (one output) | `noctalia msg wallpaper-random <connector>` | Switch to a random wallpaper on the output named by **connector** (Wayland name, e.g. `DP-1`). Other outputs are unchanged. Respects per-monitor directory configuration and theme mode. |
 | Set wallpaper (all outputs) | `noctalia msg wallpaper-set <path>` | Set every connected output and the default wallpaper, persisted to `settings.toml` (per-output entries plus `[wallpaper].default.path`). Same behavior as choosing **All monitors** in the wallpaper panel. Use an image path (`~` expanded) or `color:#RRGGBB` / `color:#RRGGBBAA`; non-color paths must exist at call time. |
 | Set wallpaper (one output) | `noctalia msg wallpaper-set <connector> <path>` | Set only the output named by **connector** (Wayland name, e.g. `DP-1` — same value as per-monitor keys in config and the wallpaper panel). Remaining tokens are joined as the path. Other outputs are unchanged. Same path and color rules as the all-output form. |
 
