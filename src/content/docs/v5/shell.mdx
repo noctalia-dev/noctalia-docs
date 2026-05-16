@@ -54,10 +54,12 @@ attach_launcher       = false  # attach launcher to the bar when a suitable bar 
 attach_clipboard      = false  # attach clipboard history to the bar when a suitable bar is available
 attach_control_center = true   # attach Control Center to the bar when a suitable bar is available
 attach_wallpaper      = true   # attach wallpaper picker to the bar when a suitable bar is available
+attach_session        = false  # attach session power menu to the bar when a suitable bar is available
 open_near_click_control_center = false  # open Control Center near the click on the bar
 open_near_click_launcher       = false  # open Launcher near the click on the bar
 open_near_click_clipboard      = false  # open Clipboard near the click on the bar
 open_near_click_wallpaper      = false  # open Wallpaper picker near the click on the bar
+open_near_click_session        = false  # open Session panel near the click on the bar
 
 [shell.screen_corners]
 enabled = false    # overlay black rounded corners on each screen
@@ -86,8 +88,8 @@ Notes:
 - `shell.shadow` defines the shared shadow metrics for shell surfaces and xdg-popup chrome such as menus, pickers, and select dropdowns. Components such as bars and the dock only opt in/out with `shadow = true|false`; they do not define their own blur or offset.
 - `shell.panel.background_blur` toggles compositor blur on every shell panel (control center, launcher, clipboard, attached menus, etc.). Inert on compositors that do not implement `ext-background-effect-v1`.
 - `shell.panel.transparency_mode` controls panel glass styling. `solid` keeps cards opaque and detached panels solid, `soft` makes detached panels lightly translucent and cards subtly translucent, and `glass` makes both visibly translucent while clamping card opacity high enough for readable text. Attached panels continue to use the effective panel background opacity inherited from the host bar.
-- `shell.panel.attach_launcher`, `attach_clipboard`, `attach_control_center`, and `attach_wallpaper` control whether those panels attach to the bar when a suitable bar is available. Attachment still requires the host bar to have `attach_panels = true`.
-- `shell.panel.open_near_click_control_center`, `open_near_click_launcher`, `open_near_click_clipboard`, and `open_near_click_wallpaper` position attached panels near the click location on the bar instead of centering them. Only effective when the corresponding `attach_*` toggle is also enabled.
+- `shell.panel.attach_launcher`, `attach_clipboard`, `attach_control_center`, `attach_wallpaper`, and `attach_session` control whether those panels attach to the bar when a suitable bar is available. Attachment still requires the host bar to have `attach_panels = true`.
+- `shell.panel.open_near_click_control_center`, `open_near_click_launcher`, `open_near_click_clipboard`, `open_near_click_wallpaper`, and `open_near_click_session` position attached panels near the click location on the bar instead of centering them. Only effective when the corresponding `attach_*` toggle is also enabled.
 - `shell.mpris.blacklist` excludes matching MPRIS players from Noctalia media UI and active-player selection. Entries are case-insensitive and match player bus name, identity, desktop entry, or a bus-name substring token (for example `"spotify"`).
 
 ---
@@ -145,6 +147,8 @@ Chords recorded in the GUI are serialized as `ctrl+shift+Return`-style strings u
 ## Session panel
 
 The session (power) menu opened from the bar **Session** widget or Control Center lists **Lock**, **Log out**, **Reboot**, and **Shut down** by default. Log out uses compositor-native exits where available, including LabWC's `labwc --exit`. You can change which buttons appear, their order, whether each is enabled, and optionally replace the implementation with a **shell command** (still run after `logging_out` / `rebooting` / `shutting_down` hooks when the action is one of those three).
+
+Built-in reboot and shutdown actions try the standard session-manager commands first (`systemctl`, then `loginctl`) and fall back to plain `reboot` / `poweroff` commands when available. Set `command` on the row when your system needs a different init or privilege wrapper.
 
 Configure under **`[shell.session]`** in TOML, or use **Settings → Panels → Session menu**: entries, reorder, and **Show** are listed inline; use the **settings** (cog) control on a row for behavior, label, command, icon, and style. **Add action** appends a custom-command entry by default.
 

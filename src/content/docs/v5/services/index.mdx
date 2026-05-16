@@ -219,14 +219,14 @@ enable_daemon      = true   # when false, don't claim org.freedesktop.Notificati
 position           = "top_right" # top_right | top_left | top_center | bottom_right | bottom_left | bottom_center
 layer              = "top"  # top | overlay
 background_opacity = 0.97   # toast card background alpha; lower values let compositor blur show through
-offset_x           = 0      # extra horizontal offset from screen edge (px)
-offset_y           = 0      # extra vertical offset from screen edge (px)
+offset_x           = 20     # absolute horizontal margin from the screen edge
+offset_y           = 8      # absolute vertical margin from the screen edge
 monitors           = []     # empty = all displays; otherwise connector/description selectors (e.g. ["eDP-1", "DP-1"])
 ```
 
 - `layer = "top"` keeps toasts above normal app windows while respecting overlay UI from other components.
 - `layer = "overlay"` forces toasts onto the overlay layer so they render above other layer-shell surfaces.
-- `offset_x` / `offset_y` add extra distance from the screen edge, relative to the toast position. For example, with `position = "top_right"`, `offset_x` pushes toasts further from the right edge and `offset_y` pushes them further from the top edge.
+- `offset_x` and `offset_y` are absolute margins from the nearest screen edge for the configured `position`.
 - `monitors = []` shows notifications on all displays (default).
 - When `monitors` is non-empty, toasts are only created on matching outputs.
 - Selector matching follows monitor override rules: exact connector name (`eDP-1`) or a word-boundary token in output description.

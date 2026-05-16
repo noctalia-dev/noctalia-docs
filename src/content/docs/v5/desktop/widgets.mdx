@@ -1,20 +1,32 @@
 ---
 title: Desktop widgets
-description: On-desktop widgets, edit mode, state file layout, and per-type settings.
+description: On-desktop widgets, declarative layout, edit mode, and per-type settings.
 sidebar:
   order: 5
 ---
 
 # Desktop Widgets
 
-Desktop widgets are enabled from `config.toml`. Widget instances and edit-mode grid settings are stored in a separate state file.
+Desktop widgets are configured through the normal Noctalia config stack. Declare layouts in `~/.config/noctalia/*.toml`;
+the interactive editor writes its layout overrides to `settings.toml`.
 
-- Config toggle: `[desktop_widgets]` in `~/.config/noctalia/config.toml`
-- State file: `$NOCTALIA_STATE_HOME/noctalia/desktop_widgets.toml`, `$XDG_STATE_HOME/noctalia/desktop_widgets.toml`, or `~/.local/state/noctalia/desktop_widgets.toml`
+- Declarative config: `[desktop_widgets]` in `~/.config/noctalia/*.toml`
+- GUI/editor overrides: `$NOCTALIA_STATE_HOME/noctalia/settings.toml`, `$XDG_STATE_HOME/noctalia/settings.toml`, or `~/.local/state/noctalia/settings.toml`
 
 ```toml
 [desktop_widgets]
 enabled = true
+
+[desktop_widgets.widget.clock_main]
+type     = "clock"
+output   = "DP-1"
+cx       = 960.0
+cy       = 540.0
+scale    = 1.5
+rotation = 0.0
+
+[desktop_widgets.widget.clock_main.settings]
+format = "{:%H:%M}"
 ```
 
 When enabled, Noctalia renders each desktop widget as its own tightly-sized layer-shell surface on the `Bottom` layer. The current implementation ships `clock`, `audio_visualizer`, `sticker`, `weather`, `media_player`, and `sysmon` widget types plus an interactive edit mode.
@@ -44,22 +56,31 @@ noctalia msg desktop-widgets-toggle-edit
 | `Delete` / `Backspace` | Remove selected widget |
 | `Escape` / click `Done` | Exit edit mode |
 
+When the snap grid is active, moving a widget snaps the nearest outer edge or center line to the grid, screen edges, and
+nearby widgets. Scaling keeps the opposite edge anchored and snaps the dragged edge to the same guides, with a horizontal
+bias for corner drags so matching widget widths is easier.
+
 ---
 
-## State file format
+## Config Format
 
-Widget definitions are not read from `config.toml` — edit mode writes them to the state file so positions and transforms can be changed interactively.
+Widget definitions are named tables under `[desktop_widgets.widget.<id>]`. This makes them friendly to split config
+files and deep-merge overrides. Edit mode writes the same schema into `settings.toml`; use Flatten config to promote
+GUI-edited layouts back into declarative config.
+When `widget_order` is present, it is the authoritative widget list and order; unlisted widget tables are ignored.
 
 ```toml
+[desktop_widgets]
+enabled = true
 schema_version = 1
+widget_order = ["clock_main"]
 
-[grid]
+[desktop_widgets.grid]
 visible        = true
 cell_size      = 16
 major_interval = 4
 
-[[widget]]
-id       = "desktop-widget-0000000000000001"
+[desktop_widgets.widget.clock_main]
 type     = "clock"
 output   = "DP-1"
 cx       = 960.0
@@ -67,7 +88,7 @@ cy       = 540.0
 scale    = 1.5
 rotation = 0.0
 
-[widget.settings]
+[desktop_widgets.widget.clock_main.settings]
 format = "{:%H:%M}"
 ```
 
@@ -75,7 +96,7 @@ format = "{:%H:%M}"
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `id` | string | (required) | Unique widget identifier |
+| Table key | string | (required) | Unique widget identifier (`clock_main` in `[desktop_widgets.widget.clock_main]`) |
 | `type` | string | (required) | Widget type (`clock`, `weather`, `media_player`, etc.) |
 | `output` | string | — | Monitor name (e.g. `"DP-1"`) |
 | `cx`, `cy` | float | — | Center position in logical pixels |
@@ -84,10 +105,9 @@ format = "{:%H:%M}"
 | `enabled` | bool | `true` | Set to `false` to temporarily hide a widget without removing it |
 
 ```toml
-[[widget]]
-id      = "desktop-widget-0000000000000001"
+[desktop_widgets.widget.clock_main]
 type    = "clock"
-enabled = false   # hidden, but preserved in the file
+enabled = false   # hidden, but preserved
 ```
 
 ### Common settings
@@ -102,7 +122,7 @@ All desktop widget types support an optional rounded background rectangle:
 | `background_padding` | float | `10.0` | Padding between content and background edge |
 
 ```toml
-[widget.settings]
+[desktop_widgets.widget.clock_main.settings]
 background       = true
 background_color = "surface"
 ```
@@ -115,7 +135,7 @@ The `clock`, `weather`, `media_player`, and `sysmon` widget types additionally s
 | `shadow` | bool | `true` | Draw a drop shadow behind text and glyphs for readability on wallpapers |
 
 ```toml
-[widget.settings]
+[desktop_widgets.widget.clock_main.settings]
 color  = "primary"
 shadow = true
 ```
@@ -125,8 +145,7 @@ shadow = true
 ### clock
 
 ```toml
-[[widget]]
-id       = "desktop-widget-0000000000000001"
+[desktop_widgets.widget.clock_main]
 type     = "clock"
 output   = "DP-1"
 cx       = 960.0
@@ -134,7 +153,7 @@ cy       = 540.0
 scale    = 1.5
 rotation = 0.0
 
-[widget.settings]
+[desktop_widgets.widget.clock_main.settings]
 format = "{:%H:%M}"
 color  = "on_surface"
 shadow = true
@@ -151,8 +170,7 @@ shadow = true
 Desktop audio visualizers store an `aspect_ratio` setting for shape while `scale` controls overall size. They also accept optional `mirrored`, `low_color`, and `high_color` settings; both colors default to `primary`.
 
 ```toml
-[[widget]]
-id       = "desktop-widget-0000000000000002"
+[desktop_widgets.widget.audio_main]
 type     = "audio_visualizer"
 output   = "DP-1"
 cx       = 1040.0
@@ -160,7 +178,7 @@ cy       = 620.0
 scale    = 1.25
 rotation = 0.0
 
-[widget.settings]
+[desktop_widgets.widget.audio_main.settings]
 bands        = 32
 aspect_ratio = 2.5
 mirrored     = true
@@ -183,8 +201,7 @@ high_color   = "secondary"
 Draws the current weather glyph alongside the temperature and short condition, driven by the shared `WeatherService`. Requires `[weather] enabled = true` in `config.toml` (see [Services — Weather](/v5/services/#weather)) — the widget will render a placeholder otherwise.
 
 ```toml
-[[widget]]
-id       = "desktop-widget-0000000000000003"
+[desktop_widgets.widget.weather_main]
 type     = "weather"
 output   = "DP-1"
 cx       = 320.0
@@ -192,7 +209,7 @@ cy       = 200.0
 scale    = 1.0
 rotation = 0.0
 
-[widget.settings]
+[desktop_widgets.widget.weather_main.settings]
 color  = "on_surface"
 shadow = true
 ```
@@ -204,8 +221,7 @@ shadow = true
 MPRIS media player showing album art, track title, artist, and playback controls (prev, play/pause, next). Requires an active MPRIS player.
 
 ```toml
-[[widget]]
-id       = "desktop-widget-0000000000000004"
+[desktop_widgets.widget.media_main]
 type     = "media_player"
 output   = "DP-1"
 cx       = 500.0
@@ -213,7 +229,7 @@ cy       = 700.0
 scale    = 1.5
 rotation = 0.0
 
-[widget.settings]
+[desktop_widgets.widget.media_main.settings]
 layout = "horizontal"
 color  = "on_surface"
 shadow = true
@@ -230,8 +246,7 @@ shadow = true
 Displays an image file on the desktop. PNG, JPEG, WebP, SVG, and GIF are supported; animated GIFs play at their encoded per-frame durations and loop forever.
 
 ```toml
-[[widget]]
-id       = "desktop-widget-0000000000000005"
+[desktop_widgets.widget.sticker_main]
 type     = "sticker"
 output   = "DP-1"
 cx       = 800.0
@@ -239,7 +254,7 @@ cy       = 400.0
 scale    = 1.0
 rotation = 0.0
 
-[widget.settings]
+[desktop_widgets.widget.sticker_main.settings]
 image_path = "/path/to/image.png"
 opacity    = 1.0
 ```
@@ -256,8 +271,7 @@ opacity    = 1.0
 GPU-accelerated system monitor graph with smooth cubic curves and optional text label. Uses the shared `SystemMonitorService`.
 
 ```toml
-[[widget]]
-id       = "desktop-widget-0000000000000006"
+[desktop_widgets.widget.sysmon_main]
 type     = "sysmon"
 output   = "DP-1"
 cx       = 200.0
@@ -265,7 +279,7 @@ cy       = 800.0
 scale    = 1.0
 rotation = 0.0
 
-[widget.settings]
+[desktop_widgets.widget.sysmon_main.settings]
 stat       = "cpu_usage"
 stat2      = "cpu_temp"
 color      = "primary"
