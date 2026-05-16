@@ -137,6 +137,8 @@ Chords recorded in the GUI are serialized as `ctrl+shift+Return`-style strings u
 
 The session (power) menu opened from the bar **Session** widget or Control Center lists **Lock**, **Log out**, **Reboot**, and **Shut down** by default. You can change which buttons appear, their order, whether each is enabled, and optionally replace the implementation with a **shell command** (still run after `logging_out` / `rebooting` / `shutting_down` hooks when the action is one of those three).
 
+Built-in reboot and shutdown actions try the standard session-manager commands first (`systemctl`, then `loginctl`) and fall back to plain `reboot` / `poweroff` commands when available. Set `command` on the row when your system needs a different init or privilege wrapper.
+
 Configure under **`[shell.session]`** in TOML, or use **Settings → Panels → Session menu**: entries, reorder, and **Show** are listed inline; use the **settings** (cog) control on a row for behavior, label, command, icon, and style. **Add action** appends a custom-command entry by default.
 
 | Field | Type | Default | Description |
