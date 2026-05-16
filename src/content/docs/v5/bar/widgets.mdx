@@ -84,13 +84,17 @@ Set `[widget.workspaces].capsule_radius` for just the workspace switcher, or `[b
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `display` | string | `"id"` | Label mode: `"none"`, `"id"`, or `"name"` |
+| `max_label_chars` | int | `1` | Maximum characters for workspace name labels; longer names are truncated. Only affects non-numeric labels (workspace IDs like `10`, `11` are never truncated). |
 | `focused_color` | string | `"primary"` | Color role or hex color for the focused workspace pill |
 | `occupied_color` | string | `"secondary"` | Color role or hex color for occupied (non-focused) workspace pills |
 | `empty_color` | string | `"secondary"` | Color role or hex color for empty workspace pills |
+| `hide_when_empty` | bool | `false` | Hide workspace pills with no open windows. |
 
 ```toml
 [widget.workspaces]
-display = "id"   # none | id | name
+display = "id"          # none | id | name
+max_label_chars = 2     # truncate long workspace names (e.g. "VESKTOP" → "VE")
+hide_when_empty = true
 focused_color = "primary"
 occupied_color = "secondary"
 empty_color = "surface_variant"
@@ -185,12 +189,16 @@ System resource monitor. Shows an icon and value for one configurable stat. Mult
 | `cpu_usage` | `75%` | CPU utilisation (all cores) |
 | `cpu_temp` | `65°C` | CPU package temperature |
 | `gpu_temp` | `72°C` | GPU temperature |
+| `gpu_vram` | `42%` | GPU VRAM usage |
 | `ram_used` | `4.2G` | RAM used (human-readable) |
 | `ram_pct` | `26%` | RAM used % |
 | `swap_pct` | `12%` | Swap used % |
 | `disk_pct` | `45%` | Disk used % for `path` |
 | `net_rx` | `1.2M` | Network download speed (auto-scaled) |
 | `net_tx` | `256K` | Network upload speed (auto-scaled) |
+
+GPU temperature is read from Linux hwmon when available, with an NVML fallback for NVIDIA proprietary drivers.
+GPU VRAM is read from AMDGPU DRM sysfs when available, with an NVML fallback for NVIDIA proprietary drivers.
 
 ```toml
 [widget.cpu]
@@ -421,6 +429,8 @@ display = "short"   # short | full
 
 Shows Caps Lock / Num Lock / Scroll Lock state from the active XKB keyboard state.
 
+Configuring this widget keeps lock-key state polling active even when `[osd].lock_keys = false`.
+
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `display` | string | `"short"` | `"short"` (`C N S`) or `"full"` (`Caps Num Scroll`) |
@@ -510,7 +520,8 @@ noctalia msg notification-clear-active
 noctalia msg notification-clear-history
 ```
 
-When DND is enabled, incoming notifications are stored in history/control center but toast popups are suppressed.
+When DND is enabled, external incoming notifications are stored in history/control center but toast popups are
+suppressed. Internal Noctalia notifications are not stored in history.
 
 ---
 

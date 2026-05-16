@@ -132,15 +132,12 @@ window-rule {
   No need to set blur to 'true' here, it's automatic.
 */
 layer-rule {
-  match namespace="^noctalia-(bar-main|notification|dock|panel)$"
+  match namespace="^noctalia-(bar-[^"]+|notification|dock|panel)$"
   background-effect {
     xray false
     //blur false
   }
 }
-```
-
-The `noctalia-bar-main` match assumes the default bar name `main`. If you have renamed your bar or defined additional bars, extend the alternation accordingly (each bar uses the namespace `noctalia-bar-<name>`).
 
 You can also fine-tune the blur effect globally:
 
@@ -154,5 +151,5 @@ blur {
 ```
 
 :::tip[Fine-tuning the blur effect]
-Adjust the blur parameters above alongside Noctalia's transparency settings (panel background opacity, bar background opacity, translucent widgets) to achieve your desired look.
+Adjust the blur parameters above alongside Noctalia's transparency settings (bar background opacity, panel card transparency, translucent widgets) to achieve your desired look.
 :::

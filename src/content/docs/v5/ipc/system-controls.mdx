@@ -1,6 +1,6 @@
 ---
 title: System Controls
-description: IPC commands for volume, microphone, brightness, night light, and caffeine.
+description: IPC commands for volume, microphone, brightness, night light, caffeine, and power profile.
 ---
 
 These commands are useful for media keys, compositor binds, scripts, and custom widgets.
@@ -56,6 +56,17 @@ Targets can be `current`, `all`, `*`, a display id such as `eDP-1` or `DP-1`, or
 | Enable caffeine | `noctalia msg caffeine-enable` | Prevent idle actions while enabled. |
 | Disable caffeine | `noctalia msg caffeine-disable` | Allow idle actions again. |
 | Toggle caffeine | `noctalia msg caffeine-toggle` | Switch caffeine on or off. |
+
+## Power profile
+
+Requires `org.freedesktop.UPower.PowerProfiles` (same as the Control Center home shortcut). Profile ids come from the compositor/session; common values are `performance`, `balanced`, and `power-saver`.
+
+When the active profile changes (from IPC, the control center, a bar widget, a shortcut, or another app), Noctalia shows a short internal notification: summary **Power mode**, body **Switched to:** the profile name, and an icon for the active mode.
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Set power profile | `noctalia msg power-set balanced` | Activate the named profile. If the service reports a profile list, the name must match one of those entries exactly. |
+| Cycle power profile | `noctalia msg power-cycle` | Switch to the next profile in UPower's ordered list (same order as the bar power widget and control center shortcut). Wraps from the last profile back to the first. Takes no arguments. |
 
 ## Display power
 

@@ -1,6 +1,6 @@
 ---
 title: Shell & UI
-description: IPC commands for status, config reload, bar, panels, dock, desktop widgets, notifications, media controls, theme mode, and lock.
+description: IPC commands for status, config reload, bar, panels, dock, desktop widgets, notifications, media controls, wallpaper, theme mode and palette scheme, and lock.
 ---
 
 These commands open, close, or toggle Noctalia UI surfaces.
@@ -31,7 +31,7 @@ These commands open, close, or toggle Noctalia UI surfaces.
 
 | Action | Command | Description |
 |--------|---------|-------------|
-| Toggle launcher | `noctalia msg panel-toggle launcher` | Open or close the app launcher. |
+| Toggle launcher | `noctalia msg panel-toggle launcher [query]` | Open or close the app launcher. Optional `query` pre-fills the search input (e.g. `noctalia msg panel-toggle launcher "/wall"`). |
 | Toggle session menu | `noctalia msg panel-toggle session` | Open or close the logout, reboot, and shutdown menu. |
 | Toggle clipboard | `noctalia msg panel-toggle clipboard` | Open or close clipboard history. |
 | Toggle wallpaper panel | `noctalia msg panel-toggle wallpaper` | Open or close wallpaper picker. |
@@ -42,6 +42,10 @@ These commands open, close, or toggle Noctalia UI surfaces.
 | Action | Command | Description |
 |--------|---------|-------------|
 | Random wallpaper now | `noctalia msg wallpaper-random` | Switch to a random wallpaper immediately. |
+| Set wallpaper (all outputs) | `noctalia msg wallpaper-set <path>` | Set every connected output and the default wallpaper, persisted to `settings.toml` (per-output entries plus `[wallpaper].default.path`). Same behavior as choosing **All monitors** in the wallpaper panel. Use an image path (`~` expanded) or `color:#RRGGBB` / `color:#RRGGBBAA`; non-color paths must exist at call time. |
+| Set wallpaper (one output) | `noctalia msg wallpaper-set <connector> <path>` | Set only the output named by **connector** (Wayland name, e.g. `DP-1` — same value as per-monitor keys in config and the wallpaper panel). Remaining tokens are joined as the path. Other outputs are unchanged. Same path and color rules as the all-output form. |
+
+The CLI forwards everything after the command as one string (`noctalia msg wallpaper-set …`), so `noctalia msg wallpaper-set DP-1 /home/you/My Pictures/wall.jpg` still yields a correct path when the shell passes separate arguments after the command (they are rejoined with spaces for parsing).
 
 ## Dock
 
@@ -83,7 +87,9 @@ These commands open, close, or toggle Noctalia UI surfaces.
 
 | Action | Command | Description |
 |--------|---------|-------------|
-| Toggle theme mode | `noctalia msg theme-mode-toggle` | Switch between dark and light theme mode. |
+| Toggle theme mode | `noctalia msg theme-mode-toggle` | Switch between dark and light theme mode (same as the bar control when mode is not `auto`). |
+| Set theme mode | `noctalia msg theme-mode-set dark` | Persist `[theme].mode` in `settings.toml` and reload. Pass `dark`, `light`, or `auto` (example shows `dark`). |
+| Set wallpaper palette scheme | `noctalia msg theme-wallpaper-scheme-set <scheme>` | Persist `[theme].wallpaper_scheme` and reload. Used when the palette is generated from the wallpaper image. Recognized values: **Material 3:** `m3-tonal-spot`, `m3-content`, `m3-fruit-salad`, `m3-rainbow`, `m3-monochrome`. **Custom:** `vibrant`, `faithful`, `dysfunctional`, `muted`. |
 
 ## Session
 
