@@ -34,11 +34,17 @@ my_setting = "value"
 |----------|---------|-------------|
 | `noctalia.log(msg)` | — | Log a message to shell debug output |
 | `noctalia.runAsync(cmd)` | `boolean` | Execute a shell command asynchronously (fire-and-forget). Returns true if the process was launched. |
-| `noctalia.runSync(cmd)` | `exitCode, stdout, stderr` | Execute a shell command synchronously. Returns exit code (number), stdout (string), stderr (string). |
+| `noctalia.runAsync(cmd, callback, timeoutMs?)` | `boolean` | Execute a shell command off the UI thread and call `callback(result)` when it exits. `result` contains `exitCode`, `stdout`, `stderr`, `timedOut`, `stdoutTruncated`, and `stderrTruncated`. |
 | `noctalia.commandExists(name)` | `boolean` | Check if a command exists in PATH |
+| `noctalia.processMatches(token, ...)` | `boolean` | Check cached process command lines for one containing all tokens. Use this for lightweight process-state polling. |
+| `noctalia.flatpakAppInstalled(appId)` | `boolean` | Check common Flatpak installation paths for an app ID without spawning `flatpak`. |
+| `noctalia.portalAvailable()` | `boolean` | Check whether `xdg-desktop-portal` and a supported portal backend are running. |
+| `noctalia.focusedOutputName()` | `string?` | Return the preferred interactive output connector name, or nil if none is known. |
 | `noctalia.notify(title, body?)` | — | Show an internal notification (normal urgency) |
 | `noctalia.notifyError(title, body?)` | — | Show an internal notification (critical urgency) |
 | `noctalia.getenv(name)` | `string?` | Read an environment variable. Returns nil if unset. |
+
+Scripted widgets do not expose synchronous command execution. Use fire-and-forget `runAsync()` for click-triggered actions, callback `runAsync()` for commands that need stdout/stderr, and the native query helpers above for polling. Callback commands default to a 5000 ms timeout, clamp to 60000 ms, and cap stdout/stderr at 1 MiB per stream.
 
 ### `barWidget.*` — widget display
 
