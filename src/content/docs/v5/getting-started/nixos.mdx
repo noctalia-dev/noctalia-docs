@@ -21,8 +21,7 @@ To make Noctalia's wifi, bluetooth, power-profile, and battery feature available
 :::
 
 ## Nix Flakes
-
-To install Noctalia using flakes, you first need to [add the flake input](#add-flake-input) and then [install the package](#install-package).
+To install Noctalia using flakes, first [add the flake input](#add-flake-input). Then you can either [install the package](#install-package) directly or use the [Home Manager module](#home-manager).
 
 ### Adding the Flake input {#add-flake-input}
 
@@ -50,6 +49,38 @@ Add the package to your system packages or equivalent:
   environment.systemPackages = [
     inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
+}
+```
+
+### Home Manager Module {#home-manager}
+
+The flake also exposes a Home Manager module, which allows you to configure Noctalia's settings [(that you would otherwise put in `~/.config/noctalia/`)](/v5/configuration).
+
+```nix
+{ inputs, pkgs, ... }:
+{
+  home-manager.users.drfoobar = {
+    imports = [
+      inputs.noctalia.homeModules.default
+    ];
+      
+    programs.noctalia = {
+      enable = true;
+
+      settings = { # This may also be a string or path to a .toml file.
+        theme = {
+          mode = "dark";
+          source = "builtin";
+          builtin = "Catppuccin";
+        };
+        
+        wallpaper = {
+          enabled = true;
+          default.path = "/path/to/wallpapers/wallpaper.png";
+        };
+      };
+    };
+  };
 }
 ```
 
