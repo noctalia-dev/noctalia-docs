@@ -36,10 +36,11 @@ Use `scope = "shared"` for scripts whose `update()` computes global state, such 
 | Function | Returns | Description |
 |----------|---------|-------------|
 | `noctalia.log(msg)` | — | Log a message to shell debug output |
-| `noctalia.runAsync(cmd)` | `boolean` | Execute a shell command asynchronously (fire-and-forget). Returns true if the process was launched. |
+| `noctalia.runAsync(cmd)` | `boolean` | Queue a shell command asynchronously (fire-and-forget). Returns true if the launch was queued. |
 | `noctalia.runAsync(cmd, callback, timeoutMs?)` | `boolean` | Execute a shell command off the UI thread and call `callback(result)` when it exits. `result` contains `exitCode`, `stdout`, `stderr`, `timedOut`, `stdoutTruncated`, and `stderrTruncated`. |
 | `noctalia.commandExists(name)` | `boolean` | Check if a command exists in PATH |
-| `noctalia.processMatches(token, ...)` | `boolean` | Check cached process command lines for one containing all tokens. Use this for lightweight process-state polling. |
+| `noctalia.processMatches(callback, token, ...)` | `boolean` | Check process command lines on a background worker and call `callback(matches)` with true when one command line contains all tokens. Returns true if the query was queued. |
+| `noctalia.copyToClipboard(text, mimeType)` | `boolean` | Queue text for Noctalia clipboard publication with the given MIME type, such as `"text/plain"` or `"text/uri-list"`. Returns true if the copy request was queued. |
 | `noctalia.flatpakAppInstalled(appId)` | `boolean` | Check common Flatpak installation paths for an app ID without spawning `flatpak`. |
 | `noctalia.portalAvailable()` | `boolean` | Check whether `xdg-desktop-portal` and a supported portal backend are running. |
 | `noctalia.focusedOutputName()` | `string?` | Return the preferred interactive output connector name, or nil if none is known. |
@@ -47,7 +48,7 @@ Use `scope = "shared"` for scripts whose `update()` computes global state, such 
 | `noctalia.notifyError(title, body?)` | — | Show an internal notification (critical urgency) |
 | `noctalia.getenv(name)` | `string?` | Read an environment variable. Returns nil if unset. |
 
-Scripted widgets run off the UI thread and do not expose synchronous command execution. Use fire-and-forget `runAsync()` for click-triggered actions, callback `runAsync()` for commands that need stdout/stderr, and the native query helpers above for polling. Callback commands default to a 5000 ms timeout, clamp to 60000 ms, and cap stdout/stderr at 1 MiB per stream.
+Scripted widgets run off the UI thread and do not expose synchronous command execution. Use fire-and-forget `runAsync()` for click-triggered actions, callback `runAsync()` for commands that need stdout/stderr, and callback-based native query helpers for polling. Callback commands default to a 5000 ms timeout, clamp to 60000 ms, and cap stdout/stderr at 1 MiB per stream.
 
 Lua callbacks have execution budgets. If a callback repeatedly exceeds its budget, Noctalia keeps the last good displayed state and stops scheduling that widget until reload.
 
