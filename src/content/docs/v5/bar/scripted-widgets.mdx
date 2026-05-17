@@ -1,6 +1,6 @@
 ---
 title: Scripted widgets
-description: Luau bar widgets, configuration, API, and the bundled screen recorder example.
+description: Luau bar widgets, configuration, API, and the bundled screen recorder and bongo cat examples.
 sidebar:
   order: 6
 ---
@@ -23,6 +23,9 @@ my_setting = "value"
 |---------|------|---------|-------------|
 | `script` | string | `""` | Path to the Luau script file. Absolute paths and `~` paths are used directly; relative paths are resolved from the assets bundle (e.g. `scripts/screen_recorder.lua`). |
 | `hot_reload` | bool | `false` | Watch the script file for changes and reload automatically (inotify). Intended for development. |
+| `scope` | string | `"instance"` | Runtime scope. `"instance"` creates one script runtime per bar widget instance. `"shared"` creates one runtime per widget config key and shares its displayed state across all matching bars. |
+
+Use `scope = "shared"` for scripts whose `update()` computes global state, such as process status. Shared scripts should not depend on per-bar layout state during `update()`.
 
 ---
 
@@ -33,10 +36,11 @@ my_setting = "value"
 | Function | Returns | Description |
 |----------|---------|-------------|
 | `noctalia.log(msg)` | — | Log a message to shell debug output |
-| `noctalia.runAsync(cmd)` | `boolean` | Execute a shell command asynchronously (fire-and-forget). Returns true if the process was launched. |
+| `noctalia.runAsync(cmd)` | `boolean` | Queue a shell command asynchronously (fire-and-forget). Returns true if the launch was queued. |
 | `noctalia.runAsync(cmd, callback, timeoutMs?)` | `boolean` | Execute a shell command off the UI thread and call `callback(result)` when it exits. `result` contains `exitCode`, `stdout`, `stderr`, `timedOut`, `stdoutTruncated`, and `stderrTruncated`. |
 | `noctalia.commandExists(name)` | `boolean` | Check if a command exists in PATH |
-| `noctalia.processMatches(token, ...)` | `boolean` | Check cached process command lines for one containing all tokens. Use this for lightweight process-state polling. |
+| `noctalia.processMatches(callback, token, ...)` | `boolean` | Check process command lines on a background worker and call `callback(matches)` with true when one command line contains all tokens. Returns true if the query was queued. |
+| `noctalia.copyToClipboard(text, mimeType)` | `boolean` | Queue text for Noctalia clipboard publication with the given MIME type, such as `"text/plain"` or `"text/uri-list"`. Returns true if the copy request was queued. |
 | `noctalia.flatpakAppInstalled(appId)` | `boolean` | Check common Flatpak installation paths for an app ID without spawning `flatpak`. |
 | `noctalia.portalAvailable()` | `boolean` | Check whether `xdg-desktop-portal` and a supported portal backend are running. |
 | `noctalia.focusedOutputName()` | `string?` | Return the preferred interactive output connector name, or nil if none is known. |
@@ -44,7 +48,9 @@ my_setting = "value"
 | `noctalia.notifyError(title, body?)` | — | Show an internal notification (critical urgency) |
 | `noctalia.getenv(name)` | `string?` | Read an environment variable. Returns nil if unset. |
 
-Scripted widgets do not expose synchronous command execution. Use fire-and-forget `runAsync()` for click-triggered actions, callback `runAsync()` for commands that need stdout/stderr, and the native query helpers above for polling. Callback commands default to a 5000 ms timeout, clamp to 60000 ms, and cap stdout/stderr at 1 MiB per stream.
+Scripted widgets run off the UI thread and do not expose synchronous command execution. Use fire-and-forget `runAsync()` for click-triggered actions, callback `runAsync()` for commands that need stdout/stderr, and callback-based native query helpers for polling. Callback commands default to a 5000 ms timeout, clamp to 60000 ms, and cap stdout/stderr at 1 MiB per stream.
+
+Lua callbacks have execution budgets. If a callback repeatedly exceeds its budget, Noctalia keeps the last good displayed state and stops scheduling that widget until reload.
 
 ### `barWidget.*` — widget display
 
@@ -52,6 +58,7 @@ Scripted widgets do not expose synchronous command execution. Use fire-and-forge
 |----------|---------|-------------|
 | `barWidget.setText(text)` | — | Set the label text |
 | `barWidget.setGlyph(name)` | — | Set the icon by Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint string |
+| `barWidget.setFont(familyOrPath)` | — | Set the label font. Pass a system font family name, or a path to a `.otf` / `.ttf` / `.woff2` file (absolute, `~/`, or relative to the assets dir). The font is registered at runtime — no restart needed. |
 | `barWidget.setColor(role, mode?)` | — | Set the label color by color role |
 | `barWidget.setGlyphColor(role, mode?)` | — | Set the glyph color by color role |
 | `barWidget.setVisible(visible)` | — | Show or hide the entire widget |
@@ -138,6 +145,7 @@ A `screen_recorder.lua` script is bundled in `assets/scripts/` that wraps `gpu-s
 [widget.screen_recorder]
 type             = "scripted"
 script           = "scripts/screen_recorder.lua"
+scope            = "shared"
 directory        = ""
 filename_pattern = "recording_%Y%m%d_%H%M%S"
 video_source     = "portal"
@@ -183,3 +191,35 @@ noctalia msg scripted-widget screen_recorder focused:default start
 | `replay_duration` | number | `30` | Replay buffer duration in seconds |
 | `replay_storage` | string | `"ram"` | `ram` or `disk` |
 | `hide_inactive` | bool | `false` | Hide widget when not recording or replaying |
+
+## Example: Bongo Cat
+
+A `bongocat.lua` script is bundled in `assets/scripts/` (with its `bongocat.otf` font in `assets/fonts/`). A cat sits in your bar and slaps its paws when you type, naps when idle, and blinks.
+
+- **Left click** — pause / resume
+- **IPC** — `keydown`, `keyup`, `keyrepeat` (payload `space` or `enter` for a two-paw slap), plus `pause`, `resume`, `toggle`
+
+```toml
+[widget.bongocat]
+type         = "scripted"
+script       = "scripts/bongocat.lua"
+input_device = "/dev/input/event6"
+```
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `input_device` | string | `""` | evdev keyboard node to read, e.g. `/dev/input/event6`. Find yours with `sudo evtest` or `ls -l /dev/input/by-id`. Must match `/dev/input/eventN`. |
+
+When `input_device` is set and [`evtest`](https://cgit.freedesktop.org/evtest/) is installed, the widget automatically launches **one** background reader that forwards key events back over IPC. The reader is `flock`-guarded, so multi-monitor setups and hot reloads will not spawn duplicates.
+
+**Requirements:** `evtest` must be installed and your user must be in the `input` group (`sudo usermod -aG input $USER`, then re-login).
+
+:::note
+The reader keeps running until the device stops emitting or the lock is released. If you change `input_device`, kill the old reader first: `pkill -f 'evtest /dev/input'`.
+:::
+
+```sh
+noctalia msg scripted-widget bongocat all pause
+noctalia msg scripted-widget bongocat all resume
+noctalia msg scripted-widget bongocat all toggle
+```
