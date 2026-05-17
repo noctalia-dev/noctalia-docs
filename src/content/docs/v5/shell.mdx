@@ -98,12 +98,14 @@ Notes:
 
 ```toml
 [osd]
-position = "top_right"   # top_right | top_left | top_center | bottom_right | bottom_left | bottom_center
+position = "top_right"   # top_right | top_left | top_center | bottom_right | bottom_left | bottom_center | center_right | center_left
+orientation = "horizontal" # horizontal | vertical
 lock_keys = true         # show Caps/Num/Scroll Lock OSD popups
 ```
 
-The OSD powers the volume HUD and defaults to `top_right`. `lock_keys = false` disables Caps/Num/Scroll Lock popups;
-when no `lock_keys` bar widget is configured, this also stops lock-key state polling.
+The OSD powers the volume HUD and defaults to `top_right` with a horizontal layout. Set `orientation = "vertical"`
+for a taller vertical gauge. `lock_keys = false` disables Caps/Num/Scroll Lock popups; when no `lock_keys` bar widget
+is configured, this also stops lock-key state polling.
 
 ---
 
