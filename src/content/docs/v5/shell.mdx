@@ -204,6 +204,7 @@ fires, but it is not required for Noctalia's own notifications.
 | `started` | Once after Noctalia finishes startup (IPC ready). |
 | `wallpaper_changed` | After a persisted wallpaper path change is applied. |
 | `colors_changed` | After the theme palette is resolved and terminal templates are updated. |
+| `theme_mode_changed` | When the resolved theme mode changes between `light` and `dark`. Sets `NOCTALIA_THEME_MODE`, `NOCTALIA_THEME_MODE_PREVIOUS`, and `NOCTALIA_THEME_MODE_CONFIGURED` (`dark`, `light`, or `auto`). |
 | `session_locked` | When the compositor confirms the session lock. |
 | `session_unlocked` | When the session leaves the locked state. |
 | `logging_out` | Immediately before the session panel runs the logout sequence. |
@@ -229,6 +230,7 @@ colors_changed = [
   "systemctl --user reload foot-server.service",
   "logger -t noctalia-hooks 'palette colors changed'",
 ]
+theme_mode_changed = "logger -t noctalia-hooks \"mode: $NOCTALIA_THEME_MODE\""
 
 # Combine normal shell commands with Noctalia IPC commands.
 session_locked = [
