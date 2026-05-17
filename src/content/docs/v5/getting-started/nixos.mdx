@@ -88,17 +88,13 @@ The flake also exposes a Home Manager module, which allows you to configure Noct
 
 Pre-built binaries are available on [Cachix](https://app.cachix.org/cache/noctalia), so you can skip compiling locally.
 
+:::caution
+To use the binary cache, you have to omit `inputs.nixpkgs.follows` from the Noctalia input.
+:::
+
 You can add the cache either to your flake, nixos configuration, or `/etc/nix/nix.conf`.
 
 <Tabs>
-  <TabItem label="flake.nix">
-    ```nix
-    nixConfig = {
-      extra-substituters = [ "https://noctalia.cachix.org" ];
-      extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ];
-    };
-    ```
-  </TabItem>
   <TabItem label="configuration.nix"> 
     ```nix
     nix.settings = { 
@@ -106,6 +102,14 @@ You can add the cache either to your flake, nixos configuration, or `/etc/nix/ni
       extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ]; 
     };
     ``` 
+  </TabItem>
+  <TabItem label="flake.nix">
+    ```nix
+    nixConfig = {
+      extra-substituters = [ "https://noctalia.cachix.org" ];
+      extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ];
+    };
+    ```
   </TabItem>
   <TabItem label="nix.conf"> 
     ```properties
