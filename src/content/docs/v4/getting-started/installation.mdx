@@ -148,34 +148,32 @@ The APT repository currently only provides `amd64` packages. Debian Bookworm (12
 
 ## openSUSE {#opensuse}
 
-Noctalia-shell is available through the [home:neifua](https://build.opensuse.org/package/show/home:neifua/noctalia-shell) repository on the openSUSE Build Service.
-
-**Step 1**: Add the repository
+Noctalia-shell is available through the official openSUSE's repository (for **Tumbleweed** and **Slowroll**) and [home:neifua:Noctalia](https://build.opensuse.org/package/show/home:neifua:Noctalia/noctalia-shell) repository on the openSUSE Build Service (for **Leap 16.0**).
 
 <Tabs>
   <TabItem label="Tumbleweed">
     ```bash
-    sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/openSUSE_Tumbleweed/home:neifua.repo
+	sudo zypper refresh
+	sudo zypper install noctalia-shell
     ```
   </TabItem>
   <TabItem label="Slowroll">
     ```bash
-    sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/openSUSE_Slowroll/home:neifua.repo
+	sudo zypper refresh
+	sudo zypper install noctalia-shell
     ```
   </TabItem>
   <TabItem label="Leap 16.0">
     ```bash
-    sudo zypper addrepo https://download.opensuse.org/repositories/home:neifua/16.0/home:neifua.repo
+	# First add the repo
+	sudo zypper addrepo --refresh --name noctalia-legacy https://download.opensuse.org/repositories/home:neifua:Noctalia/16.0/home:neifua:Noctalia.repo
+
+	# Refresh and install
+	zypper refresh
+	zypper install noctalia-shell
     ```
   </TabItem>
 </Tabs>
-
-**Step 2**: Refresh and install
-
-```bash
-sudo zypper refresh
-sudo zypper install noctalia-shell
-```
 
 ---
 
