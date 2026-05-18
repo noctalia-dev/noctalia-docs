@@ -190,12 +190,12 @@ System resource monitor. Shows an icon and value for one configurable stat. Mult
 | `cpu_temp` | `65°C` | CPU package temperature |
 | `gpu_temp` | `72°C` | GPU temperature |
 | `gpu_vram` | `42%` | GPU VRAM usage |
-| `ram_used` | `4.2G` | RAM used (human-readable) |
+| `ram_used` | `4.2GiB` | RAM used (binary, auto-scaled) |
 | `ram_pct` | `26%` | RAM used % |
 | `swap_pct` | `12%` | Swap used % |
 | `disk_pct` | `45%` | Disk used % for `path` |
-| `net_rx` | `1.2M` | Network download speed (auto-scaled) |
-| `net_tx` | `256K` | Network upload speed (auto-scaled) |
+| `net_rx` | `1.2MB/s` | Network download speed (decimal, auto-scaled) |
+| `net_tx` | `256kB/s` | Network upload speed (decimal, auto-scaled) |
 
 GPU temperature is read from Linux hwmon when available, with an NVML fallback for NVIDIA proprietary drivers.
 GPU VRAM is read from AMDGPU DRM sysfs when available, with an NVML fallback for NVIDIA proprietary drivers.
