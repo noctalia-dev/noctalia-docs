@@ -23,7 +23,7 @@ my_setting = "value"
 |---------|------|---------|-------------|
 | `script` | string | `""` | Path to the Luau script file. Absolute paths and `~` paths are used directly; relative paths are resolved from the assets bundle (e.g. `scripts/screen_recorder.lua`). |
 | `hot_reload` | bool | `false` | Watch the script file for changes and reload automatically (inotify). Intended for development. |
-| `scope` | string | `"instance"` | Runtime scope. `"instance"` creates one script runtime per bar widget instance. `"shared"` creates one runtime per widget config key and shares its displayed state across all matching bars. |
+| `scope` | string | `"instance"` | Runtime scope. `"instance"` creates one script runtime per live widget placement. `"shared"` creates one runtime per widget config key and shares its displayed state across all matching bars. |
 
 Use `scope = "shared"` for scripts whose `update()` computes global state, such as process status. Shared scripts should not depend on per-bar layout state during `update()`.
 
@@ -94,13 +94,13 @@ Scripted widgets can receive named events from Noctalia IPC:
 noctalia msg scripted-widget <widget-name> <target[:bar-name]> <event> [payload]
 ```
 
-`<widget-name>` is the `[widget.<name>]` config key. `<target>` is required so side-effectful scripts do not accidentally run once per monitor or once per bar. If the target matches more than one live scripted widget instance, the command fails instead of picking one arbitrarily.
+`<widget-name>` is the `[widget.<name>]` config key. `<target>` is required so side-effectful scripts do not accidentally run once per monitor or once per bar. If the target matches more than one live scripted widget placement, the command fails instead of picking one arbitrarily.
 
 | Target | Description |
 |--------|-------------|
 | `focused` | Dispatch to one matching widget on the preferred interactive output |
 | monitor selector | Dispatch to one matching widget on a matching connector, such as `DP-1` |
-| `all` | Broadcast to every live matching instance |
+| `all` | Broadcast to every live matching placement |
 | `<target>:<bar-name>` | Narrow any target to a named bar, such as `focused:top` or `DP-1:default` |
 
 The script receives the event through:

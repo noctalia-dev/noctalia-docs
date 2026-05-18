@@ -19,7 +19,7 @@ type = "<widget-type>"   # defaults to <name> when omitted
 # ...widget-specific settings
 ```
 
-This allows multiple instances of the same widget type:
+This allows multiple named widgets with the same widget type:
 
 ```toml
 [widget.clock-seconds]
@@ -650,7 +650,7 @@ Custom widget driven by a Luau script. See [Scripted widgets](/v5/bar/scripted-w
 |---------|------|---------|-------------|
 | `script` | string | `""` | Path to the Luau script file (`~` is expanded) |
 | `hot_reload` | bool | `false` | Watch the script file and reload on change (dev tool) |
-| `scope` | string | `"instance"` | `"instance"` runs one runtime per bar widget instance. `"shared"` runs one runtime per widget config key and shares state across bars. |
+| `scope` | string | `"instance"` | `"instance"` runs one runtime per live widget placement. `"shared"` runs one runtime per widget config key and shares state across bars. |
 
 ```toml
 [widget.my_widget]
