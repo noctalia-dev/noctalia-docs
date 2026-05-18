@@ -88,6 +88,7 @@ The CLI forwards everything after the command as one string (`noctalia msg wallp
 
 | Action | Command | Description |
 |--------|---------|-------------|
+| Get theme mode | `noctalia msg theme-mode-get` | Print the current resolved theme mode: `dark` or `light`. |
 | Toggle theme mode | `noctalia msg theme-mode-toggle` | Switch between dark and light theme mode (same as the bar control when mode is not `auto`). |
 | Set theme mode | `noctalia msg theme-mode-set dark` | Persist `[theme].mode` in `settings.toml` and reload. Pass `dark`, `light`, or `auto` (example shows `dark`). |
 | Set wallpaper palette scheme | `noctalia msg theme-wallpaper-scheme-set <scheme>` | Persist `[theme].wallpaper_scheme` and reload. Used when the palette is generated from the wallpaper image. Recognized values: **Material 3:** `m3-tonal-spot`, `m3-content`, `m3-fruit-salad`, `m3-rainbow`, `m3-monochrome`. **Custom:** `vibrant`, `faithful`, `dysfunctional`, `muted`. |

@@ -98,12 +98,14 @@ Notes:
 
 ```toml
 [osd]
-position = "top_right"   # top_right | top_left | top_center | bottom_right | bottom_left | bottom_center
+position = "top_right"   # top_right | top_left | top_center | bottom_right | bottom_left | bottom_center | center_right | center_left
+orientation = "horizontal" # horizontal | vertical
 lock_keys = true         # show Caps/Num/Scroll Lock OSD popups
 ```
 
-The OSD powers the volume HUD and defaults to `top_right`. `lock_keys = false` disables Caps/Num/Scroll Lock popups;
-when no `lock_keys` bar widget is configured, this also stops lock-key state polling.
+The OSD powers the volume HUD and defaults to `top_right` with a horizontal layout. Set `orientation = "vertical"`
+for a taller vertical gauge. `lock_keys = false` disables Caps/Num/Scroll Lock popups; when no `lock_keys` bar widget
+is configured, this also stops lock-key state polling.
 
 ---
 
@@ -204,6 +206,7 @@ fires, but it is not required for Noctalia's own notifications.
 | `started` | Once after Noctalia finishes startup (IPC ready). |
 | `wallpaper_changed` | After a persisted wallpaper path change is applied. |
 | `colors_changed` | After the theme palette is resolved and terminal templates are updated. |
+| `theme_mode_changed` | When the resolved theme mode changes between `light` and `dark`. Sets `NOCTALIA_THEME_MODE`, `NOCTALIA_THEME_MODE_PREVIOUS`, and `NOCTALIA_THEME_MODE_CONFIGURED` (`dark`, `light`, or `auto`). |
 | `session_locked` | When the compositor confirms the session lock. |
 | `session_unlocked` | When the session leaves the locked state. |
 | `logging_out` | Immediately before the session panel runs the logout sequence. |
@@ -213,6 +216,7 @@ fires, but it is not required for Noctalia's own notifications.
 | `bluetooth_enabled` / `bluetooth_disabled` | When the default adapter's powered state toggles (not on first snapshot). |
 | `battery_state_changed` | When UPower's battery state enum changes (charging, discharging, etc.). Sets `NOCTALIA_BATTERY_STATE` (e.g. `Charging`, `Discharging`, `Charged`). |
 | `battery_under_threshold` | When charge **crosses from above to at or below** `battery_low_percent_threshold`. Sets `NOCTALIA_BATTERY_PERCENT`. |
+| `power_profile_changed` | When the active UPower power profile changes (for example `performance`, `balanced`, or `power-saver`). Sets `NOCTALIA_POWER_PROFILE`, `NOCTALIA_POWER_PROFILE_PREVIOUS`, and `NOCTALIA_POWER_PROFILE_ORIGIN` (`noctalia` or `external`). |
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
@@ -229,6 +233,7 @@ colors_changed = [
   "systemctl --user reload foot-server.service",
   "logger -t noctalia-hooks 'palette colors changed'",
 ]
+theme_mode_changed = "logger -t noctalia-hooks \"mode: $NOCTALIA_THEME_MODE\""
 
 # Combine normal shell commands with Noctalia IPC commands.
 session_locked = [
@@ -255,6 +260,7 @@ bluetooth_disabled = "logger -t noctalia-hooks 'Bluetooth powered off'"
 battery_low_percent_threshold = 15
 battery_state_changed   = "logger -t noctalia-hooks \"Battery: $NOCTALIA_BATTERY_STATE\""
 battery_under_threshold = "systemctl --user start battery-low.target"
+power_profile_changed   = "logger -t noctalia-hooks \"Power profile: $NOCTALIA_POWER_PROFILE_PREVIOUS -> $NOCTALIA_POWER_PROFILE ($NOCTALIA_POWER_PROFILE_ORIGIN)\""
 
 # Quick test while developing a hook; not needed for Noctalia's own notifications.
 # started = "notify-send 'Noctalia hook' 'started fired'"
