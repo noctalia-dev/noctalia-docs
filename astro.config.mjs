@@ -161,7 +161,6 @@ export default defineConfig({
                 { label: "Installation", link: "v5/getting-started/installation/"},
                 { label: "NixOS", link: "v5/getting-started/nixos/"},
                 { label: "Running Noctalia", link: "v5/getting-started/running-the-shell/"},
-                { label: "FAQ", link: "v5/getting-started/faq/" },
                 {
                   label: "Compositor Settings",
                   items: [
@@ -176,6 +175,9 @@ export default defineConfig({
                   ],
                 },
                 {
+                  label: "Keybinds", link: "v5/getting-started/keybinds"
+                },
+                {
                   label: "Network",
                   items: [
                     {
@@ -184,6 +186,8 @@ export default defineConfig({
                     }
                   ]
                 },
+                { label: "FAQ", link: "v5/getting-started/faq/" },
+                { label: "Uninstall", link: "v5/getting-started/uninstall"}
               ],
             },
             { 
