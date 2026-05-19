@@ -37,6 +37,17 @@ debug {
 }
 ```
 
+## Optional Type to Launch
+
+Noctalia can open its launcher when you start typing in niri's overview. This is disabled by default because it requires a tiny keyboard-focus layer surface while overview is open, which means some niri overview-only keyboard state, such as the app focus ring, may not behave exactly like native overview navigation.
+
+```toml
+[shell]
+niri_overview_type_to_launch_enabled = true
+```
+
+You can also enable this from **Settings → Niri → Overview**.
+
 ## Wallpapers setup
 
 Next, choose one of the following options for your wallpaper and overview setup.

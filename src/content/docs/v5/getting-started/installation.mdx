@@ -46,18 +46,18 @@ The simplest way to install Noctalia on Arch Linux is through the Arch User Repo
 
 ## Fedora {#fedora}
 
-Noctalia is available in the [LionHeartP Copr](https://copr.fedorainfracloud.org/coprs/lionheartp/Hyprland/) repository.
+Noctalia is available via [LionHeartP Copr](https://copr.fedorainfracloud.org/coprs/lionheartp/Hyprland/) repository.
 
-First install the repository as described on the website:
+**Step 1**: Enable the repository
 
 ```bash
 sudo dnf copr enable lionheartp/Hyprland 
 ```
 
-Next, install the noctalia-shell package:
+**Step 2**: Install noctalia
 
 ```bash
-sudo dnf install noctalia-shell-v5
+sudo dnf install noctalia-git
 ```
 
 Installing noctalia-shell from Terra will automatically install all runtime dependencies and display optional dependencies.
@@ -66,15 +66,25 @@ Installing noctalia-shell from Terra will automatically install all runtime depe
 
 ## openSUSE {#opensuse}
 
-Noctalia is available in the [home:neifua](https://build.opensuse.org/package/show/home:neifua/noctalia) repository on the openSUSE Build Service.
+Noctalia is available via [home:neifua:Noctalia](https://build.opensuse.org/package/show/home:neifua:Noctalia/noctalia) repository on the openSUSE Build Service.
 
-First add the repository
+**Step 1**: Add the OBS repository
 
-```bash
-sudo zypper addrepo --refresh https://download.opensuse.org/repositories/home:neifua/openSUSE_Tumbleweed/home:neifua.repo
-```
+<Tabs>
+  <TabItem label="Tumbleweed">
+    ```bash
+	sudo zypper addrepo --refresh --name noctalia-v5 https://download.opensuse.org/repositories/home:neifua:Noctalia/openSUSE_Tumbleweed/home:neifua:Noctalia.repo
+    ```
+  </TabItem>
+  <TabItem label="Slowroll">
+    ```bash
+	sudo zypper addrepo --refresh --name noctalia-v5 https://download.opensuse.org/repositories/home:neifua:Noctalia/openSUSE_Slowroll/home:neifua:Noctalia.repo
+    ```
+  </TabItem>
+</Tabs>
 
-Next, refresh and install the v5 package:
+
+**Step 2**: Refresh and install noctalia:
 
 ```bash
 sudo zypper refresh
@@ -82,9 +92,9 @@ sudo zypper install noctalia
 ```
 
 :::note
-The package is currently only available on `Tumbleweed`, `Slowroll` and `Leap` users might need to wait for the official release.
+The package is currently only available for **Tumbleweed** and **Slowroll**. **Leap 16.0** might need some patches for it to be successfully build
 
-The `--refresh` flag is to enable auto refresh for the repo because everytime there's a new commit `noctalia` will be rebuild on the OBS.
+The `--refresh` flag is to enable auto refresh for the repo because everytime there's a new commit `noctalia` will be automatically rebuild on the OBS, so you just have to run `sudo zypper up` to update the package
 :::
 
 ---
