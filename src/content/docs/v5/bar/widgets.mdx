@@ -330,9 +330,11 @@ Shows battery charge level and state via UPower. Hides itself when the selected 
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `device` | string | `auto` | UPower device selector. `auto` monitors the system power-supply battery only; explicit selectors can target any present battery-capable UPower device. |
-| `warning_threshold` | integer | `20` | Battery percentage at or below which glyph and label switch to warning color. `0` disables. |
-| `warning_color` | color | `error` | Color applied when charge is at or below `warning_threshold`. Ignored while charging. |
+| `display_mode` | string | `"icon"` | `"icon"` shows a glyph icon; `"graphic"` draws a rectangular battery shape with an animated fill level. |
+| `show_label` | bool | `true` | In `icon` mode: show the percentage label next to the glyph. In `graphic` mode: overlay the percentage text on the battery body. |
+| `device` | string | `"auto"` | UPower device selector. `auto` monitors the system power-supply battery only; explicit selectors can target any present battery-capable UPower device. |
+| `warning_threshold` | integer | `20` | Battery percentage at or below which the widget switches to the warning color. `0` disables. |
+| `warning_color` | color | `"error"` | Color applied when charge is at or below `warning_threshold`. Ignored while charging. |
 
 `device = "auto"` is safe on desktops: it will not use gamepads, mice, headsets, or other peripherals as the default battery widget. Use an explicit selector for those devices.
 
@@ -343,6 +345,17 @@ Selectors can be a full UPower object path, a native path/name, a stable suffix 
 [widget.battery]
 type = "battery"
 device = "auto"
+
+# Graphical battery with percentage overlay
+[widget.battery]
+type = "battery"
+display_mode = "graphic"
+
+# Graphical battery without percentage text
+[widget.battery]
+type = "battery"
+display_mode = "graphic"
+show_label = false
 
 # Internal battery by native name/suffix
 [widget.internal_battery]
