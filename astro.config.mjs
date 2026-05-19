@@ -175,6 +175,15 @@ export default defineConfig({
                     },
                   ],
                 },
+                {
+                  label: "Network",
+                  items: [
+                    {
+                      label: "WpaSupplicant",
+                      link: "v5/getting-started/network/wpa_supplicant/"
+                    }
+                  ]
+                },
               ],
             },
             { 
