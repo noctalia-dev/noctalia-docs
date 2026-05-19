@@ -118,11 +118,35 @@ noctalia msg toggle-force-nightlight
 
 ```toml
 [system.monitor]
-enabled = true  # sample CPU, memory, network, load, temperature, GPU VRAM, and disk statistics
+enabled = true
+cpu_poll_seconds = 1.0
+gpu_temp_poll_seconds = 2.0
+gpu_vram_poll_seconds = 2.0
+memory_poll_seconds = 1.0
+swap_poll_seconds = 1.0
+network_poll_seconds = 1.0
+disk_poll_seconds = 5.0
+history_poll_seconds = 1.0
 ```
 
-When disabled, Noctalia keeps system-monitor UI available but stops the background sampling thread. System-monitor
-widgets and the Control Center System tab show unavailable values until the setting is enabled again.
+When disabled, Noctalia keeps system-monitor UI available but stops the background sampling thread. Bar `sysmon` widgets, desktop `sysmon` widgets, and the Control Center System tab show unavailable values until the setting is enabled again.
+
+Poll intervals are configured globally under `[system.monitor]`, not per widget. Each value is the number of seconds between samples for that metric group. Values are clamped to `0.1`–`120` seconds. You can also adjust them in **Settings → Services** when the system monitor is enabled.
+
+| Key | Default | Metrics |
+|-----|---------|---------|
+| `cpu_poll_seconds` | `1.0` | CPU usage %, CPU temperature, and load average (`1` / `5` / `15` min) |
+| `gpu_temp_poll_seconds` | `2.0` | GPU temperature |
+| `gpu_vram_poll_seconds` | `2.0` | GPU VRAM usage |
+| `memory_poll_seconds` | `1.0` | RAM usage % and used/total MB |
+| `swap_poll_seconds` | `1.0` | Swap usage % and used/total MB |
+| `network_poll_seconds` | `1.0` | Network download and upload throughput |
+| `disk_poll_seconds` | `5.0` | Disk usage % for paths used by bar `sysmon` widgets with `stat = "disk_pct"` |
+| `history_poll_seconds` | `1.0` | Graph history cadence for bar and desktop `sysmon` widgets in graph mode |
+
+CPU usage and CPU temperature share `cpu_poll_seconds` because both are tied to the same CPU sampling pass. Network Rx and Tx share `network_poll_seconds` because they come from the same `/proc/net/dev` read.
+
+GPU temperature is read from Linux hwmon when available, with an NVML fallback for NVIDIA proprietary drivers. GPU VRAM is read from AMDGPU DRM sysfs when available, with the same NVML fallback.
 
 ---
 
