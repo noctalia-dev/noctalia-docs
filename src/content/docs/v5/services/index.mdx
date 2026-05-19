@@ -224,8 +224,11 @@ noctalia:panel-toggle wallpaper
 noctalia:panel-toggle control-center
 noctalia:media previous
 noctalia:media toggle
+noctalia:media stop
 noctalia:media next
 ```
+
+`media stop` invokes the MPRIS `Stop` method on the active player and clears that player from Noctalia's active-player selection until it starts playing again. Unlike `media toggle` (pause), stop is meant for dismissing media UI such as the bar `media` widget when it is configured to hide without an active player.
 
 Idle behavior uses the Wayland `ext_idle_notifier_v1` protocol and respects active idle inhibitors.
 
