@@ -168,6 +168,10 @@ export default defineConfig({
                       label: "Niri",
                       link: "v5/getting-started/compositor-settings/niri/",
                     },
+                    {
+                      label: "Hyprland",
+                      link: "v5/getting-started/compositor-settings/hyprland/",
+                    },
                   ],
                 },
               ],

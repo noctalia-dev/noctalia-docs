@@ -16,9 +16,11 @@ For the *Niri* compositor, add the following line to the end of your configurati
 spawn-at-startup "noctalia"
 ```
 
-For the *Hyprland* compositor, append this line to your configuration file, typically located at `~/.config/hypr/hyprland.conf`
-```ini
-exec-once = noctalia
+For the *Hyprland* compositor, append this to your Lua configuration file, typically located at `~/.config/hypr/hyprland.lua`
+```lua
+hl.on("hyprland.start", function()
+  hl.exec_cmd("noctalia")
+end)
 ```
 
 If your compositor expects startup commands to return after the shell has initialized, run Noctalia in daemon mode:
