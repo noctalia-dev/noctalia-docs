@@ -71,6 +71,13 @@ Treat `~/.local/state/noctalia/settings.toml` as an app-managed override file. I
 
 Both layers are watched for changes and hot-reloaded. If neither layer exists, Noctalia uses its built-in defaults.
 
+## Exporting config from Settings
+
+The Settings actions menu includes **Export Config...**. It opens a chooser with two export modes:
+
+- **Merged User Config** is recommended for dotfiles. It merges your explicit config files and GUI-managed overrides into one TOML file, while leaving built-in defaults implicit.
+- **Full Effective Config** exports the active config snapshot, including built-in defaults. Use it for inspection or sharing an exact state, but avoid treating it as your long-term curated config because it pins defaults that could otherwise evolve.
+
 ## Where next?
 
 - [Shell](/v5/shell/) covers global behavior like fonts, scale, shadows, OSD, keybinds, and hooks.

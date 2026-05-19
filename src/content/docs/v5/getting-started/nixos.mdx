@@ -21,8 +21,7 @@ To make Noctalia's wifi, bluetooth, power-profile, and battery feature available
 :::
 
 ## Nix Flakes
-
-To install Noctalia using flakes, you first need to [add the flake input](#add-flake-input) and then [install the package](#install-package).
+To install Noctalia using flakes, first [add the flake input](#add-flake-input). Then you can either [install the package](#install-package) directly or use the [Home Manager module](#home-manager).
 
 ### Adding the Flake input {#add-flake-input}
 
@@ -53,13 +52,57 @@ Add the package to your system packages or equivalent:
 }
 ```
 
+### Home Manager Module {#home-manager}
+
+The flake also exposes a Home Manager module, which allows you to configure Noctalia's settings [(that you would otherwise put in `~/.config/noctalia/`)](/v5/configuration).
+
+```nix
+{ inputs, pkgs, ... }:
+{
+  home-manager.users.drfoobar = {
+    imports = [
+      inputs.noctalia.homeModules.default
+    ];
+
+    programs.noctalia = {
+      enable = true;
+
+      settings = { # This may also be a string or path to a .toml file.
+        theme = {
+          mode = "dark";
+          source = "builtin";
+          builtin = "Catppuccin";
+        };
+
+        wallpaper = {
+          enabled = true;
+          default.path = "/path/to/wallpapers/wallpaper.png";
+        };
+      };
+    };
+  };
+}
+```
+
 ### Binary Cache {#binary-cache}
 
 Pre-built binaries are available on [Cachix](https://app.cachix.org/cache/noctalia), so you can skip compiling locally.
 
+:::caution
+To use the binary cache, you have to omit `inputs.nixpkgs.follows` from the Noctalia input.
+:::
+
 You can add the cache either to your flake, nixos configuration, or `/etc/nix/nix.conf`.
 
 <Tabs>
+  <TabItem label="configuration.nix">
+    ```nix
+    nix.settings = {
+      extra-substituters = [ "https://noctalia.cachix.org" ];
+      extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ];
+    };
+    ```
+  </TabItem>
   <TabItem label="flake.nix">
     ```nix
     nixConfig = {
@@ -68,18 +111,10 @@ You can add the cache either to your flake, nixos configuration, or `/etc/nix/ni
     };
     ```
   </TabItem>
-  <TabItem label="configuration.nix"> 
-    ```nix
-    nix.settings = { 
-      extra-substituters = [ "https://noctalia.cachix.org" ]; 
-      extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ]; 
-    };
-    ``` 
-  </TabItem>
-  <TabItem label="nix.conf"> 
+  <TabItem label="nix.conf">
     ```properties
     extra-substituters = https://noctalia.cachix.org
     extra-trusted-public-keys = noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=
-    ``` 
+    ```
   </TabItem>
 </Tabs>

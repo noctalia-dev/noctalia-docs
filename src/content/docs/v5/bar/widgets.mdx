@@ -19,7 +19,7 @@ type = "<widget-type>"   # defaults to <name> when omitted
 # ...widget-specific settings
 ```
 
-This allows multiple instances of the same widget type:
+This allows multiple named widgets with the same widget type:
 
 ```toml
 [widget.clock-seconds]
@@ -190,12 +190,12 @@ System resource monitor. Shows an icon and value for one configurable stat. Mult
 | `cpu_temp` | `65°C` | CPU package temperature |
 | `gpu_temp` | `72°C` | GPU temperature |
 | `gpu_vram` | `42%` | GPU VRAM usage |
-| `ram_used` | `4.2G` | RAM used (human-readable) |
+| `ram_used` | `4.2 GiB` | RAM used (binary, auto-scaled) |
 | `ram_pct` | `26%` | RAM used % |
 | `swap_pct` | `12%` | Swap used % |
 | `disk_pct` | `45%` | Disk used % for `path` |
-| `net_rx` | `1.2M` | Network download speed (auto-scaled) |
-| `net_tx` | `256K` | Network upload speed (auto-scaled) |
+| `net_rx` | `1.2 MB/s` | Network download speed (decimal, auto-scaled) |
+| `net_tx` | `256 kB/s` | Network upload speed (decimal, auto-scaled) |
 
 GPU temperature is read from Linux hwmon when available, with an NVML fallback for NVIDIA proprietary drivers.
 GPU VRAM is read from AMDGPU DRM sysfs when available, with an NVML fallback for NVIDIA proprietary drivers.
@@ -283,6 +283,7 @@ Horizontal audio spectrum using the current PipeWire monitor stream.
 | `width` | number | `56` | Widget width in screen pixels |
 | `bands` | number | `16` | Number of spectrum bands |
 | `mirrored` | bool | `true` | Mirror the spectrum around the center line |
+| `centered` | bool | `true` | Center bars on the cross axis instead of aligning them to the edge |
 | `show_when_idle` | bool | `false` | Keep the widget visible even when no media is playing |
 | `low_color` | string | `"primary"` | Color role or hex color for the first bars |
 | `high_color` | string | `"primary"` | Color role or hex color for the last bars |
@@ -294,6 +295,7 @@ The widget height fills the available bar space automatically.
 type       = "audio_visualizer"
 width      = 64
 bands      = 20
+centered   = true
 show_when_idle = true
 low_color  = "primary"
 high_color = "secondary"
@@ -328,9 +330,11 @@ Shows battery charge level and state via UPower. Hides itself when the selected 
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `device` | string | `auto` | UPower device selector. `auto` monitors the system power-supply battery only; explicit selectors can target any present battery-capable UPower device. |
-| `warning_threshold` | integer | `20` | Battery percentage at or below which glyph and label switch to warning color. `0` disables. |
-| `warning_color` | color | `error` | Color applied when charge is at or below `warning_threshold`. Ignored while charging. |
+| `display_mode` | string | `"icon"` | `"icon"` shows a glyph icon; `"graphic"` draws a rectangular battery shape with an animated fill level. |
+| `show_label` | bool | `true` | In `icon` mode: show the percentage label next to the glyph. In `graphic` mode: overlay the percentage text on the battery body. |
+| `device` | string | `"auto"` | UPower device selector. `auto` monitors the system power-supply battery only; explicit selectors can target any present battery-capable UPower device. |
+| `warning_threshold` | integer | `20` | Battery percentage at or below which the widget switches to the warning color. `0` disables. |
+| `warning_color` | color | `"error"` | Color applied when charge is at or below `warning_threshold`. Ignored while charging. |
 
 `device = "auto"` is safe on desktops: it will not use gamepads, mice, headsets, or other peripherals as the default battery widget. Use an explicit selector for those devices.
 
@@ -341,6 +345,17 @@ Selectors can be a full UPower object path, a native path/name, a stable suffix 
 [widget.battery]
 type = "battery"
 device = "auto"
+
+# Graphical battery with percentage overlay
+[widget.battery]
+type = "battery"
+display_mode = "graphic"
+
+# Graphical battery without percentage text
+[widget.battery]
+type = "battery"
+display_mode = "graphic"
+show_label = false
 
 # Internal battery by native name/suffix
 [widget.internal_battery]
@@ -652,7 +667,7 @@ Custom widget driven by a Luau script. See [Scripted widgets](/v5/bar/scripted-w
 |---------|------|---------|-------------|
 | `script` | string | `""` | Path to the Luau script file (`~` is expanded) |
 | `hot_reload` | bool | `false` | Watch the script file and reload on change (dev tool) |
-| `scope` | string | `"instance"` | `"instance"` runs one runtime per bar widget instance. `"shared"` runs one runtime per widget config key and shares state across bars. |
+| `scope` | string | `"instance"` | `"instance"` runs one runtime per live widget placement. `"shared"` runs one runtime per widget config key and shares state across bars. |
 
 ```toml
 [widget.my_widget]

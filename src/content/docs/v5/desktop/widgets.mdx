@@ -65,7 +65,7 @@ bias for corner drags so matching widget widths is easier.
 ## Config Format
 
 Widget definitions are named tables under `[desktop_widgets.widget.<id>]`. This makes them friendly to split config
-files and deep-merge overrides. Edit mode writes the same schema into `settings.toml`; use Flatten config to promote
+files and deep-merge overrides. Edit mode writes the same schema into `settings.toml`; use Settings -> Export Config... -> Merged User Config to promote
 GUI-edited layouts back into declarative config.
 When `widget_order` is present, it is the authoritative widget list and order; unlisted widget tables are ignored.
 
@@ -167,7 +167,7 @@ shadow = true
 
 ### audio_visualizer
 
-Desktop audio visualizers store an `aspect_ratio` setting for shape while `scale` controls overall size. They also accept optional `mirrored`, `low_color`, and `high_color` settings; both colors default to `primary`.
+Desktop audio visualizers store an `aspect_ratio` setting for shape while `scale` controls overall size. They also accept optional `mirrored`, `centered`, `show_when_idle`, `low_color`, and `high_color` settings; both colors default to `primary`.
 
 ```toml
 [desktop_widgets.widget.audio_main]
@@ -182,6 +182,8 @@ rotation = 0.0
 bands        = 32
 aspect_ratio = 2.5
 mirrored     = true
+centered     = true
+show_when_idle = false
 low_color    = "primary"
 high_color   = "secondary"
 ```
@@ -191,6 +193,8 @@ high_color   = "secondary"
 | `bands` | int | `32` | Number of frequency bands |
 | `aspect_ratio` | float | `2.5` | Width-to-height ratio |
 | `mirrored` | bool | `true` | Mirror the spectrum horizontally |
+| `centered` | bool | `true` | Center bars vertically instead of aligning them to the bottom edge |
+| `show_when_idle` | bool | `false` | Keep the widget visible even when no media is playing |
 | `low_color` | string | `"primary"` | Gradient low-end color role or hex color |
 | `high_color` | string | `"primary"` | Gradient high-end color role or hex color |
 

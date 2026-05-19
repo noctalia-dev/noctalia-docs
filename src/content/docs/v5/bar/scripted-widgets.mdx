@@ -23,7 +23,9 @@ my_setting = "value"
 |---------|------|---------|-------------|
 | `script` | string | `""` | Path to the Luau script file. Absolute paths and `~` paths are used directly; relative paths are resolved from the assets bundle (e.g. `scripts/screen_recorder.lua`). |
 | `hot_reload` | bool | `false` | Watch the script file for changes and reload automatically (inotify). Intended for development. |
-| `scope` | string | `"instance"` | Runtime scope. `"instance"` creates one script runtime per bar widget instance. `"shared"` creates one runtime per widget config key and shares its displayed state across all matching bars. |
+| `scope` | string | `"instance"` | Runtime scope. `"instance"` creates one script runtime per live widget placement. `"shared"` creates one runtime per widget config key and shares its displayed state across all matching bars. |
+| `audio_spectrum` | bool | `false` | Subscribe the script to Noctalia's PipeWire spectrum data and call `onAudioSpectrum`. |
+| `audio_spectrum_bands` | number | `16` | Number of spectrum bands passed to `onAudioSpectrum` when `audio_spectrum` is enabled. |
 
 Use `scope = "shared"` for scripts whose `update()` computes global state, such as process status. Shared scripts should not depend on per-bar layout state during `update()`.
 
@@ -59,8 +61,8 @@ Lua callbacks have execution budgets. If a callback repeatedly exceeds its budge
 | `barWidget.setText(text)` | — | Set the label text |
 | `barWidget.setGlyph(name)` | — | Set the icon by Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint string |
 | `barWidget.setFont(familyOrPath)` | — | Set the label font. Pass a system font family name, or a path to a `.otf` / `.ttf` / `.woff2` file (absolute, `~/`, or relative to the assets dir). The font is registered at runtime — no restart needed. |
-| `barWidget.setColor(role, mode?)` | — | Set the label color by color role |
-| `barWidget.setGlyphColor(role, mode?)` | — | Set the glyph color by color role |
+| `barWidget.setColor(color, mode?)` | — | Set the label color by color role or hex color |
+| `barWidget.setGlyphColor(color, mode?)` | — | Set the glyph color by color role or hex color |
 | `barWidget.setVisible(visible)` | — | Show or hide the entire widget |
 | `barWidget.setUpdateInterval(ms)` | — | Set the `update()` tick interval in milliseconds (default 250, minimum 16) |
 | `barWidget.isVertical()` | `boolean` | Whether the bar is in vertical orientation |
@@ -83,6 +85,7 @@ role even for `"on_surface"`; Settings `color` still has final precedence.
 | `onMiddleClick()` | Middle mouse button clicked when `[shell].middle_click_opens_widget_settings = false` |
 | `onHover(isHovering)` | Mouse enters (`true`) or leaves (`false`) the widget |
 | `onIpc(event, payload)` | `noctalia msg scripted-widget ...` dispatches an event to the widget |
+| `onAudioSpectrum(values, state)` | Called when `audio_spectrum = true`; both arguments are comma-separated strings. `state` is `audio_active,mpris_playing` as `1` or `0`. |
 
 ---
 
@@ -94,13 +97,13 @@ Scripted widgets can receive named events from Noctalia IPC:
 noctalia msg scripted-widget <widget-name> <target[:bar-name]> <event> [payload]
 ```
 
-`<widget-name>` is the `[widget.<name>]` config key. `<target>` is required so side-effectful scripts do not accidentally run once per monitor or once per bar. If the target matches more than one live scripted widget instance, the command fails instead of picking one arbitrarily.
+`<widget-name>` is the `[widget.<name>]` config key. `<target>` is required so side-effectful scripts do not accidentally run once per monitor or once per bar. If the target matches more than one live scripted widget placement, the command fails instead of picking one arbitrarily.
 
 | Target | Description |
 |--------|-------------|
 | `focused` | Dispatch to one matching widget on the preferred interactive output |
 | monitor selector | Dispatch to one matching widget on a matching connector, such as `DP-1` |
-| `all` | Broadcast to every live matching instance |
+| `all` | Broadcast to every live matching placement |
 | `<target>:<bar-name>` | Narrow any target to a named bar, such as `focused:top` or `DP-1:default` |
 
 The script receives the event through:
@@ -194,21 +197,30 @@ noctalia msg scripted-widget screen_recorder focused:default start
 
 ## Example: Bongo Cat
 
-A `bongocat.lua` script is bundled in `assets/scripts/` (with its `bongocat.otf` font in `assets/fonts/`). A cat sits in your bar and slaps its paws when you type, naps when idle, and blinks.
+A `bongocat.lua` script is bundled in `assets/scripts/` (with its `bongocat.otf` font in `assets/fonts/`). A cat sits in your bar and slaps its paws when you type or to the beat, naps when idle, and blinks.
 
 - **Left click** — pause / resume
 - **IPC** — `keydown`, `keyup`, `keyrepeat` (payload `space` or `enter` for a two-paw slap), plus `pause`, `resume`, `toggle`
 
 ```toml
 [widget.bongocat]
-type         = "scripted"
-script       = "scripts/bongocat.lua"
-input_device = "/dev/input/event6"
+type           = "scripted"
+script         = "scripts/bongocat.lua"
+input_device   = "/dev/input/event6"
+audio_spectrum = true
+tappy_mode     = true
+rave_mode      = true
 ```
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `input_device` | string | `""` | evdev keyboard node to read, e.g. `/dev/input/event6`. Find yours with `sudo evtest` or `ls -l /dev/input/by-id`. Must match `/dev/input/eventN`. |
+| `audio_spectrum` | bool | `false` | Enables Noctalia PipeWire spectrum events for sound-reactive modes. |
+| `tappy_mode` | bool | `false` | Slap paws to detected beats while audio is active. |
+| `rave_mode` | bool | `false` | Flash the cat through the v4 Slow Bongo rainbow colors on detected beats. |
+| `use_mpris_filter` | bool | `false` | Only react while the active MPRIS player reports `Playing`. |
+
+Leave `input_device` unset to disable regular keyboard input and use only sound reactivity.
 
 When `input_device` is set and [`evtest`](https://cgit.freedesktop.org/evtest/) is installed, the widget automatically launches **one** background reader that forwards key events back over IPC. The reader is `flock`-guarded, so multi-monitor setups and hot reloads will not spawn duplicates.
 

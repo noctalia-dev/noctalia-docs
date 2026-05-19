@@ -111,7 +111,8 @@ Noctalia will extract colors from that image, generate a palette with the config
 
 ## `mode`
 
-`dark` or `light` selects the palette variant. `auto` is treated as `dark` until system light/dark tracking lands.
+`dark` or `light` selects the palette variant. `auto` follows the desktop color-scheme setting when available; otherwise
+the resolved mode is `dark`.
 
 ## Shell Color Roles
 
@@ -125,6 +126,7 @@ color is needed; Settings role pickers expose the 16 roles.
 ### IPC
 
 ```sh
+noctalia msg theme-mode-get
 noctalia msg theme-mode-toggle
 ```
 
