@@ -71,21 +71,3 @@ hl.layer_rule({
   blur_popups = true,
 })
 ```
-
-## KDE Tray Daemon
-
-This can happen when KDE is installed alongside Hyprland. KDE's tray daemon (`kded6`) can interfere with Noctalia's system tray, though it usually does not autostart at cold boot.
-
-Opening Dolphin with elevated privileges can respawn `kded6`, which can cause tray icons to disappear. Stop it manually, then restart Noctalia:
-
-```bash
-pkill kded6
-```
-
-You can also add this to your Hyprland Lua autostart:
-
-```lua
-hl.on("hyprland.start", function()
-  hl.exec_cmd("pkill kded6")
-end)
-```
