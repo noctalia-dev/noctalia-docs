@@ -143,16 +143,14 @@ window-rule {
   No need to set blur to 'true' here, it's automatic.
 */
 layer-rule {
-  match namespace="^noctalia-(bar-[^"]+|notification|dock|panel)$"
+  match namespace="^noctalia-(bar-[^\"]+|notification|dock|panel)$"
   background-effect {
     xray false
     //blur false
   }
 }
 
-You can also fine-tune the blur effect globally:
-
-```kdl
+/* You can also fine-tune the blur effect globally. */
 blur {
   passes 2        // more passes = stronger blur (default: 3)
   offset 3.0      // sample distance per pass (default: 3.0)
