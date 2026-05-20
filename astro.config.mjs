@@ -172,10 +172,11 @@ export default defineConfig({
                       label: "Hyprland",
                       link: "v5/getting-started/compositor-settings/hyprland/",
                     },
+                    {
+                      label: "Keybinds",
+                      link: "v5/getting-started/compositor-settings/keybinds/",
+                    },
                   ],
-                },
-                {
-                  label: "Keybinds", link: "v5/getting-started/keybinds"
                 },
                 {
                   label: "Network",

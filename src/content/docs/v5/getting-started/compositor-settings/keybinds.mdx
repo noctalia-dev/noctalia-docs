@@ -36,7 +36,7 @@ Add these binds to your `~/.config/niri/config.kdl`:
 ```kdl
 binds {
     // Core Noctalia binds
-    Mod+Space { spawn-sh "noctalia msg panel-toggle launcher; }
+    Mod+Space { spawn-sh "noctalia msg panel-toggle launcher"; }
     Mod+S { spawn-sh "noctalia msg panel-toggle control-center"; }
     Mod+Comma { spawn-sh "noctalia msg settings-toggle"; }
 
@@ -45,7 +45,7 @@ binds {
     XF86AudioLowerVolume { spawn "noctalia" "msg" "volume-down"; }
     XF86AudioMute { spawn "noctalia" "msg" "volume-mute"; }
     XF86MonBrightnessUp { spawn "noctalia" "msg" "brightness-up"; }
-    XF86MonBrightnessDown { spawn "noctalia msg brightness-down"; }
+    XF86MonBrightnessDown { spawn "noctalia" "msg" "brightness-down"; }
 }
 ```
 
@@ -56,20 +56,20 @@ binds {
 
 Add these binds to your `hyprland.conf`:
 
-```ini
-$ipc = noctalia
+```lua
+local ipc = "noctalia msg"
 
-# Core binds
-bind = SUPER, SPACE, exec, $ipc launcher toggle
-bind = SUPER, S, exec, $ipc controlCenter toggle
-bind = SUPER, comma, exec, $ipc settings toggle
+-- Core binds
+hl.bind(mainMod .. "+Space", hl.dsp.exec_cmd(ipc .. " panel-toggle launcher"))
+hl.bind(mainMod .. "+S", hl.dsp.exec_cmd(ipc .. " panel-toggle control-center"))
+hl.bind(mainMod .. "+comma", hl.dsp.exec_cmd(ipc .. " settings-toggle"))
 
-# Media keys
-bindel = , XF86AudioRaiseVolume, exec, $ipc volume increase
-bindel = , XF86AudioLowerVolume, exec, $ipc volume decrease
-bindl = , XF86AudioMute, exec, $ipc volume muteOutput
-bindel = , XF86MonBrightnessUp, exec, $ipc brightness increase
-bindel = , XF86MonBrightnessDown, exec, $ipc brightness decrease
+-- Media keys
+hl.bind("", "XF86AudioRaiseVolume", hl.dsp.exec_cmd(ipc .. " volume-up"))
+hl.bind("", "XF86AudioLowerVolume", hl.dsp.exec_cmd(ipc .. " volume-down"))
+hl.bind("", "XF86AudioMute", hl.dsp.exec_cmd(ipc .. " volume-mute"))
+hl.bind("", "XF86MonBrightnessUp", hl.dsp.exec_cmd(ipc .. " brightness-up"))
+hl.bind("", "XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc .. " brightness-down"))
 ```
 
 </details>
@@ -80,19 +80,19 @@ bindel = , XF86MonBrightnessDown, exec, $ipc brightness decrease
 Add these binds to your `~/.config/sway/config` (or equivalent for your compositor):
 
 ```bash
-set $ipc qs -c noctalia-shell ipc call
+set $ipc noctalia msg
 
 # Core binds
-bindsym $mod+space exec $ipc launcher toggle
-bindsym $mod+s exec $ipc controlCenter toggle
-bindsym $mod+comma exec $ipc settings toggle
+bindsym $mod+space exec $ipc panel-toggle launcher
+bindsym $mod+s exec $ipc panel-toggle control-center
+bindsym $mod+comma exec $ipc settings-toggle
 
 # Media keys
-bindsym --locked XF86AudioRaiseVolume exec $ipc volume increase
-bindsym --locked XF86AudioLowerVolume exec $ipc volume decrease
-bindsym --locked XF86AudioMute exec $ipc volume muteOutput
-bindsym --locked XF86MonBrightnessUp exec $ipc brightness increase
-bindsym --locked XF86MonBrightnessDown exec $ipc brightness decrease
+bindsym --locked XF86AudioRaiseVolume exec $ipc volume-up
+bindsym --locked XF86AudioLowerVolume exec $ipc volume-down
+bindsym --locked XF86AudioMute exec $ipc volume-mute
+bindsym --locked XF86MonBrightnessUp exec $ipc brightness-up
+bindsym --locked XF86MonBrightnessDown exec $ipc brightness-down
 ```
 
 </details>
@@ -104,16 +104,16 @@ Add these binds to your `~/.config/mango/config.conf`:
 
 ```bash
 # Core binds
-bind=SUPER,space,spawn,qs -c noctalia-shell ipc call launcher toggle
-bind=SUPER,s,spawn,qs -c noctalia-shell ipc call controlCenter toggle
-bind=SUPER,comma,spawn,qs -c noctalia-shell ipc call settings toggle
+bind=SUPER,space,spawn,noctalia msg panel-toggle launcher
+bind=SUPER,s,spawn,noctalia msg panel-toggle control-center
+bind=SUPER,comma,spawn,noctalia msg settings-toggle
 
 # Media keys
-bind=NONE,XF86AudioRaiseVolume,spawn,qs -c noctalia-shell ipc call volume increase
-bind=NONE,XF86AudioLowerVolume,spawn,qs -c noctalia-shell ipc call volume decrease
-bind=NONE,XF86AudioMute,spawn,qs -c noctalia-shell ipc call volume muteOutput
-bind=NONE,XF86MonBrightnessUp,spawn,qs -c noctalia-shell ipc call brightness increase
-bind=NONE,XF86MonBrightnessDown,spawn,qs -c noctalia-shell ipc call brightness decrease
+bind=NONE,XF86AudioRaiseVolume,spawn,noctalia msg volume-up
+bind=NONE,XF86AudioLowerVolume,spawn,noctalia msg volume-down
+bind=NONE,XF86AudioMute,spawn,noctalia msg volume-mute
+bind=NONE,XF86MonBrightnessUp,spawn,noctalia msg brightness-up
+bind=NONE,XF86MonBrightnessDown,spawn,noctalia msg brightness-down
 ```
 
 </details>
@@ -124,5 +124,5 @@ Not sure what else you can control? You can see all IPC commands via this termin
 
 **List all targets**:
     ```bash
-    qs -c noctalia-shell ipc show
+    noctalia msg --help
     ```
