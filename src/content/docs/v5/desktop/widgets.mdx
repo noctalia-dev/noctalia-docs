@@ -117,9 +117,11 @@ All desktop widget types support an optional rounded background rectangle:
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `background` | bool | `false` | Show a filled rounded rectangle behind the widget |
-| `background_color` | string | `"surface"` (80% opacity) | Background fill color role or hex color |
+| `background_color` | string | `"surface"` (80% opacity) | Background fill color role; fixed hex colors are also supported |
 | `background_radius` | float | `12.0` | Corner radius in logical pixels |
 | `background_padding` | float | `10.0` | Padding between content and background edge |
+
+Prefer color role names so desktop widgets follow the active palette. Fixed hex colors (`#RGB`, `#RGBA`, `#RRGGBB`, `#RRGGBBAA`) are supported when a non-palette color is intentional. Invalid role names or malformed hex colors are treated as config errors.
 
 ```toml
 [desktop_widgets.widget.clock_main.settings]
@@ -131,7 +133,7 @@ The `clock`, `weather`, `media_player`, and `sysmon` widget types additionally s
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `color` | string | `"on_surface"` | Text/glyph color role or hex color (e.g. `"primary"`, `"tertiary"`) |
+| `color` | string | `"on_surface"` | Text/glyph color role (e.g. `"primary"`, `"tertiary"`); fixed hex colors are also supported |
 | `shadow` | bool | `true` | Draw a drop shadow behind text and glyphs for readability on wallpapers |
 
 ```toml
@@ -195,8 +197,8 @@ high_color   = "secondary"
 | `mirrored` | bool | `true` | Mirror the spectrum horizontally |
 | `centered` | bool | `true` | Center bars vertically instead of aligning them to the bottom edge |
 | `show_when_idle` | bool | `false` | Keep the widget visible even when no media is playing |
-| `low_color` | string | `"primary"` | Gradient low-end color role or hex color |
-| `high_color` | string | `"primary"` | Gradient high-end color role or hex color |
+| `low_color` | string | `"primary"` | Gradient low-end color role; fixed hex colors are also supported |
+| `high_color` | string | `"primary"` | Gradient high-end color role; fixed hex colors are also supported |
 
 ---
 
@@ -297,8 +299,8 @@ background = true
 |---------|------|---------|-------------|
 | `stat` | string | `"cpu_usage"` | Primary stat: `"cpu_usage"`, `"cpu_temp"`, `"gpu_temp"`, `"gpu_vram"`, `"ram_pct"`, `"swap_pct"`, `"net_rx"`, `"net_tx"` |
 | `stat2` | string | — | Optional secondary stat (same values as `stat`). Omit for single curve. |
-| `color` | string | `"primary"` | Primary line color role or hex color |
-| `color2` | string | `"secondary"` | Secondary line color role or hex color (used when `stat2` is set) |
+| `color` | string | `"primary"` | Primary line color role; fixed hex colors are also supported |
+| `color2` | string | `"secondary"` | Secondary line color role; fixed hex colors are also supported when `stat2` is set |
 | `show_label` | bool | `true` | Show the current value as text next to the icon |
 
 GPU temperature is read from Linux hwmon when available, with an NVML fallback for NVIDIA proprietary drivers.

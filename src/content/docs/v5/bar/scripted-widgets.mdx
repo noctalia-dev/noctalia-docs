@@ -61,8 +61,8 @@ Lua callbacks have execution budgets. If a callback repeatedly exceeds its budge
 | `barWidget.setText(text)` | — | Set the label text |
 | `barWidget.setGlyph(name)` | — | Set the icon by Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint string |
 | `barWidget.setFont(familyOrPath)` | — | Set the label font. Pass a system font family name, or a path to a `.otf` / `.ttf` / `.woff2` file (absolute, `~/`, or relative to the assets dir). The font is registered at runtime — no restart needed. |
-| `barWidget.setColor(color, mode?)` | — | Set the label color by color role or hex color |
-| `barWidget.setGlyphColor(color, mode?)` | — | Set the glyph color by color role or hex color |
+| `barWidget.setColor(color, mode?)` | — | Set the label color by color role (recommended); fixed hex colors are also supported |
+| `barWidget.setGlyphColor(color, mode?)` | — | Set the glyph color by color role (recommended); fixed hex colors are also supported |
 | `barWidget.setVisible(visible)` | — | Show or hide the entire widget |
 | `barWidget.setUpdateInterval(ms)` | — | Set the `update()` tick interval in milliseconds (default 250, minimum 16) |
 | `barWidget.isVertical()` | `boolean` | Whether the bar is in vertical orientation |

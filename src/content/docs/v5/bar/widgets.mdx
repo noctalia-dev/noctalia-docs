@@ -85,10 +85,12 @@ Set `[widget.workspaces].capsule_radius` for just the workspace switcher, or `[b
 |---------|------|---------|-------------|
 | `display` | string | `"id"` | Label mode: `"none"`, `"id"`, or `"name"` |
 | `max_label_chars` | int | `1` | Maximum characters for workspace name labels; longer names are truncated. Only affects non-numeric labels (workspace IDs like `10`, `11` are never truncated). |
-| `focused_color` | string | `"primary"` | Color role or hex color for the focused workspace pill |
-| `occupied_color` | string | `"secondary"` | Color role or hex color for occupied (non-focused) workspace pills |
-| `empty_color` | string | `"secondary"` | Color role or hex color for empty workspace pills |
+| `focused_color` | string | `"primary"` | Color role for the focused workspace pill; fixed hex colors are also supported |
+| `occupied_color` | string | `"secondary"` | Color role for occupied (non-focused) workspace pills; fixed hex colors are also supported |
+| `empty_color` | string | `"secondary"` | Color role for empty workspace pills; fixed hex colors are also supported |
 | `hide_when_empty` | bool | `false` | Hide workspace pills with no open windows. |
+
+Prefer color role names so widgets follow the active palette. Fixed hex colors (`#RGB`, `#RGBA`, `#RRGGBB`, `#RRGGBBAA`) are supported when a non-palette color is intentional. Invalid role names or malformed hex colors are treated as config errors.
 
 ```toml
 [widget.workspaces]
@@ -285,8 +287,8 @@ Horizontal audio spectrum using the current PipeWire monitor stream.
 | `mirrored` | bool | `true` | Mirror the spectrum around the center line |
 | `centered` | bool | `true` | Center bars on the cross axis instead of aligning them to the edge |
 | `show_when_idle` | bool | `false` | Keep the widget visible even when no media is playing |
-| `low_color` | string | `"primary"` | Color role or hex color for the first bars |
-| `high_color` | string | `"primary"` | Color role or hex color for the last bars |
+| `low_color` | string | `"primary"` | Color role for the first bars; fixed hex colors are also supported |
+| `high_color` | string | `"primary"` | Color role for the last bars; fixed hex colors are also supported |
 
 The widget height fills the available bar space automatically.
 
@@ -655,6 +657,39 @@ Shows a glyph and opens the wallpaper picker panel on click.
 ```toml
 [widget.wallpaper]
 glyph = "photo"
+```
+
+---
+
+## `custom_button`
+
+Static command button for simple user actions. Use `scripted` when the widget needs command output, polling, dynamic
+state, IPC callbacks, or custom logic.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `glyph` | string | `"heart"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint. Empty hides the glyph. |
+| `label` | string | `""` | Optional static label shown beside or below the glyph. |
+| `tooltip` | string | `""` | Tooltip shown on hover. |
+| `command` | string | `""` | Shell command run on left click. |
+| `right_command` | string | `""` | Shell command run on right click. |
+| `middle_command` | string | `""` | Shell command run on middle click. When set, middle click runs this command instead of opening widget settings. |
+| `scroll_up_command` | string | `""` | Shell command run when scrolling up over the button. |
+| `scroll_down_command` | string | `""` | Shell command run when scrolling down over the button. |
+
+```toml
+[widget.lock_button]
+type = "custom_button"
+glyph = "lock"
+tooltip = "Lock screen"
+command = "loginctl lock-session"
+
+[widget.volume_step]
+type = "custom_button"
+glyph = "volume"
+label = "Vol"
+scroll_up_command = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+scroll_down_command = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
 ```
 
 ---
