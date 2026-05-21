@@ -204,6 +204,16 @@ Requires [just](https://github.com/casey/just) and [meson](https://mesonbuild.co
 	# After building, install. The install recipe does not build or reconfigure.
 	sudo just install release
 		```
+
+	Pass a prefix to `configure` to install somewhere other than `/usr/local`:
+
+	```bash
+	just configure release "$HOME/.local"
+	just build release
+	just install release
+	```
+
+	To remove files installed from a build directory, run `just uninstall release`.
   </TabItem>
   <TabItem label="Debug Mode">
 		```bash
