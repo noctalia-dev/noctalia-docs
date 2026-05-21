@@ -114,9 +114,10 @@ Left-click an icon to focus that window. The active window shows a small primary
 
 **Only active workspace** limits the list to windows the shell can place on a workspace that is currently active on its monitor (same idea as the v4 taskbar option). It works with or without `group_by_workspace`; with grouping, inactive workspace capsules are omitted.
 
-When `group_by_workspace` is enabled, workspace group capsules use the taskbar widget's resolved `capsule_radius`.
+When `group_by_workspace` is enabled, workspace **disc indicators** (the small numbered/name tags) and optional **group capsules** (the background around each workspace's icon row) use the taskbar widget's resolved `capsule_radius`.
 Set `[widget.taskbar].capsule_radius` for just the taskbar, or `[bar.<name>].capsule_radius` as the bar default.
-Set `show_workspace_label = false` to hide the small workspace tag on each group (icons only).
+Set `show_workspace_label = false` to hide workspace disc indicators (icons only).
+Set `workspace_group_capsule = false` to drop the group background/border while keeping grouping and disc labels.
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
@@ -126,6 +127,7 @@ Set `show_workspace_label = false` to hide the small workspace tag on each group
 | `show_workspace_label` | bool | `true` | When `group_by_workspace` is on, show the workspace tag pill on each capsule. Set `false` for groups without the label. |
 | `workspace_label_placement` | string | `corner` | With grouping: `corner`, `centered` (on the pill edge), or `inside` (first tile in the pill). Requires `show_workspace_label`. |
 | `hide_empty_workspaces` | bool | `false` | When `group_by_workspace` is on, do not show capsules for workspaces that have no windows in the taskbar list. |
+| `workspace_group_capsule` | bool | `true` | Draw the background/border capsule around each workspace group. Set `false` for grouped icons and labels only. |
 
 ```toml
 [widget.taskbar]
@@ -135,6 +137,7 @@ only_active_workspace = true
 show_workspace_label = true
 workspace_label_placement = "corner"
 hide_empty_workspaces = true
+workspace_group_capsule = true
 ```
 
 ---
