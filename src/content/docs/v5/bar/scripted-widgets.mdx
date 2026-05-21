@@ -67,6 +67,7 @@ Lua callbacks have execution budgets. If a callback repeatedly exceeds its budge
 | `barWidget.setUpdateInterval(ms)` | — | Set the `update()` tick interval in milliseconds (default 250, minimum 16) |
 | `barWidget.isVertical()` | `boolean` | Whether the bar is in vertical orientation |
 | `barWidget.getConfig(key, default?)` | `any` | Read a TOML config setting. Returns the typed value or default/nil. |
+| `barWidget.define(manifest)` | — | Declare the widget's name, icon, and settings schema. See [Self-describing widgets](#self-describing-widgets). |
 
 **Color roles:** `primary`, `on_primary`, `secondary`, `on_secondary`, `tertiary`, `on_tertiary`, `error`, `on_error`, `surface`, `on_surface`, `surface_variant`, `on_surface_variant`, `outline`, `shadow`, `hover`, `on_hover`.
 
@@ -86,6 +87,62 @@ role even for `"on_surface"`; Settings `color` still has final precedence.
 | `onHover(isHovering)` | Mouse enters (`true`) or leaves (`false`) the widget |
 | `onIpc(event, payload)` | `noctalia msg scripted-widget ...` dispatches an event to the widget |
 | `onAudioSpectrum(values, state)` | Called when `audio_spectrum = true`; both arguments are comma-separated strings. `state` is `audio_active,mpris_playing` as `1` or `0`. |
+
+---
+
+## Self-describing widgets
+
+A script can declare a **manifest** with `barWidget.define`. The manifest lets Noctalia:
+
+- list the widget directly in the bar's **Add widget** picker (with your label and icon), so it can be added in one click — no manual `[widget.*]` block or `script` path required;
+- render your custom settings as native controls in the widget's **Settings** panel.
+
+This works for any script — bundled or your own — with no changes to Noctalia itself.
+
+```lua
+-- Must be the FIRST statement in the script (before any side-effecting code,
+-- such as starting a process), so Noctalia can read the manifest safely.
+barWidget.define({
+    label = "Screen Recorder",        -- shown in the picker and settings
+    icon = "video",                   -- Noctalia alias / Tabler name / U+codepoint
+    description = "Record the screen", -- short picker subtitle
+    pickable = true,                  -- optional, default true; false hides it from the picker
+    settings = {
+        { key = "frame_rate", type = "int", label = "Frame rate",
+          default = 60, min = 1, max = 240 },
+        { key = "video_codec", type = "select", label = "Video codec", default = "h264",
+          options = {
+              { value = "h264", label = "H.264" },
+              { value = "hevc", label = "HEVC" },
+          } },
+        { key = "replay_enabled", type = "bool", label = "Replay buffer", default = false },
+        { key = "replay_duration", type = "int", label = "Replay seconds", default = 30,
+          visible_when = { key = "replay_enabled", values = { "true" } } },
+    },
+})
+```
+
+Each `settings` field accepts:
+
+| Field | Description |
+|-------|-------------|
+| `key` | Config key the widget reads with `barWidget.getConfig(key)`. Required. |
+| `type` | `bool`, `int`, `double`, `string`, `select`, or `color`. |
+| `label` | Control label. Defaults to `key`. |
+| `description` | Optional helper text under the control. |
+| `default` | Default value (matches `type`). |
+| `min` / `max` / `step` | Numeric bounds for `int` / `double`. |
+| `options` | For `select`: a list of `{ value = ..., label = ... }` (a list of plain strings also works). |
+| `advanced` | When `true`, hidden unless "Show advanced" is enabled. |
+| `visible_when` | `{ key = "other_key", values = { "true" } }` — only show this field when another setting matches one of `values`. |
+
+Manifest labels are used verbatim and are not translated.
+
+:::note
+The manifest call must run before any side effects (for example, before spawning a background process). Noctalia extracts the manifest by running the script up to `barWidget.define` and then stopping, so anything after that line is skipped during extraction.
+:::
+
+Bundled scripts that already declare a manifest are discovered automatically from the assets `scripts/` directory; your own scripts get their settings rendered in the GUI once you reference them in a `[widget.*]` block.
 
 ---
 
@@ -137,7 +194,7 @@ InputArea (accepts left / right / middle clicks)
 
 ## Example: GPU screen recorder
 
-A `screen_recorder.lua` script is bundled in `assets/scripts/` that wraps `gpu-screen-recorder` with recording and replay buffer support.
+A `screen_recorder.lua` script is bundled in `assets/scripts/` that wraps `gpu-screen-recorder` with recording and replay buffer support. It declares a [manifest](#self-describing-widgets), so it appears in the **Add widget** picker as "Screen Recorder" and can be added in one click — the TOML below is created for you, and its settings show up in the widget's Settings panel.
 
 - **Left click** — toggle recording
 - **Right click** — toggle replay buffer (if enabled) or save replay (if active)
@@ -197,7 +254,7 @@ noctalia msg scripted-widget screen_recorder focused:default start
 
 ## Example: Bongo Cat
 
-A `bongocat.lua` script is bundled in `assets/scripts/` (with its `bongocat.otf` font in `assets/fonts/`). A cat sits in your bar and slaps its paws when you type or to the beat, naps when idle, and blinks.
+A `bongocat.lua` script is bundled in `assets/scripts/` (with its `bongocat.otf` font in `assets/fonts/`). A cat sits in your bar and slaps its paws when you type or to the beat, naps when idle, and blinks. It declares a [manifest](#self-describing-widgets), so it appears in the **Add widget** picker as "Bongo Cat" and can be added in one click.
 
 - **Left click** — pause / resume
 - **IPC** — `keydown`, `keyup`, `keyrepeat` (payload `space` or `enter` for a two-paw slap), plus `pause`, `resume`, `toggle`
