@@ -168,8 +168,27 @@ export default defineConfig({
                       label: "Niri",
                       link: "v5/getting-started/compositor-settings/niri/",
                     },
+                    {
+                      label: "Hyprland",
+                      link: "v5/getting-started/compositor-settings/hyprland/",
+                    },
+                    {
+                      label: "Keybinds",
+                      link: "v5/getting-started/compositor-settings/keybinds/",
+                    },
                   ],
                 },
+                {
+                  label: "Network",
+                  items: [
+                    {
+                      label: "WpaSupplicant",
+                      link: "v5/getting-started/network/wpa_supplicant/"
+                    }
+                  ]
+                },
+                { label: "FAQ", link: "v5/getting-started/faq/" },
+                { label: "Uninstall", link: "v5/getting-started/uninstall"}
               ],
             },
             { 

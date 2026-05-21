@@ -118,12 +118,12 @@ noctalia msg toggle-force-nightlight
 
 ```toml
 [system.monitor]
-enabled = true
-cpu_poll_seconds = 1.0
-gpu_poll_seconds = 2.0
-memory_poll_seconds = 1.0
-network_poll_seconds = 1.0
-disk_poll_seconds = 5.0
+enabled = true                      # sample CPU, memory, network, load, temperature, GPU VRAM, and disk statistics
+cpu_poll_seconds = 2.0              # CPU usage, CPU temperature, and load average
+gpu_poll_seconds = 5.0              # GPU temperature and VRAM usage
+memory_poll_seconds = 2.0           # RAM usage
+network_poll_seconds = 3.0          # network throughput
+disk_poll_seconds = 10.0            # disk usage and swap usage
 ```
 
 When disabled, Noctalia keeps system-monitor UI available but stops the background sampling thread. Bar `sysmon` widgets, desktop `sysmon` widgets, and the Control Center System tab show unavailable values until the setting is enabled again.
