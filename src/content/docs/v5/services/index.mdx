@@ -238,7 +238,8 @@ Idle behavior uses the Wayland `ext_idle_notifier_v1` protocol and respects acti
 
 ```toml
 [notification]
-enable_daemon      = true   # when false, don't claim org.freedesktop.Notifications; internal toasts still work
+enable_daemon         = true   # when false, don't claim org.freedesktop.Notifications; internal toasts still work
+power_profile_notify  = true   # toast when the active UPower power profile changes
 position           = "top_right" # top_right | top_left | top_center | bottom_right | bottom_left | bottom_center
 layer              = "top"  # top | overlay
 background_opacity = 0.97   # toast card background alpha; lower values let compositor blur show through
@@ -254,3 +255,4 @@ monitors           = []     # empty = all displays; otherwise connector/descript
 - When `monitors` is non-empty, toasts are only created on matching outputs.
 - Selector matching follows monitor override rules: exact connector name (`eDP-1`) or a word-boundary token in output description.
 - Internal Noctalia notifications are transient toasts and are not stored in notification history.
+- `power_profile_notify = false` disables the toast when the active UPower power profile changes.

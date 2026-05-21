@@ -67,6 +67,7 @@ type = "session"
 | `media` | Media | Play/Pause active player | Open media tab |
 | `weather` | Temperature | Open weather tab | Open weather tab |
 | `sysmon` | System | Open system tab | Open system tab |
+| `screen_time` | Screen Time | Open screen time tab | Open screen time tab |
 | `keyboard_layout` | Current layout | Cycle keyboard layout | -- |
 | `wallpaper` | Wallpaper | Open wallpaper panel | -- |
 | `session` | Session | Open session panel | -- |
@@ -76,3 +77,14 @@ Toggle shortcuts show an active/inactive visual state. `power_profile`, `weather
 
 When no `[[control_center.shortcuts]]` entries are defined, the default set is: `wifi`, `bluetooth`, `caffeine`, `nightlight`, `notification`, `power_profile`.
 Set `shortcuts = []` under `[control_center]` to hide all Home shortcut buttons.
+
+## Screen Time
+
+The **Screen Time** tab shows how long each application was in the foreground today. Noctalia tracks focus using the active `zwlr_foreign_toplevel` window and stores daily totals under `$XDG_STATE_HOME/noctalia/screen_time.json` (about 14 days retained).
+
+- **Range** toggle: today (hourly chart), last 3 days, or last 14 days (daily bars)
+- **Total** time for the selected range, with a stacked bar chart (hourly or per-day)
+- **Chart legend** as a horizontal row under the chart (chart colors only; app list uses neutral bars)
+- **Most used** apps with icons, usage bars, and duration for the selected range
+
+Open it from the control center sidebar (`screen-time` context) or add a Home shortcut with `type = "screen_time"`.

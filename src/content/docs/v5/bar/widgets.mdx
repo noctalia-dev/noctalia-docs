@@ -120,6 +120,7 @@ Set `show_workspace_label = false` to hide the small workspace tag on each group
 | `show_all_outputs` | bool | `false` | Include windows from all displays. With `group_by_workspace`, workspaces from every monitor are merged; capsule badges use `tag·n` (workspace tag, middle dot, monitor index in bar output order) when there is more than one output. |
 | `only_active_workspace` | bool | `false` | Show only windows on the active workspace for each relevant monitor. Depends on compositor workspace data; if a window’s workspace cannot be resolved, it is still shown. |
 | `show_workspace_label` | bool | `true` | When `group_by_workspace` is on, show the workspace tag pill on each capsule. Set `false` for groups without the label. |
+| `workspace_label_placement` | string | `corner` | With grouping: `corner`, `centered` (on the pill edge), or `inside` (first tile in the pill). Requires `show_workspace_label`. |
 | `hide_empty_workspaces` | bool | `false` | When `group_by_workspace` is on, do not show capsules for workspaces that have no windows in the taskbar list. |
 
 ```toml
@@ -127,7 +128,8 @@ Set `show_workspace_label = false` to hide the small workspace tag on each group
 group_by_workspace = true
 show_all_outputs = true
 only_active_workspace = true
-show_workspace_label = false
+show_workspace_label = true
+workspace_label_placement = "corner"
 hide_empty_workspaces = true
 ```
 
