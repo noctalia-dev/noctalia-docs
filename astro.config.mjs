@@ -173,19 +173,14 @@ export default defineConfig({
                       link: "v5/getting-started/compositor-settings/hyprland/",
                     },
                     {
-                      label: "Keybinds",
-                      link: "v5/getting-started/compositor-settings/keybinds/",
+                      label: "Keybinds & IPC",
+                      items: [
+                        { label: "Overview", link: "v5/ipc/" },
+                        { label: "Shell & UI", link: "v5/ipc/shell-and-ui/" },
+                        { label: "System Controls", link: "v5/ipc/system-controls/" },
+                      ],
                     },
                   ],
-                },
-                {
-                  label: "Network",
-                  items: [
-                    {
-                      label: "WpaSupplicant",
-                      link: "v5/getting-started/network/wpa_supplicant/"
-                    }
-                  ]
                 },
                 { label: "FAQ", link: "v5/getting-started/faq/" },
                 { label: "Uninstall", link: "v5/getting-started/uninstall"}
@@ -245,11 +240,14 @@ export default defineConfig({
               ],
             },
             {
-              label: "IPC",
+              label: "System",
               items: [
-                { label: "Overview", link: "v5/ipc/" },
-                { label: "Shell & UI", link: "v5/ipc/shell-and-ui/" },
-                { label: "System Controls", link: "v5/ipc/system-controls/" },
+                {
+                  label: "Network",
+                  items: [
+                    { label: "WpaSupplicant", link: "v5/getting-started/network/wpa_supplicant/" },
+                  ],
+                },
               ],
             },
           ],
