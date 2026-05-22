@@ -128,6 +128,9 @@ Set `workspace_group_capsule = false` to drop the group background/border while 
 | `workspace_label_placement` | string | `corner` | With grouping: `corner`, `centered` (on the pill edge), or `inside` (first tile in the pill). Requires `show_workspace_label`. |
 | `hide_empty_workspaces` | bool | `false` | When `group_by_workspace` is on, do not show capsules for workspaces that have no windows in the taskbar list. |
 | `workspace_group_capsule` | bool | `true` | Draw the background/border capsule around each workspace group. Set `false` for grouped icons and labels only. |
+| `focused_color` | string | `"primary"` | Workspace disc fill when active (same roles as the workspaces widget) |
+| `occupied_color` | string | `"secondary"` | Workspace disc fill when occupied |
+| `empty_color` | string | `"secondary"` | Workspace disc fill when empty (shown at reduced opacity) |
 
 ```toml
 [widget.taskbar]
@@ -138,6 +141,9 @@ show_workspace_label = true
 workspace_label_placement = "corner"
 hide_empty_workspaces = true
 workspace_group_capsule = true
+focused_color = "primary"
+occupied_color = "secondary"
+empty_color = "secondary"
 ```
 
 ---
@@ -559,6 +565,7 @@ System tray (StatusNotifierItem).
 |---------|------|---------|-------------|
 | `hidden` | array of string | `[]` | Tray items to hide by id/name/bus/path token |
 | `pinned` | array of string | `[]` | Tray items that always stay visible in the bar when `drawer = true` |
+| `match_adjacent_spacing` | bool | `false` | Widen inline tray icon gaps to match the visual spacing of neighboring bar widgets (adds capsule padding on top of `widget_spacing`) |
 | `drawer` | bool | `false` | Replace inline tray icons with a tray button that opens a tray drawer panel |
 | `drawer_columns` | number | `3` | Number of tray icons per row in the drawer panel (`1` to `5`) |
 
