@@ -182,15 +182,6 @@ export default defineConfig({
                     },
                   ],
                 },
-                {
-                  label: "Network",
-                  items: [
-                    {
-                      label: "WpaSupplicant",
-                      link: "v5/getting-started/network/wpa_supplicant/"
-                    }
-                  ]
-                },
                 { label: "FAQ", link: "v5/getting-started/faq/" },
                 { label: "Uninstall", link: "v5/getting-started/uninstall"}
               ],
@@ -244,6 +235,17 @@ export default defineConfig({
                   label: "Services",
                   items: [
                     { label: "Services", link: "v5/services/" },
+                  ],
+                },
+              ],
+            },
+            {
+              label: "System",
+              items: [
+                {
+                  label: "Network",
+                  items: [
+                    { label: "WpaSupplicant", link: "v5/getting-started/network/wpa_supplicant/" },
                   ],
                 },
               ],
