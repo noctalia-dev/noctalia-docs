@@ -59,6 +59,7 @@ wallpaper_placement      = "attached" # attached | floating | centered
 session_placement        = "attached" # attached | floating | centered
 open_near_click_control_center = false  # attached/floating: follow the bar click instead of bar-center
 open_near_click_launcher       = false  # attached/floating: follow the bar click instead of bar-center
+launcher_browse_categories     = false  # optional segmented tabs for apps, wallpaper, and emoji browse
 open_near_click_clipboard      = false  # attached/floating: follow the bar click instead of bar-center
 open_near_click_wallpaper      = false  # attached/floating: follow the bar click instead of bar-center
 open_near_click_session        = false  # attached/floating: follow the bar click instead of bar-center
@@ -95,6 +96,7 @@ Notes:
 - `shell.panel.launcher_placement`, `clipboard_placement`, `control_center_placement`, `wallpaper_placement`, and `session_placement` accept `attached`, `floating`, or `centered`. `attached` merges the panel with the host bar when the bar allows `attach_panels`; `floating` keeps the panel detached but near the bar; `centered` opens it in the middle of the output. Defaults are centered for Launcher and Clipboard, attached for Control Center, Wallpaper, and Session.
 - When multiple enabled bars resolve to the same edge on one output, exact source-bar attachment is ambiguous. In that case attached/floating panels use the compositor's reserved edge area and open outside the bar stack instead of trying to merge with one bar.
 - `shell.panel.open_near_click_control_center`, `open_near_click_launcher`, `open_near_click_clipboard`, `open_near_click_wallpaper`, and `open_near_click_session` position attached or floating panels near the click location on the bar instead of centering them along the bar. They are ignored when the corresponding placement is `centered`.
+- `shell.panel.launcher_browse_categories` adds optional segmented tabs in the launcher for browsing providers that opt in (applications, wallpaper, emoji). The **All** tab still merges global providers (applications and calculator). Prefixed queries such as `/emo` or `/wall` still route to the matching provider and override the selected tab.
 - `shell.mpris.blacklist` excludes matching MPRIS players from Noctalia media UI and active-player selection. Entries are case-insensitive and match player bus name, identity, desktop entry, or a bus-name substring token (for example `"spotify"`).
 
 ---
@@ -106,11 +108,12 @@ Notes:
 position = "top_right"   # top_right | top_left | top_center | bottom_right | bottom_left | bottom_center | center_right | center_left
 orientation = "horizontal" # horizontal | vertical
 lock_keys = true         # show Caps/Num/Scroll Lock OSD popups
+keyboard_layout = true   # show an OSD popup when the input keyboard layout changes
 ```
 
 The OSD powers the volume HUD and defaults to `top_right` with a horizontal layout. Set `orientation = "vertical"`
 for a taller vertical gauge. `lock_keys = false` disables Caps/Num/Scroll Lock popups; when no `lock_keys` bar widget
-is configured, this also stops lock-key state polling.
+is configured, this also stops lock-key state polling. `keyboard_layout = false` disables layout-change popups.
 
 ---
 
