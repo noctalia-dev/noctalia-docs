@@ -11,35 +11,35 @@ Customize and secure your desktop experience with these commands.
 
 | Function | Command | Description |
 |----------|---------|-------------|
-| **Lock Screen** | <IpcCommand command="lockScreen lock" /> | Lock your screen |
-| **Idle Inhibit** | <IpcCommand command="idleInhibitor toggle" /> | Toggle idle inhibitor |
-| **Enable Inhibit** | <IpcCommand command="idleInhibitor enable" /> | Enable idle inhibitor |
-| **Disable Inhibit** | <IpcCommand command="idleInhibitor disable" /> | Disable idle inhibitor |
-| **Airplane Mode** | <IpcCommand command="airplaneMode toggle" /> | Toggle airplane mode |
-| **Enable Airplane Mode** | <IpcCommand command="airplaneMode enable" /> | Enable airplane mode (disables Wi-Fi & Bluetooth) |
-| **Disable Airplane Mode** | <IpcCommand command="airplaneMode disable" /> | Disable airplane mode |
+| **Lock Screen** | <IpcCommand prefix="ipc call" command="lockScreen lock" /> | Lock your screen |
+| **Idle Inhibit** | <IpcCommand prefix="ipc call" command="idleInhibitor toggle" /> | Toggle idle inhibitor |
+| **Enable Inhibit** | <IpcCommand prefix="ipc call" command="idleInhibitor enable" /> | Enable idle inhibitor |
+| **Disable Inhibit** | <IpcCommand prefix="ipc call" command="idleInhibitor disable" /> | Disable idle inhibitor |
+| **Airplane Mode** | <IpcCommand prefix="ipc call" command="airplaneMode toggle" /> | Toggle airplane mode |
+| **Enable Airplane Mode** | <IpcCommand prefix="ipc call" command="airplaneMode enable" /> | Enable airplane mode (disables Wi-Fi & Bluetooth) |
+| **Disable Airplane Mode** | <IpcCommand prefix="ipc call" command="airplaneMode disable" /> | Disable airplane mode |
 
 ### Notifications
 
 | Function | Command | Description |
 |----------|---------|-------------|
-| **History** | <IpcCommand command="notifications toggleHistory" /> | View past notifications |
-| **Get History** | <IpcCommand command="notifications getHistory" /> | Get history as JSON |
-| **Do Not Disturb** | <IpcCommand command="notifications toggleDND" /> | Toggle silence mode |
-| **Enable DND** | <IpcCommand command="notifications enableDND" /> | Enable silence mode |
-| **Disable DND** | <IpcCommand command="notifications disableDND" /> | Disable silence mode |
-| **Clear All** | <IpcCommand command="notifications clear" /> | Clear notification history |
-| **Remove Oldest** | <IpcCommand command="notifications removeOldestHistory" /> | Remove oldest from history |
-| **Remove ID** | <IpcCommand command="notifications removeFromHistory $id" /> | Remove notification by ID |
-| **Dismiss Oldest** | <IpcCommand command="notifications dismissOldest" /> | Dismiss oldest active |
-| **Dismiss All** | <IpcCommand command="notifications dismissAll" /> | Dismiss active notifications |
+| **History** | <IpcCommand prefix="ipc call" command="notifications toggleHistory" /> | View past notifications |
+| **Get History** | <IpcCommand prefix="ipc call" command="notifications getHistory" /> | Get history as JSON |
+| **Do Not Disturb** | <IpcCommand prefix="ipc call" command="notifications toggleDND" /> | Toggle silence mode |
+| **Enable DND** | <IpcCommand prefix="ipc call" command="notifications enableDND" /> | Enable silence mode |
+| **Disable DND** | <IpcCommand prefix="ipc call" command="notifications disableDND" /> | Disable silence mode |
+| **Clear All** | <IpcCommand prefix="ipc call" command="notifications clear" /> | Clear notification history |
+| **Remove Oldest** | <IpcCommand prefix="ipc call" command="notifications removeOldestHistory" /> | Remove oldest from history |
+| **Remove ID** | <IpcCommand prefix="ipc call" command="notifications removeFromHistory $id" /> | Remove notification by ID |
+| **Dismiss Oldest** | <IpcCommand prefix="ipc call" command="notifications dismissOldest" /> | Dismiss oldest active |
+| **Dismiss All** | <IpcCommand prefix="ipc call" command="notifications dismissAll" /> | Dismiss active notifications |
 
 ### Toast Notifications
 
 | Function | Command | Description |
 |----------|---------|-------------|
-| **Send** | <IpcCommand command="toast send '$json'" /> | Display a toast notification |
-| **Dismiss** | <IpcCommand command="toast dismiss" /> | Dismiss active toast notification |
+| **Send** | <IpcCommand prefix="ipc call" command="toast send '$json'" /> | Display a toast notification |
+| **Dismiss** | <IpcCommand prefix="ipc call" command="toast dismiss" /> | Dismiss active toast notification |
 
 The toast `send` command accepts a JSON object with the following fields:
 
@@ -68,17 +68,17 @@ qs -c noctalia-shell ipc call toast send '{"title": "Connection failed", "body":
 
 | Function | Command | Description |
 |----------|---------|-------------|
-| **Toggle Bar** | <IpcCommand command="bar toggle" /> | Toggle bar visibility |
-| **Show Bar** | <IpcCommand command="bar showBar" /> | Show bar |
-| **Hide Bar** | <IpcCommand command="bar hideBar" /> | Hide bar |
-| **Peek Bar** | <IpcCommand command="bar peek" /> | Briefly show bar, then auto-hide |
-| **Bar DisplayMode** | <IpcCommand command="bar setDisplayMode <mode> <screen>" /> | Set bar display mode |
-| **Bar Position** | <IpcCommand command="bar setPosition <position> <screen>" /> | Set bar position |
-| **Toggle Dock** | <IpcCommand command="dock toggle" /> | Toggle dock visibility |
-| **Show Widgets** | <IpcCommand command="desktopWidgets enable" /> | Enable desktop widgets |
-| **Hide Widgets** | <IpcCommand command="desktopWidgets disable" /> | Disable desktop widgets |
-| **Toggle Widgets** | <IpcCommand command="desktopWidgets toggle" /> | Toggle desktop widgets |
-| **Edit Widgets** | <IpcCommand command="desktopWidgets edit" /> | Toggle widget editing |
+| **Toggle Bar** | <IpcCommand prefix="ipc call" command="bar toggle" /> | Toggle bar visibility |
+| **Show Bar** | <IpcCommand prefix="ipc call" command="bar showBar" /> | Show bar |
+| **Hide Bar** | <IpcCommand prefix="ipc call" command="bar hideBar" /> | Hide bar |
+| **Peek Bar** | <IpcCommand prefix="ipc call" command="bar peek" /> | Briefly show bar, then auto-hide |
+| **Bar DisplayMode** | <IpcCommand prefix="ipc call" command="bar setDisplayMode <mode> <screen>" /> | Set bar display mode |
+| **Bar Position** | <IpcCommand prefix="ipc call" command="bar setPosition <position> <screen>" /> | Set bar position |
+| **Toggle Dock** | <IpcCommand prefix="ipc call" command="dock toggle" /> | Toggle dock visibility |
+| **Show Widgets** | <IpcCommand prefix="ipc call" command="desktopWidgets enable" /> | Enable desktop widgets |
+| **Hide Widgets** | <IpcCommand prefix="ipc call" command="desktopWidgets disable" /> | Disable desktop widgets |
+| **Toggle Widgets** | <IpcCommand prefix="ipc call" command="desktopWidgets toggle" /> | Toggle desktop widgets |
+| **Edit Widgets** | <IpcCommand prefix="ipc call" command="desktopWidgets edit" /> | Toggle widget editing |
 
 :::note[Available Bar Display Modes]
 - `always_visible`
@@ -102,11 +102,11 @@ qs -c noctalia-shell ipc call toast send '{"title": "Connection failed", "body":
 
 | Function | Command | Description |
 |----------|---------|-------------|
-| **Dark Mode** | <IpcCommand command="darkMode toggle" /> | Toggle system theme |
-| **Set Dark** | <IpcCommand command="darkMode setDark" /> | Force dark theme |
-| **Set Light** | <IpcCommand command="darkMode setLight" /> | Force light theme |
-| **Color Scheme** | <IpcCommand command="colorScheme set <theme>" /> | Set scheme by name |
-| **Set Method** | <IpcCommand command="colorScheme setGenerationMethod <method>" /> | Set color generation method |
+| **Dark Mode** | <IpcCommand prefix="ipc call" command="darkMode toggle" /> | Toggle system theme |
+| **Set Dark** | <IpcCommand prefix="ipc call" command="darkMode setDark" /> | Force dark theme |
+| **Set Light** | <IpcCommand prefix="ipc call" command="darkMode setLight" /> | Force light theme |
+| **Color Scheme** | <IpcCommand prefix="ipc call" command="colorScheme set <theme>" /> | Set scheme by name |
+| **Set Method** | <IpcCommand prefix="ipc call" command="colorScheme setGenerationMethod <method>" /> | Set color generation method |
 
 :::note[Available Generation Methods]
 - `tonal-spot`
@@ -124,14 +124,14 @@ qs -c noctalia-shell ipc call toast send '{"title": "Connection failed", "body":
 
 | Function | Command | Description |
 |----------|---------|-------------|
-| **Selector** | <IpcCommand command="wallpaper toggle" /> | Toggle wallpaper selector |
-| **Get Wallpaper** | <IpcCommand command="wallpaper get $monitor" /> | Get path to  wallpaper on monitor |
-| **Set Wallpaper** | <IpcCommand command="wallpaper set $path $monitor" /> | Set wallpaper on monitor |
-| **Random** | <IpcCommand command="wallpaper random $monitor" /> | Apply random wallpaper (omit monitor for all) |
-| **Toggle Auto** | <IpcCommand command="wallpaper toggleAutomation" /> | Toggle automation |
-| **Enable Auto** | <IpcCommand command="wallpaper enableAutomation" /> | Enable automation |
-| **Disable Auto** | <IpcCommand command="wallpaper disableAutomation" /> | Disable automation |
-| **Refresh List** | <IpcCommand command="wallpaper refresh" /> | Refresh wallpapers list |
+| **Selector** | <IpcCommand prefix="ipc call" command="wallpaper toggle" /> | Toggle wallpaper selector |
+| **Get Wallpaper** | <IpcCommand prefix="ipc call" command="wallpaper get $monitor" /> | Get path to  wallpaper on monitor |
+| **Set Wallpaper** | <IpcCommand prefix="ipc call" command="wallpaper set $path $monitor" /> | Set wallpaper on monitor |
+| **Random** | <IpcCommand prefix="ipc call" command="wallpaper random $monitor" /> | Apply random wallpaper (omit monitor for all) |
+| **Toggle Auto** | <IpcCommand prefix="ipc call" command="wallpaper toggleAutomation" /> | Toggle automation |
+| **Enable Auto** | <IpcCommand prefix="ipc call" command="wallpaper enableAutomation" /> | Enable automation |
+| **Disable Auto** | <IpcCommand prefix="ipc call" command="wallpaper disableAutomation" /> | Disable automation |
+| **Refresh List** | <IpcCommand prefix="ipc call" command="wallpaper refresh" /> | Refresh wallpapers list |
 
 :::note[Wallpaper variables]
 - `$path`: Full path to your wallpaper image file
@@ -142,10 +142,10 @@ qs -c noctalia-shell ipc call toast send '{"title": "Connection failed", "body":
 
 | Function | Command | Description |
 |----------|---------|-------------|
-| **Settings** | <IpcCommand command="plugin openSettings $pluginId" /> | Open plugin settings |
-| **Open Panel** | <IpcCommand command="plugin openPanel $pluginId" /> | Open plugin panel |
-| **Close Panel** | <IpcCommand command="plugin closePanel $pluginId" /> | Close plugin panel |
-| **Toggle Panel** | <IpcCommand command="plugin togglePanel $pluginId" /> | Toggle plugin panel |
+| **Settings** | <IpcCommand prefix="ipc call" command="plugin openSettings $pluginId" /> | Open plugin settings |
+| **Open Panel** | <IpcCommand prefix="ipc call" command="plugin openPanel $pluginId" /> | Open plugin panel |
+| **Close Panel** | <IpcCommand prefix="ipc call" command="plugin closePanel $pluginId" /> | Close plugin panel |
+| **Toggle Panel** | <IpcCommand prefix="ipc call" command="plugin togglePanel $pluginId" /> | Toggle plugin panel |
 
 :::note[Plugin ID]
 Replace `$pluginId` with the actual plugin identifier (e.g., `todo`, `pomodoro`).
@@ -155,6 +155,6 @@ Replace `$pluginId` with the actual plugin identifier (e.g., `todo`, `pomodoro`)
 
 | Function | Command | Description |
 |----------|---------|-------------|
-| **State** | <IpcCommand command="state all" /> | Output settings state |
-| **Set Location** | <IpcCommand command="location set $name" /> | Set geographic location |
-| **Get Location** | <IpcCommand command="location get" /> | Get geographic location |
+| **State** | <IpcCommand prefix="ipc call" command="state all" /> | Output settings state |
+| **Set Location** | <IpcCommand prefix="ipc call" command="location set $name" /> | Set geographic location |
+| **Get Location** | <IpcCommand prefix="ipc call" command="location get" /> | Get geographic location |

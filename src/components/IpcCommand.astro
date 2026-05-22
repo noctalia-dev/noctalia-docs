@@ -1,10 +1,11 @@
 ---
 interface Props {
   command: string;
+  prefix?: string;
 }
 
-const { command } = Astro.props;
-const fullCommand = `ipc call ${command}`;
+const { command, prefix = "noctalia msg" } = Astro.props;
+const fullCommand = `${prefix} ${command}`;
 ---
 
 <span class="ipc-wrapper">

@@ -1,11 +1,11 @@
 ---
-title: IPC
+title: IPC & Keybinds
 description: Commands you can run with noctalia msg for keybinds, scripts, and automation.
 sidebar:
   order: 20
 ---
 
-import { LinkCard, CardGrid, Aside } from '@astrojs/starlight/components';
+import { LinkCard, CardGrid, Aside, Steps } from '@astrojs/starlight/components';
 
 IPC commands let you control Noctalia from a terminal, a compositor keybind, a script, or a hook.
 
@@ -48,3 +48,107 @@ started = "noctalia msg panel-toggle launcher"
 ```
 
 Both styles call the same command registry. Use `noctalia msg ...` in a terminal or compositor keybind, and `noctalia:...` where a Noctalia config field documents that shorthand.
+
+## Compositor keybind examples
+
+Apply these binds in your window manager configuration to integrate Noctalia.
+
+<details open>
+<summary><strong>Niri Configuration</strong></summary>
+
+> Both `spawn-sh` and `spawn` are usable to run Noctalia keybinds.
+
+Add these binds to your `~/.config/niri/config.kdl`:
+
+```kdl
+binds {
+    // Core Noctalia binds
+    Mod+Space { spawn-sh "noctalia msg panel-toggle launcher"; }
+    Mod+S { spawn-sh "noctalia msg panel-toggle control-center"; }
+    Mod+Comma { spawn-sh "noctalia msg settings-toggle"; }
+
+    // Audio & Brightness
+    XF86AudioRaiseVolume { spawn "noctalia" "msg" "volume-up"; }
+    XF86AudioLowerVolume { spawn "noctalia" "msg" "volume-down"; }
+    XF86AudioMute { spawn "noctalia" "msg" "volume-mute"; }
+    XF86MonBrightnessUp { spawn "noctalia" "msg" "brightness-up"; }
+    XF86MonBrightnessDown { spawn "noctalia" "msg" "brightness-down"; }
+}
+```
+
+</details>
+
+<details open>
+<summary><strong>Hyprland Configuration</strong></summary>
+
+Add these binds to your `hyprland.lua`:
+
+```lua
+local ipc = "noctalia msg"
+
+-- Core binds
+hl.bind(mainMod .. "+Space", hl.dsp.exec_cmd(ipc .. " panel-toggle launcher"))
+hl.bind(mainMod .. "+S", hl.dsp.exec_cmd(ipc .. " panel-toggle control-center"))
+hl.bind(mainMod .. "+comma", hl.dsp.exec_cmd(ipc .. " settings-toggle"))
+
+-- Media keys
+hl.bind("", "XF86AudioRaiseVolume", hl.dsp.exec_cmd(ipc .. " volume-up"))
+hl.bind("", "XF86AudioLowerVolume", hl.dsp.exec_cmd(ipc .. " volume-down"))
+hl.bind("", "XF86AudioMute", hl.dsp.exec_cmd(ipc .. " volume-mute"))
+hl.bind("", "XF86MonBrightnessUp", hl.dsp.exec_cmd(ipc .. " brightness-up"))
+hl.bind("", "XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc .. " brightness-down"))
+```
+
+</details>
+
+<details open>
+<summary><strong>Sway / Scroll Configuration</strong></summary>
+
+Add these binds to your `~/.config/sway/config` (or equivalent for your compositor):
+
+```bash
+set $ipc noctalia msg
+
+# Core binds
+bindsym $mod+space exec $ipc panel-toggle launcher
+bindsym $mod+s exec $ipc panel-toggle control-center
+bindsym $mod+comma exec $ipc settings-toggle
+
+# Media keys
+bindsym --locked XF86AudioRaiseVolume exec $ipc volume-up
+bindsym --locked XF86AudioLowerVolume exec $ipc volume-down
+bindsym --locked XF86AudioMute exec $ipc volume-mute
+bindsym --locked XF86MonBrightnessUp exec $ipc brightness-up
+bindsym --locked XF86MonBrightnessDown exec $ipc brightness-down
+```
+
+</details>
+
+<details open>
+<summary><strong>MangoWC Configuration</strong></summary>
+
+Add these binds to your `~/.config/mango/config.conf`:
+
+```bash
+# Core binds
+bind=SUPER,space,spawn,noctalia msg panel-toggle launcher
+bind=SUPER,s,spawn,noctalia msg panel-toggle control-center
+bind=SUPER,comma,spawn,noctalia msg settings-toggle
+
+# Media keys
+bind=NONE,XF86AudioRaiseVolume,spawn,noctalia msg volume-up
+bind=NONE,XF86AudioLowerVolume,spawn,noctalia msg volume-down
+bind=NONE,XF86AudioMute,spawn,noctalia msg volume-mute
+bind=NONE,XF86MonBrightnessUp,spawn,noctalia msg brightness-up
+bind=NONE,XF86MonBrightnessDown,spawn,noctalia msg brightness-down
+```
+
+</details>
+
+## Discovering commands
+
+Not sure what else you can control? You can see all IPC commands via this terminal command:
+
+```bash
+noctalia msg --help
+```

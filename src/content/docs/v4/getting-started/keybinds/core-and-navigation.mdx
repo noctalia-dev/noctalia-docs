@@ -11,12 +11,12 @@ These are the most common commands used for opening basic shell interfaces.
 
 | Function | Command | Description |
 |----------|---------|-------------|
-| **Launcher** | <IpcCommand command="launcher toggle" /> | Open/close application launcher |
-| **Control Center** | <IpcCommand command="controlCenter toggle" /> | Toggle control center visibility |
-| **Settings** | <IpcCommand command="settings toggle" /> | Toggle settings (General tab) |
-| **Settings Tab** | <IpcCommand command="settings toggleTab $tab" /> | Toggle settings on a specific tab |
-| **Open Settings** | <IpcCommand command="settings open" /> | Open settings (General tab) |
-| **Open Settings Tab** | <IpcCommand command="settings openTab $tab" /> | Open settings on a specific tab |
+| **Launcher** | <IpcCommand prefix="ipc call" command="launcher toggle" /> | Open/close application launcher |
+| **Control Center** | <IpcCommand prefix="ipc call" command="controlCenter toggle" /> | Toggle control center visibility |
+| **Settings** | <IpcCommand prefix="ipc call" command="settings toggle" /> | Toggle settings (General tab) |
+| **Settings Tab** | <IpcCommand prefix="ipc call" command="settings toggleTab $tab" /> | Toggle settings on a specific tab |
+| **Open Settings** | <IpcCommand prefix="ipc call" command="settings open" /> | Open settings (General tab) |
+| **Open Settings Tab** | <IpcCommand prefix="ipc call" command="settings openTab $tab" /> | Open settings on a specific tab |
 
 :::note[Settings tab parameter]
 `$tab` is a tab name (case-insensitive, hyphens/underscores ignored): `general`, `bar`, `dock`, `wallpaper`, `color-scheme`, `user-interface`, `control-center`, `desktop-widgets`, `launcher`, `notifications`, `osd`, `lock-screen`, `session-menu`, `audio`, `display`, `network`, `location`, `system-monitor`, `plugins`, `hooks`, `about`.
@@ -28,13 +28,13 @@ Append `/$subtab` to navigate to a specific subtab index, e.g. `settings openTab
 
 | Function | Command | Description |
 |----------|---------|-------------|
-| **Clipboard** | <IpcCommand command="launcher clipboard" /> | Access clipboard history |
-| **Emoji** | <IpcCommand command="launcher emoji" /> | Quick emoji selector access |
-| **Command** | <IpcCommand command="launcher command" /> | Quick command runner access |
-| **Windows** | <IpcCommand command="launcher windows" /> | Window switcher access |
-| **Settings Search** | <IpcCommand command="launcher settings" /> | Settings search access |
-| **Calendar** | <IpcCommand command="calendar toggle" /> | Open/close Calendar window |
-| **Session** | <IpcCommand command="sessionMenu toggle" /> | Logout, reboot, shutdown... |
-| **Lock** | <IpcCommand command="lockScreen lock" /> | Launch the lock screen |
-| **Lock & Suspend** | <IpcCommand command="sessionMenu lockAndSuspend" /> | Lock screen and suspend system |
-| **System Monitor** | <IpcCommand command="systemMonitor toggle" /> | Open/close system monitor |
+| **Clipboard** | <IpcCommand prefix="ipc call" command="launcher clipboard" /> | Access clipboard history |
+| **Emoji** | <IpcCommand prefix="ipc call" command="launcher emoji" /> | Quick emoji selector access |
+| **Command** | <IpcCommand prefix="ipc call" command="launcher command" /> | Quick command runner access |
+| **Windows** | <IpcCommand prefix="ipc call" command="launcher windows" /> | Window switcher access |
+| **Settings Search** | <IpcCommand prefix="ipc call" command="launcher settings" /> | Settings search access |
+| **Calendar** | <IpcCommand prefix="ipc call" command="calendar toggle" /> | Open/close Calendar window |
+| **Session** | <IpcCommand prefix="ipc call" command="sessionMenu toggle" /> | Logout, reboot, shutdown... |
+| **Lock** | <IpcCommand prefix="ipc call" command="lockScreen lock" /> | Launch the lock screen |
+| **Lock & Suspend** | <IpcCommand prefix="ipc call" command="sessionMenu lockAndSuspend" /> | Lock screen and suspend system |
+| **System Monitor** | <IpcCommand prefix="ipc call" command="systemMonitor toggle" /> | Open/close system monitor |

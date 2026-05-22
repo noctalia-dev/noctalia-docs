@@ -173,8 +173,12 @@ export default defineConfig({
                       link: "v5/getting-started/compositor-settings/hyprland/",
                     },
                     {
-                      label: "Keybinds",
-                      link: "v5/getting-started/compositor-settings/keybinds/",
+                      label: "Keybinds & IPC",
+                      items: [
+                        { label: "Overview", link: "v5/ipc/" },
+                        { label: "Shell & UI", link: "v5/ipc/shell-and-ui/" },
+                        { label: "System Controls", link: "v5/ipc/system-controls/" },
+                      ],
                     },
                   ],
                 },
@@ -242,14 +246,6 @@ export default defineConfig({
                     { label: "Services", link: "v5/services/" },
                   ],
                 },
-              ],
-            },
-            {
-              label: "IPC",
-              items: [
-                { label: "Overview", link: "v5/ipc/" },
-                { label: "Shell & UI", link: "v5/ipc/shell-and-ui/" },
-                { label: "System Controls", link: "v5/ipc/system-controls/" },
               ],
             },
           ],
