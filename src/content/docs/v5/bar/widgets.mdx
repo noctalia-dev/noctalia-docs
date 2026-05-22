@@ -158,6 +158,7 @@ Shows the active window icon and title for the current output.
 | `max_length` | number | `260` | Maximum widget length in pixels |
 | `icon_size` | number | `14` | Icon size in pixels |
 | `title_scroll` | string | `"none"` | Title scrolling mode: `"none"`, `"always"`, or `"on_hover"` |
+| `icon_only` | bool | `false` | On horizontal bars, show only the window icon. Vertical bars always show the icon only. |
 
 ```toml
 [widget.active_window]
@@ -165,6 +166,7 @@ min_length = 80
 max_length = 260
 icon_size = 14
 title_scroll = "on_hover"
+icon_only = true
 ```
 
 ---
