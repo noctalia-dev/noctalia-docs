@@ -19,9 +19,9 @@ These commands open, close, or toggle Noctalia UI surfaces.
 
 | Action | Command | Description |
 |--------|---------|-------------|
-| Show bar | <IpcCommand command="bar-show" /> | Show the bar. |
-| Hide bar | <IpcCommand command="bar-hide" /> | Hide the bar. |
-| Toggle bar | <IpcCommand command="bar-toggle" /> | Toggle bar visibility. |
+| Show bar | <IpcCommand command="bar-show" /> | Reveal the bar using the same slide/opacity path as auto-hide. With `auto_hide`, pointer leave resumes normal auto-hide. |
+| Hide bar | <IpcCommand command="bar-hide" /> | Hide the bar and block edge/pointer reveal until the next show/toggle. |
+| Toggle bar | <IpcCommand command="bar-toggle" /> | Fade the bar in or out using the auto-hide animation. Does not block edge reveal (use <IpcCommand command="bar-hide" /> to stay hidden until <IpcCommand command="bar-show" />). Clears a prior <IpcCommand command="bar-hide" /> block when revealing. |
 
 ## Scripted widgets
 
