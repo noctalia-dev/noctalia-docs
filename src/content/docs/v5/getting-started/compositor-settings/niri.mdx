@@ -37,6 +37,28 @@ debug {
 }
 ```
 
+## IPC Keybinds
+
+Both `spawn-sh` and `spawn` are usable to run Noctalia keybinds.
+
+Add these binds to your `~/.config/niri/config.kdl`:
+
+```kdl
+binds {
+    // Core Noctalia binds
+    Mod+Space { spawn-sh "noctalia msg panel-toggle launcher"; }
+    Mod+S { spawn-sh "noctalia msg panel-toggle control-center"; }
+    Mod+Comma { spawn-sh "noctalia msg settings-toggle"; }
+
+    // Audio & Brightness
+    XF86AudioRaiseVolume { spawn "noctalia" "msg" "volume-up"; }
+    XF86AudioLowerVolume { spawn "noctalia" "msg" "volume-down"; }
+    XF86AudioMute { spawn "noctalia" "msg" "volume-mute"; }
+    XF86MonBrightnessUp { spawn "noctalia" "msg" "brightness-up"; }
+    XF86MonBrightnessDown { spawn "noctalia" "msg" "brightness-down"; }
+}
+```
+
 ## Optional Type to Launch
 
 Noctalia can open its launcher when you start typing in niri's overview. This is disabled by default because it requires a tiny keyboard-focus layer surface while overview is open, which means some niri overview-only keyboard state, such as the app focus ring, may not behave exactly like native overview navigation.

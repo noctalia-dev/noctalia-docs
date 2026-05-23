@@ -173,13 +173,21 @@ export default defineConfig({
                       link: "v5/getting-started/compositor-settings/hyprland/",
                     },
                     {
-                      label: "Keybinds & IPC",
-                      items: [
-                        { label: "Overview", link: "v5/ipc/" },
-                        { label: "Shell & UI", link: "v5/ipc/shell-and-ui/" },
-                        { label: "System Controls", link: "v5/ipc/system-controls/" },
-                      ],
+                      label: "Sway / Scroll",
+                      link: "v5/getting-started/compositor-settings/sway-scroll/",
                     },
+                    {
+                      label: "Mango",
+                      link: "v5/getting-started/compositor-settings/mango/",
+                    },
+                  ],
+                },
+                {
+                  label: "Keybinds & IPC",
+                  items: [
+                    { label: "Overview", link: "v5/ipc/" },
+                    { label: "Shell & UI", link: "v5/ipc/shell-and-ui/" },
+                    { label: "System Controls", link: "v5/ipc/system-controls/" },
                   ],
                 },
                 { label: "FAQ", link: "v5/getting-started/faq/" },
