@@ -8,9 +8,21 @@ sidebar:
 import ImageLightbox from '../../../../../components/ImageLightbox.astro';
 import blur1 from '../../../../../assets/hyprland-blur/hyprland-blur-1-v5.png';
 
-Add the following settings to your existing `hl.config({})` block, typically located in your Hyprland Lua configuration file (usually found at `~/.config/hypr/hyprland.lua`).
+Add the following settings to your Hyprland Lua configuration file (usually found at `~/.config/hypr/hyprland.lua`).
 
-These settings are for general window appearance and functionality.
+## Autostart Noctalia
+
+Add this to your `hyprland.start` event hook:
+
+```lua
+hl.on("hyprland.start", function()
+  hl.exec_cmd("noctalia")
+end)
+```
+
+## Compositor Settings
+
+Add the following to your existing `hl.config({})` block. These settings are for general window appearance and functionality.
 
 ```lua
 hl.config({
