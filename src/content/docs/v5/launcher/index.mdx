@@ -18,6 +18,16 @@ As you type, Noctalia queries all active **Launcher Providers**. Providers can e
 
 The launcher tracks how often you activate specific results (applications and wallpapers). Frequently used items receive a score boost, surfacing them at the top of the results list even with partial queries.
 
+### Category filters
+
+When category filters are enabled, the launcher shows compact filter buttons for providers that expose categories.
+
+- **Applications** can be filtered by desktop-entry categories such as Internet, Development, Games, Office, System, and Utilities.
+- **Emoji** can be filtered by emoji categories such as people, animals, food, travel, objects, symbols, and flags.
+- **All** leaves the active result set unfiltered.
+
+Press `Tab` while the launcher is open to hide or show the filters. Use the left/right keybind actions to move between filters.
+
 ---
 
 ## Providers
@@ -63,5 +73,5 @@ Quickly browse and apply wallpapers from your configured directories.
 The launcher itself is mostly automatic, but its behavior is influenced by other sections of your config:
 
 - **[Keybinds](/v5/shell/#keybinds)**: Customize navigation (`up`, `down`) and activation (`validate`, `cancel`).
-- **[Shell](/v5/shell/#shell-settings)**: `ui_scale` and `font_family` affect the launcher's appearance.
+- **[Shell](/v5/shell/#shell-settings)**: `ui_scale` and `font_family` affect the launcher's appearance. `shell.panel.launcher_categories` controls the category filters.
 - **[Wallpaper](/v5/desktop/wallpaper/)**: Defines the search paths for the Wallpaper provider.
