@@ -180,6 +180,10 @@ export default defineConfig({
                       label: "Mango",
                       link: "v5/getting-started/compositor-settings/mango/",
                     },
+                    {
+                      label: "Labwc",
+                      link: "v5/getting-started/compositor-settings/labwc/",
+                    },
                   ],
                 },
                 {
