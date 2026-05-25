@@ -1,7 +1,11 @@
 ---
 import Default from '@astrojs/starlight/components/Header.astro';
+import { isV5Path } from '../lib/versioning';
 
-const faqHref = /^\/v5(?:\/|$)/.test(Astro.url.pathname)
+const pathname = Astro.url.pathname;
+const isV5 = isV5Path(pathname);
+
+const faqHref = /^\/v5(?:\/|$)/.test(pathname)
   ? '/v5/getting-started/faq/'
   : '/v4/getting-started/faq/';
 ---
@@ -17,6 +21,27 @@ const faqHref = /^\/v5(?:\/|$)/.test(Astro.url.pathname)
     </svg>
     <span>FAQ</span>
   </a>
+</div>
+
+<div class:list={['version-alert-banner', isV5 ? 'is-alpha' : 'is-stable']} role="alert">
+  {isV5 ? (
+    <>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+        <line x1="12" y1="9" x2="12" y2="13"></line>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </svg>
+      <span>
+        You are viewing the <strong>v5 (alpha)</strong> documentation — this version is a work in progress.
+        <a href="/v4/">Switch to v4 (stable) →</a>
+      </span>
+    </>
+  ) : (
+    <span>
+      You are viewing the <strong>v4 (stable)</strong> documentation.
+      <a href="/v5/">Switch to v5 (alpha) →</a>
+    </span>
+  )}
 </div>
 
 <script>
@@ -37,8 +62,48 @@ const faqHref = /^\/v5(?:\/|$)/.test(Astro.url.pathname)
     }
   }
 
+  function positionBanner() {
+    const banner = document.querySelector('.version-alert-banner');
+    const header = document.querySelector('.header');
+    if (banner && header) {
+      header.after(banner);
+    }
+  }
+
+  function updateBannerVersion() {
+    const banner = document.querySelector('.version-alert-banner');
+    if (!banner) return;
+    const isV5 = /^\/v5(?:\/|$)/.test(window.location.pathname);
+    banner.classList.toggle('is-alpha', isV5);
+    banner.classList.toggle('is-stable', !isV5);
+
+    if (isV5) {
+      banner.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        <span>
+          You are viewing the <strong>v5 (alpha)</strong> documentation — this version is a work in progress.
+          <a href="/v4/">Switch to v4 (stable) →</a>
+        </span>`;
+    } else {
+      banner.innerHTML = `
+        <span>
+          You are viewing the <strong>v4 (stable)</strong> documentation.
+          <a href="/v5/">Switch to v5 (alpha) →</a>
+        </span>`;
+    }
+  }
+
   positionFaqButton();
-  document.addEventListener('astro:page-load', positionFaqButton);
+  positionBanner();
+  document.addEventListener('astro:page-load', () => {
+    positionFaqButton();
+    positionBanner();
+    updateBannerVersion();
+  });
 </script>
 
 <style>
@@ -80,5 +145,78 @@ const faqHref = /^\/v5(?:\/|$)/.test(Astro.url.pathname)
     .faq-button {
       padding: 0.4rem;
     }
+  }
+</style>
+
+<style is:global>
+  .version-alert-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.5rem 1.5rem;
+    font-size: var(--sl-text-sm);
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.4;
+    border-bottom: 2px solid;
+    position: fixed;
+    top: var(--sl-nav-height);
+    left: 0;
+    right: 0;
+    z-index: var(--sl-z-index-navbar);
+  }
+
+  .version-alert-banner.is-alpha {
+    color: color-mix(in srgb, var(--sl-color-orange) 90%, black);
+    background-color: color-mix(in srgb, var(--sl-color-orange) 12%, var(--sl-color-bg));
+    border-bottom-color: color-mix(in srgb, var(--sl-color-orange) 40%, transparent);
+  }
+
+  [data-theme='dark'] .version-alert-banner.is-alpha {
+    color: color-mix(in srgb, var(--sl-color-orange) 90%, white);
+  }
+
+  .version-alert-banner.is-alpha svg {
+    flex-shrink: 0;
+    color: var(--sl-color-orange);
+  }
+
+  .version-alert-banner.is-alpha strong {
+    color: var(--sl-color-orange);
+  }
+
+  .version-alert-banner.is-alpha a {
+    color: var(--sl-color-orange);
+  }
+
+  .version-alert-banner.is-alpha a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .version-alert-banner.is-stable {
+    color: var(--sl-color-text);
+    background-color: color-mix(in srgb, var(--sl-color-accent) 8%, var(--sl-color-bg));
+    border-bottom-color: color-mix(in srgb, var(--sl-color-accent) 30%, transparent);
+  }
+
+  .version-alert-banner.is-stable strong {
+    color: var(--sl-color-text-accent, var(--sl-color-accent));
+  }
+
+  .version-alert-banner.is-stable a {
+    color: var(--sl-color-text-accent, var(--sl-color-accent));
+  }
+
+  .version-alert-banner a {
+    margin-inline-start: 0.4rem;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    white-space: nowrap;
+  }
+
+  .version-alert-banner a:hover {
+    text-decoration-thickness: 2px;
   }
 </style>
