@@ -1,0 +1,34 @@
+---
+title: Mango
+description: Configure Mango keybinds for Noctalia.
+sidebar:
+  order: 5
+---
+
+Use Mango binds to launch Noctalia IPC commands directly from the compositor.
+
+## Autostart Noctalia
+
+Add to your `~/.config/mango/config.conf`:
+
+```bash
+exec=noctalia
+```
+
+## IPC Keybinds
+
+Add these binds to your `~/.config/mango/config.conf`:
+
+```bash
+# Core binds
+bind=SUPER,space,spawn,noctalia msg panel-toggle launcher
+bind=SUPER,s,spawn,noctalia msg panel-toggle control-center
+bind=SUPER,comma,spawn,noctalia msg settings-toggle
+
+# Media keys
+bind=NONE,XF86AudioRaiseVolume,spawn,noctalia msg volume-up
+bind=NONE,XF86AudioLowerVolume,spawn,noctalia msg volume-down
+bind=NONE,XF86AudioMute,spawn,noctalia msg volume-mute
+bind=NONE,XF86MonBrightnessUp,spawn,noctalia msg brightness-up
+bind=NONE,XF86MonBrightnessDown,spawn,noctalia msg brightness-down
+```

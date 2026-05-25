@@ -19,17 +19,6 @@ See the [Installation guide](/v5/getting-started/installation/) for distro-speci
 
 </FaqItem>
 
-<FaqItem question="What compositors are supported?">
-
-Noctalia v5 targets Wayland compositors. Niri and Hyprland have documented setup pages because they need compositor-specific configuration for the best experience.
-
-- [Niri setup](/v5/getting-started/compositor-settings/niri/)
-- [Hyprland setup](/v5/getting-started/compositor-settings/hyprland/)
-
-Other Wayland compositors may work when they support the protocols Noctalia needs, but compositor-specific features can be unavailable. For example, compositor blur depends on blur/background-effect protocol support, and Night Light depends on gamma-control support.
-
-</FaqItem>
-
 <FaqItem question="Should I use v4 or noctalia-qs instructions with v5?">
 
 No. Noctalia v5 is a native C++ and OpenGL ES shell launched with `noctalia`. The v4 line is Quickshell-based and uses `qs` / `noctalia-qs`, so v4 commands and configuration examples should not be copied into a v5 setup.
@@ -40,7 +29,46 @@ If you are using the Quickshell-based version, use the [v4 documentation](/v4/) 
 
 <FaqItem question="How do I start Noctalia automatically?">
 
-Use your compositor's autostart mechanism. The [Running Noctalia](/v5/getting-started/running-the-shell/) page has examples for Niri and Hyprland Lua config.
+Use your compositor's autostart mechanism. Examples for each supported compositor:
+
+:::note[Niri]
+Add to `~/.config/niri/config.kdl`:
+```ini
+spawn-at-startup "noctalia"
+```
+:::
+
+:::note[Hyprland]
+Add to your `hyprland.start` event hook in `~/.config/hypr/hyprland.lua`:
+```lua
+hl.on("hyprland.start", function()
+  hl.exec_cmd("noctalia")
+end)
+```
+:::
+
+:::note[Sway / Scroll]
+Add to `~/.config/sway/config` (or equivalent):
+```bash
+exec noctalia
+```
+:::
+
+:::note[Labwc]
+Add to `~/.config/labwc/autostart`:
+```
+noctalia
+```
+:::
+
+:::note[Mango]
+Add to `~/.config/mango/config.conf`:
+```bash
+exec=noctalia
+```
+:::
+
+If your compositor expects startup commands to return after the shell has initialized, use `noctalia --daemon`. See the [Running Noctalia](/v5/getting-started/running-the-shell/) page for details.
 
 </FaqItem>
 

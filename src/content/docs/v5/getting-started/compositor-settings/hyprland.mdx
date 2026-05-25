@@ -8,9 +8,21 @@ sidebar:
 import ImageLightbox from '../../../../../components/ImageLightbox.astro';
 import blur1 from '../../../../../assets/hyprland-blur/hyprland-blur-1-v5.png';
 
-Add the following settings to your existing `hl.config({})` block, typically located in your Hyprland Lua configuration file (usually found at `~/.config/hypr/hyprland.lua`).
+Add the following settings to your Hyprland Lua configuration file (usually found at `~/.config/hypr/hyprland.lua`).
 
-These settings are for general window appearance and functionality.
+## Autostart Noctalia
+
+Add this to your `hyprland.start` event hook:
+
+```lua
+hl.on("hyprland.start", function()
+  hl.exec_cmd("noctalia")
+end)
+```
+
+## Compositor Settings
+
+Add the following to your existing `hl.config({})` block. These settings are for general window appearance and functionality.
 
 ```lua
 hl.config({
@@ -52,6 +64,26 @@ hl.workspace_rule({ workspace = "2", monitor = "DP-1", persistent = true })
 hl.workspace_rule({ workspace = "3", monitor = "DP-1", persistent = true })
 hl.workspace_rule({ workspace = "4", monitor = "DP-1", persistent = true })
 hl.workspace_rule({ workspace = "5", monitor = "DP-1", persistent = true })
+```
+
+## IPC Keybinds
+
+Add these binds to your `hyprland.lua`:
+
+```lua
+local ipc = "noctalia msg"
+
+-- Core binds
+hl.bind(mainMod .. "+Space", hl.dsp.exec_cmd(ipc .. " panel-toggle launcher"))
+hl.bind(mainMod .. "+S", hl.dsp.exec_cmd(ipc .. " panel-toggle control-center"))
+hl.bind(mainMod .. "+comma", hl.dsp.exec_cmd(ipc .. " settings-toggle"))
+
+-- Media keys
+hl.bind("", "XF86AudioRaiseVolume", hl.dsp.exec_cmd(ipc .. " volume-up"))
+hl.bind("", "XF86AudioLowerVolume", hl.dsp.exec_cmd(ipc .. " volume-down"))
+hl.bind("", "XF86AudioMute", hl.dsp.exec_cmd(ipc .. " volume-mute"))
+hl.bind("", "XF86MonBrightnessUp", hl.dsp.exec_cmd(ipc .. " brightness-up"))
+hl.bind("", "XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc .. " brightness-down"))
 ```
 
 ## Blur

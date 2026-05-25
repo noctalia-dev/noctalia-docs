@@ -16,6 +16,7 @@ Middle-click a bar widget to open Settings directly to that widget's configurati
 ```toml
 [widget.<name>]
 type = "<widget-type>"   # defaults to <name> when omitted
+scale = 1.0              # multiplies the owning bar's scale for this widget only
 # ...widget-specific settings
 ```
 
@@ -587,7 +588,7 @@ Tip: right-click a tray item and use `Pin` / `Unpin` in the item menu to update 
 
 ---
 
-## `power_profiles`
+## `power_profile`
 
 Shows the current power profile using a glyph and cycles to the next available profile on click.
 
