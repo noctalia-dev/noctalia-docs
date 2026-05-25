@@ -52,6 +52,13 @@ Use `scope = "shared"` for scripts whose `update()` computes global state, such 
 
 Scripted widgets run off the UI thread and do not expose synchronous command execution. Use fire-and-forget `runAsync()` for click-triggered actions, callback `runAsync()` for commands that need stdout/stderr, and callback-based native query helpers for polling. Callback commands default to a 5000 ms timeout, clamp to 60000 ms, and cap stdout/stderr at 1 MiB per stream.
 
+```lua
+noctalia.runAsync("some command", function(result)
+  noctalia.log(result.stdout)
+  noctalia.log(result.stderr)
+end)
+```
+
 Lua callbacks have execution budgets. If a callback repeatedly exceeds its budget, Noctalia keeps the last good displayed state and stops scheduling that widget until reload.
 
 ### `barWidget.*` — widget display
@@ -60,6 +67,7 @@ Lua callbacks have execution budgets. If a callback repeatedly exceeds its budge
 |----------|---------|-------------|
 | `barWidget.setText(text)` | — | Set the label text |
 | `barWidget.setGlyph(name)` | — | Set the icon by Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint string |
+| `barWidget.setImage(path, watch?, width?, height?)` | — | Set the icon slot to an image file instead of a glyph. Absolute paths and `~` paths are used directly; relative paths are resolved from the assets bundle. Pass `true` as `watch` to reload the image when the file changes. `width`/`height` are logical pixels; when `height` is omitted, the image is square. |
 | `barWidget.setFont(familyOrPath)` | — | Set the label font. Pass a system font family name, or a path to a `.otf` / `.ttf` / `.woff2` file (absolute, `~/`, or relative to the assets dir). The font is registered at runtime — no restart needed. |
 | `barWidget.setColor(color, mode?)` | — | Set the label color by color role (recommended); fixed hex colors are also supported |
 | `barWidget.setGlyphColor(color, mode?)` | — | Set the glyph color by color role (recommended); fixed hex colors are also supported |
@@ -68,6 +76,9 @@ Lua callbacks have execution budgets. If a callback repeatedly exceeds its budge
 | `barWidget.isVertical()` | `boolean` | Whether the bar is in vertical orientation |
 | `barWidget.getConfig(key, default?)` | `any` | Read a TOML config setting. Returns the typed value or default/nil. |
 | `barWidget.define(manifest)` | — | Declare the widget's name, icon, and settings schema. See [Self-describing widgets](#self-describing-widgets). |
+
+The icon slot displays either a glyph or an image. `setImage()` replaces the current glyph; `setGlyph()` switches the
+slot back to glyph rendering. Watched image reloads keep the previous image visible until the replacement file loads.
 
 **Color roles:** `primary`, `on_primary`, `secondary`, `on_secondary`, `tertiary`, `on_tertiary`, `error`, `on_error`, `surface`, `on_surface`, `surface_variant`, `on_surface_variant`, `outline`, `shadow`, `hover`, `on_hover`.
 
