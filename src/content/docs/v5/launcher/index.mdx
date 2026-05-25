@@ -66,6 +66,14 @@ Quickly browse and apply wallpapers from your configured directories.
 - **Functionality**: Filters by filename and parent directory name. Activating a result immediately applies the wallpaper to all monitors and updates your theme if using `wallpaper` as the theme source.
 - **Scoring**: Activation count boosts the score.
 
+### Session
+
+Run enabled session menu actions from the launcher.
+
+- **Prefix**: `/session `
+- **Source**: Uses the configured `shell.session.actions` entries, including custom labels, icons, and commands.
+- **Functionality**: Activating a result runs the same action path as the session panel, including logout, suspend, reboot, shutdown, lock, custom command entries, and configured hooks.
+
 ---
 
 ## Configuration
@@ -75,3 +83,4 @@ The launcher itself is mostly automatic, but its behavior is influenced by other
 - **[Keybinds](/v5/shell/#keybinds)**: Customize navigation (`up`, `down`) and activation (`validate`, `cancel`).
 - **[Shell](/v5/shell/#shell-settings)**: `ui_scale` and `font_family` affect the launcher's appearance. `shell.panel.launcher_categories` controls the category filters.
 - **[Wallpaper](/v5/desktop/wallpaper/)**: Defines the search paths for the Wallpaper provider.
+- **[Session actions](/v5/shell/#session-panel)**: Defines the actions shown by the Session provider.

@@ -163,7 +163,7 @@ Chords recorded in the GUI are serialized as `ctrl+shift+Return`-style strings u
 
 ## Session panel
 
-The session (power) menu opened from the bar **Session** widget or Control Center lists **Lock**, **Log out**, **Reboot**, and **Shut down** by default. Log out uses compositor-native exits where available, including LabWC's `labwc --exit`. You can change which buttons appear, their order, whether each is enabled, and optionally replace the implementation with a **shell command** (still run after `logging_out` / `rebooting` / `shutting_down` hooks when the action is one of those three).
+The session (power) menu opened from the bar **Session** widget or Control Center lists **Lock**, **Log out**, **Suspend**, **Reboot**, and **Shut down** by default. The launcher also exposes the same enabled entries under `/session`. Log out uses compositor-native exits where available, including LabWC's `labwc --exit`. You can change which buttons appear, their order, whether each is enabled, and optionally replace the implementation with a **shell command** (still run after `logging_out` / `rebooting` / `shutting_down` hooks when the action is one of those three).
 
 Built-in reboot and shutdown actions try the standard session-manager commands first (`systemctl`, then `loginctl`) and fall back to plain `reboot` / `poweroff` commands when available. Set `command` on the row when your system needs a different init or privilege wrapper.
 
@@ -171,7 +171,7 @@ Configure under **`[shell.session]`** in TOML, or use **Settings → Panels → 
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `action` | string | *required* | `lock`, `logout`, `reboot`, `shutdown`, or `command` (custom entry). |
+| `action` | string | *required* | `lock`, `logout`, `suspend`, `reboot`, `shutdown`, or `command` (custom entry). |
 | `enabled` | bool | `true` | When `false`, the button is hidden. |
 | `command` | string | *unset* | Optional. If set, the string is run with `/bin/sh -c` instead of the built-in handler. For `action = "command"`, this field is required. |
 | `label` | string | *unset* | Optional button label (otherwise translated defaults). |
@@ -179,7 +179,7 @@ Configure under **`[shell.session]`** in TOML, or use **Settings → Panels → 
 | `shortcut` | string | `"1"`–`"5"` | Optional keyboard shortcut that triggers the action while the session panel is open. Any XKB key name (e.g. `1`, `F1`, `Escape`) or modifier combo (`Ctrl+1`). Clear to disable. |
 | `destructive` | bool | `false` | Use the destructive (warning) button style. |
 
-Omitting `[[shell.session.actions]]` entirely keeps the default four actions. To define your own list, declare one or more tables. An explicit empty array hides all session buttons:
+Omitting `[[shell.session.actions]]` entirely keeps the default five actions. To define your own list, declare one or more tables. An explicit empty array hides all session buttons:
 
 ```toml
 [shell.session]
