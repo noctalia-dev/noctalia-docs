@@ -109,7 +109,7 @@ empty_color = "surface_variant"
 
 ## `taskbar`
 
-Icon-only running application list. By default it follows the bar’s output (only windows the compositor associates with that monitor). Enable **Show all monitors** when you use one bar for everything but still want to see and focus apps on other displays.
+Icon-only running application list. By default it follows the bar’s monitor (only windows the compositor associates with that monitor). Enable **Show all monitors** when you use one bar for everything but still want to see and focus apps on other monitors.
 
 Left-click an icon to focus that window. The active window shows a small primary dot under the icon.
 
@@ -123,7 +123,7 @@ Set `workspace_group_capsule = false` to drop the group background/border while 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `group_by_workspace` | bool | `false` | Group icons into workspace capsules when backend workspace-app mapping is available. |
-| `show_all_outputs` | bool | `false` | Include windows from all displays. With `group_by_workspace`, workspaces from every monitor are merged; capsule badges use `tag·n` (workspace tag, middle dot, monitor index in bar output order) when there is more than one output. |
+| `show_all_outputs` | bool | `false` | Include windows from all monitors. With `group_by_workspace`, workspaces from every monitor are merged; capsule badges use `tag·n` (workspace tag, middle dot, monitor index in bar monitor order) when there is more than one monitor. |
 | `only_active_workspace` | bool | `false` | Show only windows on the active workspace for each relevant monitor. Depends on compositor workspace data; if a window’s workspace cannot be resolved, it is still shown. |
 | `show_workspace_label` | bool | `true` | When `group_by_workspace` is on, show the workspace tag pill on each capsule. Set `false` for groups without the label. |
 | `workspace_label_placement` | string | `corner` | With grouping: `corner`, `centered` (on the pill edge), or `inside` (first tile in the pill). Requires `show_workspace_label`. |
@@ -397,7 +397,7 @@ device = "/org/freedesktop/UPower/devices/gaming_input_hid_001"
 
 ## `brightness`
 
-Shows the current display brightness level and adjusts it via scroll wheel (±5% per step). Hides itself when no controllable display is found. Click opens the display tab in the control center.
+Shows the current monitor brightness level and adjusts it via scroll wheel (±5% per step). Hides itself when no controllable monitor is found. Click opens the display tab in the control center.
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|

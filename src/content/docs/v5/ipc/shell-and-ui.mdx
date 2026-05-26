@@ -43,10 +43,10 @@ These commands open, close, or toggle Noctalia UI surfaces.
 
 | Action | Command | Description |
 |--------|---------|-------------|
-| Random wallpaper now | <IpcCommand command="wallpaper-random" /> | Switch to a random wallpaper immediately on all outputs. |
-| Random wallpaper (one output) | <IpcCommand command="wallpaper-random <connector>" /> | Switch to a random wallpaper on the output named by **connector** (Wayland name, e.g. `DP-1`). Other outputs are unchanged. Respects per-monitor directory configuration and theme mode. |
-| Set wallpaper (all outputs) | <IpcCommand command="wallpaper-set <path>" /> | Set every connected output and the default wallpaper, persisted to `settings.toml` (per-output entries plus `wallpaper.default.path`). Same behavior as choosing **All monitors** in the wallpaper panel. Use an image path (`~` expanded) or `color:#RRGGBB` / `color:#RRGGBBAA`; non-color paths must exist at call time. |
-| Set wallpaper (one output) | <IpcCommand command="wallpaper-set <connector> <path>" /> | Set only the output named by **connector** (Wayland name, e.g. `DP-1` — same value as per-monitor keys in config and the wallpaper panel). Remaining tokens are joined as the path. Other outputs are unchanged. Same path and color rules as the all-output form. |
+| Random wallpaper now | <IpcCommand command="wallpaper-random" /> | Switch to a random wallpaper immediately on all monitors. |
+| Random wallpaper (one monitor) | <IpcCommand command="wallpaper-random <connector>" /> | Switch to a random wallpaper on the monitor named by **connector** (e.g. `DP-1`). Other monitors are unchanged. Respects per-monitor directory configuration and theme mode. |
+| Set wallpaper (all monitors) | <IpcCommand command="wallpaper-set <path>" /> | Set every connected monitor and the default wallpaper, persisted to `settings.toml` (per-monitor entries plus `wallpaper.default.path`). Same behavior as choosing **All monitors** in the wallpaper panel. Use an image path (`~` expanded) or `color:#RRGGBB` / `color:#RRGGBBAA`; non-color paths must exist at call time. |
+| Set wallpaper (one monitor) | <IpcCommand command="wallpaper-set <connector> <path>" /> | Set only the monitor named by **connector** (e.g. `DP-1` — same value as per-monitor keys in config and the wallpaper panel). Remaining tokens are joined as the path. Other monitors are unchanged. Same path and color rules as the all-monitor form. |
 
 The CLI forwards everything after the command as one string (`noctalia msg wallpaper-set …`), so `noctalia msg wallpaper-set DP-1 /home/you/My Pictures/wall.jpg` still yields a correct path when the shell passes separate arguments after the command (they are rejoined with spaces for parsing).
 

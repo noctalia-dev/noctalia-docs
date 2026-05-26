@@ -33,14 +33,14 @@ Default step is 5% when not specified. Output volume is clamped to 100% unless `
 
 | Action | Command | Description |
 |--------|---------|-------------|
-| Set current brightness | <IpcCommand command="brightness-set 65" /> | Set brightness on the current display. |
-| Set one display | <IpcCommand command="brightness-set DP-1 0.65" /> | Set brightness for a specific display or monitor selector. |
-| Set all displays | <IpcCommand command="brightness-set * 40%" /> | Set brightness on every display. |
+| Set current brightness | <IpcCommand command="brightness-set 65" /> | Set brightness on the current monitor. |
+| Set one monitor | <IpcCommand command="brightness-set DP-1 0.65" /> | Set brightness for a specific monitor or monitor selector. |
+| Set all monitors | <IpcCommand command="brightness-set * 40%" /> | Set brightness on every monitor. |
 | Raise current brightness | <IpcCommand command="brightness-up" /> | Raise brightness by the default step. |
-| Raise one display | <IpcCommand command="brightness-up DP-1 10" /> | Raise brightness for one display. |
-| Lower all displays | <IpcCommand command="brightness-down * 5%" /> | Lower brightness on every display. |
+| Raise one monitor | <IpcCommand command="brightness-up DP-1 10" /> | Raise brightness for one monitor. |
+| Lower all monitors | <IpcCommand command="brightness-down * 5%" /> | Lower brightness on every monitor. |
 
-Targets can be `current`, `all`, `*`, a display id such as `eDP-1` or `DP-1`, or a monitor selector token. Values accept normalized `0.0` to `1.0` or percentage form such as `65`, `65%`, and `5%`.
+Targets can be `current`, `all`, `*`, a monitor connector name such as `eDP-1` or `DP-1`, or a monitor selector token. Values accept normalized `0.0` to `1.0` or percentage form such as `65`, `65%`, and `5%`.
 
 ## Night light
 
@@ -70,9 +70,9 @@ When the active profile changes (from IPC, the control center, a bar widget, a s
 | Set power profile | <IpcCommand command="power-set balanced" /> | Activate the named profile. If the service reports a profile list, the name must match one of those entries exactly. |
 | Cycle power profile | <IpcCommand command="power-cycle" /> | Switch to the next profile in UPower's ordered list (same order as the bar power widget and control center shortcut). Wraps from the last profile back to the first. Takes no arguments. |
 
-## Display power
+## Monitor power
 
 | Action | Command | Description |
 |--------|---------|-------------|
-| Turn displays on | <IpcCommand command="dpms-on" /> | Turn monitors on. |
-| Turn displays off | <IpcCommand command="dpms-off" /> | Turn monitors off. |
+| Turn monitors on | <IpcCommand command="dpms-on" /> | Turn monitors on. |
+| Turn monitors off | <IpcCommand command="dpms-off" /> | Turn monitors off. |
