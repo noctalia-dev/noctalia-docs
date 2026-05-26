@@ -450,15 +450,20 @@ Left-click cycles layouts using the compositor backend when supported. Override 
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `hide_label` | bool | `false` | Show only the keyboard glyph, hiding the layout text label |
-| `hide_when_single_layout` | bool | `false` | Hide the widget unless more than one keyboard layout is configured |
-| `display` | string | `"short"` | `"short"` = compact code; `"full"` = full layout name. Ignored when `hide_label = true`. |
 | `cycle_command` | string | `""` | Optional override command run on left click instead of compositor backend |
+| `hide_when_single_layout` | bool | `false` | Hide the widget unless more than one keyboard layout is configured |
+| `show_icon` | bool | `true` | Show the keyboard glyph |
+| `show_label` | bool | `true` | Show the layout text label next to the keyboard glyph |
+| `display` | string | `"short"` | `"short"` = compact code; `"full"` = full layout name. Ignored when `show_label = false`. |
+
+At least one of `show_icon` or `show_label` must be `true`.
 
 ```toml
 [widget.keyboard_layout]
-hide_label = false
+cycle_command = ""
 hide_when_single_layout = false
+show_icon = true
+show_label = true
 display = "short"   # short | full
 ```
 
