@@ -68,6 +68,8 @@ Lua callbacks have execution budgets. If a callback repeatedly exceeds its budge
 | `barWidget.setText(text)` | — | Set the label text |
 | `barWidget.setGlyph(name)` | — | Set the icon by Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint string |
 | `barWidget.setImage(path, watch?, width?, height?)` | — | Set the icon slot to an image file instead of a glyph. Absolute paths and `~` paths are used directly; relative paths are resolved from the assets bundle. Pass `true` as `watch` to reload the image when the file changes. `width`/`height` are logical pixels; when `height` is omitted, the image is square. |
+| `barWidget.setTooltip(textOrRows)` | — | Set the widget hover tooltip. Pass a string for plain text, or rows like `{ { key = "Status", value = "Ready" } }` for a two-column tooltip. Passing `nil`, an empty string, or an empty row list clears it. |
+| `barWidget.clearTooltip()` | — | Clear the widget hover tooltip. |
 | `barWidget.setFont(familyOrPath)` | — | Set the label font. Pass a system font family name, or a path to a `.otf` / `.ttf` / `.woff2` file (absolute, `~/`, or relative to the assets dir). The font is registered at runtime — no restart needed. |
 | `barWidget.setColor(color, mode?)` | — | Set the label color by color role (recommended); fixed hex colors are also supported |
 | `barWidget.setGlyphColor(color, mode?)` | — | Set the glyph color by color role (recommended); fixed hex colors are also supported |
@@ -79,6 +81,29 @@ Lua callbacks have execution budgets. If a callback repeatedly exceeds its budge
 
 The icon slot displays either a glyph or an image. `setImage()` replaces the current glyph; `setGlyph()` switches the
 slot back to glyph rendering. Watched image reloads keep the previous image visible until the replacement file loads.
+
+#### Tooltips
+
+`barWidget.setTooltip()` attaches a hover tooltip to the scripted widget's root input area. A string creates a normal
+text tooltip:
+
+```lua
+barWidget.setTooltip("Left click to start recording")
+```
+
+Pass a list of rows for the same two-column tooltip style used by built-in status widgets. Each row can use named
+fields or positional values:
+
+```lua
+barWidget.setTooltip({
+    { key = "Status", value = "Ready" },
+    { key = "Left click", value = "Start recording" },
+    { "Right click", "Start replay buffer" },
+})
+```
+
+Call `barWidget.clearTooltip()`, `barWidget.setTooltip(nil)`, `barWidget.setTooltip("")`, or pass an empty row list to
+remove the tooltip. Tooltip updates from callbacks, including `onHover(true)`, refresh the currently shown tooltip.
 
 **Color roles:** `primary`, `on_primary`, `secondary`, `on_secondary`, `tertiary`, `on_tertiary`, `error`, `on_error`, `surface`, `on_surface`, `surface_variant`, `on_surface_variant`, `outline`, `shadow`, `hover`, `on_hover`.
 
