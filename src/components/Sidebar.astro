@@ -2,75 +2,17 @@
 import MobileMenuFooter from 'virtual:starlight/components/MobileMenuFooter';
 import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro';
 import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro';
-import { isV5Path, pickVersionSidebarEntries } from '../lib/versioning';
+import { pickVersionSidebarEntries } from '../lib/versioning';
 
 const { sidebar } = Astro.locals.starlightRoute;
 const pathname = Astro.url.pathname;
-const isV5 = isV5Path(pathname);
-const currentVersion = isV5 ? 'v5' : 'v4';
-const otherVersion = isV5 ? 'v4' : 'v5';
-const otherHref = isV5 ? '/v4/' : '/v5/';
-
 const sublist = pickVersionSidebarEntries(sidebar, pathname);
 ---
 
 <SidebarPersister>
-  <div class:list={['version-banner', { 'is-prerelease': isV5 }]}>
-    {isV5 ? (
-      <p>
-        You are viewing the <strong>v5 (alpha)</strong> documentation.
-        <a href="/v4/">Switch to v4 (stable)</a>
-      </p>
-    ) : (
-      <p>
-        You are viewing the <strong>v4</strong> documentation.
-        <a href="/v5/">Switch to v5 (alpha)</a>
-      </p>
-    )}
-  </div>
   <SidebarSublist sublist={sublist} />
 </SidebarPersister>
 
 <div class="md:sl-hidden">
   <MobileMenuFooter />
 </div>
-
-<style>
-  .version-banner {
-    margin-bottom: 1rem;
-    padding: 0.6rem 0.75rem;
-    font-size: var(--sl-text-xs);
-    line-height: 1.5;
-    color: var(--sl-color-gray-2);
-    background-color: var(--sl-color-bg-nav);
-    border: 1px solid var(--sl-color-hairline-light);
-    border-radius: var(--sl-border-radius, 0.5rem);
-  }
-
-  .version-banner p {
-    margin: 0;
-  }
-
-  .version-banner strong {
-    color: var(--sl-color-text);
-  }
-
-  .version-banner a {
-    color: var(--sl-color-text-accent, var(--sl-color-accent));
-    text-decoration: underline;
-    text-underline-offset: 0.15em;
-  }
-
-  .version-banner a:hover {
-    text-decoration-thickness: 2px;
-  }
-
-  .version-banner.is-prerelease {
-    background-color: color-mix(in srgb, var(--sl-color-orange) 10%, transparent);
-    border-color: color-mix(in srgb, var(--sl-color-orange) 30%, transparent);
-  }
-
-  .version-banner.is-prerelease strong {
-    color: var(--sl-color-orange);
-  }
-</style>

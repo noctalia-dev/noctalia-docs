@@ -323,4 +323,27 @@ snake-toc a[data-visible="true"] {
 	}
 }
 
+/* Layout tweaks: wider content, narrower TOC, fixed banner */
+:root {
+	--sl-content-width: 55rem;
+	--sl-sidebar-width: 16rem;
+	--sl-banner-height: 2rem;
+}
+
+.sidebar-pane {
+	top: calc(var(--sl-nav-height) + var(--sl-banner-height)) !important;
+}
+
+.main-frame {
+	padding-top: calc(var(--sl-nav-height) + var(--sl-mobile-toc-height) + var(--sl-banner-height)) !important;
+}
+
+.right-sidebar {
+	padding-top: calc(var(--sl-nav-height) + var(--sl-banner-height)) !important;
+}
+
+html {
+	scroll-padding-top: calc(1.5rem + var(--sl-nav-height) + var(--sl-mobile-toc-height) + var(--sl-banner-height)) !important;
+}
+
 /* Global script to update logo link - injected via style tag */
