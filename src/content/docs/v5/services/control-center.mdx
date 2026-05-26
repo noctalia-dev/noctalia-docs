@@ -83,6 +83,13 @@ Toggle shortcuts show an active/inactive visual state. `power_profile`, `weather
 When no `[[control_center.shortcuts]]` entries are defined, the default set is: `wifi`, `bluetooth`, `caffeine`, `nightlight`, `notification`, `power_profile`.
 Set `shortcuts = []` under `[control_center]` to hide all Home shortcut buttons.
 
+## Clipboard
+
+The Clipboard panel shows history entries with persistent pin markers for pinned items. Destructive actions use a
+two-click confirmation: click the trash action once to arm it, then click again to delete. The header trash action clears
+only unpinned history entries, so pinned entries stay protected from bulk clearing. To delete a pinned item, select that
+entry and use its individual delete action.
+
 ## Screen Time
 
 The **Screen Time** tab shows how long each application was in the foreground today. Noctalia tracks focus using the active `zwlr_foreign_toplevel` window and stores daily totals under `$XDG_STATE_HOME/noctalia/screen_time.json` (about 14 days retained).
