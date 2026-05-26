@@ -129,6 +129,9 @@ Set `workspace_group_capsule = false` to drop the group background/border while 
 | `workspace_label_placement` | string | `corner` | With grouping: `corner`, `centered` (on the pill edge), or `inside` (first tile in the pill). Requires `show_workspace_label`. |
 | `hide_empty_workspaces` | bool | `false` | When `group_by_workspace` is on, do not show capsules for workspaces that have no windows in the taskbar list. |
 | `workspace_group_capsule` | bool | `true` | Draw the background/border capsule around each workspace group. Set `false` for grouped icons and labels only. |
+| `show_active_indicator` | bool | `true` | Show a small dot below the active window icon in the taskbar. |
+| `active_opacity` | float | `1.0` | Opacity of the icon for the active (focused) window. |
+| `inactive_opacity` | float | `1.0` | Opacity of icons for inactive (unfocused) windows. |
 | `focused_color` | string | `"primary"` | Workspace disc fill when active (same roles as the workspaces widget) |
 | `occupied_color` | string | `"secondary"` | Workspace disc fill when occupied |
 | `empty_color` | string | `"secondary"` | Workspace disc fill when empty (shown at reduced opacity) |
@@ -142,6 +145,9 @@ show_workspace_label = true
 workspace_label_placement = "corner"
 hide_empty_workspaces = true
 workspace_group_capsule = true
+show_active_indicator = true
+active_opacity = 1.0
+inactive_opacity = 1.0
 focused_color = "primary"
 occupied_color = "secondary"
 empty_color = "secondary"
