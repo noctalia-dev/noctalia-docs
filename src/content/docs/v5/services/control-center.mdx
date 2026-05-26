@@ -12,18 +12,19 @@ sidebar:
 The Home tab shows your user card, current media, date/time, weather summary, and shortcut buttons. Click the avatar in
 the user card to pick a custom image; Noctalia saves the selected path as `[shell].avatar_path`.
 
-## Compact Sidebar
+## Sidebar
 
-Set `compact = true` under `[control_center]` to show only icons in the sidebar, hiding the tab labels. This makes the Control Center panel narrower.
+Set `sidebar` under `[control_center]` to choose how Control Center shows its tab navigation.
+Use `"full"` for icons and labels, `"compact"` for icon-only tabs, or `"none"` to hide the sidebar.
 
 ```toml
 [control_center]
-compact = true
+sidebar = "compact"
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `compact` | bool | `true` | Show only icons in the sidebar (no tab labels) |
+| `sidebar` | string | `"compact"` | `"full"` = icons and labels; `"compact"` = icons only; `"none"` = hide the sidebar |
 
 ## Shortcuts
 
@@ -82,13 +83,6 @@ Toggle shortcuts show an active/inactive visual state. `power_profile`, `weather
 
 When no `[[control_center.shortcuts]]` entries are defined, the default set is: `wifi`, `bluetooth`, `caffeine`, `nightlight`, `notification`, `power_profile`.
 Set `shortcuts = []` under `[control_center]` to hide all Home shortcut buttons.
-
-## Clipboard
-
-The Clipboard panel shows history entries with persistent pin markers for pinned items. Destructive actions use a
-two-click confirmation: click the trash action once to arm it, then click again to delete. The header trash action clears
-only unpinned history entries, so pinned entries stay protected from bulk clearing. To delete a pinned item, select that
-entry and use its individual delete action.
 
 ## Screen Time
 
