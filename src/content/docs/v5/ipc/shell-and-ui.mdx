@@ -33,6 +33,8 @@ These commands open, close, or toggle Noctalia UI surfaces.
 
 | Action | Command | Description |
 |--------|---------|-------------|
+| Open panel | <IpcCommand command="panel-open <id> [context]" /> | Open a panel by id without toggling it closed when it is already open. Optional `context` works like <IpcCommand command="panel-toggle <id> [context]" />. |
+| Close panel | <IpcCommand command="panel-close [id]" /> | Close the active panel, or close the named panel if it is active. |
 | Toggle launcher | <IpcCommand command="panel-toggle launcher [query]" /> | Open or close the app launcher. Optional `query` pre-fills the search input (e.g. `noctalia msg panel-toggle launcher "/wall"`). |
 | Toggle session menu | <IpcCommand command="panel-toggle session" /> | Open or close the logout, reboot, and shutdown menu. |
 | Toggle clipboard | <IpcCommand command="panel-toggle clipboard" /> | Open or close clipboard history. |
