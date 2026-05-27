@@ -112,6 +112,7 @@ empty_color = "surface_variant"
 Icon-only running application list. By default it follows the bar’s output (only windows the compositor associates with that monitor). Enable **Show all monitors** when you use one bar for everything but still want to see and focus apps on other displays.
 
 Left-click an icon to focus that window. The active window shows a small primary dot under the icon.
+When grouped app collapsing is enabled, multi-window app tiles also show compact right-edge dots over the icon.
 
 **Only active workspace** limits the list to windows the shell can place on a workspace that is currently active on its monitor (same idea as the v4 taskbar option). It works with or without `group_by_workspace`; with grouping, inactive workspace capsules are omitted.
 
@@ -129,6 +130,7 @@ Set `workspace_group_capsule = false` to drop the group background/border while 
 | `workspace_label_placement` | string | `corner` | With grouping: `corner`, `centered` (on the pill edge), or `inside` (first tile in the pill). Requires `show_workspace_label`. |
 | `hide_empty_workspaces` | bool | `false` | When `group_by_workspace` is on, do not show capsules for workspaces that have no windows in the taskbar list. |
 | `workspace_group_capsule` | bool | `true` | Draw the background/border capsule around each workspace group. Set `false` for grouped icons and labels only. |
+| `group_single_icon_per_app` | bool | `false` | With `group_by_workspace`, collapse multiple windows of the same app into one tile per workspace group. Left-click cycles that app's windows; right-edge overlay dots indicate multiple windows. |
 | `focused_color` | string | `"primary"` | Workspace disc fill when active (same roles as the workspaces widget) |
 | `occupied_color` | string | `"secondary"` | Workspace disc fill when occupied |
 | `empty_color` | string | `"secondary"` | Workspace disc fill when empty (shown at reduced opacity) |
@@ -142,6 +144,7 @@ show_workspace_label = true
 workspace_label_placement = "corner"
 hide_empty_workspaces = true
 workspace_group_capsule = true
+group_single_icon_per_app = true
 focused_color = "primary"
 occupied_color = "secondary"
 empty_color = "secondary"
