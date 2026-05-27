@@ -40,6 +40,7 @@ Use `scope = "shared"` for scripts whose `update()` computes global state, such 
 | `noctalia.log(msg)` | — | Log a message to shell debug output |
 | `noctalia.runAsync(cmd)` | `boolean` | Queue a shell command asynchronously (fire-and-forget). Returns true if the launch was queued. |
 | `noctalia.runAsync(cmd, callback, timeoutMs?)` | `boolean` | Execute a shell command off the UI thread and call `callback(result)` when it exits. `result` contains `exitCode`, `stdout`, `stderr`, `timedOut`, `stdoutTruncated`, and `stderrTruncated`. |
+| `noctalia.runInTerminal(cmd)` | `boolean` | Queue a shell command in the user's terminal. Returns true if the launch was queued. |
 | `noctalia.commandExists(name)` | `boolean` | Check if a command exists in PATH |
 | `noctalia.processMatches(callback, token, ...)` | `boolean` | Check process command lines on a background worker and call `callback(matches)` with true when one command line contains all tokens. Returns true if the query was queued. |
 | `noctalia.copyToClipboard(text, mimeType)` | `boolean` | Queue text for Noctalia clipboard publication with the given MIME type, such as `"text/plain"` or `"text/uri-list"`. Returns true if the copy request was queued. |
@@ -57,6 +58,14 @@ noctalia.runAsync("some command", function(result)
   noctalia.log(result.stdout)
   noctalia.log(result.stderr)
 end)
+```
+
+Use `runInTerminal()` for interactive commands:
+
+```lua
+function onClick()
+  noctalia.runInTerminal("nvim ~/.config/noctalia/config.toml")
+end
 ```
 
 Lua callbacks have execution budgets. If a callback repeatedly exceeds its budget, Noctalia keeps the last good displayed state and stops scheduling that widget until reload.
