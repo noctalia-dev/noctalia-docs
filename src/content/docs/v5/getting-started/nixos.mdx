@@ -21,7 +21,7 @@ To make Noctalia's wifi, bluetooth, power-profile, and battery feature available
 :::
 
 ## Nix Flakes
-To install Noctalia using flakes, first [add the flake input](#add-flake-input). Then you can either [install the package](#install-package) directly or use the [Home Manager module](#home-manager).
+To install Noctalia using flakes, first [add the flake input](#add-flake-input). Then you can [install the package](#install-package) directly or use either the [Home Manager](#home-manager) or [Hjem](#hjem) modules.
 
 ### Adding the Flake input {#add-flake-input}
 
@@ -57,7 +57,7 @@ Add the package to your system packages or equivalent:
 The flake also exposes a Home Manager module, which allows you to configure Noctalia's settings [(that you would otherwise put in `~/.config/noctalia/`)](/v5/configuration).
 
 ```nix
-{ inputs, pkgs, ... }:
+{ inputs, ... }:
 {
   home-manager.users.drfoobar = {
     imports = [
@@ -83,6 +83,35 @@ The flake also exposes a Home Manager module, which allows you to configure Noct
   };
 }
 ```
+
+### Hjem Module {#hjem}
+
+For those using Hjem instead of Home Manager, a Hjem module is also available.
+
+```nix
+{ inputs, ... }:
+{
+  hjem.users.drfoobar = {
+    extraModules = [
+      inputs.noctalia.hjemModules.default
+    ];
+
+    programs.noctalia = {
+      enable = true;
+
+      settings = { ... };
+    };
+  };
+}
+```
+
+### Systemd Service {#systemd}
+
+Both of the above modules include a systemd user service for Noctalia, which can be enabled by setting `programs.noctalia.systemd.enable = true`.
+
+:::note
+When using the service, it is recommended to enable `launch_apps_as_systemd_services`, otherwise any apps launched by Noctalia will be terminated when the service restarts.
+:::
 
 ### Binary Cache {#binary-cache}
 

@@ -7,7 +7,7 @@ sidebar:
 
 # Bar
 
-Bars are defined as named subtables under `[bar.*]`. Each bar is spawned on every connected output, then per-monitor overrides are applied.
+Bars are defined as named subtables under `[bar.*]`. Each bar is spawned on every connected monitor, then per-monitor overrides are applied.
 
 ```toml
 [bar]
@@ -51,7 +51,7 @@ end    = ["media", "tray", "notifications", "clipboard", "network", "bluetooth",
 
 Radius precedence: `radius` is the global fallback; per-corner values override it when provided.
 
-Multiple `[bar.*]` entries are supported — each is independently configured and rendered on all outputs.
+Multiple `[bar.*]` entries are supported — each is independently configured and rendered on all monitors.
 
 `[bar].order` controls the order Noctalia creates bar layer-shell surfaces. This matters only for bars with
 `reserve_space = true`, and the compositor still owns the final exclusive-zone arrangement. Names omitted from `order`

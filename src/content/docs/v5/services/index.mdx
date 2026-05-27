@@ -56,22 +56,22 @@ Notes:
 - `ignore_mmids` passes `--ignore-mmid` to every `ddcutil` invocation. Run `ddcutil --verbose detect` to find monitor model id strings.
 - Per-monitor overrides use the same connector/description matching rules as bar monitor overrides.
 - `backend = "auto"` prefers kernel backlight when available and falls back to `ddcutil`.
-- `backend = "none"` hides brightness control for the matched display.
-- `ddcutil` is treated as best-effort — repeated DDC failures cool down that display to avoid hammering the monitor bus.
+- `backend = "none"` hides brightness control for the matched monitor.
+- `ddcutil` is treated as best-effort — repeated DDC failures cool down that monitor to avoid hammering the bus.
 
 ### IPC
 
 ```sh
-noctalia msg set-brightness 65           # current display
+noctalia msg set-brightness 65           # current monitor
 noctalia msg set-brightness DP-1 0.65
-noctalia msg set-brightness * 40%        # all displays
+noctalia msg set-brightness * 40%        # all monitors
 
-noctalia msg raise-brightness            # current display, default 5% step
+noctalia msg raise-brightness            # current monitor, default 5% step
 noctalia msg raise-brightness DP-1 10
-noctalia msg lower-brightness * 5%       # all displays
+noctalia msg lower-brightness * 5%       # all monitors
 ```
 
-Targets: `current`, `all`/`*`, a display id (`eDP-1`, `DP-1`), or a monitor selector token (same matching rules as monitor overrides). `current` resolves from the active/focused output, falling back to the last interactive output.
+Targets: `current`, `all`/`*`, a monitor connector name (`eDP-1`, `DP-1`), or a monitor selector token (same matching rules as monitor overrides). `current` resolves from the active/focused monitor, falling back to the last interactive one.
 
 Values and steps accept normalized (`0.0`–`1.0`) or percentage-style (`65`, `65%`, `5%`) values. `raise-brightness` / `lower-brightness` target `current` with a 5% step when no arguments are given.
 
@@ -177,7 +177,7 @@ Optional top-level **`[idle]`** keys apply before any behavior’s `command` run
 pre_action_fade_seconds = 2.0
 ```
 
-While a fade is in progress, the overlay is click-through so pointer/keyboard activity still reaches the compositor; if the session becomes active again during that window, the pending command is cancelled. The dim is a layer-shell **overlay** that covers the full output (including the bar).
+While a fade is in progress, the overlay is click-through so pointer/keyboard activity still reaches the compositor; if the session becomes active again during that window, the pending command is cancelled. The dim is a layer-shell **overlay** that covers the full monitor (including the bar).
 
 ```toml
 [idle.behavior.lock]
@@ -245,14 +245,16 @@ layer              = "top"  # top | overlay
 background_opacity = 0.97   # toast card background alpha; lower values let compositor blur show through
 offset_x           = 20     # absolute horizontal margin from the screen edge
 offset_y           = 8      # absolute vertical margin from the screen edge
-monitors           = []     # empty = all displays; otherwise connector/description selectors (e.g. ["eDP-1", "DP-1"])
+monitors           = []     # empty = all monitors; otherwise connector/description selectors (e.g. ["eDP-1", "DP-1"])
+collapse_on_dismiss = true  # slide remaining toasts to close gaps when one is dismissed
 ```
 
 - `layer = "top"` keeps toasts above normal app windows while respecting overlay UI from other components.
 - `layer = "overlay"` forces toasts onto the overlay layer so they render above other layer-shell surfaces.
 - `offset_x` and `offset_y` are absolute margins from the nearest screen edge for the configured `position`.
-- `monitors = []` shows notifications on all displays (default).
-- When `monitors` is non-empty, toasts are only created on matching outputs.
-- Selector matching follows monitor override rules: exact connector name (`eDP-1`) or a word-boundary token in output description.
+- `monitors = []` shows notifications on all monitors (default).
+- When `monitors` is non-empty, toasts are only created on matching monitors.
+- Selector matching follows monitor override rules: exact connector name (`eDP-1`) or a word-boundary token in the monitor description.
 - Internal Noctalia notifications are transient toasts and are not stored in notification history.
+- `collapse_on_dismiss = true` (default) causes remaining toasts to slide into a compact stack when one is dismissed. Set to `false` for stable-slot behavior where toasts keep their original positions.
 - `power_profile_notify = false` disables the toast when the active UPower power profile changes.
