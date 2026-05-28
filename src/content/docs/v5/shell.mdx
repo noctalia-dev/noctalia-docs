@@ -39,16 +39,15 @@ clipboard_history_max_entries = 50      # unpinned history cap (10–200); pinne
 clipboard_confirm_clear_history = true  # confirm before clear history / delete unpinned entries
 clipboard_auto_paste  = "auto"          # off | auto | ctrl_v | ctrl_shift_v | shift_insert
 clipboard_image_action_command = ""     # image clipboard action; e.g. "gimp {path}" or "satty -f -"
+shared_gl_context     = true            # startup-only; share GPU textures across surfaces
 
 [shell.animation]
 enabled = true
 speed   = 1.0   # 1.0 = normal, 0.5 = 2× slower, 2.0 = 2× faster
 
 [shell.shadow]
-blur     = 12    # global surface shadow blur radius; 0 disables all rendered surface shadows
-offset_x = 2
-offset_y = 2     # positive = down
-alpha    = 0.55  # multiplied by each component's background opacity
+direction = "down"  # center, up, down, left, right, up_left, up_right, down_left, down_right
+alpha     = 0.55    # multiplied by each component's background opacity
 
 [shell.panel]
 background_blur       = true   # request compositor blur behind panels via ext-background-effect-v1
@@ -93,12 +92,13 @@ Notes:
 - `clipboard_confirm_clear_history`: when `true` (default), the clipboard panel asks before **Clear history** and before deleting an **unpinned** entry (trash in the preview, or double-click a row). When `false`, those actions apply immediately: sidebar clear removes unpinned rows and keeps pins when any exist, or clears everything when nothing is pinned; unpinned single deletes are immediate. **Pinned** entries still require confirmation before delete. With confirmation enabled, the clear dialog only offers **Keep pinned** when both pinned and unpinned rows exist; if history is all pinned or all unpinned, the description matches that case. Toggle in **Settings → Shell → Clipboard**.
 - `clipboard_auto_paste`: `auto` = image entries use `Ctrl+V`, text entries use `Ctrl+Shift+V`; `off` = copy only, no automatic paste.
 - `clipboard_image_action_command`: when non-empty, image clipboard previews show an action button. Use `{path}` to receive an exported image file path. Use `{stdin}` (expanded to `-`) or omit `{path}` to receive the image bytes on stdin, matching the v4 annotation tool behavior (`satty -f -`, `gradia`, etc.).
+- `shared_gl_context`: when `true` (default), all rendering surfaces share a single EGL context group so wallpaper and icon textures are uploaded once in VRAM and reused across monitors. Set to `false` if you see corrupted textures (e.g. vertical stripe artifacts) on older GPUs with buggy cross-context texture sharing. Each surface then creates its own standalone context, which uses more VRAM on multi-monitor setups. Restart required.
 - `shell.animation.enabled` disables all animated transitions globally. `speed` scales durations globally.
-- `shell.shadow` defines the shared shadow metrics for shell surfaces and xdg-popup chrome such as panels, menus, pickers, and select dropdowns. Components such as panels, bars, and the dock only opt in/out with `shadow = true|false`; they do not define their own blur or offset.
+- `shell.shadow` defines the shared shadow style for shell surfaces and xdg-popup chrome such as panels, menus, pickers, and select dropdowns. `direction` controls which way the shadow is cast; blur is fixed at 12 px. Components such as panels, bars, and the dock only opt in/out with `shadow = true|false`.
 - `shell.panel.background_blur` toggles compositor blur on every shell panel (control center, launcher, clipboard, attached menus, etc.). Inert on compositors that do not implement `ext-background-effect-v1`.
 - `shell.panel.transparency_mode` controls panel glass styling. `solid` keeps cards opaque and floating/centered panels solid, `soft` makes floating/centered panels lightly translucent and cards subtly translucent, and `glass` makes both visibly translucent while clamping card opacity high enough for readable text. Attached panels continue to use the effective panel background opacity inherited from the host bar.
 - `shell.panel.borders` draws an outline on detached panel shells and on section cards inside panels (control center tabs, clipboard preview, setup wizard steps, etc.). Attached bar-merged panels stay borderless on the shell edge. Default is `true`; set to `false` for a flatter, borderless look.
-- `shell.panel.shadow` toggles the rendered drop shadow on attached, floating, and centered panels. Shadow blur, offset, and alpha still come from `[shell.shadow]`.
+- `shell.panel.shadow` toggles the rendered drop shadow on attached, floating, and centered panels. Shadow direction and alpha come from `[shell.shadow]`.
 - `shell.panel.launcher_placement`, `clipboard_placement`, `control_center_placement`, `wallpaper_placement`, and `session_placement` accept `attached`, `floating`, or `centered`. `attached` merges the panel with the host bar when the bar allows `attach_panels`; `floating` keeps the panel detached but near the bar; `centered` opens it in the middle of the monitor. Defaults are centered for Launcher and Clipboard, attached for Control Center, Wallpaper, and Session.
 - When multiple enabled bars resolve to the same edge on one monitor, exact source-bar attachment is ambiguous. In that case attached/floating panels use the compositor's reserved edge area and open outside the bar stack instead of trying to merge with one bar.
 - `shell.panel.open_near_click_control_center`, `open_near_click_launcher`, `open_near_click_clipboard`, `open_near_click_wallpaper`, and `open_near_click_session` position attached or floating panels near the click location on the bar instead of centering them along the bar. They are ignored when the corresponding placement is `centered`.

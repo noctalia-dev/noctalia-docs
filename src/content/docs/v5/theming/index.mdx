@@ -129,13 +129,14 @@ non-palette color is needed; Settings role pickers expose the 16 roles first.
 ```sh
 noctalia msg theme-mode-get
 noctalia msg theme-mode-toggle
+noctalia msg templates-apply
 ```
 
 ---
 
 ## External App Templates
 
-Noctalia can apply generated colors to external app config files whenever the resolved theme changes.
+Noctalia can apply generated colors to external app config files whenever the resolved theme changes. Run `noctalia msg templates-apply` to rerender the enabled configured templates for the current palette without changing the theme.
 
 ```toml
 [theme.templates]
