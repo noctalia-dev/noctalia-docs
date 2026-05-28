@@ -140,6 +140,7 @@ role even for `"on_surface"`; Settings `color` still has final precedence.
 A script can declare a **manifest** with `barWidget.define`. The manifest lets Noctalia:
 
 - list the widget directly in the bar's **Add widget** picker (with your label and icon), so it can be added in one click — no manual `[widget.*]` block or `script` path required;
+- show the widget version in picker/details when you declare one;
 - render your custom settings as native controls in the widget's **Settings** panel.
 
 This works for any script — bundled or your own — with no changes to Noctalia itself.
@@ -149,6 +150,7 @@ This works for any script — bundled or your own — with no changes to Noctali
 -- such as starting a process), so Noctalia can read the manifest safely.
 barWidget.define({
     label = "Screen Recorder",        -- shown in the picker and settings
+    version = "1.0.0",                -- optional; shown in picker/details
     icon = "video",                   -- Noctalia alias / Tabler name / U+codepoint
     description = "Record the screen", -- short picker subtitle
     pickable = true,                  -- optional, default true; false hides it from the picker
@@ -163,6 +165,9 @@ barWidget.define({
         { key = "replay_enabled", type = "bool", label = "Replay buffer", default = false },
         { key = "replay_duration", type = "int", label = "Replay seconds", default = 30,
           visible_when = { key = "replay_enabled", values = { "true" } } },
+        { key = "output_dir", type = "folder", label = "Output directory" },
+        { key = "overlay_image", type = "file", label = "Overlay image",
+          extensions = { ".png", ".jpg", ".webp" } },
     },
 })
 ```
@@ -172,12 +177,13 @@ Each `settings` field accepts:
 | Field | Description |
 |-------|-------------|
 | `key` | Config key the widget reads with `barWidget.getConfig(key)`. Required. |
-| `type` | `bool`, `int`, `double`, `string`, `select`, or `color`. |
+| `type` | `bool`, `int`, `double`, `string`, `file`, `folder`, `glyph`, `select`, or `color`. |
 | `label` | Control label. Defaults to `key`. |
 | `description` | Optional helper text under the control. |
 | `default` | Default value (matches `type`). |
 | `min` / `max` / `step` | Numeric bounds for `int` / `double`. |
 | `options` | For `select`: a list of `{ value = ..., label = ... }` (a list of plain strings also works). |
+| `extensions` | For `file`: optional list of extensions such as `{ ".png", ".json" }`. Omit it to allow any file. |
 | `advanced` | When `true`, hidden unless "Show advanced" is enabled. |
 | `visible_when` | `{ key = "other_key", values = { "true" } }` — only show this field when another setting matches one of `values`. |
 
