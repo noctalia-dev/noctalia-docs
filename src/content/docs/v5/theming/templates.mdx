@@ -355,7 +355,7 @@ When rendering files, `TemplateEngine`:
 - skips rewriting unchanged files
 - reports render failures through the file render result
 
-Skipping unchanged output avoids unnecessary timestamp updates and downstream reloads.
+Skipping unchanged output avoids unnecessary timestamp updates.
 
 ## Config Processing
 
@@ -452,7 +452,7 @@ Behavior:
 
 - hook commands are rendered through the template engine first
 - `pre_hook` runs before any output files are written
-- `post_hook` runs after rendering, but only when at least one output file changed
+- `post_hook` runs after a template is processed successfully, even when rendered output was unchanged
 - `closest_color` is available inside hooks
 
 Additional variables available inside hooks and templates:
