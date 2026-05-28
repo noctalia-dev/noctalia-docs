@@ -66,6 +66,7 @@ Inside a bar, add named monitor subtables under `[bar.<name>.monitor.*]`. **Firs
 ```toml
 [bar.main.monitor.dp1]
 match              = "DP-1"    # connector name or description substring
+position           = "bottom"  # top | bottom | left | right
 enabled            = true
 thickness          = 44
 background_opacity = 0.9
@@ -88,7 +89,7 @@ end                = ["volume", "clock"]
 
 `match` defaults to the subtable key name when omitted, so `[bar.main.monitor."DP-1"]` without a `match` field works too.
 
-Only the fields you specify are overridden; everything else falls through to the `[bar.*]` defaults. Supported override fields: all bar fields, plus `auto_hide`, `reserve_space`, `scale`, `background_opacity`, `color`, and all `capsule_*` keys.
+Only the fields you specify are overridden; everything else falls through to the `[bar.*]` defaults. Supported override fields: all bar fields including `position`, plus `auto_hide`, `reserve_space`, `scale`, `background_opacity`, `color`, and all `capsule_*` keys.
 
 Shadow blur, offset, and alpha are global under `[shell.shadow]`. Bars only expose `shadow = true|false`.
 
