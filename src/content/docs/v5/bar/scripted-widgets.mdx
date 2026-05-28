@@ -160,6 +160,8 @@ barWidget.define({
               { value = "h264", label = "H.264" },
               { value = "hevc", label = "HEVC" },
           } },
+        { key = "icon", type = "glyph", label = "Icon", default = "video" },
+        { key = "accent", type = "color", label = "Accent", default = "primary" },
         { key = "replay_enabled", type = "bool", label = "Replay buffer", default = false },
         { key = "replay_duration", type = "int", label = "Replay seconds", default = 30,
           visible_when = { key = "replay_enabled", values = { "true" } } },
@@ -172,7 +174,7 @@ Each `settings` field accepts:
 | Field | Description |
 |-------|-------------|
 | `key` | Config key the widget reads with `barWidget.getConfig(key)`. Required. |
-| `type` | `bool`, `int`, `double`, `string`, `select`, or `color`. |
+| `type` | `bool`, `int`, `double`, `string`, `glyph`, `select`, or `color`. |
 | `label` | Control label. Defaults to `key`. |
 | `description` | Optional helper text under the control. |
 | `default` | Default value (matches `type`). |
@@ -182,6 +184,8 @@ Each `settings` field accepts:
 | `visible_when` | `{ key = "other_key", values = { "true" } }` — only show this field when another setting matches one of `values`. |
 
 Manifest labels are used verbatim and are not translated.
+`glyph` and `color` are stored as strings. `glyph` shows a glyph picker next to the input; `color` shows the color role
+picker and can store a color role token or fixed hex color.
 
 :::note
 The manifest call must run before any side effects (for example, before spawning a background process). Noctalia extracts the manifest by running the script up to `barWidget.define` and then stopping, so anything after that line is skipped during extraction.
