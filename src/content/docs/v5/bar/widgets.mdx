@@ -92,6 +92,7 @@ Pill styling and `capsule_radius` are ignored when `minimal = true`.
 | `focused_color` | string | `"primary"` | Color role or hex color for the focused workspace pill |
 | `occupied_color` | string | `"secondary"` | Color role or hex color for occupied (non-focused) workspace pills |
 | `empty_color` | string | `"secondary"` | Color role or hex color for empty workspace pills |
+| `labels_only_when_occupied` | bool | `false` | Show id/name labels only on workspaces with open windows; empty tags stay unlabeled. Requires `display = "id"` or `"name"`. |
 | `hide_when_empty` | bool | `false` | Hide workspace pills with no open windows. |
 
 ```toml
@@ -99,6 +100,7 @@ Pill styling and `capsule_radius` are ignored when `minimal = true`.
 display = "id"          # none | id | name
 minimal = false         # true = text-only labels, no animated pills
 max_label_chars = 2     # truncate long workspace names (e.g. "VESKTOP" → "VE")
+labels_only_when_occupied = true  # (1) ( ) ( ) (4) — only occupied tags show labels
 hide_when_empty = true
 focused_color = "primary"
 occupied_color = "secondary"
