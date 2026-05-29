@@ -146,8 +146,8 @@ builtin_ids                = []        # opt-in; run: noctalia theme --list-temp
 community_ids              = []        # opt-in; fetched from api.noctalia.dev/templates
 
 [theme.templates.user.my_app]
-input_path  = "~/.config/noctalia/templates/my-app.css"
-output_path = "~/.config/my-app/theme.css"
+input_path  = "$XDG_CONFIG_HOME/noctalia/templates/my-app.css"
+output_path = "$XDG_CONFIG_HOME/my-app/theme.css"
 post_hook   = "my-app --reload-theme"
 ```
 
