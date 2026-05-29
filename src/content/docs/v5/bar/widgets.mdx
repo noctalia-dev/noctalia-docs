@@ -536,6 +536,54 @@ glyph = "clipboard-list"
 
 ---
 
+## `screenshot`
+
+Captures the screen through the compositor's `wlr-screencopy` protocol (Niri, Hyprland, Sway, and other compositors that expose it). The widget is omitted from the bar when screencopy is unavailable.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `glyph` | string | `"screenshot"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint |
+| `directory` | folder | `""` | Output folder for saved PNGs; empty uses `~/Pictures` |
+| `filename_pattern` | string | `screenshot_%Y%m%d_%H%M%S` | strftime pattern without extension (`.png` is appended); `%s` is unix epoch |
+| `primary_click` | string | `"region"` | Left-click action: `"region"` (interactive drag selection) or `"fullscreen"` (all outputs) |
+| `save_to_file` | bool | `true` | Write PNG files to the output directory |
+| `copy_to_clipboard` | bool | `false` | Place the captured PNG on the clipboard |
+| `pipe_to_command` | bool | `false` | Send the captured PNG to a shell command on stdin (works without `save_to_file`) |
+| `pipe_command` | string | `""` | Command run as `/bin/sh -lc` when `pipe_to_command` is enabled (for example `swappy -`) |
+
+Any combination of the three outputs is valid. A failed save does not block clipboard or pipe.
+
+**Click behavior:**
+
+- **Left-click**: runs `primary_click` (region or fullscreen) using the output options above.
+- **Right-click**: opens a menu with fullscreen, region, and (when available) per-window captures.
+
+Region mode shows a dimmed overlay; drag to select, release to capture, **Escape** to cancel.
+
+```toml
+[widget.screenshot]
+glyph = "screenshot"
+directory = "~/Pictures"
+filename_pattern = "screenshot_%Y%m%d_%H%M%S"
+primary_click = "region"
+save_to_file = true
+copy_to_clipboard = false
+pipe_to_command = false
+pipe_command = "swappy -"
+```
+
+### IPC
+
+```sh
+noctalia msg screenshot-region
+noctalia msg screenshot-fullscreen
+noctalia msg screenshot-region my-capture
+```
+
+IPC uses the same output settings as the bar widget (`directory`, `filename_pattern`, `save_to_file`, `copy_to_clipboard`, `pipe_to_command`, `pipe_command`). With no widget name, the first screenshot widget on a bar is used (bar list order, then `[widget.*]` names). Pass a widget name to target a specific `[widget.<name>]` entry.
+
+---
+
 ## `weather`
 
 Shows the current weather in the bar and opens the Weather control-center tab on click. Requires `[weather]` to be configured.

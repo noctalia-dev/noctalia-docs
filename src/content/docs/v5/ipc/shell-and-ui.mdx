@@ -99,6 +99,15 @@ The CLI forwards everything after the command as one string (`noctalia msg wallp
 | Apply templates | <IpcCommand command="templates-apply" /> | Rerender the enabled configured theme templates for the current palette without changing theme mode or firing shell palette hooks. |
 | Set wallpaper palette scheme | <IpcCommand command="theme-wallpaper-scheme-set <scheme>" /> | Persist `[theme].wallpaper_scheme` and reload. Used when the palette is generated from the wallpaper image. Recognized values: **Material 3:** `m3-tonal-spot`, `m3-content`, `m3-fruit-salad`, `m3-rainbow`, `m3-monochrome`. **Custom:** `vibrant`, `faithful`, `dysfunctional`, `muted`. |
 
+## Screenshots
+
+Requires compositor support for `wlr-screencopy-unstable-v1`. Uses the same output options as the bar screenshot widget (`directory`, `filename_pattern`, `save_to_file`, `copy_to_clipboard`, `pipe_to_command`, `pipe_command`). Omit the widget name to use the first screenshot widget on a bar; pass a name to select `[widget.<name>]`.
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Region screenshot | <IpcCommand command="screenshot-region [widget-name]" /> | Start interactive region capture (drag to select, **Escape** to cancel). |
+| Fullscreen screenshot | <IpcCommand command="screenshot-fullscreen [widget-name]" /> | Capture all outputs immediately. |
+
 ## Session
 
 | Action | Command | Description |
