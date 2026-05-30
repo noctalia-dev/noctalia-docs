@@ -72,6 +72,15 @@ size    = 32       # corner radius in logical pixels (1–100)
 
 [shell.mpris]
 blacklist = []           # optional list of players to hide from media widgets/control-center
+
+[shell.screenshot]
+save_to_file      = true                       # write captures as PNG to the output directory
+directory         = ""                          # output folder; empty = ~/Pictures
+filename_pattern  = "screenshot_%Y%m%d_%H%M%S"  # strftime pattern, no extension (.png is added)
+copy_to_clipboard = false                       # also place the PNG on the clipboard
+freeze_screen     = false                       # freeze the desktop before region selection
+pipe_to_command   = false                       # pipe the PNG to a shell command on stdin
+pipe_command      = ""                          # annotator/uploader, e.g. "swappy -f -" or "satty -f -"
 ```
 
 Notes:
@@ -104,6 +113,7 @@ Notes:
 - `shell.panel.open_near_click_control_center`, `open_near_click_launcher`, `open_near_click_clipboard`, `open_near_click_wallpaper`, and `open_near_click_session` position attached or floating panels near the click location on the bar instead of centering them along the bar. They are ignored when the corresponding placement is `centered`.
 - `shell.panel.launcher_categories` shows compact category filters in the launcher for providers that expose categories, currently Applications and Emoji. **All** leaves results unfiltered. With a prefixed provider such as `/emo`, the filters come from that provider. Press `Tab` while the launcher is open to hide/show the filters; the left/right keybind actions move between filters.
 - `shell.mpris.blacklist` excludes matching MPRIS players from Noctalia media UI and active-player selection. Entries are case-insensitive and match player bus name, identity, desktop entry, or a bus-name substring token (for example `"spotify"`).
+- `shell.screenshot` holds the global output policy for all screenshot captures (region, fullscreen), shared by the screenshot bar widget and the `screenshot-region` / `screenshot-fullscreen` IPC commands. At least one of `save_to_file`, `copy_to_clipboard`, or `pipe_to_command` must be enabled or the capture reports "No screenshot output enabled". `directory` accepts `~`; `filename_pattern` is a [strftime](/v5/configuration/date-format-tokens/) pattern (the `.png` extension is appended). `copy_to_clipboard` requires clipboard integration (`clipboard_enabled = true`). `pipe_command` runs via `/bin/sh -lc` with the PNG written to its stdin — use it for annotators or uploaders (`swappy -f -`, `satty -f -`); for plain clipboard copies use `copy_to_clipboard` instead. The bar widget itself only configures its `glyph` and `primary_click` (region vs fullscreen). Edit in **Settings → Shell → Screenshot**.
 
 ---
 

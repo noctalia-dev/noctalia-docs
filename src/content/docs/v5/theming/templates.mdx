@@ -412,8 +412,8 @@ Each template entry supports:
 [templates.qt]
 input_path = "./qtct.conf"
 output_path = [
-  "~/.config/qt5ct/colors/noctalia.conf",
-  "~/.config/qt6ct/colors/noctalia.conf",
+  "$XDG_CONFIG_HOME/qt5ct/colors/noctalia.conf",
+  "$XDG_CONFIG_HOME/qt6ct/colors/noctalia.conf",
 ]
 ```
 
@@ -424,10 +424,16 @@ output_path = [
 ```toml
 [templates.foo]
 input_path_modes = { dark = "./dark.css", light = "./light.css" }
-output_path = "~/.config/foo/theme.css"
+output_path = "$XDG_CONFIG_HOME/foo/theme.css"
 ```
 
 Relative `input_path` and `output_path` values are resolved from the config file directory.
+
+A leading `$XDG_CONFIG_HOME`, `$XDG_DATA_HOME`, `$XDG_STATE_HOME`, or `$XDG_CACHE_HOME` token in
+`input_path`/`output_path` is expanded per the [XDG Base Directory spec](https://specs.freedesktop.org/basedir-spec/latest/):
+the environment variable when it is set, otherwise the spec default (`~/.config`, `~/.local/share`,
+`~/.local/state`, `~/.cache`). Prefer these tokens over a hardcoded `~/.config` so output lands in the right
+place when a config/data/cache home is relocated. A leading `~` still expands to `$HOME` only.
 
 `index` controls processing order and defaults to `0`.
 

@@ -543,21 +543,14 @@ Captures the screen through the compositor's `wlr-screencopy` protocol (Niri, Hy
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `glyph` | string | `"screenshot"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint |
-| `directory` | folder | `""` | Output folder for saved PNGs; empty uses `~/Pictures` |
-| `filename_pattern` | string | `screenshot_%Y%m%d_%H%M%S` | strftime pattern without extension (`.png` is appended); `%s` is unix epoch |
 | `primary_click` | string | `"region"` | Left-click action: `"region"` (interactive drag selection) or `"fullscreen"` (focused monitor) |
-| `freeze_screen` | bool | `false` | Capture the desktop before region selection so moving content stays still (grimblast-style freeze) |
-| `save_to_file` | bool | `true` | Write PNG files to the output directory |
-| `copy_to_clipboard` | bool | `false` | Place the captured PNG on the clipboard |
-| `pipe_to_command` | bool | `false` | Send the captured PNG to a shell command on stdin (works without `save_to_file`) |
-| `pipe_command` | string | `""` | Command run as `/bin/sh -lc` when `pipe_to_command` is enabled (for example `swappy -`) |
 
-Any combination of the three outputs is valid. A failed save does not block clipboard or pipe.
+The capture **output policy** (save to file, output directory, filename pattern, clipboard, freeze, pipe command) is global and lives under [`[shell.screenshot]`](/v5/shell/#shell-settings), shared by this widget and the IPC commands. The widget only sets its glyph and left-click action.
 
 **Click behavior:**
 
-- **Left-click**: runs `primary_click` (region or fullscreen) using the output options above.
-- **Right-click**: opens a menu with fullscreen, region, and (when available) per-window captures.
+- **Left-click**: runs `primary_click` (region or fullscreen) using the global output policy.
+- **Right-click**: opens a menu with fullscreen and region capture.
 
 Region mode shows a dimmed overlay; drag to select, release to capture. Press a **`[keybinds].cancel`** chord (default **Escape**) to cancel. With `freeze_screen = true`, the shell captures each output first, then shows the frozen frame under the dim overlay while you select; the final PNG is cropped from that snapshot.
 
@@ -566,14 +559,7 @@ While dragging, a size badge (`1920x1080`) follows the pointer below the cursor.
 ```toml
 [widget.screenshot]
 glyph = "screenshot"
-directory = "~/Pictures"
-filename_pattern = "screenshot_%Y%m%d_%H%M%S"
 primary_click = "region"
-freeze_screen = false
-save_to_file = true
-copy_to_clipboard = false
-pipe_to_command = false
-pipe_command = "swappy -"
 ```
 
 ### IPC
@@ -587,7 +573,7 @@ noctalia msg screenshot-fullscreen all
 noctalia msg screenshot-region my-capture
 ```
 
-IPC uses the same output settings as the bar widget (`directory`, `filename_pattern`, `freeze_screen`, `save_to_file`, `copy_to_clipboard`, `pipe_to_command`, `pipe_command`). With no widget name, the first screenshot widget on a bar is used (bar list order, then `[widget.*]` names). Pass a widget name to target a specific `[widget.<name>]` entry.
+Both commands use the global `[shell.screenshot]` output policy.
 
 By default, `screenshot-fullscreen` captures the **focused monitor** (compositor-selected output, active toplevel, keyboard focus, or recent pointer position). Use `pick` to click a monitor on multi-monitor setups, a connector name such as `DP-2` for a specific output, or `all` to capture every monitor in one combined desktop PNG.
 
