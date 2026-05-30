@@ -186,7 +186,7 @@ username = "me"
 
 # Google Calendar (authorized via Settings → Services → Calendar → Connect)
 [[calendar.accounts]]
-id   = "work_gmail"
+id   = "work_gmail"          # unique identifier — not your email address
 type = "google"
 name = "Work"
 ```
@@ -203,6 +203,10 @@ Use the **calendar collection URL** for the specific calendar (not the account r
 ### Google setup
 
 Set `type = "google"` with a unique `id`, enable the calendar service, then open **Settings → Services → Calendar** and press **Connect** next to the account. A browser tab opens for Google's consent screen; approve it and the tab confirms completion. Tokens are obtained through the noctalia OAuth broker (`api.noctalia.dev`) — no Google Cloud project or client secret is required on your side. Access is `calendar.readonly`.
+
+:::note
+`id` is a local account key used in config and `state.toml` (for example `work_gmail`). It must **not** be your Google email address — use a short unique identifier with lowercase letters, digits, and underscores only (`[a-z0-9_]`). The signed-in Google account is chosen during browser authorization, not from `id`.
+:::
 
 If a Google account later shows as disconnected (revoked or expired), press **Connect** again to reauthorize.
 
