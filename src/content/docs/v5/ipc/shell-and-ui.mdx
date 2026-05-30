@@ -106,7 +106,10 @@ Requires compositor support for `wlr-screencopy-unstable-v1`. Uses the global `[
 | Action | Command | Description |
 |--------|---------|-------------|
 | Region screenshot | <IpcCommand command="screenshot-region [widget-name]" /> | Start interactive region capture (drag to select; press **`[keybinds].cancel`** to dismiss). |
-| Fullscreen screenshot | <IpcCommand command="screenshot-fullscreen [pick|monitor|all]" /> | Capture the focused monitor by default. Use `pick` to click a monitor, a connector name (for example `DP-2`) for a specific output, or `all` for one combined desktop PNG spanning every monitor. |
+| Fullscreen screenshot | <IpcCommand command="screenshot-fullscreen" /> | Capture the focused monitor. |
+| Fullscreen (pick monitor) | <IpcCommand command="screenshot-fullscreen pick" /> | Click to choose which monitor to capture. |
+| Fullscreen (specific output) | <IpcCommand command="screenshot-fullscreen DP-2" /> | Capture a specific connector by name (e.g. `DP-2`, `HDMI-1`). |
+| Fullscreen (all monitors) | <IpcCommand command="screenshot-fullscreen all" /> | One combined desktop PNG spanning every monitor. |
 
 ## Session
 
