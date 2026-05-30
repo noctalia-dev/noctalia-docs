@@ -127,7 +127,6 @@ Set under `[bar.<name>]` or `[bar.<name>.monitor.*]`:
 | `capsule` | bool | `false` | `true` gives every widget a capsule unless `[widget.*]` sets `capsule = false`. |
 | `color` | string | *(unset)* | Default icon + label color role for every widget on this bar; fixed hex colors are also supported. |
 | `capsule_radius` | number | *(auto pill)* | Default capsule corner radius in logical pixels before `scale` is applied (clamped 0–80). Also used by workspace pills and taskbar workspace groups. Omit to use automatic pill radius. |
-| `capsule_groups` | array of string | `[]` | Managed capsule group names for nearby widgets on this bar. |
 | `capsule_fill` | string | `surface_variant` | Default capsule background color role; fixed hex colors are also supported. |
 | `capsule_foreground` | string | *(unset)* | Default icon + label color role for capped widgets; fixed hex colors are also supported. |
 | `capsule_padding` | number | `6` | Inner padding in logical pixels before `scale` is applied (clamped 0–48). |
@@ -143,7 +142,6 @@ Set under `[widget.<name>]`:
 | `scale` | number | `1.0` | Multiplies the owning bar's `scale` for this widget only (clamped 0.2–2.5). |
 | `capsule` | bool | *(from bar)* | Omit to inherit bar flag; `false` disables; `true` forces on. |
 | `capsule_radius` | number | *(from bar)* | Per-widget corner radius (0–80). Omit to inherit; omit at every level for automatic pill radius. |
-| `capsule_group` | string | *(unset)* | Select one of the bar's managed capsule group names. Nearby widgets in the same section with the same non-empty value and matching capsule styling share one capsule. |
 | `capsule_fill` | string | *(from bar)* | Capsule background color role; fixed hex colors are also supported. |
 | `capsule_foreground` | string | *(from bar)* | Icon + label color role when capsule is visible; fixed hex colors are also supported. `color` takes priority over this. |
 | `capsule_padding` | number | *(from bar)* | Per-widget inner padding (0–48). |
@@ -161,7 +159,6 @@ capsule is disabled.
 ```toml
 [bar.main]
 capsule         = true
-capsule_groups  = ["status", "media"]
 capsule_fill    = "surface_variant"
 capsule_opacity = 0.9
 capsule_border  = "outline"
@@ -179,13 +176,47 @@ capsule_fill   = "secondary"
 capsule_radius = 0.0         # square this widget's capsule
 capsule_border = ""          # no border on this widget
 
-[widget.network]
-capsule_group = "status"
-
-[widget.bluetooth]
-capsule_group = "status"
-
 [widget.spacer]
 type    = "spacer"
 capsule = false
 ```
+
+## Capsule groups
+
+A **capsule group** is a container that holds several widgets and renders them inside one shared capsule with a
+single common style. A group is a real item in the lane — its members live *inside* it, so inserting another
+widget elsewhere can never split it. Grouping is managed entirely from the Settings GUI:
+
+1. Open **Settings → Bar → Bar Widgets**.
+2. **Drag one widget onto the middle of another** (using its drag handle) to instantly create a group from the two.
+   Or tick the checkbox on two or more **adjacent** widgets and click **Group**. Either way they move into one
+   group container and a style editor opens.
+3. Edit the group's background, border, foreground, padding, radius, and opacity — every member updates together.
+4. **Drag a widget onto the group** to add it; **drag a member out**, or use its eject button, to remove it.
+   Reorder members by dragging them within the group. Drag the group's own handle to move the whole group along
+   the lane or into another lane.
+5. To dissolve a group, open its style editor and click **Ungroup** (its members return to the lane in place).
+
+When dragging a widget, hovering the **middle** of another widget combines them into a group, while hovering the
+**top/bottom edge** drops it between widgets as a normal reorder.
+
+Under the hood each group is one `[[bar.<name>.capsule_group]]` table holding an ordered `members` list plus the
+shared style, and the lane references the group with a single `group:<id>` token. You normally do not write these
+by hand:
+
+```toml
+[bar.main]
+end = ["clock", "group:g1", "session"]   # the group occupies one lane slot
+
+[[bar.main.capsule_group]]
+id      = "g1"
+members = ["network", "bluetooth", "volume"]
+fill    = "surface_variant"
+padding = 6.0
+opacity = 0.9
+# border, foreground, radius are optional; omit border for no outline
+```
+
+A group's style can be overridden per monitor by declaring `[[bar.<name>.monitor.<match>.capsule_group]]` tables
+with matching `id` values. A reused widget name (e.g. several `spacer` instances) can appear in different groups
+independently — membership is positional, not a per-widget flag.
