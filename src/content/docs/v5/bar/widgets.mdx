@@ -263,11 +263,13 @@ Shows PipeWire output (speaker) or input (microphone) volume and mute state.
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `device` | string | `"output"` | Audio target: `"output"` (default sink) or `"input"` (default source / microphone) |
+| `scroll_step` | int | `5` | Percentage change applied on each mouse wheel step (1–25) |
 | `show_label` | bool | `true` | Show the volume percentage next to the glyph (horizontal and vertical bars) |
 
 ```toml
 [widget.volume]
 device = "output"   # output | input
+scroll_step = 10
 show_label = false
 
 [widget.input-volume]
@@ -408,14 +410,16 @@ device = "/org/freedesktop/UPower/devices/gaming_input_hid_001"
 
 ## `brightness`
 
-Shows the current monitor brightness level and adjusts it via scroll wheel (±5% per step). Hides itself when no controllable monitor is found. Click opens the display tab in the control center.
+Shows the current monitor brightness level and adjusts it via scroll wheel. Hides itself when no controllable monitor is found. Click opens the display tab in the control center.
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
+| `scroll_step` | int | `5` | Percentage change applied on each mouse wheel step (1–25) |
 | `show_label` | bool | `true` | Show the brightness percentage next to the glyph (horizontal and vertical bars) |
 
 ```toml
 [widget.brightness]
+scroll_step = 10
 show_label = false
 ```
 
