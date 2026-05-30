@@ -18,6 +18,7 @@ Noctalia is available on the following distributions:
 - [Fedora](#fedora)
 - [openSUSE](#opensuse)
 - [Void Linux](#void)
+- [GNU Guix](#guix)
 
 You can also [install manually](#manual-install) on any other Linux distribution.
 
@@ -120,6 +121,69 @@ sudo xbps-install noctalia
 :::note
 If your noctalia fails on run install sdbus from UniversalRepository because its up-to-update
 :::
+---
+
+## GNU Guix {#guix}
+
+The Git repository of Noctalia is also available as a [Guix channel](https://guix.gnu.org/manual/devel/en/html_node/Channels.html).  It provides a `(noctalia)` [module](https://guix.gnu.org/manual/devel/en/html_node/Package-Modules.html) with the `noctalia-git` package.
+
+```scheme
+(channel
+  (name 'noctalia)
+  (url "https://github.com/noctalia-dev/noctalia-shell")
+  (branch "v5"))
+```
+
+To use this channel, add it into your `~/.config/guix/channels.scm`.  For example:
+
+```scheme
+(list (channel
+        (name 'noctalia)
+        (url "https://github.com/noctalia-dev/noctalia-shell")
+        (branch "v5"))
+      %default-guix-channel)
+```
+
+After updating channels via [`guix pull`](https://guix.gnu.org/manual/devel/en/html_node/Invoking-guix-pull.html), Noctalia will be available to your Guix installation.  Then you're free to do what you want with the `noctalia-git` package ;-)
+
+For example, spawn one-off software environment via [`guix shell`](https://guix.gnu.org/manual/devel/en/html_node/Invoking-guix-shell.html):
+
+```bash
+guix shell noctalia-git
+```
+
+install it into your user profile via [`guix package`](https://guix.gnu.org/manual/devel/en/html_node/Invoking-guix-package.html):
+
+```bash
+guix install noctalia-git
+```
+
+declare it in your [home environment](https://guix.gnu.org/manual/devel/en/html_node/Home-Configuration.html) (`...`s are placeholders for your existing configuration):
+
+```scheme
+(use-modules (noctalia)
+             ...)
+
+(home-environment
+  (packages
+   (list noctalia-git
+         ...))
+  ...)
+```
+
+or [whole-system configuration](https://guix.gnu.org/manual/devel/en/html_node/System-Configuration.html):
+
+```scheme
+(use-modules (noctalia)
+             ...)
+
+(operating-system
+  (packages
+   (list noctalia-git
+         ...))
+  ...)
+```
+
 ---
 
 ## Manual Installation {#manual-install}
