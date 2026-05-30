@@ -1,6 +1,6 @@
 ---
 title: Services
-description: Audio, brightness, night light, weather, idle behaviors, and notifications.
+description: Audio, brightness, night light, weather, calendar, idle behaviors, and notifications.
 sidebar:
   order: 7
 ---
@@ -12,6 +12,7 @@ sidebar:
 - [Night Light](#night-light)
 - [System Monitor](#system-monitor)
 - [Weather](#weather)
+- [Calendar](#calendar)
 - [Idle](#idle)
 - [Notifications](#notifications)
 
@@ -160,6 +161,52 @@ unit            = "metric"      # metric | imperial
 When `auto_locate = false`, Noctalia geocodes `address` to latitude/longitude and fetches current weather plus a 6-day forecast. When `auto_locate = true`, the `address` field is ignored and location is resolved via IP.
 
 Enabling weather adds a `Weather` tab to the control center. The bar `weather` widget type also requires weather to be enabled.
+
+---
+
+## Calendar
+
+The calendar service syncs events from your online accounts and shows them in the control center calendar. CalDAV providers (Nextcloud, iCloud, Fastmail, Radicale, mailbox.org, …) are talked to directly; Google Calendar is connected through a one-click browser authorization. Events are read-only.
+
+```toml
+[calendar]
+enabled         = false
+refresh_minutes = 15
+
+# One [[calendar.accounts]] block per connected calendar.
+
+# Generic CalDAV (Nextcloud, iCloud, Fastmail, Radicale, …)
+[[calendar.accounts]]
+id       = "home"            # unique, lowercase letters/digits/underscore
+type     = "caldav"
+name     = "Home"            # display name
+color    = "#3367d6"         # optional accent color
+url      = "https://cloud.example.com/remote.php/dav/calendars/me/personal/"
+username = "me"
+
+# Google Calendar (authorized via Settings → Services → Calendar → Connect)
+[[calendar.accounts]]
+id   = "work_gmail"
+type = "google"
+name = "Work"
+```
+
+**Credentials are never stored in your config.** CalDAV app-passwords and Google OAuth tokens live in `state.toml` (user-only readable) under `[calendar_credentials]`.
+
+### CalDAV setup
+
+Use the **calendar collection URL** for the specific calendar (not the account root) and an **app-password** (not your login password). Create the app-password in your provider's security settings, then store it once:
+
+- Settings → Services → Calendar, or
+- directly in `state.toml`: `[calendar_credentials]` → `<id>_password = "…"`.
+
+### Google setup
+
+Set `type = "google"` with a unique `id`, enable the calendar service, then open **Settings → Services → Calendar** and press **Connect** next to the account. A browser tab opens for Google's consent screen; approve it and the tab confirms completion. Tokens are obtained through the noctalia OAuth broker (`api.noctalia.dev`) — no Google Cloud project or client secret is required on your side. Access is `calendar.readonly`.
+
+If a Google account later shows as disconnected (revoked or expired), press **Connect** again to reauthorize.
+
+`[shell].offline_mode = true` disables all calendar network traffic; the last successfully synced events remain available from the on-disk cache.
 
 ---
 
