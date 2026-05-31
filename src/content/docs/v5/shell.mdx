@@ -130,13 +130,31 @@ orientation = "horizontal" # horizontal | vertical
 scale = 1.0              # OSD size multiplier on top of shell.ui_scale
 lock_keys = true         # show Caps/Num/Scroll Lock OSD popups
 keyboard_layout = true   # show an OSD popup when the input keyboard layout changes
+# monitors = ["DP-1"]    # connector names; omit or leave empty for all monitors
 ```
 
 The OSD powers the volume HUD and defaults to `top_right` with a horizontal layout. Set `orientation = "vertical"`
 for a taller vertical gauge. `scale` multiplies the effective OSD size on top of `shell.ui_scale` (for example `1.25`
-makes volume, brightness, and lock-key popups 25% larger than the default). `lock_keys = false` disables Caps/Num/Scroll
-Lock popups; when no `lock_keys` bar widget is configured, this also stops lock-key state polling. `keyboard_layout = false`
+makes volume, brightness, and lock-key popups 25% larger than the default). `monitors` limits OSD popups to the listed
+connector names (same matching rules as notification toasts and the dock); leave it empty to show on every connected
+output. If none of the configured monitors are connected, OSD falls back to all outputs until one reconnects.
+`lock_keys = false` disables Caps/Num/Scroll Lock popups; when no `lock_keys` bar widget is configured, this also stops lock-key state polling. `keyboard_layout = false`
 disables layout-change popups.
+
+---
+
+## Lock screen
+
+When `wlr-screencopy` is available, Noctalia can capture the desktop **before** the session lock engages and show that frame blurred behind the lock UI instead of the wallpaper.
+
+```toml
+[lockscreen]
+blurred_desktop = false   # capture desktop via screencopy at lock time
+blur_intensity  = 0.5     # 0.0 – 1.0
+tint_intensity  = 0.2     # surface-color overlay on top of the blur
+```
+
+If capture fails (missing protocol, permission denied, etc.), the lock screen falls back to the normal per-output wallpaper. The snapshot lives in memory only until unlock.
 
 ---
 
