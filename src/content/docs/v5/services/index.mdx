@@ -63,18 +63,20 @@ Notes:
 ### IPC
 
 ```sh
-noctalia msg set-brightness 65           # current monitor
-noctalia msg set-brightness DP-1 0.65
-noctalia msg set-brightness * 40%        # all monitors
+noctalia msg brightness-set 65           # current monitor
+noctalia msg brightness-set DP-1 0.65
+noctalia msg brightness-set * 40%        # all monitors
 
-noctalia msg raise-brightness            # current monitor, default 5% step
-noctalia msg raise-brightness DP-1 10
-noctalia msg lower-brightness * 5%       # all monitors
+noctalia msg brightness-up               # current monitor, default 5% step
+noctalia msg brightness-up DP-1 10
+noctalia msg brightness-down * 5%        # all monitors
+
+noctalia msg brightness-osd 72           # show the OSD at 72% without changing brightness
 ```
 
 Targets: `current`, `all`/`*`, a monitor connector name (`eDP-1`, `DP-1`), or a monitor selector token (same matching rules as monitor overrides). `current` resolves from the active/focused monitor, falling back to the last interactive one.
 
-Values and steps accept normalized (`0.0`–`1.0`) or percentage-style (`65`, `65%`, `5%`) values. `raise-brightness` / `lower-brightness` target `current` with a 5% step when no arguments are given.
+Values and steps accept normalized (`0.0`–`1.0`) or percentage-style (`65`, `65%`, `5%`) values. `brightness-up` / `brightness-down` target `current` with a 5% step when no arguments are given.
 
 ---
 
@@ -105,13 +107,13 @@ When `use_weather_location = true`, Night Light uses WeatherService coordinates 
 ### IPC
 
 ```sh
-noctalia msg enable-nightlight
-noctalia msg disable-nightlight
-noctalia msg toggle-nightlight
-noctalia msg toggle-force-nightlight
+noctalia msg nightlight-enable
+noctalia msg nightlight-disable
+noctalia msg nightlight-toggle
+noctalia msg nightlight-force-toggle
 ```
 
-`enable-nightlight` / `disable-nightlight` / `toggle-nightlight` control schedule enable state. `toggle-force-nightlight` toggles forced-on mode regardless of schedule.
+`nightlight-enable` / `nightlight-disable` / `nightlight-toggle` control schedule enable state. `nightlight-force-toggle` toggles forced-on mode regardless of schedule.
 
 ---
 

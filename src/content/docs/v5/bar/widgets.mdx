@@ -285,18 +285,18 @@ device = "output"
 
 ```sh
 # Output (speaker)
-noctalia msg set-volume 65
-noctalia msg raise-volume
-noctalia msg raise-volume 10
-noctalia msg lower-volume
-noctalia msg mute
+noctalia msg volume-set 65
+noctalia msg volume-up
+noctalia msg volume-up 10
+noctalia msg volume-down
+noctalia msg volume-mute
 
 # Input (microphone)
-noctalia msg set-mic-volume 0.5
-noctalia msg raise-mic-volume
-noctalia msg raise-mic-volume 5%
-noctalia msg lower-mic-volume
-noctalia msg mute-mic
+noctalia msg mic-volume-set 0.5
+noctalia msg mic-volume-up
+noctalia msg mic-volume-up 5%
+noctalia msg mic-volume-down
+noctalia msg mic-mute
 ```
 
 Volume and mic IPC use a default step of 5% when no explicit step is provided. Values and steps accept normalized (`0.0`–`1.0`) or percentage-style values (`65`, `65%`, `5%`). Rule of thumb: if you include a decimal and the value is `<= 1.0`, it is treated as normalized; otherwise it is treated as a percentage.
@@ -616,7 +616,7 @@ hide_when_no_unread = true
 ### IPC
 
 ```sh
-noctalia msg toggle-notification-dnd
+noctalia msg notification-dnd-toggle
 noctalia msg notification-dnd-status
 noctalia msg notification-clear-active
 noctalia msg notification-clear-history
@@ -695,8 +695,8 @@ No configurable settings.
 ### IPC
 
 ```sh
-noctalia msg toggle-nightlight
-noctalia msg toggle-force-nightlight
+noctalia msg nightlight-toggle
+noctalia msg nightlight-force-toggle
 ```
 
 ---
