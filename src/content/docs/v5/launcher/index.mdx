@@ -44,11 +44,15 @@ The primary provider for finding and launching your installed apps.
 
 ### Calculator
 
-A built-in expression evaluator powered by `tinyexpr`.
+A built-in expression evaluator powered by [`libqalculate`](https://qalculate.github.io/).
 
 - **Prefix**: None (Global).
-- **Trigger**: Automatically activates when the query looks like a mathematical expression (contains digits and operators like `+`, `-`, `*`, `/`, `^`, `%`).
-- **Functionality**: Supports standard arithmetic and functions like `sin`, `cos`, `sqrt`, `pi`, `e`. Pressing **Enter** copies the result to your clipboard.
+- **Trigger**: Automatically activates when the query contains a digit and evaluates to a result.
+- **Functionality**: Standard arithmetic and functions (`sin`, `cos`, `sqrt`, `pi`, `e`, …), plus
+  unit conversion (`10 cm to in`, `100 km/h to mph`), number bases (`0xff`), and currency conversion
+  (`10 USD to EUR`). Pressing **Enter** copies the result to your clipboard.
+- **Currency rates**: Exchange rates are cached locally and refreshed in the background. Refresh is
+  skipped when `[shell].offline_mode` is enabled, in which case the last cached rates are used.
 
 ### Emoji
 
