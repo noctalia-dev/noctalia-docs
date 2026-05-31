@@ -70,7 +70,7 @@ When automation is enabled, Noctalia picks one image from the resolved browse fo
 
 All favorite management happens in the **wallpaper panel** - there is no separate Settings page.
 
-Use the **Browse | Favorites** toggle in the panel toolbar to switch views. In **Browse**, star a tile to bookmark that wallpaper (or use the toolbar star to favorite the wallpaper currently applied to the selected monitor - useful for solid `color:#…` wallpapers). In **Favorites**, click a tile to apply it; the monitor selector (**ALL** vs one output) works the same as in Browse.
+Starred wallpapers appear at the **top of the browse grid** (before folders and images from the current directory). Star a tile to bookmark it; star again to remove it. The monitor selector (**ALL** vs one output) works the same for favorites and browse entries.
 
 Favorites are stored in `settings.toml`:
 
@@ -88,12 +88,9 @@ palette_source = "builtin"
 builtin_palette = "Noctalia"
 ```
 
-In the **Favorites** view, select a tile to edit its metadata:
+Select any image tile (favorite or not) to show the **Theme** and **Colors** row under the toolbar. Adjusting those controls applies the selected wallpaper with the chosen theme settings immediately, so you can try palettes without opening Settings or starring the image. For favorited wallpapers, changes are also saved on the favorite entry. For non-favorites, only the live session theme in `settings.toml` is updated until you star the wallpaper.
 
-- **Theme** - Auto, Light, or Dark
-- **Colors** - Pick a palette source (Built-in, Wallpaper, Community, Custom) and the matching palette/scheme in the second dropdown
-
-Starring a wallpaper in **Browse** bookmarks the path only, except when that image is the wallpaper currently applied to the selected monitor (including solid `color:#…` entries): the favorite is saved with the active `theme_mode`, `palette_source`, and palette selection so re-applying it restores the look you already have. Clicking a favorite applies the wallpaper together with its stored theme settings.
+Starring a wallpaper bookmarks the path only, except when that image is the wallpaper currently applied to the selected monitor (including solid `color:#…` entries): the favorite is saved with the active `theme_mode`, `palette_source`, and palette selection so re-applying it restores the look you already have. Clicking a favorite applies the wallpaper together with its stored theme settings.
 
 ---
 
