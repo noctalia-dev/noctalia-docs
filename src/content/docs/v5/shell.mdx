@@ -1,6 +1,6 @@
 ---
 title: Shell
-description: Global shell settings, animation, shadow, MPRIS filtering, OSD, keybinds, and hooks in Noctalia.
+description: Global shell settings, animation, shadow, MPRIS filtering, OSD, lock screen, keybinds, and hooks in Noctalia.
 sidebar:
   order: 1
 ---
@@ -9,6 +9,7 @@ sidebar:
 
 - [Shell settings](#shell-settings)
 - [OSD](#osd)
+- [Lock screen](#lock-screen)
 - [Keybinds](#keybinds)
 - [Hooks](#hooks)
 
@@ -145,16 +146,24 @@ disables layout-change popups.
 
 ## Lock screen
 
-When `wlr-screencopy` is available, Noctalia can capture the desktop **before** the session lock engages and show that frame blurred behind the lock UI instead of the wallpaper.
+When `wlr-screencopy` is available, Noctalia can capture the desktop **before** the session lock engages and show that frame blurred behind the lock UI instead of the wallpaper. Disabled by default.
+
+Configure under **`[lockscreen]`** in TOML, or use **Settings → Lock Screen** when screencopy is available on your compositor.
 
 ```toml
 [lockscreen]
 blurred_desktop = false   # capture desktop via screencopy at lock time
-blur_intensity  = 0.5     # 0.0 – 1.0
-tint_intensity  = 0.2     # surface-color overlay on top of the blur
+blur_intensity  = 0.5     # 0.0 = no blur, 1.0 = maximum
+tint_intensity  = 0.3     # 0.0 = no tint, 1.0 = opaque surface-color overlay
 ```
 
-If capture fails (missing protocol, permission denied, etc.), the lock screen falls back to the normal per-output wallpaper. The snapshot lives in memory only until unlock.
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `blurred_desktop` | bool | `false` | Capture each output before lock and show it blurred behind the lock UI. |
+| `blur_intensity` | float | `0.5` | Blur strength of the captured desktop (`0.0`–`1.0`). |
+| `tint_intensity` | float | `0.3` | Surface-color tint over the blur (`0.0`–`1.0`). |
+
+If capture fails (missing protocol, permission denied, etc.), the lock screen falls back to the normal per-output wallpaper. The snapshot lives in memory only until unlock. Blur and tint sliders can be adjusted live from Settings while the session is locked.
 
 ---
 
