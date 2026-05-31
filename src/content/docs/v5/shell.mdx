@@ -183,7 +183,7 @@ Configure under **`[shell.session]`** in TOML, or use **Settings → Panels → 
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `action` | string | *required* | `lock`, `logout`, `suspend`, `reboot`, `shutdown`, or `command` (custom entry). |
+| `action` | string | *required* | `lock`, `logout`, `suspend`, `lock_and_suspend`, `reboot`, `shutdown`, or `command` (custom entry). |
 | `enabled` | bool | `true` | When `false`, the button is hidden. |
 | `command` | string | *unset* | Optional. If set, the string is run with `/bin/sh -c` instead of the built-in handler. For `action = "command"`, this field is required. |
 | `label` | string | *unset* | Optional button label (otherwise translated defaults). |

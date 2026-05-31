@@ -35,7 +35,7 @@ interval_minutes             = 30       # 0 = disable automation
 order                        = "random" # random | alphabetical
 recursive                    = true     # scan subdirectories when selecting random wallpapers
 
-# Per-monitor overrides — same match rules as bar monitor overrides
+# Per-monitor overrides - same match rules as bar monitor overrides
 # Only active when per_monitor_directories = true
 [wallpaper.monitor.DP-2]
 enabled         = false
@@ -65,6 +65,35 @@ Monitor overrides may also set `fill_color`.
 When automation is enabled, Noctalia picks one image from the resolved browse folder on the configured interval and applies it to all connected outputs in sync.
 `order = "random"` chooses a random image each cycle.
 `order = "alphabetical"` sorts paths case-insensitively and advances to the next image each cycle (wrapping at the end).
+
+## Favorites
+
+All favorite management happens in the **wallpaper panel** - there is no separate Settings page.
+
+Use the **Browse | Favorites** toggle in the panel toolbar to switch views. In **Browse**, star a tile to bookmark that wallpaper (or use the toolbar star to favorite the wallpaper currently applied to the selected monitor - useful for solid `color:#…` wallpapers). In **Favorites**, click a tile to apply it; the monitor selector (**ALL** vs one output) works the same as in Browse.
+
+Favorites are stored in `settings.toml`:
+
+```toml
+[[wallpaper.favorite]]
+path = "/home/user/Wallpapers/sunset.jpg"
+theme_mode = "auto"              # auto, light, or dark
+palette_source = "wallpaper"     # optional: builtin, wallpaper, community, or custom
+wallpaper_scheme = "m3-content"  # when palette_source = wallpaper
+
+[[wallpaper.favorite]]
+path = "color:#1a1a2e"
+theme_mode = "dark"
+palette_source = "builtin"
+builtin_palette = "Noctalia"
+```
+
+In the **Favorites** view, select a tile to edit its metadata:
+
+- **Theme** - Auto, Light, or Dark
+- **Colors** - Pick a palette source (Built-in, Wallpaper, Community, Custom) and the matching palette/scheme in the second dropdown
+
+Starring a wallpaper in **Browse** bookmarks the path only. Clicking a favorite applies the wallpaper together with its stored `theme_mode` and optional `palette_source` settings.
 
 ---
 
