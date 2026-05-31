@@ -17,6 +17,7 @@ transition          = ["fade", "wipe", "disc", "stripes", "zoom", "honeycomb"]
                                 # omit to use all effects
 transition_duration = 1500      # milliseconds
 edge_smoothness     = 0.3       # 0.0 – 1.0
+transition_on_startup = false   # animate the first wallpaper at shell startup (v4-style)
 
 # Directory browsed by the wallpaper picker panel
 directory           = "/home/user/Wallpapers"
@@ -61,6 +62,8 @@ The launcher's wallpaper provider and **automatic rotation** use the same browse
 Prefer a color role such as `surface` or `primary` for `fill_color` so wallpaper fallback colors follow the active palette. Fixed hex colors (`#RGB`, `#RGBA`, `#RRGGBB`, `#RRGGBBAA`) are supported when a non-palette fill is intentional. It is used behind image wallpapers and in uncovered areas for `center`/`fit`. Invalid role names or malformed hex colors are treated as config errors.
 
 Monitor overrides may also set `fill_color`.
+
+By default, the first wallpaper on each output appears immediately with no transition. Set `transition_on_startup = true` to fade (or wipe, etc.) in from a black screen at shell startup, matching v4 behavior. Later wallpaper changes always use the configured transition pool.
 
 When automation is enabled, Noctalia picks one image from the resolved browse folder on the configured interval and applies it to all connected outputs in sync.
 `order = "random"` chooses a random image each cycle.
