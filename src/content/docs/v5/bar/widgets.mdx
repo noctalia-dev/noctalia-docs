@@ -41,11 +41,13 @@ Displays the current time.
 |---------|------|---------|-------------|
 | `format` | string | `{:%H:%M}` | Clock format string for horizontal bars and vertical fallback. Use `\n` for multiple lines; examples: `{:%H:%M}\n{:%d/%m}`, `%H:%M`, `{:%-I:%M %p}`. See [Date format tokens](/v5/configuration/date-format-tokens/). |
 | `vertical_format` | string | `""` | Format used when the bar is vertical. When empty, falls back to `format` with `:` replaced by line breaks. Supports the same syntax as `format`. |
+| `tooltip_format` | string | `""` | Optional format shown when mouse is hovered over the clock widget. This utilizes the same [date format tokens](/v5/configuration/date-format-tokens/) as format.
 
 ```toml
 [widget.clock]
 format = "{:%H:%M}\n{:%d/%m}"
 vertical_format = "{:%H\n%M}"
+tooltip_format = "{:%A, %B %d, %Y}"
 
 [widget.clock-12h]
 type   = "clock"
