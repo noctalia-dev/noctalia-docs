@@ -17,6 +17,7 @@ transition          = ["fade", "wipe", "disc", "stripes", "zoom", "honeycomb"]
                                 # omit to use all effects
 transition_duration = 1500      # milliseconds
 edge_smoothness     = 0.3       # 0.0 – 1.0
+transition_on_startup = false   # animate the first wallpaper at shell startup (v4-style)
 
 # Directory browsed by the wallpaper picker panel
 directory           = "/home/user/Wallpapers"
@@ -35,7 +36,7 @@ interval_minutes             = 30       # 0 = disable automation
 order                        = "random" # random | alphabetical
 recursive                    = true     # scan subdirectories when selecting random wallpapers
 
-# Per-monitor overrides — same match rules as bar monitor overrides
+# Per-monitor overrides - same match rules as bar monitor overrides
 # Only active when per_monitor_directories = true
 [wallpaper.monitor.DP-2]
 enabled         = false
@@ -62,9 +63,37 @@ Prefer a color role such as `surface` or `primary` for `fill_color` so wallpaper
 
 Monitor overrides may also set `fill_color`.
 
+By default, the first wallpaper on each output appears immediately with no transition. Set `transition_on_startup = true` to fade (or wipe, etc.) in from a black screen at shell startup, matching v4 behavior. Later wallpaper changes always use the configured transition pool.
+
 When automation is enabled, Noctalia picks one image from the resolved browse folder on the configured interval and applies it to all connected outputs in sync.
 `order = "random"` chooses a random image each cycle.
 `order = "alphabetical"` sorts paths case-insensitively and advances to the next image each cycle (wrapping at the end).
+
+## Favorites
+
+All favorite management happens in the **wallpaper panel** - there is no separate Settings page.
+
+Starred wallpapers appear at the **top of the browse grid** at the wallpaper root (before folders and images from that folder). Inside a subfolder, only favorites whose files live in that folder (or under it when **Flatten** is on) are pinned at the top. Solid `color:#…` favorites only appear at the root. Star a tile to bookmark it; star again to remove it. The monitor selector (**ALL** vs one output) works the same for favorites and browse entries.
+
+Favorites are stored in `settings.toml`:
+
+```toml
+[[wallpaper.favorite]]
+path = "/home/user/Wallpapers/sunset.jpg"
+theme_mode = "auto"              # auto, light, or dark
+palette_source = "wallpaper"     # optional: builtin, wallpaper, community, or custom
+wallpaper_scheme = "m3-content"  # when palette_source = wallpaper
+
+[[wallpaper.favorite]]
+path = "color:#1a1a2e"
+theme_mode = "dark"
+palette_source = "builtin"
+builtin_palette = "Noctalia"
+```
+
+Select any image tile (favorite or not) to show the **Theme** and **Colors** row under the toolbar. Adjusting those controls applies the selected wallpaper with the chosen theme settings immediately, so you can try palettes without opening Settings or starring the image. For favorited wallpapers, changes are also saved on the favorite entry. For non-favorites, only the live session theme in `settings.toml` is updated until you star the wallpaper.
+
+Starring a wallpaper bookmarks the path only, except when that image is the wallpaper currently applied to the selected monitor (including solid `color:#…` entries): the favorite is saved with the active `theme_mode`, `palette_source`, and palette selection so re-applying it restores the look you already have. Clicking a favorite applies the wallpaper together with its stored theme settings.
 
 ---
 

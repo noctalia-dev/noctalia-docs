@@ -19,9 +19,10 @@ These commands open, close, or toggle Noctalia UI surfaces.
 
 | Action | Command | Description |
 |--------|---------|-------------|
-| Show bar | <IpcCommand command="bar-show" /> | Reveal the bar using the same slide/opacity path as auto-hide. With `auto_hide`, pointer leave resumes normal auto-hide. |
-| Hide bar | <IpcCommand command="bar-hide" /> | Hide the bar and block edge/pointer reveal until the next show/toggle. |
-| Toggle bar | <IpcCommand command="bar-toggle" /> | Fade the bar in or out using the auto-hide animation. Does not block edge reveal (use <IpcCommand command="bar-hide" /> to stay hidden until <IpcCommand command="bar-show" />). Clears a prior <IpcCommand command="bar-hide" /> block when revealing. |
+| Show bar | <IpcCommand command="bar-show" /> [bar-name] [monitor-selector] | Reveal matching bar instance(s). Omit both arguments to show every bar on every output. |
+| Hide bar | <IpcCommand command="bar-hide" /> [bar-name] [monitor-selector] | Hide matching bar instance(s) and block edge/pointer reveal until the next show/toggle. Omit both arguments to hide every bar. |
+| Toggle bar | <IpcCommand command="bar-toggle" /> [bar-name] [monitor-selector] | Toggle visibility for matching bar instance(s). Omit both arguments to toggle every bar. Does not block edge reveal on hide (use <IpcCommand command="bar-hide" /> to stay hidden until <IpcCommand command="bar-show" />). |
+| Set bar auto-hide | <IpcCommand command="bar-auto-hide-set" /> &lt;on\|off&gt; [bar-name] [monitor-selector] | Temporarily enable or disable auto-hide for matching bar instance(s). Omit `bar-name` to update every bar. |
 
 ## Scripted widgets
 
@@ -115,4 +116,9 @@ Requires compositor support for `wlr-screencopy-unstable-v1`. Uses the global `[
 
 | Action | Command | Description |
 |--------|---------|-------------|
-| Lock session | <IpcCommand command="screen-lock" /> | Lock the current session. |
+| Lock session | <IpcCommand command="session lock" /> | Lock the current session. |
+| Suspend system | <IpcCommand command="session suspend" /> | Suspend without locking first. |
+| Lock and suspend | <IpcCommand command="session lock-and-suspend" /> | Lock the session, then suspend once the lock is active. |
+| Log out | <IpcCommand command="session logout" /> | End the graphical session (compositor-native when available). |
+| Reboot | <IpcCommand command="session reboot" /> | Reboot the system. |
+| Shut down | <IpcCommand command="session shutdown" /> | Shut down the system. |

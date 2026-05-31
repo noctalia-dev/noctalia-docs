@@ -14,17 +14,21 @@ the user card to pick a custom image; Noctalia saves the selected path as `[shel
 
 ## Sidebar
 
-Set `sidebar` under `[control_center]` to choose how Control Center shows its tab navigation.
+Set `sidebar` under `[control_center]` for tab navigation when Control Center opens on **Home** (control center widget, bar background click, or `noctalia msg panel-toggle control-center` with no tab name).
 Use `"full"` for icons and labels, `"compact"` for icon-only tabs, or `"none"` to hide the sidebar.
+
+Set `sidebar_section` for opens that jump **straight to a tab** (volume, network, and media bar widgets, or `noctalia msg panel-toggle control-center audio`).
 
 ```toml
 [control_center]
 sidebar = "compact"
+# sidebar_section = "compact"  # optional; defaults to the same as sidebar
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `sidebar` | string | `"compact"` | `"full"` = icons and labels; `"compact"` = icons only; `"none"` = hide the sidebar |
+| `sidebar` | string | `"compact"` | Sidebar on Home / general open: `"full"`, `"compact"`, or `"none"` |
+| `sidebar_section` | string | `"compact"` | Sidebar when opening straight to a tab: `"full"`, `"compact"`, or `"none"` |
 
 ## Shortcuts
 

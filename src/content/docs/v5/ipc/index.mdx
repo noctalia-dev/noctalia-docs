@@ -24,7 +24,7 @@ noctalia msg panel-toggle launcher
 ```
 
 <Aside type="note">
-These pages list the command exactly as you run it. If you use the same command inside an idle behavior or hook with the `noctalia:` prefix, remove `noctalia msg` and keep the rest. For example, `noctalia msg screen-lock` becomes `noctalia:screen-lock`.
+These pages list the command exactly as you run it. If you use the same command inside an idle behavior or hook with the `noctalia:` prefix, remove `noctalia msg` and keep the rest. For example, `noctalia msg session lock` becomes `noctalia:session lock`.
 </Aside>
 
 ## Command lists
@@ -69,7 +69,7 @@ Some config fields accept normal shell commands. Idle behaviors and hooks also a
 ```toml
 [idle.behavior.lock]
 timeout = 660
-command = "noctalia:screen-lock"
+command = "noctalia:session lock"
 
 [hooks]
 started = "noctalia msg panel-toggle launcher"
