@@ -51,8 +51,9 @@ A built-in expression evaluator powered by [`libqalculate`](https://qalculate.gi
 - **Functionality**: Standard arithmetic and functions (`sin`, `cos`, `sqrt`, `pi`, `e`, …), plus
   unit conversion (`10 cm to in`, `100 km/h to mph`), number bases (`0xff`), and currency conversion
   (`10 USD to EUR`). Pressing **Enter** copies the result to your clipboard.
-- **Currency rates**: Exchange rates are cached locally and refreshed in the background. Refresh is
-  skipped when `[shell].offline_mode` is enabled, in which case the last cached rates are used.
+- **Currency rates**: Exchange rates are cached locally and refreshed in the background from libqalculate's
+  ECB/global providers. Refresh is skipped when `[shell].offline_mode` is enabled, in which case the last
+  cached rates are used.
 
 ### Emoji
 

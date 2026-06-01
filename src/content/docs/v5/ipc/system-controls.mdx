@@ -39,8 +39,11 @@ Default step is 5% when not specified. Output volume is clamped to 100% unless `
 | Raise current brightness | <IpcCommand command="brightness-up" /> | Raise brightness by the default step. |
 | Raise one monitor | <IpcCommand command="brightness-up DP-1 10" /> | Raise brightness for one monitor. |
 | Lower all monitors | <IpcCommand command="brightness-down * 5%" /> | Lower brightness on every monitor. |
+| Show brightness OSD | <IpcCommand command="brightness-osd 72" /> | Show the brightness OSD at the given value without changing brightness. Useful when an external script controls brightness. |
 
 Targets can be `current`, `all`, `*`, a monitor connector name such as `eDP-1` or `DP-1`, or a monitor selector token. Values accept normalized `0.0` to `1.0` or percentage form such as `65`, `65%`, and `5%`.
+
+`brightness-osd` takes a value only — unlike `brightness-set`, it has no monitor target. The OSD appears on whichever monitors are configured under `[osd].monitors`.
 
 ## Night light
 

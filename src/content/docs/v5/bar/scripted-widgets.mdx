@@ -47,6 +47,7 @@ Use `scope = "shared"` for scripts whose `update()` computes global state, such 
 | `noctalia.flatpakAppInstalled(appId)` | `boolean` | Check common Flatpak installation paths for an app ID without spawning `flatpak`. |
 | `noctalia.portalAvailable()` | `boolean` | Check whether `xdg-desktop-portal` and a supported portal backend are running. |
 | `noctalia.focusedOutputName()` | `string?` | Return the preferred interactive output connector name, or nil if none is known. |
+| `noctalia.isDarkMode()` | `boolean` | Return true when the active theme resolves to dark, false when light. Tracks `Auto` mode and theme toggles. |
 | `noctalia.notify(title, body?)` | — | Show an internal notification (normal urgency) |
 | `noctalia.notifyError(title, body?)` | — | Show an internal notification (critical urgency) |
 | `noctalia.getenv(name)` | `string?` | Read an environment variable. Returns nil if unset. |
