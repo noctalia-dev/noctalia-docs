@@ -158,6 +158,7 @@ post_hook   = "my-app --reload-theme"
 - `builtin_ids` selects which built-in templates run. Empty array = nothing applied until you opt in.
 - `enable_community_templates` enables fetching and applying templates from `https://api.noctalia.dev/templates`.
 - `community_ids` selects which community templates run. Metadata and files are cached in `~/.cache/noctalia/community-templates/` (honoring `XDG_CACHE_HOME`).
+- Cached community template files are treated as editable local copies. Sync updates files only while their content still matches the last Noctalia-written md5; local edits are preserved until you delete the edited cached file.
 - `[theme.templates.user.<id>]` declares a user template directly in Noctalia config. Defining the table enables it;
   set `enabled = false` on an entry to keep it available but inactive.
 

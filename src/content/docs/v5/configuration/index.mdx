@@ -43,7 +43,7 @@ GUI-managed overrides live in:
 - `$XDG_STATE_HOME/noctalia/settings.toml`
 - or `~/.local/state/noctalia/settings.toml`
 
-Noctalia writes this file when you change settings through the UI, setup flows, IPC-backed controls, and other runtime actions that need to persist.
+Noctalia writes this file when you change settings through the UI, setup flows, IPC-backed controls, and other runtime actions that need to persist. If the file is a symbolic link, Noctalia writes through to the link target and keeps the link in place.
 
 `NOCTALIA_CONFIG_HOME` and `NOCTALIA_STATE_HOME` have the same "home root" shape as the XDG variables. For example, `NOCTALIA_CONFIG_HOME=/tmp/profile` reads `/tmp/profile/noctalia/`. Use these Noctalia-specific variables when you want a separate shell profile without changing the environment inherited by apps launched from Noctalia.
 
