@@ -28,6 +28,7 @@ time_format           = "{:%H:%M}"      # default time format for shell UI witho
 date_format           = "%A, %x"        # default date format for shell UI without its own setting
 offline_mode          = false           # block all outgoing HTTP requests
 telemetry_enabled     = false           # anonymous startup ping
+setup_wizard_enabled = true              # open first-run wizard while the marker is missing
 niri_overview_type_to_launch_enabled = false # niri-only type-to-launch from overview
 polkit_agent          = false           # register Noctalia's native polkit authentication agent
 password_style        = "default"       # default | random
@@ -92,6 +93,7 @@ Notes:
 - `time_format` and `date_format` are fallbacks for shell-owned displays such as the home tab, calendar tab, and lock screen. Widget-specific clock formats still use their own widget settings. See [Date format tokens](/v5/configuration/date-format-tokens/).
 - `offline_mode` prevents the shell from making any outgoing HTTP requests (weather, community palettes, community templates, album art, remote notification icons). Distro packagers can default to `true` to comply with policies requiring explicit user consent for network access.
 - `telemetry_enabled` sends a single anonymous POST to `api.noctalia.dev/ping` on each startup containing: a random instance ID, shell version, compositor name, OS name, RAM, monitor resolutions, and UI scale. No personal data is collected. The instance ID is a random UUID stored in `~/.local/state/noctalia/instance.id`.
+- `setup_wizard_enabled`: when `false`, Noctalia does not auto-open the setup wizard on startup even if `.setup-complete` is missing. Use this for declarative or preseeded deployments; the marker remains the normal completion state for interactive runs.
 - `niri_overview_type_to_launch_enabled` is opt-in. When `true` on niri, Noctalia keeps a tiny keyboard-focus layer surface while overview is open so typing a letter or number opens the launcher with that initial query. This gives up niri's exact native handling for some overview-only keyboard state, such as the app focus ring.
 - `polkit_agent` controls registration on `org.freedesktop.PolicyKit1`. Keep disabled if another desktop agent handles auth prompts.
 - Notification daemon ownership moved out of `[shell]`: use `[notification].enable_daemon` in [Services](/v5/services/#notifications).
