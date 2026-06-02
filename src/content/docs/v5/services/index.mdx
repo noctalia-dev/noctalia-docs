@@ -1,6 +1,6 @@
 ---
 title: Services
-description: Audio, brightness, night light, weather, calendar, idle behaviors, and notifications.
+description: Audio, brightness, location schedule, night light, weather, calendar, idle behaviors, and notifications.
 sidebar:
   order: 7
 ---
@@ -9,6 +9,7 @@ sidebar:
 
 - [Audio](#audio)
 - [Brightness](#brightness)
+- [Location](#location)
 - [Night Light](#night-light)
 - [System Monitor](#system-monitor)
 - [Weather](#weather)
@@ -80,29 +81,39 @@ Values and steps accept normalized (`0.0`–`1.0`) or percentage-style (`65`, `6
 
 ---
 
+## Location
+
+Shared sunrise/sunset schedule for [Theme `auto`](/v5/theming/#mode) and [Night Light](#night-light). Configure under **Settings → Services → Location**, directly below Weather.
+
+```toml
+[location]
+use_weather_location = true    # prefer weather coordinates; requires weather auto_locate or address
+
+# Option A: explicit schedule (used when weather location is off or unavailable)
+sunset  = "20:30"              # HH:MM — night starts
+sunrise = "07:30"              # HH:MM — day starts
+
+# Option B: manual geolocation schedule (fallback when sunset/sunrise are missing)
+# latitude  = 52.5200
+# longitude = 13.4050
+```
+
+When `use_weather_location = true`, Noctalia uses WeatherService coordinates for sunrise/sunset once weather has a configured location (`[weather].auto_locate = true` or `[weather].address`). While weather coordinates are unavailable, and whenever `use_weather_location = false`, it uses `sunset` + `sunrise`, then falls back to explicit `latitude`/`longitude`. If only one coordinate is provided, the schedule is considered invalid.
+
+---
+
 ## Night Light
 
-Applies color temperature shifts using the Wayland `wlr-gamma-control` protocol. Supported on compositors that implement gamma control (Hyprland, Sway, etc.).
+Applies color temperature shifts using the Wayland `wlr-gamma-control` protocol. Supported on compositors that implement gamma control (Hyprland, Sway, etc.). Follows the [`[location]`](#location) schedule when enabled; use `force` to ignore the schedule.
 
 ```toml
 [nightlight]
 enabled              = false
 force                = false   # force night mode from startup
-use_weather_location = true    # prefer weather coordinates; requires weather auto_locate or address
 
 temperature_day   = 6500       # Kelvin (must be > temperature_night by at least 100)
 temperature_night = 4000       # Kelvin
-
-# Option A: explicit schedule (used when weather location is off or unavailable)
-start_time = "20:30"           # HH:MM — sunset / night starts
-stop_time  = "07:30"           # HH:MM — sunrise / day starts
-
-# Option B: manual geolocation schedule (fallback when start/stop are missing)
-# latitude  = 52.5200
-# longitude = 13.4050
 ```
-
-When `use_weather_location = true`, Night Light uses WeatherService coordinates for sunrise/sunset once weather has a configured location (`[weather].auto_locate = true` or `[weather].address`). While weather coordinates are unavailable, and whenever `use_weather_location = false`, Night Light uses `start_time` + `stop_time`, then falls back to explicit `latitude`/`longitude`. If only one coordinate is provided, Night Light refuses to start.
 
 ### IPC
 

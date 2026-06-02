@@ -148,13 +148,15 @@ disables layout-change popups.
 
 When `wlr-screencopy` is available, Noctalia can capture the desktop **before** the session lock engages and show that frame blurred behind the lock UI instead of the wallpaper. Disabled by default.
 
-Configure under **`[lockscreen]`** in TOML, or use **Settings → Security → Lock Screen** when screencopy is available on your compositor.
+Configure under **`[lockscreen]`** in TOML, or use **Settings → Security → Lock Screen**. Screencopy-specific controls appear only when your compositor supports screencopy.
 
 ```toml
 [lockscreen]
 blurred_desktop = false   # capture desktop via screencopy at lock time
 blur_intensity  = 0.5     # 0.0 = no blur, 1.0 = maximum
 tint_intensity  = 0.3     # 0.0 = no tint, 1.0 = opaque surface-color overlay
+wallpaper_blur_intensity = 0.0  # blur applied when using configured wallpaper background
+wallpaper_tint_intensity = 0.0  # tint applied when using configured wallpaper background
 ```
 
 | Field | Type | Default | Description |
@@ -162,6 +164,8 @@ tint_intensity  = 0.3     # 0.0 = no tint, 1.0 = opaque surface-color overlay
 | `blurred_desktop` | bool | `false` | Capture each output before lock and show it blurred behind the lock UI. |
 | `blur_intensity` | float | `0.5` | Blur strength of the captured desktop (`0.0`–`1.0`). |
 | `tint_intensity` | float | `0.3` | Surface-color tint over the blur (`0.0`–`1.0`). |
+| `wallpaper_blur_intensity` | float | `0.0` | Blur strength applied to the configured lockscreen wallpaper when `blurred_desktop = false` (`0.0`–`1.0`). |
+| `wallpaper_tint_intensity` | float | `0.0` | Surface-color tint over the configured lockscreen wallpaper when `blurred_desktop = false` (`0.0`–`1.0`). |
 
 If capture fails (missing protocol, permission denied, etc.), the lock screen falls back to the normal per-output wallpaper. The snapshot lives in memory only until unlock. Blur and tint sliders can be adjusted live from Settings while the session is locked.
 

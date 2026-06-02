@@ -157,9 +157,9 @@ For dock pins, match the desktop entry ID, `StartupWMClass`, display name, or fu
 
 Weather requires `[weather] enabled = true` plus either `auto_locate = true` or an `address`. The weather widget also requires the weather service to be enabled.
 
-Night Light can use the weather location for sunrise and sunset, or fall back to explicit schedule/location settings. It also needs compositor support for the `wlr-gamma-control` protocol.
+Theme `auto` and Night Light share the `[location]` schedule (weather coordinates, manual `sunset`/`sunrise`, or `latitude`/`longitude`). Night Light also needs compositor support for the `wlr-gamma-control` protocol.
 
-See [Services](/v5/services/#weather) and [Night Light](/v5/services/#night-light).
+See [Location](/v5/services/#location), [Theme](/v5/theming/#mode), and [Night Light](/v5/services/#night-light).
 
 </FaqItem>
 
