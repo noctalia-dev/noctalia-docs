@@ -112,10 +112,10 @@ Noctalia will extract colors from that image, generate a palette with the config
 ## `mode`
 
 `dark` or `light` selects the palette variant directly. `auto` switches between them using the shared sunrise/sunset
-schedule in [`[location]`](/v5/services/#location) (same rules as [Night Light](/v5/services/#night-light)): weather
-coordinates when `use_weather_location = true`, otherwise manual `sunset` / `sunrise` times, otherwise computed times
-from `latitude` / `longitude`. Night light does not need to be enabled for theme auto to follow the schedule. When the
-schedule cannot be resolved, `auto` uses the light (day) palette until a valid schedule is available.
+schedule in [`[location]`](/v5/services/#location) (same rules as [Night Light](/v5/services/#night-light)): resolved
+coordinates from `auto_locate`/`address`, otherwise manual `latitude` / `longitude`, otherwise fixed `sunset` / `sunrise`
+times. Night light does not need to be enabled for theme auto to follow the schedule. When the schedule cannot be
+resolved, `auto` uses the light (day) palette until a valid schedule is available.
 
 ## Shell Color Roles
 
