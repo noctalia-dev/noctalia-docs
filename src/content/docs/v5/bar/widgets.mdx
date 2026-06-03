@@ -194,7 +194,7 @@ Opens the control center panel on click.
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `glyph` | string | `"noctalia"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint |
-| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Leave empty to use the glyph. When set, the image follows global `[shell.app_icon_colorize]` (see [Shell → App icon colorization](/v5/shell/#app-icon-colorization)) |
+| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Leave empty to use the glyph. When set, the image is tinted with the widget **Color** setting (same as the glyph fallback) |
 
 ```toml
 [widget.control-center]
@@ -520,7 +520,7 @@ Opens the launcher panel on click.
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `glyph` | string | `"search"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint |
-| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Leave empty to use the glyph. When set, the image follows global `[shell.app_icon_colorize]` (see [Shell → App icon colorization](/v5/shell/#app-icon-colorization)) |
+| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Leave empty to use the glyph. When set, the image is tinted with the widget **Color** setting (same as the glyph fallback) |
 
 ```toml
 [widget.launcher]
