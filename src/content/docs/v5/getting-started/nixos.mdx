@@ -91,15 +91,17 @@ For those using Hjem instead of Home Manager, a Hjem module is also available.
 ```nix
 { inputs, ... }:
 {
-  hjem.users.drfoobar = {
+  hjem = {
     extraModules = [
       inputs.noctalia.hjemModules.default
     ];
 
-    programs.noctalia = {
-      enable = true;
-
-      settings = { ... };
+    users.drfoobar = {
+      programs.noctalia = {
+        enable = true;
+        
+        settings = { ... };
+      };
     };
   };
 }
