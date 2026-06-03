@@ -1,6 +1,6 @@
 ---
 title: Services
-description: Audio, brightness, night light, weather, calendar, idle behaviors, and notifications.
+description: Audio, brightness, location schedule, night light, weather, calendar, idle behaviors, and notifications.
 sidebar:
   order: 7
 ---
@@ -9,6 +9,7 @@ sidebar:
 
 - [Audio](#audio)
 - [Brightness](#brightness)
+- [Location](#location)
 - [Night Light](#night-light)
 - [System Monitor](#system-monitor)
 - [Weather](#weather)
@@ -80,29 +81,40 @@ Values and steps accept normalized (`0.0`–`1.0`) or percentage-style (`65`, `6
 
 ---
 
+## Location
+
+`[location]` is the single source of "where am I" for the whole shell. It resolves your coordinates and feeds [Weather](#weather), [Night Light](#night-light), and [Theme `auto`](/v5/theming/#mode). Configure under **Settings → Location**.
+
+```toml
+[location]
+auto_locate = false            # resolve coordinates from your IP address when true
+address     = "Toronto, ON"    # geocoded when auto_locate = false and non-empty
+
+# Manual schedule fallback (used only when neither auto_locate nor address is set):
+sunset    = "20:30"            # HH:MM — night starts
+sunrise   = "07:30"            # HH:MM — day starts
+# latitude  = 52.5200          # used instead of sunset/sunrise when set
+# longitude = 13.4050
+```
+
+Resolution priority: **`auto_locate` (IP) → `address` (geocoded) → manual `latitude`/`longitude` → fixed `sunset`/`sunrise`**. Whenever coordinates resolve (from IP, address, or manual lat/long), sunrise and sunset are computed astronomically for your position; the fixed `sunset`/`sunrise` times are used only when no coordinates are available. If only one of `latitude`/`longitude` is provided, the manual coordinates are ignored.
+
+Location resolution runs independently of Weather — `auto_locate` and `address` work even when Weather is disabled, so Night Light and Theme `auto` get real coordinates on their own.
+
+---
+
 ## Night Light
 
-Applies color temperature shifts using the Wayland `wlr-gamma-control` protocol. Supported on compositors that implement gamma control (Hyprland, Sway, etc.).
+Applies color temperature shifts using the Wayland `wlr-gamma-control` protocol. Supported on compositors that implement gamma control (Hyprland, Sway, etc.). Follows the [`[location]`](#location) schedule when enabled; use `force` to ignore the schedule.
 
 ```toml
 [nightlight]
 enabled              = false
 force                = false   # force night mode from startup
-use_weather_location = true    # prefer weather coordinates; requires weather auto_locate or address
 
 temperature_day   = 6500       # Kelvin (must be > temperature_night by at least 100)
 temperature_night = 4000       # Kelvin
-
-# Option A: explicit schedule (used when weather location is off or unavailable)
-start_time = "20:30"           # HH:MM — sunset / night starts
-stop_time  = "07:30"           # HH:MM — sunrise / day starts
-
-# Option B: manual geolocation schedule (fallback when start/stop are missing)
-# latitude  = 52.5200
-# longitude = 13.4050
 ```
-
-When `use_weather_location = true`, Night Light uses WeatherService coordinates for sunrise/sunset once weather has a configured location (`[weather].auto_locate = true` or `[weather].address`). While weather coordinates are unavailable, and whenever `use_weather_location = false`, Night Light uses `start_time` + `stop_time`, then falls back to explicit `latitude`/`longitude`. If only one coordinate is provided, Night Light refuses to start.
 
 ### IPC
 
@@ -154,13 +166,12 @@ GPU temperature is read from Linux hwmon when available, with an NVML fallback f
 ```toml
 [weather]
 enabled         = false
-auto_locate     = false         # resolve coordinates from IP address when true
-address         = "Toronto, ON" # geocoded when auto_locate = false
 refresh_minutes = 30
 unit            = "metric"      # metric | imperial
+effects         = true          # visual weather effects
 ```
 
-When `auto_locate = false`, Noctalia geocodes `address` to latitude/longitude and fetches current weather plus a 6-day forecast. When `auto_locate = true`, the `address` field is ignored and location is resolved via IP.
+Weather consumes the coordinates resolved by [`[location]`](#location) — set `auto_locate` or `address` there. When a location is available, Noctalia fetches current weather plus a 6-day forecast. Configure under **Settings → Location → Weather**.
 
 Enabling weather adds a `Weather` tab to the control center. The bar `weather` widget type also requires weather to be enabled.
 

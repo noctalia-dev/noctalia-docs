@@ -102,7 +102,7 @@ Pill styling and `capsule_radius` are ignored when `minimal = true`.
 display = "id"          # none | id | name
 minimal = false         # true = text-only labels, no animated pills
 max_label_chars = 2     # truncate long workspace names (e.g. "VESKTOP" → "VE")
-labels_only_when_occupied = true  # (1) ( ) ( ) (4) — only occupied tags show labels
+labels_only_when_occupied = true  # (1) ( ) ( ) (4) - only occupied tags show labels
 hide_when_empty = true
 focused_color = "primary"
 occupied_color = "secondary"
@@ -529,7 +529,7 @@ glyph = "menu-2"
 
 ## `clipboard`
 
-Shows a clipboard glyph and opens or closes the clipboard panel on click. History limits, clear/delete confirmation, auto-paste, and image actions are configured under `[shell]` — see [Shell settings](/v5/shell/#shell-settings) (`clipboard_*` keys).
+Shows a clipboard glyph and opens or closes the clipboard panel on click. History limits, clear/delete confirmation, auto-paste, and image actions are configured under `[shell]` - see [Shell settings](/v5/shell/#shell-settings) (`clipboard_*` keys).
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
@@ -682,15 +682,15 @@ noctalia msg caffeine-toggle
 | State | Icon | Meaning |
 |-------|------|---------|
 | Off | moon-off | Night light disabled |
-| On | moon | Scheduled — follows `start_time`/`stop_time` or location |
-| Forced | moon-stars | Always-on override — ignores schedule |
+| On | moon | Scheduled - follows `[location]` (`sunset`/`sunrise` or coordinates) |
+| Forced | moon-stars | Always-on override - ignores schedule |
 
 Click behavior:
 
 - **Left-click**: toggles night light on/off. If currently *forced*, this drops the force override and lands on the regular scheduled-on state, so force is reversible without also turning night light off.
 - **Right-click**: toggles the always-on (force) override.
 
-User toggles made via the bar widget (or control center) are preserved across config hot-reload — only an actual change to `enabled` / `force` in your config file resets the corresponding override.
+User toggles made via the bar widget (or control center) are preserved across config hot-reload - only an actual change to `enabled` / `force` in your config file resets the corresponding override.
 
 No configurable settings.
 

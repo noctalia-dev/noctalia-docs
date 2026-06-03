@@ -155,11 +155,11 @@ For dock pins, match the desktop entry ID, `StartupWMClass`, display name, or fu
 
 <FaqItem question="Why are weather or Night Light not working?">
 
-Weather requires `[weather] enabled = true` plus either `auto_locate = true` or an `address`. The weather widget also requires the weather service to be enabled.
+Weather requires `[weather] enabled = true` plus a resolved location — set `[location] auto_locate = true` or an `[location] address`. The weather widget also requires the weather service to be enabled.
 
-Night Light can use the weather location for sunrise and sunset, or fall back to explicit schedule/location settings. It also needs compositor support for the `wlr-gamma-control` protocol.
+Weather, Theme `auto`, and Night Light all share the `[location]` source (`auto_locate`/`address` coordinates, manual `latitude`/`longitude`, or fixed `sunset`/`sunrise`). Night Light also needs compositor support for the `wlr-gamma-control` protocol.
 
-See [Services](/v5/services/#weather) and [Night Light](/v5/services/#night-light).
+See [Location](/v5/services/#location), [Theme](/v5/theming/#mode), and [Night Light](/v5/services/#night-light).
 
 </FaqItem>
 

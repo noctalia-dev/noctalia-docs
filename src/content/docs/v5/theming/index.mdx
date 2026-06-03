@@ -111,8 +111,11 @@ Noctalia will extract colors from that image, generate a palette with the config
 
 ## `mode`
 
-`dark` or `light` selects the palette variant. `auto` follows the desktop color-scheme setting when available; otherwise
-the resolved mode is `dark`.
+`dark` or `light` selects the palette variant directly. `auto` switches between them using the shared sunrise/sunset
+schedule in [`[location]`](/v5/services/#location) (same rules as [Night Light](/v5/services/#night-light)): resolved
+coordinates from `auto_locate`/`address`, otherwise manual `latitude` / `longitude`, otherwise fixed `sunset` / `sunrise`
+times. Night light does not need to be enabled for theme auto to follow the schedule. When the schedule cannot be
+resolved, `auto` uses the light (day) palette until a valid schedule is available.
 
 ## Shell Color Roles
 
@@ -155,6 +158,7 @@ post_hook   = "my-app --reload-theme"
 - `builtin_ids` selects which built-in templates run. Empty array = nothing applied until you opt in.
 - `enable_community_templates` enables fetching and applying templates from `https://api.noctalia.dev/templates`.
 - `community_ids` selects which community templates run. Metadata and files are cached in `~/.cache/noctalia/community-templates/` (honoring `XDG_CACHE_HOME`).
+- Cached community template files are treated as editable local copies. Sync updates files only while their content still matches the last Noctalia-written md5; local edits are preserved until you delete the edited cached file.
 - `[theme.templates.user.<id>]` declares a user template directly in Noctalia config. Defining the table enables it;
   set `enabled = false` on an entry to keep it available but inactive.
 

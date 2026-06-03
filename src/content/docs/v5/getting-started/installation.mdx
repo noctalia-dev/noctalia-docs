@@ -258,7 +258,7 @@ git clone https://github.com/noctalia-dev/noctalia-shell --branch v5
 cd noctalia-shell
 ```
 
-**Step 3**: Building and installing noctalia
+**Step 3**: Building and installing Noctalia
 
 Requires [just](https://github.com/casey/just) and [meson](https://mesonbuild.com/).
 
@@ -269,7 +269,7 @@ Requires [just](https://github.com/casey/just) and [meson](https://mesonbuild.co
 	just configure release
 	just build release
 
-	# After building, install. The install recipe does not build or reconfigure.
+	# Install the selected build mode. This does not build or reconfigure.
 	sudo just install release
 		```
 
@@ -285,7 +285,7 @@ Requires [just](https://github.com/casey/just) and [meson](https://mesonbuild.co
   </TabItem>
   <TabItem label="Debug Mode">
 		```bash
-	# Debug build in build-debug/ don't use debug unless you are debugging...
+	# Debug build in build-debug/ for local development and troubleshooting.
 	just configure
 	just build
 
