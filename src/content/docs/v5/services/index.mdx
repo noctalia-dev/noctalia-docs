@@ -1,6 +1,6 @@
 ---
 title: Services
-description: Audio, brightness, location schedule, night light, weather, calendar, idle behaviors, and notifications.
+description: Audio, brightness, battery, location schedule, night light, weather, calendar, idle behaviors, and notifications.
 sidebar:
   order: 7
 ---
@@ -9,6 +9,7 @@ sidebar:
 
 - [Audio](#audio)
 - [Brightness](#brightness)
+- [Battery](#battery)
 - [Location](#location)
 - [Night Light](#night-light)
 - [System Monitor](#system-monitor)
@@ -81,6 +82,25 @@ Values and steps accept normalized (`0.0`–`1.0`) or percentage-style (`65`, `6
 
 ---
 
+## Battery
+
+Battery status uses UPower. The global warning threshold controls the system battery's internal low-battery notifications and the warning color state used by default battery widgets. Peripheral batteries warn only when they have an explicit per-device threshold.
+
+```toml
+[battery]
+warning_threshold = 20 # 0 disables low-battery warnings
+
+[battery.device."/org/freedesktop/UPower/devices/battery_BAT0"]
+warning_threshold = 15
+
+[battery.device."/org/freedesktop/UPower/devices/headset_dev_00_11_22_33_44_55"]
+warning_threshold = 10
+```
+
+Per-device tables use the same UPower selectors as the battery widget `device` setting. The Settings UI writes full UPower object paths for reported non-system devices. Do not add a per-device table for the default system battery; `[battery].warning_threshold` is its canonical threshold.
+
+---
+
 ## Location
 
 `[location]` is the single source of "where am I" for the whole shell. It resolves your coordinates and feeds [Weather](#weather), [Night Light](#night-light), and [Theme `auto`](/v5/theming/#mode). Configure under **Settings → Location**.
@@ -135,7 +155,7 @@ noctalia msg nightlight-force-toggle
 [system.monitor]
 enabled = true                      # sample CPU, memory, network, load, temperature, GPU VRAM, and disk statistics
 cpu_poll_seconds = 2.0              # CPU usage, CPU temperature, and load average
-gpu_poll_seconds = 5.0              # GPU temperature and VRAM usage
+gpu_poll_seconds = 0.0              # GPU temperature and VRAM usage (0 = disabled by default)
 memory_poll_seconds = 2.0           # RAM usage
 network_poll_seconds = 3.0          # network throughput
 disk_poll_seconds = 10.0            # disk usage and swap usage
@@ -143,19 +163,19 @@ disk_poll_seconds = 10.0            # disk usage and swap usage
 
 When disabled, Noctalia keeps system-monitor UI available but stops the background sampling thread. Bar `sysmon` widgets, desktop `sysmon` widgets, and the Control Center System tab show unavailable values until the setting is enabled again.
 
-Poll intervals are configured globally under `[system.monitor]`, not per widget. Each value is the number of seconds between samples for that metric group. Values are clamped to `1` to `120` seconds. You can also adjust them in whole-second steps in **Settings → Services → Advanced** when the system monitor is enabled.
+Poll intervals are configured globally under `[system.monitor]`, not per widget. Each value is the number of seconds between samples for that metric group. A non-zero value is clamped to `1` to `120` seconds; setting a value to `0` disables that metric group entirely — it is never sampled and schedules no wakeups. Disabling `gpu_poll_seconds` is useful on laptops to avoid waking a discrete GPU. You can also adjust them in whole-second steps (down to `0`) in **Settings → Services → Advanced** when the system monitor is enabled.
 
 | Key | Default | Metrics |
 |-----|---------|---------|
 | `cpu_poll_seconds` | `2.0` | CPU usage %, CPU temperature, and load average (`1` / `5` / `15` min) |
-| `gpu_poll_seconds` | `5.0` | GPU temperature and VRAM usage |
+| `gpu_poll_seconds` | `0.0` | GPU temperature and VRAM usage. Disabled by default so a discrete GPU is not woken on laptops; the Control Center GPU card stays hidden until you set a non-zero interval. If you enable it, `5` seconds is a good interval — GPU stats rarely need sub-second sampling, and a short interval keeps the GPU busy |
 | `memory_poll_seconds` | `2.0` | RAM usage % and used/total MB |
 | `network_poll_seconds` | `3.0` | Network download and upload throughput |
 | `disk_poll_seconds` | `10.0` | Disk usage % for paths used by bar `sysmon` widgets with `stat = "disk_pct"`, plus swap usage % and used/total MB |
 
 CPU usage and CPU temperature share `cpu_poll_seconds` because both are tied to the same CPU sampling pass. GPU temperature and VRAM share `gpu_poll_seconds`. Swap and disk usage share `disk_poll_seconds`. Network Rx and Tx share `network_poll_seconds` because they come from the same `/proc/net/dev` read.
 
-Bar and desktop `sysmon` widgets in **graph** mode, plus the Control Center System graphs, scroll using the same cadence as the fastest poll interval above (the minimum of the configured intervals). There is no separate graph-only setting.
+Bar and desktop `sysmon` widgets in **graph** mode, plus the Control Center System graphs, scroll using the same cadence as the fastest poll interval above (the minimum of the enabled, non-zero intervals). There is no separate graph-only setting. If every metric is set to `0`, no history is recorded and the graphs stop updating.
 
 GPU temperature is read from Linux hwmon when available, with an NVML fallback for NVIDIA proprietary drivers. GPU VRAM is read from AMDGPU DRM sysfs when available, with the same NVML fallback.
 
@@ -306,15 +326,19 @@ Idle behavior uses the Wayland `ext_idle_notifier_v1` protocol and respects acti
 
 ```toml
 [notification]
-enable_daemon         = true   # when false, don't claim org.freedesktop.Notifications; internal toasts still work
-power_profile_notify  = true   # toast when the active UPower power profile changes
-position           = "top_right" # top_right | top_left | top_center | bottom_right | bottom_left | bottom_center
-layer              = "top"  # top | overlay
-background_opacity = 0.97   # toast card background alpha; lower values let compositor blur show through
-offset_x           = 20     # absolute horizontal margin from the screen edge
-offset_y           = 8      # absolute vertical margin from the screen edge
-monitors           = []     # empty = all monitors; otherwise connector/description selectors (e.g. ["eDP-1", "DP-1"])
-collapse_on_dismiss = true  # slide remaining toasts to close gaps when one is dismissed
+enable_daemon          = true        # when false, don't claim org.freedesktop.Notifications; internal toasts still work
+show_app_name            = true        # show the sending application name in toasts
+position                 = "top_right" # top_right | top_left | top_center | bottom_right | bottom_left | bottom_center
+layer                    = "top"       # top | overlay
+scale                    = 1.0         # toast size multiplier on top of shell.ui_scale
+background_opacity       = 0.97        # toast card background alpha; lower values let compositor blur show through
+offset_x                 = 20          # absolute horizontal margin from the screen edge
+offset_y                 = 8           # absolute vertical margin from the screen edge
+monitors                 = []          # empty = all monitors; otherwise connector/description selectors (e.g. ["eDP-1", "DP-1"])
+collapse_on_dismiss      = true        # slide remaining toasts to close gaps when one is dismissed
+blacklist                = []          # hide matching external senders (see below)
+blacklist_allow_critical = true        # still show critical notifications from blacklisted senders
+allowed_urgencies        = []          # empty = low, normal, and critical; otherwise only listed levels
 ```
 
 - `layer = "top"` keeps toasts above normal app windows while respecting overlay UI from other components.
@@ -326,4 +350,15 @@ collapse_on_dismiss = true  # slide remaining toasts to close gaps when one is d
 - Selector matching follows monitor override rules: exact connector name (`eDP-1`) or a word-boundary token in the monitor description.
 - Internal Noctalia notifications are transient toasts and are not stored in notification history.
 - `collapse_on_dismiss = true` (default) causes remaining toasts to slide into a compact stack when one is dismissed. Set to `false` for stable-slot behavior where toasts keep their original positions.
-- `power_profile_notify = false` disables the toast when the active UPower power profile changes.
+
+### Filtering
+
+External notifications (from `org.freedesktop.Notifications` clients) can be filtered before toasts, sounds, and control-center history:
+
+- `allowed_urgencies` — when non-empty, only listed urgency levels are shown. Values: `low`, `normal`, `critical`. Urgency is checked before the sender blacklist.
+- `blacklist` — list of case-insensitive tokens. A notification is hidden when a token matches the app name exactly, matches as a substring of the app name, or matches the `desktop-entry` or `category` hint exactly.
+- `blacklist_allow_critical = true` (default) — critical notifications from blacklisted senders still appear unless `critical` is excluded by `allowed_urgencies`.
+
+Filtered notifications still return a valid D-Bus id; `CloseNotification` on that id succeeds without showing a toast.
+
+Configure filtering in **Settings → Notifications → Filtering**, or in `config.toml` / `settings.toml`.

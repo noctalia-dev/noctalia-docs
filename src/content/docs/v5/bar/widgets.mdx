@@ -115,6 +115,8 @@ empty_color = "surface_variant"
 
 Icon-only running application list. By default it follows the bar’s monitor (only windows the compositor associates with that monitor). Enable **Show all monitors** when you use one bar for everything but still want to see and focus apps on other monitors.
 
+Application icons use global `[shell.app_icon_colorize]` when enabled (see [Shell → App icon colorization](/v5/shell/#app-icon-colorization)).
+
 Left-click an icon to focus that window. The active window shows a small primary dot under the icon.
 When grouped app collapsing is enabled, multi-window app tiles also show compact right-edge dots over the icon.
 
@@ -164,7 +166,7 @@ empty_color = "secondary"
 
 ## `active_window`
 
-Shows the active window icon and title for the current output.
+Shows the active window icon and title for the current output. The window icon uses global `[shell.app_icon_colorize]` when enabled (see [Shell → App icon colorization](/v5/shell/#app-icon-colorization)).
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
@@ -192,7 +194,7 @@ Opens the control center panel on click.
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `glyph` | string | `"noctalia"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint |
-| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Leave empty to use the glyph |
+| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Leave empty to use the glyph. When set, the image is tinted with the widget **Color** setting (same as the glyph fallback) |
 
 ```toml
 [widget.control-center]
@@ -518,7 +520,7 @@ Opens the launcher panel on click.
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `glyph` | string | `"search"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint |
-| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Leave empty to use the glyph |
+| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Leave empty to use the glyph. When set, the image is tinted with the widget **Color** setting (same as the glyph fallback) |
 
 ```toml
 [widget.launcher]
@@ -631,7 +633,7 @@ suppressed. Internal Noctalia notifications are not stored in history.
 
 ## `tray`
 
-System tray (StatusNotifierItem).
+System tray (StatusNotifierItem). Tray icons use the global `[shell.app_icon_colorize]` / `[shell.app_icon_color]` settings when enabled (see [Shell → App icon colorization](/v5/shell/#app-icon-colorization)); symbolic tray icons are not recolored.
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|

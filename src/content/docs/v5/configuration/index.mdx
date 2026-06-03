@@ -78,6 +78,29 @@ The Settings actions menu includes **Export Config...**. It opens a chooser with
 - **Merged User Config** is recommended for dotfiles. It merges your explicit config files and GUI-managed overrides into one TOML file, while leaving built-in defaults implicit.
 - **Full Effective Config** exports the active config snapshot, including built-in defaults. Use it for inspection or sharing an exact state, but avoid treating it as your long-term curated config because it pins defaults that could otherwise evolve.
 
+## Validating your configuration
+
+Run the validator to catch problems before they silently take effect:
+
+```sh
+noctalia config validate
+```
+
+With no argument it checks the merged configuration exactly as the shell loads it: every `*.toml` in `~/.config/noctalia/` (or `$NOCTALIA_CONFIG_HOME`), then the `settings.toml` overrides in `~/.local/state/noctalia/`. Pass a directory to validate just that directory's `*.toml` files instead:
+
+```sh
+noctalia config validate ./my-config-dir
+```
+
+It reports two severities:
+
+- **Errors** — problems that stop the configuration from loading correctly: TOML syntax errors (with file, line, and column) and values that fail to parse, such as an invalid color. These exit with status `1`.
+- **Warnings** — things the shell loads fine but quietly ignores or adjusts: unknown/obsolete sections and settings (misspelled or left over from an older version), values outside the allowed range (clamped), and invalid enum choices. Warnings are advisory and do **not** fail the check. Unknown widget and desktop-widget settings are checked against each widget type's known options.
+
+A config with only warnings still prints `✓ Config is valid` and exits `0` (with the warnings listed), so unknown keys won't break a pre-commit hook or CI step — they're surfaced as cleanup hints. Only genuine errors exit `1`.
+
+Scripted-widget settings come from each script's own manifest, so unknown keys under a `scripted` widget are not flagged.
+
 ## Where next?
 
 - [Shell](/v5/shell/) covers global behavior like fonts, scale, shadows, OSD, keybinds, and hooks.
