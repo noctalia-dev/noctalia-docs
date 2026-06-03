@@ -92,13 +92,12 @@ With no argument it checks the merged configuration exactly as the shell loads i
 noctalia config validate ./my-config-dir
 ```
 
-It reports:
+It reports two severities:
 
-- **TOML syntax errors** — with the file, line, and column.
-- **Unknown sections and settings** — misspelled or obsolete keys that would otherwise be ignored, including bar, widget, and desktop-widget settings (validated against each widget type's known options).
-- **Bad values** — wrong type, invalid color, or a value outside the allowed range or enum set.
+- **Errors** — problems that stop the configuration from loading correctly: TOML syntax errors (with file, line, and column) and values that fail to parse, such as an invalid color. These exit with status `1`.
+- **Warnings** — things the shell loads fine but quietly ignores or adjusts: unknown/obsolete sections and settings (misspelled or left over from an older version), values outside the allowed range (clamped), and invalid enum choices. Warnings are advisory and do **not** fail the check. Unknown widget and desktop-widget settings are checked against each widget type's known options.
 
-Errors mean the configuration is invalid and the command exits with status `1`; warnings (such as an out-of-range number that the shell would clamp) are advisory and do not fail the check. A clean config prints `✓ Config is valid` and exits `0`, which makes it convenient in a dotfiles pre-commit hook or CI step.
+A config with only warnings still prints `✓ Config is valid` and exits `0` (with the warnings listed), so unknown keys won't break a pre-commit hook or CI step — they're surfaced as cleanup hints. Only genuine errors exit `1`.
 
 Scripted-widget settings come from each script's own manifest, so unknown keys under a `scripted` widget are not flagged.
 
