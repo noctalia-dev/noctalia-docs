@@ -273,13 +273,17 @@ fires, but it is not required for Noctalia's own notifications.
 | `shutting_down` | Immediately before the session panel runs shutdown. |
 | `wifi_enabled` / `wifi_disabled` | When NetworkManager's Wi-Fi radio toggles (not on first snapshot). |
 | `bluetooth_enabled` / `bluetooth_disabled` | When the default adapter's powered state toggles (not on first snapshot). |
-| `battery_state_changed` | When UPower's battery state enum changes (charging, discharging, etc.). Sets `NOCTALIA_BATTERY_STATE` (e.g. `Charging`, `Discharging`, `Charged`). |
-| `battery_under_threshold` | When charge **crosses from above to at or below** `battery_low_percent_threshold`. Sets `NOCTALIA_BATTERY_PERCENT`. |
+| `battery_charging` | When the battery enters charging after the previous tracked charging/discharging direction was not charging. Intermediate UPower states do not retrigger it. |
+| `battery_discharging` | When the battery enters discharging after the previous tracked charging/discharging direction was not discharging. Intermediate UPower states do not retrigger it. |
+| `battery_percentage_changed` | When the normalized whole battery percentage changes. Sets `NOCTALIA_BATTERY_STATE` (`charging`, `discharging`, `empty`, `fully_charged`, `pending_charge`, `pending_discharge`, or `unknown`) and `NOCTALIA_BATTERY_PERCENT`. |
 | `power_profile_changed` | When the active UPower power profile changes (for example `performance`, `balanced`, or `power-saver`). Sets `NOCTALIA_POWER_PROFILE`, `NOCTALIA_POWER_PROFILE_PREVIOUS`, and `NOCTALIA_POWER_PROFILE_ORIGIN` (`noctalia` or `external`). |
 
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `battery_low_percent_threshold` | int | `0` | Percent (0–100). `0` disables `battery_under_threshold`. Set to e.g. `15` to activate. |
+Battery hook values are exposed as environment variables, not positional arguments. For example:
+
+```toml
+[hooks]
+battery_percentage_changed = "notify-send 'Battery' \"$NOCTALIA_BATTERY_PERCENT% ($NOCTALIA_BATTERY_STATE)\""
+```
 
 ```toml
 [hooks]
@@ -316,9 +320,9 @@ wifi_disabled = "logger -t noctalia-hooks 'Wi-Fi radio disabled'"
 bluetooth_enabled  = "logger -t noctalia-hooks 'Bluetooth powered on'"
 bluetooth_disabled = "logger -t noctalia-hooks 'Bluetooth powered off'"
 
-battery_low_percent_threshold = 15
-battery_state_changed   = "logger -t noctalia-hooks \"Battery: $NOCTALIA_BATTERY_STATE\""
-battery_under_threshold = "systemctl --user start battery-low.target"
+battery_charging           = "logger -t noctalia-hooks 'Battery charging'"
+battery_discharging        = "logger -t noctalia-hooks 'Battery discharging'"
+battery_percentage_changed = "logger -t noctalia-hooks \"Battery: $NOCTALIA_BATTERY_STATE $NOCTALIA_BATTERY_PERCENT%\""
 power_profile_changed   = "logger -t noctalia-hooks \"Power profile: $NOCTALIA_POWER_PROFILE_PREVIOUS -> $NOCTALIA_POWER_PROFILE ($NOCTALIA_POWER_PROFILE_ORIGIN)\""
 
 # Quick test while developing a hook; not needed for Noctalia's own notifications.
