@@ -78,6 +78,30 @@ The Settings actions menu includes **Export Config...**. It opens a chooser with
 - **Merged User Config** is recommended for dotfiles. It merges your explicit config files and GUI-managed overrides into one TOML file, while leaving built-in defaults implicit.
 - **Full Effective Config** exports the active config snapshot, including built-in defaults. Use it for inspection or sharing an exact state, but avoid treating it as your long-term curated config because it pins defaults that could otherwise evolve.
 
+## Validating your configuration
+
+Run the validator to catch problems before they silently take effect:
+
+```sh
+noctalia config validate
+```
+
+With no argument it checks the merged configuration exactly as the shell loads it: every `*.toml` in `~/.config/noctalia/` (or `$NOCTALIA_CONFIG_HOME`), then the `settings.toml` overrides in `~/.local/state/noctalia/`. Pass a directory to validate just that directory's `*.toml` files instead:
+
+```sh
+noctalia config validate ./my-config-dir
+```
+
+It reports:
+
+- **TOML syntax errors** — with the file, line, and column.
+- **Unknown sections and settings** — misspelled or obsolete keys that would otherwise be ignored, including bar, widget, and desktop-widget settings (validated against each widget type's known options).
+- **Bad values** — wrong type, invalid color, or a value outside the allowed range or enum set.
+
+Errors mean the configuration is invalid and the command exits with status `1`; warnings (such as an out-of-range number that the shell would clamp) are advisory and do not fail the check. A clean config prints `✓ Config is valid` and exits `0`, which makes it convenient in a dotfiles pre-commit hook or CI step.
+
+Scripted-widget settings come from each script's own manifest, so unknown keys under a `scripted` widget are not flagged.
+
 ## Where next?
 
 - [Shell](/v5/shell/) covers global behavior like fonts, scale, shadows, OSD, keybinds, and hooks.
