@@ -36,6 +36,8 @@ avatar_path           = "~/Pictures/avatar.png"
 settings_show_advanced = false          # show advanced settings by default in Settings
 middle_click_opens_widget_settings = true # middle-click bar widgets to open their Settings entry
 show_location         = true            # show weather location text in shell UI
+app_icon_colorize     = false           # recolor application icons across the shell
+app_icon_color        = "on_surface"    # ColorSpec when colorize is enabled; see App icon colorization below
 clipboard_enabled     = true            # false disables clipboard history/panel (basic copy & paste still work)
 clipboard_history_max_entries = 50      # unpinned history cap (10–200); pinned entries are exempt
 clipboard_confirm_clear_history = true  # confirm before clear history / delete unpinned entries
@@ -101,6 +103,7 @@ Notes:
 - `settings_show_advanced`: when `true`, Settings opens with advanced entries visible.
 - `middle_click_opens_widget_settings`: when `true`, middle-clicking a bar widget opens Settings directly to that widget's configuration. Set it to `false` if a scripted widget needs `onMiddleClick()`.
 - `show_location`: when `false`, weather location text/coordinates are hidden in shell surfaces.
+- `app_icon_colorize` and `app_icon_color`: global application icon tinting for the dock, system tray (bar and drawer), taskbar, active-window widget, and bar `launcher` / `control-center` widgets when `custom_image` is set. See [App icon colorization](#app-icon-colorization).
 - `clipboard_enabled`: when `false`, disables clipboard **history** only — the history is no longer recorded or persisted, and the clipboard panel and bar/control-center shortcuts are unavailable. The live clipboard transport stays active, so basic copy/cut/paste in text fields and launcher math/emoji copy-to-clipboard actions keep working.
 - `clipboard_history_max_entries`: caps how many **unpinned** clipboard history rows Noctalia keeps (default `50`, range `10`–`200`). Pinned entries stay outside this limit. Lowering the value trims older unpinned rows on reload.
 - `clipboard_confirm_clear_history`: when `true` (default), the clipboard panel asks before **Clear history** and before deleting an **unpinned** entry (trash in the preview, or double-click a row). When `false`, those actions apply immediately: sidebar clear removes unpinned rows and keeps pins when any exist, or clears everything when nothing is pinned; unpinned single deletes are immediate. **Pinned** entries still require confirmation before delete. With confirmation enabled, the clear dialog only offers **Keep pinned** when both pinned and unpinned rows exist; if history is all pinned or all unpinned, the description matches that case. Toggle in **Settings → Shell → Clipboard**.
@@ -121,6 +124,25 @@ Notes:
 - `shell.panel.launcher_compact` uses smaller icons, tighter padding, and single-line rows (subtitles hidden).
 - `shell.mpris.blacklist` excludes matching MPRIS players from Noctalia media UI and active-player selection. Entries are case-insensitive and match player bus name, identity, desktop entry, or a bus-name substring token (for example `"spotify"`).
 - `shell.screenshot` holds the global output policy for all screenshot captures (region, fullscreen), shared by the screenshot bar widget and the `screenshot-region` / `screenshot-fullscreen` IPC commands. At least one of `save_to_file`, `copy_to_clipboard`, or `pipe_to_command` must be enabled or the capture reports "No screenshot output enabled". `directory` accepts `~`; `filename_pattern` is a [strftime](/v5/configuration/date-format-tokens/) pattern (the `.png` extension is appended). `copy_to_clipboard` requires clipboard integration (`clipboard_enabled = true`). `pipe_command` runs via `/bin/sh -lc` with the PNG written to its stdin — use it for annotators or uploaders (`swappy -f -`, `satty -f -`); for plain clipboard copies use `copy_to_clipboard` instead. The bar widget itself only configures its `glyph` and `primary_click` (region vs fullscreen). Edit in **Settings → Shell → Screenshot**.
+
+### App icon colorization
+
+When `app_icon_colorize = true`, Noctalia recolors **application bitmap icons** (desktop/tray pixmaps and file-backed icons) so they follow the active palette:
+
+- **Dock** pinned and running app icons
+- **Tray** inline icons and the tray drawer panel
+- **Taskbar** window icons
+- **Active window** widget icon
+- **Launcher** and **control center** bar widgets when `custom_image` is set — recolored with the tint through an alpha mask (defaults to `on_surface`; falls back to `on_surface` when contrast against the bar capsule would be too low; glyph fallbacks are unchanged)
+- **Launcher panel** search result app icons (same bake as taskbar)
+
+Glyphs, symbolic tray icons, media album art, and other non-app-bitmap images are unchanged. Launcher panel result icons use the same app-icon bake as the taskbar.
+
+`app_icon_color` is a [shell color role](/v5/theming/#shell-color-roles) or fixed hex color (`#RGB`, `#RGBA`, `#RRGGBB`, `#RRGGBBAA`), using the same picker as bar capsule colors. When omitted while colorize is enabled, Noctalia picks a theme-aware default: `on_surface` in light mode and `on_surface_variant` in dark mode.
+
+Icons are desaturated on the CPU, contrast-normalized, then tinted. Changes apply immediately when you edit the setting in **Settings → Appearance → Interface**, switch light/dark mode, or change the palette.
+
+Per-widget `colorize_icons` / `icon_colorization` keys on the dock or tray are no longer used — configure this only under `[shell]`.
 
 ---
 
