@@ -1,6 +1,6 @@
 ---
 title: Services
-description: Audio, brightness, location schedule, night light, weather, calendar, idle behaviors, and notifications.
+description: Audio, brightness, battery, location schedule, night light, weather, calendar, idle behaviors, and notifications.
 sidebar:
   order: 7
 ---
@@ -9,6 +9,7 @@ sidebar:
 
 - [Audio](#audio)
 - [Brightness](#brightness)
+- [Battery](#battery)
 - [Location](#location)
 - [Night Light](#night-light)
 - [System Monitor](#system-monitor)
@@ -78,6 +79,25 @@ noctalia msg brightness-osd 72           # show the OSD at 72% without changing 
 Targets: `current`, `all`/`*`, a monitor connector name (`eDP-1`, `DP-1`), or a monitor selector token (same matching rules as monitor overrides). `current` resolves from the active/focused monitor, falling back to the last interactive one.
 
 Values and steps accept normalized (`0.0`–`1.0`) or percentage-style (`65`, `65%`, `5%`) values. `brightness-up` / `brightness-down` target `current` with a 5% step when no arguments are given.
+
+---
+
+## Battery
+
+Battery status uses UPower. The global warning threshold controls the system battery's internal low-battery notifications and the warning color state used by default battery widgets. Peripheral batteries warn only when they have an explicit per-device threshold.
+
+```toml
+[battery]
+warning_threshold = 20 # 0 disables low-battery warnings
+
+[battery.device."/org/freedesktop/UPower/devices/battery_BAT0"]
+warning_threshold = 15
+
+[battery.device."/org/freedesktop/UPower/devices/headset_dev_00_11_22_33_44_55"]
+warning_threshold = 10
+```
+
+Per-device tables use the same UPower selectors as the battery widget `device` setting. The Settings UI writes full UPower object paths for reported non-system devices. Do not add a per-device table for the default system battery; `[battery].warning_threshold` is its canonical threshold.
 
 ---
 
