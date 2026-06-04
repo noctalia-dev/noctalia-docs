@@ -555,7 +555,7 @@ Captures the screen through the compositor's `wlr-screencopy` protocol (Niri, Hy
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `glyph` | string | `"screenshot"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint |
-| `primary_click` | string | `"region"` | Left-click action: `"region"` (interactive drag selection) or `"fullscreen"` (focused monitor) |
+| `primary_click` | string | `"region"` | Left-click action: `"region"` (interactive drag selection) or `"fullscreen"` (see below) |
 
 The capture **output policy** (save to file, output directory, filename pattern, clipboard, freeze, pipe command) is global and lives under [`[shell.screenshot]`](/v5/shell/#shell-settings), shared by this widget and the IPC commands. The widget only sets its glyph and left-click action.
 
@@ -564,9 +564,11 @@ The capture **output policy** (save to file, output directory, filename pattern,
 - **Left-click**: runs `primary_click` (region or fullscreen) using the global output policy.
 - **Right-click**: opens a menu with fullscreen and region capture.
 
-Region mode shows a dimmed overlay; drag to select, release to capture. Press a **`[keybinds].cancel`** chord (default **Escape**) to cancel. With `freeze_screen = true`, the shell captures each output first, then shows the frozen frame under the dim overlay while you select; the final PNG is cropped from that snapshot.
+**Fullscreen** on a **single monitor** captures that output immediately (focused monitor when using IPC with no argument). On **multiple monitors**, fullscreen opens a **display picker**: a top bar labeled “Choose display” with one button per connector (`DP-1`, `HDMI-A-1`, …). Click a button from **any** screen to capture that output—you do not need to move the pointer onto that monitor first. Clicking the dimmed desktop captures the monitor under the cursor (same as before). Press a **`[keybinds].cancel`** chord (default **Escape**) to dismiss the picker.
 
-While dragging, a size badge (`1920x1080`) follows the pointer below the cursor.
+**Region** mode shows a dimmed overlay; drag to select, release to capture. Press **`[keybinds].cancel`** to cancel. With `freeze_screen = true`, the shell captures each output first, then shows the frozen frame under the dim overlay while you select; the final PNG is cropped from that snapshot.
+
+While dragging a region, a size badge (`1920x1080`) follows the pointer below the cursor.
 
 ```toml
 [widget.screenshot]
@@ -587,7 +589,14 @@ noctalia msg screenshot-region my-capture
 
 Both commands use the global `[shell.screenshot]` output policy.
 
-By default, `screenshot-fullscreen` captures the **focused monitor** (compositor-selected output, active toplevel, keyboard focus, or recent pointer position). Use `pick` to click a monitor on multi-monitor setups, a connector name such as `DP-2` for a specific output, or `all` to capture every monitor in one combined desktop PNG.
+| `screenshot-fullscreen` argument | Behavior |
+|----------------------------------|----------|
+| *(none)* | Focused monitor |
+| `pick` | Display picker (multi-monitor); immediate capture on one monitor |
+| `DP-2`, `HDMI-A-1`, … | Named output only—no picker; exact connector name or word-boundary match in the output description |
+| `all` or `*` | One combined desktop PNG |
+
+The bar widget’s fullscreen action matches `pick` on multi-monitor setups. To capture a specific display from a script without UI, pass the connector name (for example `noctalia msg screenshot-fullscreen DP-1`).
 
 ---
 
