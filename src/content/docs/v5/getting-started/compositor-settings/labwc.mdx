@@ -52,3 +52,16 @@ Add these binds to your `rc.xml`
     <keybind key="XF86MonBrightnessDown"><action name="Execute"><command>noctalia msg brightness-down</command></action></keybind>
   </keyboard>
 ```
+
+## DPMS mode
+Install wlopm from extra repository for Arch Linux
+```
+sudo pacman -S wlopm
+```
+Create a custom command for dpms on and off using wlopm. Add the below commands to the toml config. Pass the Wayland connector name (e.g. DP-1, HDMI-A-1)
+```
+[idle.behavior.screen-off]
+timeout = 600
+command = "wlopm --off [Monitor name]"
+resume_command = "wlopm --on [Monitor name]"
+```
