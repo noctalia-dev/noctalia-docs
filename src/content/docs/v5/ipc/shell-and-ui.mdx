@@ -107,8 +107,9 @@ The CLI forwards everything after the command as one string (`noctalia msg wallp
 | Get theme mode | <IpcCommand command="theme-mode-get" /> | Print the current resolved theme mode: `dark` or `light` (from `[theme].mode` or from the `[location]` schedule when mode is `auto`). |
 | Toggle theme mode | <IpcCommand command="theme-mode-toggle" /> | Switch between dark and light theme mode (same as the bar control when `[theme].mode` is not `auto`). |
 | Set theme mode | <IpcCommand command="theme-mode-set dark" /> | Persist `[theme].mode` in `settings.toml` and reload. Pass `dark`, `light`, or `auto` (example shows `dark`). |
+| Get color scheme | <IpcCommand command="color-scheme-get" /> | Print the active palette selection as two tokens: `builtin Noctalia`, `wallpaper m3-content`, `community Oxocarbon`, or `custom MyScheme` (matches `[theme].source` and the corresponding palette field). |
+| Set color scheme | <IpcCommand command="color-scheme-set builtin Noctalia" /> | Persist `[theme].source` and the palette for that source, then reload. **builtin** — built-in palette name (e.g. `Noctalia`). **wallpaper** — generator scheme (`m3-tonal-spot`, `m3-content`, `m3-fruit-salad`, `m3-rainbow`, `m3-monochrome`, `vibrant`, `faithful`, `dysfunctional`, `muted`). **community** — community palette id. **custom** — folder name under `~/.config/noctalia/colorschemes/`. |
 | Apply templates | <IpcCommand command="templates-apply" /> | Rerender the enabled configured theme templates for the current palette without changing theme mode or firing shell palette hooks. |
-| Set wallpaper palette scheme | <IpcCommand command="theme-wallpaper-scheme-set <scheme>" /> | Persist `[theme].wallpaper_scheme` and reload. Used when the palette is generated from the wallpaper image. Recognized values: **Material 3:** `m3-tonal-spot`, `m3-content`, `m3-fruit-salad`, `m3-rainbow`, `m3-monochrome`. **Custom:** `vibrant`, `faithful`, `dysfunctional`, `muted`. |
 
 ## Screenshots
 
