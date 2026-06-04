@@ -1,0 +1,59 @@
+---
+title: Lockscreen widgets
+description: Configurable widgets on the session lock screen, layout editor, and settings.toml overrides.
+sidebar:
+  order: 6
+---
+
+# Lockscreen widgets
+
+Lockscreen widgets use the same widget types and per-type settings as [desktop widgets](/v5/desktop/widgets/). Layout is stored in a dedicated `[lockscreen_widgets]` section (not shared with `[desktop_widgets]` or `[lockscreen]` backdrop keys).
+
+- Declarative config: `[lockscreen_widgets]` in `~/.config/noctalia/*.toml`
+- GUI/editor overrides: `settings.toml` under your Noctalia state directory (same as desktop widgets)
+
+```toml
+[lockscreen_widgets]
+enabled = true
+
+[lockscreen_widgets.widget.clock_main]
+type     = "clock"
+output   = "DP-1"
+cx       = 1600.0
+cy       = 120.0
+scale    = 1.5
+rotation = 0.0
+
+[lockscreen_widgets.widget.clock_main.settings]
+format = "{:%H:%M}"
+```
+
+When enabled, widgets render inside each lock surface (same wallpaper/tint stack as the built-in lock UI). If a **clock** widget is placed on a monitor, the built-in corner clock on that output is hidden so you do not get duplicate clocks.
+
+---
+
+## Edit mode
+
+Edit mode is only available while the session is **unlocked**. The editor shows a dimmed full-screen preview with a ghost login panel at the bottom.
+
+### IPC
+
+```sh
+noctalia msg lockscreen-widgets-edit
+noctalia msg lockscreen-widgets-exit
+noctalia msg lockscreen-widgets-toggle-edit
+```
+
+You can also use **Settings → Security → Lock screen → Toggle Editor**.
+
+### Controls
+
+Same interaction model as desktop widget edit mode (move, rotate, scale, grid snap, toolbar). See [Desktop widgets — Edit mode](/v5/desktop/widgets/#edit-mode).
+
+---
+
+## Config format
+
+The schema mirrors `[desktop_widgets]`: `enabled`, `schema_version`, optional `[lockscreen_widgets.grid]`, `widget_order`, and `[lockscreen_widgets.widget.<id>]` tables with `type`, `output`, `cx`, `cy`, `scale`, `rotation`, `enabled`, and `[lockscreen_widgets.widget.<id>.settings]`.
+
+Widget IDs generated in the editor use the `lockscreen-widget-` prefix.
