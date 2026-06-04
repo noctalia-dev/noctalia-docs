@@ -29,7 +29,7 @@ rotation = 0.0
 format = "{:%H:%M}"
 ```
 
-When enabled, Noctalia renders each desktop widget as its own tightly-sized layer-shell surface on the `Bottom` layer. The current implementation ships `clock`, `audio_visualizer`, `sticker`, `weather`, `media_player`, and `sysmon` widget types plus an interactive edit mode.
+When enabled, Noctalia renders each desktop widget as its own tightly-sized layer-shell surface on the `Bottom` layer. The current implementation ships `clock`, `label`, `audio_visualizer`, `sticker`, `weather`, `media_player`, and `sysmon` widget types plus an interactive edit mode.
 
 ---
 
@@ -271,6 +271,36 @@ opacity    = 1.0
 |---------|------|---------|-------------|
 | `image_path` | string | — | Absolute path to the image file (PNG, JPEG, WebP, SVG, or GIF) |
 | `opacity` | float | `1.0` | Sticker image opacity from `0.0` to `1.0` |
+
+---
+
+### label
+
+Static title and description text block. The title uses a larger bold line; the description wraps below it and is hidden when empty.
+
+```toml
+[desktop_widgets.widget.note_main]
+type     = "label"
+output   = "DP-1"
+cx       = 400.0
+cy       = 300.0
+scale    = 1.0
+rotation = 0.0
+
+[desktop_widgets.widget.note_main.settings]
+title       = "Welcome"
+description = "Edit this in the widget inspector or settings.toml."
+color       = "on_surface"
+shadow      = true
+background  = true
+```
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `title` | string | `"Title"` | Primary heading text |
+| `description` | string | `""` | Body text under the title (omitted from layout when empty) |
+| `color` | string | `"on_surface"` | Text color role for both lines; fixed hex colors are also supported |
+| `shadow` | bool | `true` | Drop shadow on the text |
 
 ---
 
