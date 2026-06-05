@@ -1,13 +1,13 @@
 ---
 title: Theme
-description: Color sources, built-in palettes, wallpaper-driven palettes, and shell color roles.
+description: Theme mode and palette source configuration.
 sidebar:
   order: 8
 ---
 
 # Theme
 
-Controls the colors used across the shell — bars, panels, widgets, OSD, backdrop, and notifications.
+Controls the active palette source and dark/light mode used across the shell.
 
 ```toml
 [theme]
@@ -19,7 +19,24 @@ custom_palette    = "MyPalette"   # file name (without .json) when source = "cus
 wallpaper_scheme  = "m3-content"  # generator used when source = "wallpaper"
 ```
 
-Palette changes apply live when you edit `config.toml`. Wallpaper-derived themes re-resolve automatically when the default wallpaper changes.
+Palette changes apply live when you edit `config.toml`. Wallpaper-derived themes re-resolve automatically when the default wallpaper changes. See [Palette](/v5/theming/palette/) for color roles, custom palette files, and terminal colors.
+
+---
+
+## `mode`
+
+`dark` or `light` selects the palette variant directly. `auto` switches between them using the shared sunrise/sunset
+schedule in [`[location]`](/v5/services/#location) (same rules as [Night Light](/v5/services/#night-light)): resolved
+coordinates from `auto_locate`/`address`, otherwise manual `latitude` / `longitude`, otherwise fixed `sunset` / `sunrise`
+times. Night light does not need to be enabled for theme auto to follow the schedule. When the schedule cannot be
+resolved, `auto` uses the light (day) palette until a valid schedule is available.
+
+### IPC
+
+```sh
+noctalia msg theme-mode-get
+noctalia msg theme-mode-toggle
+```
 
 ---
 
@@ -27,7 +44,7 @@ Palette changes apply live when you edit `config.toml`. Wallpaper-derived themes
 
 | Value | Description |
 |-------|-------------|
-| `builtin` | Use one of the palette compiled into the binary. |
+| `builtin` | Use one of the palettes compiled into the binary. |
 | `wallpaper` | Generate a palette from the current default wallpaper each time it changes. |
 | `community` | Fetch a palette by name from `https://api.noctalia.dev/palette/<name>`. |
 | `custom` | Load a palette JSON file from the Noctalia config directory's `palettes/` folder. |
@@ -58,11 +75,9 @@ While the initial download is in flight — or if it fails — the shell falls b
 
 Names a palette file in the Noctalia config directory's `palettes/` folder (honoring `NOCTALIA_CONFIG_HOME`, then `XDG_CONFIG_HOME`). The value is the file name without the `.json` extension — for example, `custom_palette = "MyPalette"` loads `~/.config/noctalia/palettes/MyPalette.json` with the default config location.
 
-The JSON format is identical to community palettes: a root object with `"dark"` and `"light"` keys, each containing the 16 semantic color roles and a `"terminal"` object. If the `"light"` key is omitted, the dark variant is used for both modes.
+The Settings GUI lists palette files found in the directory when `source = "custom"` is selected. If the file is missing or invalid, the shell falls back to the `Noctalia` built-in palette.
 
-If the file is missing or invalid, the shell falls back to the `Noctalia` built-in palette.
-
-The Settings GUI lists palette files found in the directory when `source = "custom"` is selected.
+See [Palette](/v5/theming/palette/) for the custom palette JSON format.
 
 ---
 
@@ -82,94 +97,9 @@ Picks the generator when `source = "wallpaper"`:
 | `dysfunctional` | Custom — deliberately off-kilter |
 | `muted` | Custom — low-saturation |
 
----
+## Where next?
 
-## Using an external wallpaper app
-
-If you manage wallpapers with an external tool (waypaper, awww, swww, etc.) you can still use noctalia's wallpaper-driven palette generation. Disable noctalia's own wallpaper rendering so it does not compete with your app, then point noctalia at each new image so it can extract colors from it.
-
-```toml
-# Disable noctalia wallpaper display
-[wallpaper]
-enabled = false
-
-# Generate colors from wallpaper with your preferred scheme
-[theme]
-source           = "wallpaper"
-wallpaper_scheme = "m3-content"   # or any scheme from the table above
-```
-
-After your external app sets a new wallpaper, tell noctalia which image to derive colors from:
-
-```sh
-noctalia msg wallpaper-set ~/Pictures/Wallpapers/new-wallpaper.png
-```
-
-Noctalia will extract colors from that image, generate a palette with the configured scheme, and cross-fade the shell to the new colors — even though it is not displaying the wallpaper itself. The path is persisted across restarts.
-
----
-
-## `mode`
-
-`dark` or `light` selects the palette variant directly. `auto` switches between them using the shared sunrise/sunset
-schedule in [`[location]`](/v5/services/#location) (same rules as [Night Light](/v5/services/#night-light)): resolved
-coordinates from `auto_locate`/`address`, otherwise manual `latitude` / `longitude`, otherwise fixed `sunset` / `sunrise`
-times. Night light does not need to be enabled for theme auto to follow the schedule. When the schedule cannot be
-resolved, `auto` uses the light (day) palette until a valid schedule is available.
-
-## Shell Color Roles
-
-User-facing shell color settings can reference these 16 color roles:
-
-`primary`, `on_primary`, `secondary`, `on_secondary`, `tertiary`, `on_tertiary`, `error`, `on_error`, `surface`, `on_surface`, `surface_variant`, `on_surface_variant`, `outline`, `shadow`, `hover`, `on_hover`
-
-Role names are lowercase `snake_case` and are the recommended way to configure shell colors because they follow the
-active palette. Config fields parsed as palette colors may also accept hex colors where a deliberately fixed,
-non-palette color is needed; Settings role pickers expose the 16 roles first.
-
-### IPC
-
-```sh
-noctalia msg theme-mode-get
-noctalia msg theme-mode-toggle
-noctalia msg templates-apply
-```
-
----
-
-## External App Templates
-
-Noctalia can apply generated colors to external app config files whenever the resolved theme changes. Run `noctalia msg templates-apply` to rerender the enabled configured templates for the current palette without changing the theme.
-
-```toml
-[theme.templates]
-enable_builtin_templates   = true
-enable_community_templates = true
-builtin_ids                = []        # opt-in; run: noctalia theme --list-templates
-community_ids              = []        # opt-in; fetched from api.noctalia.dev/templates
-
-[theme.templates.user.my_app]
-input_path  = "$XDG_CONFIG_HOME/noctalia/templates/my-app.css"
-output_path = "$XDG_CONFIG_HOME/my-app/theme.css"
-post_hook   = "my-app --reload-theme"
-```
-
-- `enable_builtin_templates` enables the shipped built-in template catalog.
-- `builtin_ids` selects which built-in templates run. Empty array = nothing applied until you opt in.
-- `enable_community_templates` enables fetching and applying templates from `https://api.noctalia.dev/templates`.
-- `community_ids` selects which community templates run. Metadata and files are cached in `~/.cache/noctalia/community-templates/` (honoring `XDG_CACHE_HOME`).
-- Cached community template files are treated as editable local copies. Sync updates files only while their content still matches the last Noctalia-written md5; local edits are preserved until you delete the edited cached file.
-- `[theme.templates.user.<id>]` declares a user template directly in Noctalia config. Defining the table enables it;
-  set `enabled = false` on an entry to keep it available but inactive.
-
-User template entries support the same fields documented in [Template Entries](/v5/theming/templates/#template-entries),
-including `input_path_modes`, `output_path_dynamic`, `colors_to_compare`, `compare_to`, `pre_hook`, `post_hook`, and
-`index`. Relative paths resolve from the Noctalia config directory.
-The same tables are valid in `settings.toml` because it is the final config overlay, but dotfile-managed templates
-should normally live in `~/.config/noctalia/*.toml`.
-
-List available template ids:
-
-```sh
-noctalia theme --list-templates
-```
+- [Palette](/v5/theming/palette/) covers color roles, custom palette files, and terminal colors.
+- [App Theming](/v5/theming/app-theming/) covers applying Noctalia colors to app config files.
+- [Template Reference](/v5/theming/templates/) covers template syntax, tokens, filters, hooks, and CLI rendering.
+- [FAQ: external wallpaper apps](/v5/getting-started/faq/#how-do-i-use-noctalia-colors-with-an-external-wallpaper-app) covers wallpaper-driven colors when another tool displays the wallpaper.

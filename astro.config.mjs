@@ -241,7 +241,9 @@ export default defineConfig({
                   label: "Theming",
                   items: [
                     { label: "Theme", link: "v5/theming/" },
-                    { label: "Theming Templates", link: "v5/theming/templates/" },
+                    { label: "Palette", link: "v5/theming/palette/" },
+                    { label: "App Theming", link: "v5/theming/app-theming/" },
+                    { label: "Template Reference", link: "v5/theming/templates/" },
                   ],
                 },
                 {
