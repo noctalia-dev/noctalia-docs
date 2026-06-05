@@ -5,6 +5,8 @@ sidebar:
   order: 4
 ---
 
+# Widgets
+
 ## Widget definitions
 
 Widget definitions are optional. When a name in a widget list matches a `[widget.<name>]` entry, that entry's `type` and settings are used. When there is no match, the name itself is treated as the widget type with default settings.
@@ -212,6 +214,7 @@ System resource monitor. Shows an icon and value for one configurable stat. Mult
 | `stat` | string | `"cpu_usage"` | Which stat to display (see table below) |
 | `path` | string | `"/"` | Mount path for `disk_pct` (ignored otherwise) |
 | `display` | string | `"gauge"` | `"gauge"` = icon + vertical fill bar; `"graph"` = icon + sparkline; `"text"` = icon + value |
+| `gauge_color` | string | `"primary"` | Color role (or fixed hex) for the gauge fill bar when `display = "gauge"` |
 | `show_label` | bool | `true` | Show the text value next to the graph or gauge (always shown in `"text"` mode) |
 | `label_min_width` | float | `0` | Minimum label width in pixels to prevent resizing as values change. Only relevant when `show_label` is enabled. |
 

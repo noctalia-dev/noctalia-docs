@@ -14,7 +14,8 @@ position            = "bottom"   # top | bottom | left | right
 active_monitor_only = false      # when true, only show apps/windows from the active monitor
 
 icon_size           = 48
-padding             = 8          # inner padding around the icon row (all sides)
+main_axis_padding   = 16          # inner padding along the icon row (main axis)
+cross_axis_padding  = 8           # inner padding perpendicular to the icon row
 item_spacing        = 6          # gap between items in pixels
 background_opacity  = 0.88
 shadow              = true       # cast the global [shell.shadow]
@@ -32,6 +33,8 @@ reserve_space       = false      # keep exclusive zone even when auto-hidden
 
 active_scale        = 1.0        # icon scale for the focused app (clamped 0.1–1.75)
 inactive_scale      = 0.85       # icon scale for non-focused apps (clamped 0.1–1.0)
+magnification       = true       # magnify icons near the pointer (macOS-style)
+magnification_scale = 1.35       # max scale multiplier at the pointer center (1.0–2.0; 1.0 = off)
 active_opacity      = 1.0
 inactive_opacity    = 0.85
 show_instance_count = true       # badge with window count when an app has 2+ windows
@@ -72,6 +75,16 @@ Configure in **Settings → Appearance → Interface**, or in `config.toml` / `s
 - The focused app uses `active_scale` and `active_opacity`.
 - All other apps use `inactive_scale` and `inactive_opacity`.
 - Focus changes animate smoothly between the two states.
+
+## Magnification
+
+When `magnification = true` (default), icons grow as the pointer moves along the dock — similar to the macOS dock. Icons under the pointer grow the most; nearby entries scale down smoothly with distance.
+
+- `magnification_scale` sets the maximum multiplier at the pointer center (default `1.35`, range `1.0`–`2.0`). At `1.0`, magnification is disabled even when `magnification` is on.
+- Magnification applies on top of `active_scale` / `inactive_scale`.
+- Icons may extend past the dock capsule into a small cross-axis pad (macOS-style); the background slab stays fixed size.
+- The launcher button participates when shown.
+- Hovering an entry shows a tooltip with its app name (launcher button shows **Launcher**).
 
 ---
 
