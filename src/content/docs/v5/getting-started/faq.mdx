@@ -111,6 +111,31 @@ If a translation is not available for that language, untranslated strings fall b
 
 </FaqItem>
 
+<FaqItem question="How do I use Noctalia colors with an external wallpaper app?">
+
+If you manage wallpapers with another tool such as waypaper, swww, or hyprpaper, disable Noctalia's wallpaper rendering and keep wallpaper-driven theme generation enabled:
+
+```toml
+# Disable Noctalia wallpaper display
+[wallpaper]
+enabled = false
+
+# Generate colors from the current wallpaper path
+[theme]
+source           = "wallpaper"
+wallpaper_scheme = "m3-content"
+```
+
+After your wallpaper app sets a new image, tell Noctalia which file to use for color extraction:
+
+```sh
+noctalia msg wallpaper-set ~/Pictures/Wallpapers/new-wallpaper.png
+```
+
+Noctalia extracts colors from that image, generates a palette with the configured scheme, and cross-fades the shell to the new colors even though it is not displaying the wallpaper itself. The path is persisted across restarts.
+
+</FaqItem>
+
 ## Troubleshooting
 
 <FaqItem question="Why aren't my keybinds working?">
