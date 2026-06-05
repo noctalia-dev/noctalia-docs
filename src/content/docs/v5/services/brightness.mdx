@@ -1,0 +1,46 @@
+---
+title: Brightness
+description: Brightness backends, per-monitor overrides, and brightness IPC.
+sidebar:
+  order: 2
+---
+
+Brightness control uses the kernel backlight interface by default. `ddcutil` support is opt-in for external monitors that expose DDC/CI brightness.
+
+```toml
+[brightness]
+enable_ddcutil = false
+ignore_mmids   = []   # e.g. ["ACI-ROG_PG279Q-10220"] — skip in all ddcutil commands
+
+[brightness.monitor.eDP-1]
+backend = "backlight"   # auto | none | backlight | ddcutil
+
+[brightness.monitor.DP-1]
+backend = "ddcutil"
+```
+
+Notes:
+- `enable_ddcutil = true` only enables DDC/CI discovery — it does not force every monitor to `ddcutil`.
+- `ignore_mmids` passes `--ignore-mmid` to every `ddcutil` invocation. Run `ddcutil --verbose detect` to find monitor model id strings.
+- Per-monitor overrides use the same connector/description matching rules as bar monitor overrides.
+- `backend = "auto"` prefers kernel backlight when available and falls back to `ddcutil`.
+- `backend = "none"` hides brightness control for the matched monitor.
+- `ddcutil` is treated as best-effort — repeated DDC failures cool down that monitor to avoid hammering the bus.
+
+## IPC
+
+```sh
+noctalia msg brightness-set 65           # current monitor
+noctalia msg brightness-set DP-1 0.65
+noctalia msg brightness-set * 40%        # all monitors
+
+noctalia msg brightness-up               # current monitor, default 5% step
+noctalia msg brightness-up DP-1 10
+noctalia msg brightness-down * 5%        # all monitors
+
+noctalia msg brightness-osd 72           # show the OSD at 72% without changing brightness
+```
+
+Targets: `current`, `all`/`*`, a monitor connector name (`eDP-1`, `DP-1`), or a monitor selector token (same matching rules as monitor overrides). `current` resolves from the active/focused monitor, falling back to the last interactive one.
+
+Values and steps accept normalized (`0.0`–`1.0`) or percentage-style (`65`, `65%`, `5%`) values. `brightness-up` / `brightness-down` target `current` with a 5% step when no arguments are given.

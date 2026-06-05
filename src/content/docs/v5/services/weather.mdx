@@ -1,0 +1,18 @@
+---
+title: Weather
+description: Weather service configuration and location requirements.
+sidebar:
+  order: 7
+---
+
+```toml
+[weather]
+enabled         = false
+refresh_minutes = 30
+unit            = "metric"      # metric | imperial
+effects         = true          # visual weather effects
+```
+
+Weather consumes the coordinates resolved by [`[location]`](/v5/services/location/) — set `auto_locate` or `address` there. When a location is available, Noctalia fetches current weather plus a 6-day forecast. Configure under **Settings → Location → Weather**.
+
+Enabling weather adds a `Weather` tab to the control center. The bar `weather` widget type also requires weather to be enabled.

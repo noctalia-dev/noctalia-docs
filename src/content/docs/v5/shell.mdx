@@ -95,7 +95,7 @@ Notes:
 - `setup_wizard_enabled`: when `false`, Noctalia does not auto-open the setup wizard on startup even if `.setup-complete` is missing. Use this for declarative or preseeded deployments; the marker remains the normal completion state for interactive runs.
 - `niri_overview_type_to_launch_enabled` is opt-in. When `true` on niri, Noctalia keeps a tiny keyboard-focus layer surface while overview is open so typing a letter or number opens the launcher with that initial query. This gives up niri's exact native handling for some overview-only keyboard state, such as the app focus ring.
 - `polkit_agent` controls registration on `org.freedesktop.PolicyKit1`. Keep disabled if another desktop agent handles auth prompts.
-- Notification daemon ownership moved out of `[shell]`: use `[notification].enable_daemon` in [Services](/v5/services/#notifications).
+- Notification daemon ownership moved out of `[shell]`: use `[notification].enable_daemon` in [Services](/v5/services/notifications/).
 - `password_style`: `default` uses `circle-filled`; `random` cycles through multiple filled glyph shapes on polkit and lock screen inputs.
 - `settings_show_advanced`: when `true`, Settings opens with advanced entries visible.
 - `middle_click_opens_widget_settings`: when `true`, middle-clicking a bar widget opens Settings directly to that widget's configuration. Set it to `false` if a scripted widget needs `onMiddleClick()`.
@@ -277,7 +277,7 @@ destructive = true
 
 Optional shell hooks run extra commands when specific events happen. Define them under `[hooks]` in `config.toml`.
 Each event is a string (one command) or an array of strings (run in order). The same `noctalia:` prefix rules apply as
-in [idle behaviors](/v5/services/#idle).
+in [idle behaviors](/v5/services/idle/).
 
 Hooks do not replace Noctalia's built-in behavior. For example, external or IPC-initiated Wi-Fi, Bluetooth, and power
 profile changes show an OSD. `notify-send` can be useful while testing that a hook fires, but it is not required for

@@ -249,7 +249,17 @@ export default defineConfig({
                 {
                   label: "Services",
                   items: [
-                    { label: "Services", link: "v5/services/" },
+                    { label: "Audio", link: "v5/services/audio/" },
+                    { label: "Battery", link: "v5/services/battery/" },
+                    { label: "Brightness", link: "v5/services/brightness/" },
+                    { label: "Calendar", link: "v5/services/calendar/" },
+                    { label: "Control Center", link: "v5/services/control-center/" },
+                    { label: "Idle", link: "v5/services/idle/" },
+                    { label: "Location", link: "v5/services/location/" },
+                    { label: "Night Light", link: "v5/services/night-light/" },
+                    { label: "Notifications", link: "v5/services/notifications/" },
+                    { label: "System Monitor", link: "v5/services/system-monitor/" },
+                    { label: "Weather", link: "v5/services/weather/" },
                   ],
                 },
               ],

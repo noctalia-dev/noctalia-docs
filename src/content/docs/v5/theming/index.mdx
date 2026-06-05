@@ -24,7 +24,7 @@ Palette changes apply live when you edit `config.toml`. Wallpaper-derived themes
 ## `mode`
 
 `dark` or `light` selects the palette variant directly. `auto` switches between them using the shared sunrise/sunset
-schedule in [`[location]`](/v5/services/#location) (same rules as [Night Light](/v5/services/#night-light)): resolved
+schedule in [`[location]`](/v5/services/location/) (same rules as [Night Light](/v5/services/night-light/)): resolved
 coordinates from `auto_locate`/`address`, otherwise manual `latitude` / `longitude`, otherwise fixed `sunset` / `sunrise`
 times. Night light does not need to be enabled for theme auto to follow the schedule. When the schedule cannot be
 resolved, `auto` uses the light (day) palette until a valid schedule is available.

@@ -1,0 +1,34 @@
+---
+title: System Monitor
+description: System monitor sampling intervals and metric groups.
+sidebar:
+  order: 6
+---
+
+```toml
+[system.monitor]
+enabled = true                      # sample CPU, memory, network, load, temperature, GPU VRAM, and disk statistics
+cpu_poll_seconds = 2.0              # CPU usage, CPU temperature, and load average
+gpu_poll_seconds = 0.0              # GPU temperature and VRAM usage (0 = disabled by default)
+memory_poll_seconds = 2.0           # RAM usage
+network_poll_seconds = 3.0          # network throughput
+disk_poll_seconds = 10.0            # disk usage and swap usage
+```
+
+When disabled, Noctalia keeps system-monitor UI available but stops the background sampling thread. Bar `sysmon` widgets, desktop `sysmon` widgets, and the Control Center System tab show unavailable values until the setting is enabled again.
+
+Poll intervals are configured globally under `[system.monitor]`, not per widget. Each value is the number of seconds between samples for that metric group. A non-zero value is clamped to `1` to `120` seconds; setting a value to `0` disables that metric group entirely — it is never sampled and schedules no wakeups. Disabling `gpu_poll_seconds` is useful on laptops to avoid waking a discrete GPU. You can also adjust them in whole-second steps (down to `0`) in **Settings → Services → Advanced** when the system monitor is enabled.
+
+| Key | Default | Metrics |
+|-----|---------|---------|
+| `cpu_poll_seconds` | `2.0` | CPU usage %, CPU temperature, and load average (`1` / `5` / `15` min) |
+| `gpu_poll_seconds` | `0.0` | GPU temperature and VRAM usage. Disabled by default so a discrete GPU is not woken on laptops; the Control Center GPU card stays hidden until you set a non-zero interval. If you enable it, `5` seconds is a good interval — GPU stats rarely need sub-second sampling, and a short interval keeps the GPU busy |
+| `memory_poll_seconds` | `2.0` | RAM usage % and used/total MB |
+| `network_poll_seconds` | `3.0` | Network download and upload throughput |
+| `disk_poll_seconds` | `10.0` | Disk usage % for paths used by bar `sysmon` widgets with `stat = "disk_pct"`, plus swap usage % and used/total MB |
+
+CPU usage and CPU temperature share `cpu_poll_seconds` because both are tied to the same CPU sampling pass. GPU temperature and VRAM share `gpu_poll_seconds`. Swap and disk usage share `disk_poll_seconds`. Network Rx and Tx share `network_poll_seconds` because they come from the same `/proc/net/dev` read.
+
+Bar and desktop `sysmon` widgets in **graph** mode, plus the Control Center System graphs, scroll using the same cadence as the fastest poll interval above (the minimum of the enabled, non-zero intervals). There is no separate graph-only setting. If every metric is set to `0`, no history is recorded and the graphs stop updating.
+
+GPU temperature is read from Linux hwmon when available, with an NVML fallback for NVIDIA proprietary drivers. GPU VRAM is read from AMDGPU DRM sysfs when available, with the same NVML fallback.

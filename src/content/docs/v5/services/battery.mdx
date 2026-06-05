@@ -1,0 +1,21 @@
+---
+title: Battery
+description: Battery warning thresholds and per-device battery configuration.
+sidebar:
+  order: 3
+---
+
+Battery status uses UPower. The global warning threshold controls the system battery's internal low-battery notifications and the warning color state used by default battery widgets. Peripheral batteries warn only when they have an explicit per-device threshold.
+
+```toml
+[battery]
+warning_threshold = 20 # 0 disables low-battery warnings
+
+[battery.device."/org/freedesktop/UPower/devices/battery_BAT0"]
+warning_threshold = 15
+
+[battery.device."/org/freedesktop/UPower/devices/headset_dev_00_11_22_33_44_55"]
+warning_threshold = 10
+```
+
+Per-device tables use the same UPower selectors as the battery widget `device` setting. The Settings UI writes full UPower object paths for reported non-system devices. Do not add a per-device table for the default system battery; `[battery].warning_threshold` is its canonical threshold.

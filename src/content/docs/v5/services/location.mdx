@@ -1,0 +1,24 @@
+---
+title: Location
+description: Location resolution for weather, night light, and automatic theme mode.
+sidebar:
+  order: 4
+---
+
+`[location]` is the single source of "where am I" for the whole shell. It resolves your coordinates and feeds [Weather](/v5/services/weather/), [Night Light](/v5/services/night-light/), and [Theme `auto`](/v5/theming/#mode). Configure under **Settings → Location**.
+
+```toml
+[location]
+auto_locate = false            # resolve coordinates from your IP address when true
+address     = "Toronto, ON"    # geocoded when auto_locate = false and non-empty
+
+# Manual schedule fallback (used only when neither auto_locate nor address is set):
+sunset    = "20:30"            # HH:MM — night starts
+sunrise   = "07:30"            # HH:MM — day starts
+# latitude  = 52.5200          # used instead of sunset/sunrise when set
+# longitude = 13.4050
+```
+
+Resolution priority: **`auto_locate` (IP) → `address` (geocoded) → manual `latitude`/`longitude` → fixed `sunset`/`sunrise`**. Whenever coordinates resolve (from IP, address, or manual lat/long), sunrise and sunset are computed astronomically for your position; the fixed `sunset`/`sunrise` times are used only when no coordinates are available. If only one of `latitude`/`longitude` is provided, the manual coordinates are ignored.
+
+Location resolution runs independently of Weather — `auto_locate` and `address` work even when Weather is disabled, so Night Light and Theme `auto` get real coordinates on their own.

@@ -1,0 +1,77 @@
+---
+title: Idle
+description: Idle behaviors, pre-action fade, and idle IPC commands.
+sidebar:
+  order: 9
+---
+
+Idle behaviors are named entries under `[idle.behavior.*]`. When no `config.toml` exists, Noctalia seeds built-in Lock and Monitor off behaviors, both disabled by default.
+
+Optional top-level **`[idle]`** keys apply before any behavior’s `command` runs:
+
+```toml
+[idle]
+# Seconds to fade a fullscreen surface-tint overlay, then run the idle command.
+# 0 disables the overlay (the command runs as soon as the compositor reports idle).
+# Parsed between 0 and 120; the in-app Settings stepper uses whole seconds 0–30.
+pre_action_fade_seconds = 2.0
+```
+
+While a fade is in progress, the overlay is click-through so pointer/keyboard activity still reaches the compositor; if the session becomes active again during that window, the pending command is cancelled. The dim is a layer-shell **overlay** that covers the full monitor (including the bar).
+
+```toml
+[idle.behavior.lock]
+timeout = 600
+command = "noctalia:session lock"
+enabled = false             # explicitly disabled in the default config
+
+[idle.behavior.screen-off]
+timeout = 660
+command = "noctalia:dpms-off"
+resume_command = "noctalia:dpms-on"
+enabled = false             # explicitly disabled in the default config
+
+[idle.behavior.custom]
+timeout = 48
+command = "notify-send 'Idle' 'Going idle'"
+resume_command = "notify-send 'Idle' 'Back from idle'"
+```
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `enabled` | bool | `true` | Enable or disable this behavior |
+| `timeout` | int | `0` | Seconds before the behavior triggers; `0` disables this behavior |
+| `command` | string | `""` | Shell command or `noctalia:` IPC subcommand |
+| `resume_command` | string | `""` | Shell command or `noctalia:` IPC subcommand to run when activity resumes after this behavior triggered |
+
+For screen-off behaviors, pair `command = "noctalia:dpms-off"` with `resume_command = "noctalia:dpms-on"`. Noctalia also applies a monitor-on resume action automatically when `resume_command` is empty and the idle command is a known display-off command (`noctalia:dpms-off`, `wlr-dpms`, `wlr-randr --off`, and similar), so waking from idle does not leave monitors powered off — including when a later idle behavior locks the session while outputs are still off.
+
+## `noctalia:` commands in idle
+
+The `noctalia:` prefix runs the rest of the string through the IPC command registry — the same as `noctalia msg <subcommand>`. Examples:
+
+```
+noctalia:session lock
+noctalia:session suspend
+noctalia:session lock-and-suspend
+noctalia:dpms-off
+noctalia:dpms-on
+noctalia:caffeine-enable
+noctalia:caffeine-disable
+noctalia:caffeine-toggle
+noctalia:panel-open launcher
+noctalia:panel-close
+noctalia:panel-toggle launcher
+noctalia:panel-toggle session
+noctalia:panel-toggle clipboard
+noctalia:panel-toggle wallpaper
+noctalia:panel-toggle control-center
+noctalia:media previous
+noctalia:media toggle
+noctalia:media stop
+noctalia:media next
+```
+
+`media stop` invokes the MPRIS `Stop` method on the active player and clears that player from Noctalia's active-player selection until it starts playing again. Unlike `media toggle` (pause), stop is meant for dismissing media UI such as the bar `media` widget when it is configured to hide without an active player.
+
+Idle behavior uses the Wayland `ext_idle_notifier_v1` protocol and respects active idle inhibitors.

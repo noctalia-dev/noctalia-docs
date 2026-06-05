@@ -1,0 +1,20 @@
+---
+title: Audio
+description: Audio service settings, sound effects, and volume behavior.
+sidebar:
+  order: 1
+---
+
+```toml
+[audio]
+enable_overdrive     = false  # allow volume sliders above 100% (up to 150%)
+enable_sounds        = false  # master toggle for UI sounds
+sound_volume         = 0.5    # global sound volume (0.0 - 1.0)
+volume_change_sound  = ""     # empty = bundled default sounds/volume-change.wav
+notification_sound   = ""     # empty = bundled default sounds/notification.wav
+```
+
+- `enable_overdrive = false` clamps Control Center output/microphone sliders to 100%; `true` allows up to 150%.
+- `enable_sounds = false` disables all UI sound playback.
+- `sound_volume` is the global playback gain for all UI sounds.
+- `volume_change_sound` and `notification_sound` accept absolute paths, `~`-prefixed home paths, or asset-relative paths.
