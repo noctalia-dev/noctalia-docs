@@ -170,13 +170,13 @@ window-rule {
 /*
   Noctalia
   Disable xray on all our surfaces so it looks more realistic.
-  No need to set blur to 'true' here, it's automatic.
+  Noctalia publishes blur regions automatically when ext-background-effects is available.
 */
 layer-rule {
   match namespace="^noctalia-(bar-[^\"]+|notification|dock|panel|osd)$"
   background-effect {
     xray false
-    //blur false
+    // blur false
   }
 }
 
@@ -188,3 +188,9 @@ blur {
   saturation 1.0  // color saturation boost (default: 1.5)
 }
 ```
+
+:::tip[Turning blur off]
+When Noctalia detects `ext-background-effects`, it automatically publishes blur regions for its layer surfaces. This means bars, panels, dock, notifications, and OSD can still blur even if you do not declare any Noctalia `layer-rule` in your Niri config.
+
+If you want fully transparent Noctalia surfaces or simply do not want blur behind them, keep the Noctalia `layer-rule` and uncomment `blur false` inside its `background-effect` block. Omit the `window-rule` and global `blur` block only if you do not want to configure Niri blur for regular windows.
+:::
