@@ -355,7 +355,7 @@ resume_command = "notify-send 'Idle' 'Back from idle'"
 | `command` | string | `""` | Shell command or `noctalia:` IPC subcommand |
 | `resume_command` | string | `""` | Shell command or `noctalia:` IPC subcommand to run when activity resumes after this behavior triggered |
 
-For screen-off behaviors, pair `command = "noctalia:dpms-off"` with `resume_command = "noctalia:dpms-on"`. Noctalia also applies this `dpms-on` resume action automatically for older configs that use exactly `noctalia:dpms-off` without an explicit `resume_command`, so user input does not leave monitors powered off.
+For screen-off behaviors, pair `command = "noctalia:dpms-off"` with `resume_command = "noctalia:dpms-on"`. Noctalia also applies a monitor-on resume action automatically when `resume_command` is empty and the idle command is a known display-off command (`noctalia:dpms-off`, `wlr-dpms`, `wlr-randr --off`, and similar), so waking from idle does not leave monitors powered off — including when a later idle behavior locks the session while outputs are still off.
 
 ### `noctalia:` commands in idle
 
