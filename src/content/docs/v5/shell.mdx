@@ -153,13 +153,14 @@ keyboard_layout = true   # show an OSD popup when the input keyboard layout chan
 # monitors = ["DP-1"]    # connector names; omit or leave empty for all monitors
 ```
 
-The OSD powers the volume HUD and defaults to `top_center` with a horizontal layout. Set `orientation = "vertical"`
-for a taller vertical gauge. `scale` multiplies the effective OSD size on top of `shell.ui_scale` (for example `1.25`
-makes volume, brightness, and lock-key popups 25% larger than the default). `monitors` limits OSD popups to the listed
-connector names (same matching rules as notification toasts and the dock); leave it empty to show on every connected
-output. If none of the configured monitors are connected, OSD falls back to all outputs until one reconnects.
-`lock_keys = false` disables Caps/Num/Scroll Lock popups; when no `lock_keys` bar widget is configured, this also stops lock-key state polling. `keyboard_layout = false`
-disables layout-change popups.
+The OSD powers volume, brightness, lock-key, keyboard-layout, and power-profile popups, and defaults to `top_center`
+with a horizontal layout. Set `orientation = "vertical"` for a taller vertical gauge. `scale` multiplies the effective
+OSD size on top of `shell.ui_scale` (for example `1.25` makes volume, brightness, and lock-key popups 25% larger than
+the default). `monitors` limits OSD popups to the listed connector names (same matching rules as notification toasts
+and the dock); leave it empty to show on every connected output. If none of the configured monitors are connected, OSD
+falls back to all outputs until one reconnects.
+`lock_keys = false` disables Caps/Num/Scroll Lock popups; when no `lock_keys` bar widget is configured, this also stops
+lock-key state polling. `keyboard_layout = false` disables layout-change popups.
 
 ---
 
@@ -277,9 +278,9 @@ Optional shell hooks run extra commands when specific events happen. Define them
 Each event is a string (one command) or an array of strings (run in order). The same `noctalia:` prefix rules apply as
 in [idle behaviors](/v5/services/#idle).
 
-Hooks do not replace Noctalia's built-in behavior. For example, Wi-Fi, Bluetooth, and power profile changes made outside
-Noctalia still create transient internal Noctalia notifications. `notify-send` can be useful while testing that a hook
-fires, but it is not required for Noctalia's own notifications.
+Hooks do not replace Noctalia's built-in behavior. For example, Wi-Fi and Bluetooth changes made outside Noctalia still
+create transient internal Noctalia notifications, while power profile changes show an OSD. `notify-send` can be useful
+while testing that a hook fires, but it is not required for Noctalia's own feedback.
 
 | Key | When it fires |
 |-----|---------------|
@@ -334,7 +335,7 @@ rebooting     = "systemctl --user stop backup-sync.service"
 shutting_down = "systemctl --user stop backup-sync.service"
 
 # External Wi-Fi/Bluetooth power changes emit internal notifications without these hooks;
-# use hooks only for extra side effects. Changes made from Noctalia do not toast.
+# power profile changes use OSD. Use hooks only for extra side effects.
 wifi_enabled  = "logger -t noctalia-hooks 'Wi-Fi radio enabled'"
 wifi_disabled = "logger -t noctalia-hooks 'Wi-Fi radio disabled'"
 
