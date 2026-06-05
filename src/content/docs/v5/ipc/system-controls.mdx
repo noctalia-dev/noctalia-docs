@@ -1,6 +1,6 @@
 ---
 title: System Controls
-description: IPC commands for volume, microphone, brightness, night light, caffeine, and power profile.
+description: IPC commands for volume, microphone, brightness, night light, Wi-Fi, Bluetooth, caffeine, and power profile.
 ---
 
 import IpcCommand from '../../../../components/IpcCommand.astro';
@@ -54,6 +54,21 @@ Targets can be `current`, `all`, `*`, a monitor connector name such as `eDP-1` o
 | Toggle schedule | <IpcCommand command="nightlight-toggle" /> | Toggle scheduled night light. |
 | Toggle forced mode | <IpcCommand command="nightlight-force-toggle" /> | Force night light on or return to schedule behavior. |
 
+## Wireless
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Enable Wi-Fi | <IpcCommand command="wifi-enable" /> | Turn the Wi-Fi radio on. |
+| Disable Wi-Fi | <IpcCommand command="wifi-disable" /> | Turn the Wi-Fi radio off. |
+| Toggle Wi-Fi | <IpcCommand command="wifi-toggle" /> | Toggle the Wi-Fi radio. |
+| Show Wi-Fi status | <IpcCommand command="wifi-status" /> | Print `on` or `off`. |
+| Enable Bluetooth | <IpcCommand command="bluetooth-enable" /> | Turn the Bluetooth adapter on. |
+| Disable Bluetooth | <IpcCommand command="bluetooth-disable" /> | Turn the Bluetooth adapter off. |
+| Toggle Bluetooth | <IpcCommand command="bluetooth-toggle" /> | Toggle the Bluetooth adapter. |
+| Show Bluetooth status | <IpcCommand command="bluetooth-status" /> | Print `on` or `off`. |
+
+Wi-Fi and Bluetooth IPC commands show a short OSD when they change the state.
+
 ## Caffeine
 
 | Action | Command | Description |
@@ -62,11 +77,13 @@ Targets can be `current`, `all`, `*`, a monitor connector name such as `eDP-1` o
 | Disable caffeine | <IpcCommand command="caffeine-disable" /> | Allow idle actions again. |
 | Toggle caffeine | <IpcCommand command="caffeine-toggle" /> | Switch caffeine on or off. |
 
+Caffeine IPC commands show a short OSD when they change the state.
+
 ## Power profile
 
 Requires `org.freedesktop.UPower.PowerProfiles` (same as the Control Center home shortcut). Profile ids come from the compositor/session; common values are `performance`, `balanced`, and `power-saver`.
 
-When the active profile changes (from IPC, the control center, a bar widget, a shortcut, or another app), Noctalia shows a short internal notification: summary **Power mode**, body **Switched to:** the profile name, and an icon for the active mode.
+When another app or an IPC command changes the active profile, Noctalia shows a short OSD with the active mode's icon and profile name. Profile changes made through Noctalia's UI update the UI and fire hooks without showing extra OSD feedback.
 
 | Action | Command | Description |
 |--------|---------|-------------|

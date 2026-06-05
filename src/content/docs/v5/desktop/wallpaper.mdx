@@ -30,7 +30,7 @@ path = "/home/user/Wallpapers/default.png"
 
 [wallpaper.automation]
 enabled                      = false
-interval_minutes             = 30       # 0 = disable automation
+interval_seconds             = 1800
 order                        = "random" # random | alphabetical
 recursive                    = true     # scan subdirectories when selecting random wallpapers
 
@@ -63,7 +63,7 @@ Monitor overrides may also set `fill_color`.
 
 By default, the first wallpaper on each output appears immediately with no transition. Set `transition_on_startup = true` to fade (or wipe, etc.) in from a black screen at shell startup, matching v4 behavior. Later wallpaper changes always use the configured transition pool.
 
-When automation is enabled, Noctalia picks one image from the resolved browse folder on the configured interval and applies it to all connected outputs in sync.
+When automation is enabled, Noctalia picks one image from the resolved browse folder at shell startup, then keeps picking on the configured interval and applies it to all connected outputs in sync.
 `order = "random"` chooses a random image each cycle.
 `order = "alphabetical"` sorts paths case-insensitively and advances to the next image each cycle (wrapping at the end).
 
