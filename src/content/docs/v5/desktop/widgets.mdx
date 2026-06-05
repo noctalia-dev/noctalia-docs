@@ -27,7 +27,7 @@ rotation = 0.0
 format = "{:%H:%M}"
 ```
 
-When enabled, Noctalia renders each desktop widget as its own tightly-sized layer-shell surface on the `Bottom` layer. The current implementation ships `clock`, `label`, `audio_visualizer`, `sticker`, `weather`, `media_player`, and `sysmon` widget types plus an interactive edit mode.
+When enabled, Noctalia renders each desktop widget as its own tightly-sized layer-shell surface on the `Bottom` layer. The current implementation ships `clock`, `label`, `audio_visualizer`, `fancy_audio_visualizer`, `sticker`, `weather`, `media_player`, and `sysmon` widget types plus an interactive edit mode.
 
 ---
 
@@ -199,6 +199,50 @@ high_color   = "secondary"
 | `show_when_idle` | bool | `false` | Keep the widget visible even when no media is playing |
 | `low_color` | string | `"primary"` | Gradient low-end color role; fixed hex colors are also supported |
 | `high_color` | string | `"primary"` | Gradient high-end color role; fixed hex colors are also supported |
+
+---
+
+### fancy_audio_visualizer
+
+The fancy audio visualizer is a square, shader-based circular desktop widget with bars, wave, ring, and combined modes. The common `background` setting defaults to `false`; set `background = true` if you want the usual rounded desktop-widget background.
+
+```toml
+[desktop_widgets.widget.fancy_audio_main]
+type     = "fancy_audio_visualizer"
+output   = "DP-1"
+cx       = 1040.0
+cy       = 620.0
+scale    = 1.0
+rotation = 0.0
+
+[desktop_widgets.widget.fancy_audio_main.settings]
+visualization_mode = "bars_rings"
+sensitivity        = 1.5
+rotation_speed     = 0.5
+bar_width          = 0.6
+ring_opacity       = 0.8
+bloom_intensity    = 0.5
+wave_thickness     = 1.0
+inner_diameter     = 0.7
+fade_when_idle     = false
+primary_color      = "primary"
+secondary_color    = "secondary"
+background         = false
+```
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `visualization_mode` | string | `"bars_rings"` | One of `"bars"`, `"wave"`, `"rings"`, `"bars_rings"`, `"wave_rings"`, or `"all"` |
+| `sensitivity` | float | `1.5` | Audio response sensitivity |
+| `rotation_speed` | float | `0.5` | Rotation speed for animated circular elements |
+| `bar_width` | float | `0.6` | Width of radial bars when bars are enabled |
+| `ring_opacity` | float | `0.8` | Opacity of ring elements when rings are enabled |
+| `bloom_intensity` | float | `0.5` | Glow intensity around visual elements |
+| `wave_thickness` | float | `1.0` | Wave fill and edge thickness when waves are enabled |
+| `inner_diameter` | float | `0.7` | Diameter of the center opening, from `0.0` to `1.0` |
+| `fade_when_idle` | bool | `false` | Fade the visualizer out when no audio is playing |
+| `primary_color` | string | `"primary"` | Primary color role; fixed hex colors are also supported |
+| `secondary_color` | string | `"secondary"` | Secondary color role; fixed hex colors are also supported |
 
 ---
 
