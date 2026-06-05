@@ -204,20 +204,25 @@ The calendar service syncs events from your online accounts and shows them in th
 enabled         = false
 refresh_minutes = 15
 
-# One [[calendar.accounts]] block per connected calendar.
-
-# Generic CalDAV (Nextcloud, iCloud, Fastmail, Radicale, …)
-[[calendar.accounts]]
-id       = "home"            # unique, lowercase letters/digits/underscore
+# iCloud CalDAV. The table name is the local account id.
+[calendar.account.personal_icloud]
 type     = "caldav"
-name     = "Home"            # display name
-color    = "#3367d6"         # optional accent color
-url      = "https://cloud.example.com/remote.php/dav/calendars/me/personal/"
-username = "me"
+name     = "Personal iCloud"
+provider = "icloud"
+username = "you@example.com"
+calendars = []              # empty = all discovered calendars
+
+# Generic CalDAV discovery root (Nextcloud, Fastmail, Radicale, mailbox.org, …)
+[calendar.account.home_nextcloud]
+type       = "caldav"
+name       = "Home"
+provider   = "custom"
+server_url = "https://cloud.example.com/remote.php/dav/"
+username   = "me"
+calendars  = ["personal"]   # optional discovered collection ids; empty = all
 
 # Google Calendar (authorized via Settings → Services → Calendar → Connect)
-[[calendar.accounts]]
-id   = "work_gmail"          # unique identifier — not your email address
+[calendar.account.work_google]
 type = "google"
 name = "Work"
 ```
@@ -226,17 +231,81 @@ name = "Work"
 
 ### CalDAV setup
 
-Use the **calendar collection URL** for the specific calendar (not the account root) and an **app-password** (not your login password). Create the app-password in your provider's security settings, then store it once:
+Noctalia discovers CalDAV calendars from an account/server root, then syncs each selected calendar collection. You do
+not need to find the provider's final calendar collection URL yourself.
 
-- Settings → Services → Calendar, or
-- directly in `state.toml`: `[calendar_credentials]` → `<id>_password = "…"`.
+The account id is the last segment of the named table. For `[calendar.account.personal_icloud]`, the id is
+`personal_icloud`. Use short ids with lowercase letters, digits, and underscores only. The id is local to Noctalia; it
+does not need to match your email address or provider account name.
+
+Store the password in `state.toml`; CalDAV passwords are not read from config and are not entered through Settings.
+The password key is `<id>_password`, so `[calendar.account.personal_icloud]` uses
+`personal_icloud_password`:
+
+```toml
+[calendar_credentials]
+personal_icloud_password = "provider-app-password"
+```
+
+The state file is normally at `~/.local/state/noctalia/state.toml`, unless `NOCTALIA_STATE_HOME` or `XDG_STATE_HOME`
+is set.
+
+For providers with two-factor authentication, create an app-specific password in the provider's account security
+settings and use that value here. Your normal account password will usually fail.
+
+Provider rules:
+
+- `provider = "icloud"` uses Apple's built-in CalDAV discovery URL. Do not set `server_url`.
+- `provider = "custom"` requires `server_url`, which should be the provider's CalDAV discovery root, not a specific
+  calendar collection.
+- `calendars = []` syncs every discovered calendar that supports events.
+- `calendars = ["id"]` syncs only discovered collection ids. Collection ids are the decoded final path segment of the
+  discovered calendar URL; the Settings UI will expose these once CalDAV account management is available there.
+
+#### iCloud
+
+iCloud needs an Apple app-specific password. Use your Apple Account email as `username`.
+
+Use `provider = "icloud"` and do not set `server_url`; Noctalia uses Apple's CalDAV discovery URL automatically.
+
+```toml
+[calendar.account.icloud_personal]
+type     = "caldav"
+name     = "Personal iCloud"
+provider = "icloud"
+username = "me@example.com"
+calendars = []
+
+[calendar.account.icloud_family]
+type     = "caldav"
+name     = "Family iCloud"
+provider = "icloud"
+username = "family@example.com"
+calendars = []
+```
+
+```toml
+[calendar_credentials]
+icloud_personal_password = "apple-app-specific-password"
+icloud_family_password = "another-apple-app-specific-password"
+```
+
+Do not use a public `.ics` sharing URL. Noctalia connects to your private iCloud CalDAV account.
+
+Common iCloud failures:
+
+- `401` or repeated auth failures: regenerate an Apple app-specific password and store it under the exact
+  `<id>_password` key.
+- No events from one calendar: leave `calendars = []` first to verify discovery, then select collection ids only after
+  confirming what was discovered.
+- Shared calendars may have their own collection ids; leave `calendars = []` to include them all.
 
 ### Google setup
 
-Set `type = "google"` with a unique `id`, enable the calendar service, then open **Settings → Services → Calendar** and press **Connect** next to the account. A browser tab opens for Google's consent screen; approve it and the tab confirms completion. Tokens are obtained through the noctalia OAuth broker (`api.noctalia.dev`) — no Google Cloud project or client secret is required on your side. Access is `calendar.readonly`.
+Add a named account table with `type = "google"`, enable the calendar service, then open **Settings → Services → Calendar** and press **Connect** next to the account. A browser tab opens for Google's consent screen; approve it and the tab confirms completion. Tokens are obtained through the noctalia OAuth broker (`api.noctalia.dev`) — no Google Cloud project or client secret is required on your side. Access is `calendar.readonly`.
 
 :::note
-`id` is a local account key used in config and `state.toml` (for example `work_gmail`). It must **not** be your Google email address — use a short unique identifier with lowercase letters, digits, and underscores only (`[a-z0-9_]`). The signed-in Google account is chosen during browser authorization, not from `id`.
+The account id is the last segment of the named table. For `[calendar.account.work_google]`, the id is `work_google`. It must **not** be your Google email address. The signed-in Google account is chosen during browser authorization, not from the table name.
 :::
 
 If a Google account later shows as disconnected (revoked or expired), press **Connect** again to reauthorize.
