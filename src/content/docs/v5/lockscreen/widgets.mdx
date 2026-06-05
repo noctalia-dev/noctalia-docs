@@ -34,7 +34,7 @@ When enabled, widgets render inside each lock surface (same wallpaper/tint stack
 
 ## Edit mode
 
-Edit mode is only available while the session is **unlocked**. The editor shows a dimmed full-screen preview with a ghost login panel at the bottom.
+Edit mode is only available while the session is **unlocked**. The editor shows a dimmed full-screen preview with a movable **login box** preview on each monitor (one per output, move-only).
 
 ### IPC
 
@@ -48,7 +48,7 @@ You can also use **Settings → Security → Lock screen → Toggle Editor**.
 
 ### Controls
 
-Same interaction model as desktop widget edit mode (move, rotate, scale, grid snap, toolbar). See [Desktop widgets — Edit mode](/v5/desktop/widgets/#edit-mode).
+Same interaction model as desktop widget edit mode (move, rotate, scale, grid snap, toolbar), except the **login box** widget is mandatory per monitor and can only be moved. See [Desktop widgets — Edit mode](/v5/desktop/widgets/#edit-mode).
 
 ---
 
@@ -56,4 +56,4 @@ Same interaction model as desktop widget edit mode (move, rotate, scale, grid sn
 
 The schema mirrors `[desktop_widgets]`: `enabled`, `schema_version`, optional `[lockscreen_widgets.grid]`, `widget_order`, and `[lockscreen_widgets.widget.<id>]` tables with `type`, `output`, `cx`, `cy`, `scale`, `rotation`, `enabled`, and `[lockscreen_widgets.widget.<id>.settings]`.
 
-Widget IDs generated in the editor use the `lockscreen-widget-` prefix.
+Widget IDs generated in the editor use the `lockscreen-widget-` prefix. Login box placement uses fixed IDs `lockscreen-login-box@<output>` with `type = "login_box"` (not shown in the add-widget list).

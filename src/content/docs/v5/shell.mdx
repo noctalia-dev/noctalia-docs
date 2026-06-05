@@ -167,26 +167,24 @@ disables layout-change popups.
 
 ## Lock screen
 
-When `wlr-screencopy` is available, Noctalia can capture the desktop **before** the session lock engages and show that frame blurred behind the lock UI instead of the wallpaper. Disabled by default.
+When `wlr-screencopy` is available, Noctalia can capture the desktop **before** the session lock engages and use that snapshot as the lock screen background instead of the wallpaper. Disabled by default.
 
-Configure under **`[lockscreen]`** in TOML, or use **Settings → Security → Lock Screen**. Screencopy-specific controls appear only when your compositor supports screencopy.
+Configure under **`[lockscreen]`** in TOML, or use **Settings → Security → Lock Screen**. The **Desktop capture** toggle appears only when your compositor supports screencopy. Use **Wallpaper** to pick a custom lock screen image (empty uses the desktop wallpaper per output).
 
 ```toml
 [lockscreen]
-blurred_desktop = false   # capture desktop via screencopy at lock time
-blur_intensity  = 0.5     # 0.0 = no blur, 1.0 = maximum
-tint_intensity  = 0.3     # 0.0 = no tint, 1.0 = opaque surface-color overlay
-wallpaper_blur_intensity = 0.0  # blur applied when using configured wallpaper background
-wallpaper_tint_intensity = 0.0  # tint applied when using configured wallpaper background
+blurred_desktop = false   # use a desktop snapshot as the lock screen background
+blur_intensity  = 0.5     # background blur (0.0 = none, 1.0 = maximum)
+tint_intensity  = 0.3     # surface-color tint over the background (0.0 = none, 1.0 = opaque)
+wallpaper       = ""        # optional image path; empty uses the desktop wallpaper per output
 ```
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `blurred_desktop` | bool | `false` | Capture each output before lock and show it blurred behind the lock UI. |
-| `blur_intensity` | float | `0.5` | Blur strength of the captured desktop (`0.0`–`1.0`). |
-| `tint_intensity` | float | `0.3` | Surface-color tint over the blur (`0.0`–`1.0`). |
-| `wallpaper_blur_intensity` | float | `0.0` | Blur strength applied to the configured lockscreen wallpaper when `blurred_desktop = false` (`0.0`–`1.0`). |
-| `wallpaper_tint_intensity` | float | `0.0` | Surface-color tint over the configured lockscreen wallpaper when `blurred_desktop = false` (`0.0`–`1.0`). |
+| `blurred_desktop` | bool | `false` | Capture each output before lock and use it as the lock screen background. |
+| `blur_intensity` | float | `0.5` | Blur strength for the active lock screen background (`0.0`–`1.0`). |
+| `tint_intensity` | float | `0.3` | Surface-color tint over the active lock screen background (`0.0`–`1.0`). |
+| `wallpaper` | string | `""` | Optional image path for the lock screen. When empty, each output uses its desktop wallpaper. Ignored when desktop capture is active. |
 
 If capture fails (missing protocol, permission denied, etc.), the lock screen falls back to the normal per-output wallpaper. The snapshot lives in memory only until unlock. Blur and tint sliders can be adjusted live from Settings while the session is locked.
 
