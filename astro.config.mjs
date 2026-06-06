@@ -12,6 +12,8 @@ export default defineConfig({
   redirects: {
     /** Default landing (v4 = current production shell docs) */
     "/": "/v4/",
+    /** wpa_supplicant troubleshooting moved into the v5 FAQ */
+    "/v5/system/network/wpa_supplicant/": "/v5/getting-started/faq/#wpa-supplicant",
   },
   integrations: [
     starlight({
@@ -155,15 +157,6 @@ export default defineConfig({
                   autogenerate: { directory: "v5/services" },
                 },
               ],
-            },
-            {
-              label: "System",
-              items: [
-                {
-                  label: "Network",
-                  autogenerate: { directory: "v5/system/network" },
-                }
-              ]
             },
           ],
         },

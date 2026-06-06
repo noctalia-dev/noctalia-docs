@@ -195,3 +195,59 @@ Noctalia v5 authenticates through PAM using the `login` service. Make sure `/etc
 If you changed your PAM stack for fingerprint, security key, or other authentication methods, make sure those changes are present in the `login` PAM service used by Noctalia.
 
 </FaqItem>
+
+<FaqItem question="Why can't NetworkManager communicate with wpa_supplicant?" id="wpa-supplicant">
+
+If your wireless management tools (like `NetworkManager` or desktop applets) fail to communicate with `wpa_supplicant`, it is often a matter of missing D-Bus permissions or incorrect service options. The steps below allow users in the `wheel` group to interact with the wpa_supplicant daemon.
+
+**1. Update the D-Bus configuration**
+
+Explicitly allow the `wheel` group to send and receive signals via the `fi.w1.wpa_supplicant1` interface. Open `/etc/dbus-1/system.d/wpa_supplicant.conf` and ensure the `<policy group="wheel">` block is included before the closing `</busconfig>` tag:
+
+```xml title="/etc/dbus-1/system.d/wpa_supplicant.conf" ins={18-22}
+<!DOCTYPE busconfig PUBLIC
+ "-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
+<busconfig>
+        <policy user="root">
+                <allow own="fi.w1.wpa_supplicant1"/>
+
+                <allow send_destination="fi.w1.wpa_supplicant1"/>
+                <allow send_interface="fi.w1.wpa_supplicant1"/>
+                <allow receive_sender="fi.w1.wpa_supplicant1" receive_type="signal"/>
+        </policy>
+        <policy context="default">
+                <deny own="fi.w1.wpa_supplicant1"/>
+                <deny send_destination="fi.w1.wpa_supplicant1"/>
+                <deny receive_sender="fi.w1.wpa_supplicant1" receive_type="signal"/>
+        </policy>
+
+        <!-- Allow users in the wheel group to interact with wpa_supplicant -->
+        <policy group="wheel">
+                <allow send_destination="fi.w1.wpa_supplicant1"/>
+                <allow receive_sender="fi.w1.wpa_supplicant1" receive_type="signal"/>
+        </policy>
+</busconfig>
+```
+
+**2. Configure the runit service flags**
+
+For D-Bus control to function correctly, `wpa_supplicant` must be started with the `-u` flag. Update (or create) the service configuration file:
+
+```sh title="/etc/sv/wpa_supplicant/conf"
+OPTS="-u -M -c /etc/wpa_supplicant/wpa_supplicant.conf"
+```
+
+**3. Apply the changes**
+
+After saving both files, restart the D-Bus daemon and the wpa_supplicant service:
+
+```sh
+# Reload D-Bus configuration
+sudo pkill -HUP dbus-daemon
+
+# Restart the wpa_supplicant runit service if you hit the service-flags issue
+sudo sv restart wpa_supplicant
+```
+
+</FaqItem>
