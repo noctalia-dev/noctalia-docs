@@ -92,25 +92,16 @@ export default defineConfig({
               label: "Getting started",
               items: [
                 { label: "Overview", autogenerate: { directory: "v5/getting-started" } },
-                {
-                  label: "Keybinds & IPC",
-                  items: [
-                    { label: "Overview", link: "v5/ipc/" },
-                    { label: "Shell & UI", link: "v5/ipc/shell-and-ui/" },
-                    { label: "System Controls", link: "v5/ipc/system-controls/" },
-                  ],
-                },
+                { label: "Compositor Settings", autogenerate: { directory: "v5/compositor-settings" } },
+                { label: "Keybinds & IPC", autogenerate: { directory: "v5/ipc" }, },
               ],
             },
-            { 
+            {
               label: "Configuration",
               items: [
                 {
                   label: "Basics",
-                  items: [
-                    { label: "Shell", link: "v5/shell/" },
-                    { label: "Configuration", autogenerate: { directory: "v5/configuration" } },
-                  ],
+                  autogenerate: { directory: "v5/basics" },
                 },
                 {
                   label: "Bar",
@@ -141,6 +132,15 @@ export default defineConfig({
                   autogenerate: { directory: "v5/services" },
                 },
               ],
+            },
+            {
+              label: "System",
+              items: [
+                {
+                  label: "Network",
+                  autogenerate: { directory: "v5/system/network" },
+                }
+              ]
             },
           ],
         },
