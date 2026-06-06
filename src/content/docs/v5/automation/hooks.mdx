@@ -5,8 +5,8 @@ sidebar:
   order: 0
 ---
 
-Hooks are advanced automation entries under `[hooks]` in `config.toml`. They run extra commands when specific Noctalia
-events happen.
+Hooks are advanced automation entries under `[hooks]` in the Noctalia config stack. For hand-written hooks, put them in
+any `*.toml` file under `~/.config/noctalia/`. They run extra commands when specific Noctalia events happen.
 
 Each event is a string (one command) or an array of strings (run in order). The same `noctalia:` prefix rules apply as
 in [idle behaviors](/v5/services/idle/).
