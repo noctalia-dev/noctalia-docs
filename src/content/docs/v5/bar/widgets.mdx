@@ -581,6 +581,9 @@ Set `workspace_group_capsule = false` to drop the group background/border while 
 | `focused_color` | string | `"primary"` | Workspace disc fill when active (same roles as the workspaces widget) |
 | `occupied_color` | string | `"secondary"` | Workspace disc fill when occupied |
 | `empty_color` | string | `"secondary"` | Workspace disc fill when empty (shown at reduced opacity) |
+| `show_window_title` | bool | `false` | Show each window's title next to its icon. Only available without `group_by_workspace`, and not on left/right (vertical) bars. |
+| `window_title_max_width` | float | `100.0` | Maximum width in pixels for a single window title. Requires `show_window_title`. |
+| `taskbar_max_width` | float | `8192.0` | Total width budget in pixels for the taskbar. Window titles shrink to share this budget and are hidden when they would be too narrow to read. Best-effort: once titles are hidden there is nothing left to shrink, so icon-only tiles may still exceed it. Requires `show_window_title`. |
 
 ```toml
 [widget.taskbar]
@@ -598,6 +601,9 @@ inactive_opacity = 1.0
 focused_color = "primary"
 occupied_color = "secondary"
 empty_color = "secondary"
+show_window_title = false
+window_title_max_width = 100.0
+taskbar_max_width = 8192.0
 ```
 
 ---
