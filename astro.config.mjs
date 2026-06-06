@@ -92,7 +92,8 @@ export default defineConfig({
               label: "Getting started",
               items: [
                 { label: "Overview", autogenerate: { directory: "v5/getting-started" } },
-                { label: "Keybinds & IPC", autogenerate: { directory: "v5/ipc" },                },
+                { label: "Compositor Settings", autogenerate: { directory: "v5/compositor-settings" } },
+                { label: "Keybinds & IPC", autogenerate: { directory: "v5/ipc" }, },
               ],
             },
             {
