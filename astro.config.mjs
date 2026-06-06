@@ -65,7 +65,15 @@ export default defineConfig({
           items: [
             {
               label: "Getting started",
-              autogenerate: { directory: "v4/getting-started" },
+              items: [
+                { label: "Installation", link: "v4/getting-started/installation/" },
+                { label: "NixOS", link: "v4/getting-started/nixos/" },
+                { label: "Running the Shell", link: "v4/getting-started/running-the-shell/" },
+                { label: "Compositor Settings", autogenerate: { directory: "v4/getting-started/compositor-settings" } },
+                { label: "Keybinds", autogenerate: { directory: "v4/getting-started/keybinds" } },
+                { label: "FAQ", link: "v4/getting-started/faq/" },
+                { label: "Uninstall", link: "v4/getting-started/uninstall/" },
+              ],
             },
             {
               label: "Configuration",
@@ -73,11 +81,22 @@ export default defineConfig({
             },
             {
               label: "Theming",
-              autogenerate: { directory: "v4/theming" },
+              items: [
+                { label: "Basic App Theming", link: "v4/theming/basic-app-theming/" },
+                { label: "Program Specific", autogenerate: { directory: "v4/theming/program-specific" } },
+                { label: "User Templates", link: "v4/theming/user-templates/" },
+                { label: "User Color Schemes", link: "v4/theming/color-schemes/" },
+              ],
             },
             {
               label: "Development",
-              autogenerate: { directory: "v4/development" },
+              items: [
+                { label: "Guidelines", link: "v4/development/guidelines/" },
+                { label: "IPC", link: "v4/development/ipc/" },
+                { label: "Widgets", link: "v4/development/widgets/" },
+                { label: "Templates", link: "v4/development/templates/" },
+                { label: "Plugins", autogenerate: { directory: "v4/development/plugins" } },
+              ],
             },
             {
               label: "Deprecated",
@@ -91,9 +110,13 @@ export default defineConfig({
             {
               label: "Getting started",
               items: [
-                { label: "Overview", autogenerate: { directory: "v5/getting-started" } },
+                { label: "Installation", link: "v5/getting-started/installation/" },
+                { label: "NixOS", link: "v5/getting-started/nixos/" },
+                { label: "Running Noctalia", link: "v5/getting-started/running-the-shell/" },
+                { label: "FAQ", link: "v5/getting-started/faq/" },
+                { label: "Uninstall", link: "v5/getting-started/uninstall/" },
                 { label: "Compositor Settings", autogenerate: { directory: "v5/compositor-settings" } },
-                { label: "Keybinds & IPC", autogenerate: { directory: "v5/ipc" }, },
+                { label: "Keybinds & IPC", autogenerate: { directory: "v5/ipc" } },
               ],
             },
             {
