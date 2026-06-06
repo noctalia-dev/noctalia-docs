@@ -149,6 +149,10 @@ export default defineConfig({
                   autogenerate: { directory: "v5/desktop" },
                 },
                 {
+                  label: "Automation",
+                  autogenerate: { directory: "v5/automation" },
+                },
+                {
                   label: "Theming",
                   autogenerate: { directory: "v5/theming" },
                 },
