@@ -92,14 +92,7 @@ export default defineConfig({
               label: "Getting started",
               items: [
                 { label: "Overview", autogenerate: { directory: "v5/getting-started" } },
-                {
-                  label: "Keybinds & IPC",
-                  items: [
-                    { label: "Overview", link: "v5/ipc/" },
-                    { label: "Shell & UI", link: "v5/ipc/shell-and-ui/" },
-                    { label: "System Controls", link: "v5/ipc/system-controls/" },
-                  ],
-                },
+                { label: "Keybinds & IPC", autogenerate: { directory: "v5/ipc" },                },
               ],
             },
             { 
