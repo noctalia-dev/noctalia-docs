@@ -5,7 +5,7 @@ import { remarkHeadingId } from "remark-custom-heading-id";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://noctalia.dev",
+  site: "https://docs.noctalia.dev",
   vite: {
     logLevel: "error",
   },
