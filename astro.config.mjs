@@ -95,15 +95,12 @@ export default defineConfig({
                 { label: "Keybinds & IPC", autogenerate: { directory: "v5/ipc" },                },
               ],
             },
-            { 
+            {
               label: "Configuration",
               items: [
                 {
                   label: "Basics",
-                  items: [
-                    { label: "Shell", link: "v5/shell/" },
-                    { label: "Configuration", autogenerate: { directory: "v5/configuration" } },
-                  ],
+                  autogenerate: { directory: "v5/basics" },
                 },
                 {
                   label: "Bar",
