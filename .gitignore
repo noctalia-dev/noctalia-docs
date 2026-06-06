@@ -1,5 +1,9 @@
 # build output
 dist/
+
+# Generated Open Graph WebPs (`node scripts/build-og.mjs`)
+public/og/
+
 # generated types
 .astro/
 

@@ -3,9 +3,12 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
+    "og": "node scripts/build-og.mjs",
+    "dev": "node scripts/build-og.mjs && astro dev",
+    "start": "node scripts/build-og.mjs && astro dev",
+    "prebuild": "node scripts/build-og.mjs",
     "build": "astro build",
+    "prepreview": "node scripts/build-og.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -14,5 +17,12 @@
     "astro": "^6.0.6",
     "remark-custom-heading-id": "^2.0.0",
     "sharp": "^0.34.2"
+  },
+  "devDependencies": {
+    "@fontsource/inter": "^5.2.8",
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/react": "^19.2.14",
+    "react": "^19.2.5",
+    "satori": "^0.26.0"
   }
 }
