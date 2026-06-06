@@ -231,6 +231,12 @@ export default defineConfig({
                   ],
                 },
                 {
+                  label: "Control Center",
+                  items: [
+                    { label: "Control Center", link: "v5/control-center/" },
+                  ],
+                },
+                {
                   label: "Desktop",
                   items: [
                     { label: "Desktop Widgets", link: "v5/desktop/widgets/" },
@@ -253,7 +259,6 @@ export default defineConfig({
                     { label: "Battery", link: "v5/services/battery/" },
                     { label: "Brightness", link: "v5/services/brightness/" },
                     { label: "Calendar", link: "v5/services/calendar/" },
-                    { label: "Control Center", link: "v5/services/control-center/" },
                     { label: "Idle", link: "v5/services/idle/" },
                     { label: "Location", link: "v5/services/location/" },
                     { label: "Night Light", link: "v5/services/night-light/" },

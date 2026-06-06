@@ -1,6 +1,6 @@
 ---
 title: Night Light
-description: Night light color temperature scheduling and IPC.
+description: Night light color temperature scheduling.
 sidebar:
   order: 5
 ---
@@ -16,13 +16,7 @@ temperature_day   = 6500       # Kelvin (must be > temperature_night by at least
 temperature_night = 4000       # Kelvin
 ```
 
-## IPC
+## Related IPC
 
-```sh
-noctalia msg nightlight-enable
-noctalia msg nightlight-disable
-noctalia msg nightlight-toggle
-noctalia msg nightlight-force-toggle
-```
-
-`nightlight-enable` / `nightlight-disable` / `nightlight-toggle` control schedule enable state. `nightlight-force-toggle` toggles forced-on mode regardless of schedule.
+For night light commands, see
+[System Controls → Night light](/v5/ipc/system-controls/#night-light).

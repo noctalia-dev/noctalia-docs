@@ -2,7 +2,7 @@
 title: Control Center
 description: Control center shortcut buttons and their configuration.
 sidebar:
-  order: 11
+  order: 3
 ---
 
 ## Home
@@ -81,6 +81,19 @@ type = "session"
 | `wallpaper` | Wallpaper | Open wallpaper panel | -- |
 | `session` | Session | Open session panel | -- |
 | `clipboard` | Clipboard | Open clipboard panel | -- |
+
+## Related IPC
+
+For opening Control Center from scripts or keybinds, see
+[Shell & UI → Panels](/v5/ipc/shell-and-ui/#panels).
+
+Many shortcut buttons trigger the same canonical IPC commands documented elsewhere:
+
+- [System Controls](/v5/ipc/system-controls/) for Wi-Fi, Bluetooth, night light, audio, caffeine, and power profile
+- [Shell & UI → Notifications](/v5/ipc/shell-and-ui/#notifications) for DND
+- [Shell & UI → Media](/v5/ipc/shell-and-ui/#media) for media controls
+- [Shell & UI → Theme](/v5/ipc/shell-and-ui/#theme) for dark mode
+- [Shell & UI → Session](/v5/ipc/shell-and-ui/#session) for session actions
 
 Toggle shortcuts show an active/inactive visual state. `power_profile`, `weather`, and `keyboard_layout` display dynamic labels (current profile, temperature, or layout name).
 

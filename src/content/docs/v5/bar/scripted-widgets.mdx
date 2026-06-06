@@ -200,13 +200,10 @@ Bundled scripts that already declare a manifest are discovered automatically fro
 
 ---
 
-## IPC
+## Related IPC
 
-Scripted widgets can receive named events from Noctalia IPC:
-
-```sh
-noctalia msg scripted-widget <widget-name> <target[:bar-name]> <event> [payload]
-```
+Scripted widgets receive named events through the `scripted-widget` IPC command documented in
+[Shell & UI → Scripted widgets](/v5/ipc/shell-and-ui/#scripted-widgets).
 
 `<widget-name>` is the `[widget.<name>]` config key. `<target>` is required so side-effectful scripts do not accidentally run once per monitor or once per bar. If the target matches more than one live scripted widget placement, the command fails instead of picking one arbitrarily.
 
@@ -279,12 +276,7 @@ replay_storage   = "ram"
 hide_inactive    = false
 ```
 
-```sh
-noctalia msg scripted-widget screen_recorder focused start
-noctalia msg scripted-widget screen_recorder focused stop
-noctalia msg scripted-widget screen_recorder DP-1 toggle
-noctalia msg scripted-widget screen_recorder focused:default start
-```
+See [Shell & UI → Scripted widgets](/v5/ipc/shell-and-ui/#scripted-widgets) for the canonical command syntax and targeting rules.
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
@@ -341,8 +333,4 @@ When `input_device` is set and [`evtest`](https://cgit.freedesktop.org/evtest/) 
 The reader keeps running until the device stops emitting or the lock is released. If you change `input_device`, kill the old reader first: `pkill -f 'evtest /dev/input'`.
 :::
 
-```sh
-noctalia msg scripted-widget bongocat all pause
-noctalia msg scripted-widget bongocat all resume
-noctalia msg scripted-widget bongocat all toggle
-```
+See [Shell & UI → Scripted widgets](/v5/ipc/shell-and-ui/#scripted-widgets) for the canonical command syntax and targeting rules.
