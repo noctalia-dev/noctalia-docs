@@ -142,6 +142,10 @@ export default defineConfig({
                 },
               ],
             },
+            {
+              label: "System",
+              autogenerate: { directory: "v5/system" },
+            },
           ],
         },
       ],
