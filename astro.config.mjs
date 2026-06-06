@@ -134,7 +134,12 @@ export default defineConfig({
             },
             {
               label: "System",
-              autogenerate: { directory: "v5/system" },
+              items: [
+                {
+                  label: "Network",
+                  autogenerate: { directory: "v5/system/network" },
+                }
+              ]
             },
           ],
         },
