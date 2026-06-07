@@ -71,7 +71,19 @@ Treat `~/.local/state/noctalia/settings.toml` as an app-managed override file. I
 
 Both layers are watched for changes and hot-reloaded. If neither layer exists, Noctalia uses its built-in defaults.
 
-## Exporting config from Settings
+## Exporting config
+
+Export the merged user config from the command line:
+
+```sh
+noctalia config export > noctalia-config.toml
+```
+
+Export the full effective config, including built-in defaults:
+
+```sh
+noctalia config export full > noctalia-full-config.toml
+```
 
 The Settings actions menu includes **Export Config...**. It opens a chooser with two export modes:
 
