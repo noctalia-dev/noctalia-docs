@@ -35,45 +35,45 @@ GPU temperature is read from Linux hwmon when available, with an NVML fallback f
 
 ## Value highlighting
 
-Bar `sysmon` widgets tint their value (icon, text label, and graph line) toward the widget's `highlight_color` as the stat rises. Each stat has an **activity threshold** and a **critical threshold**, configured globally under `[system.monitor]`:
+Bar `sysmon` widgets tint their value (icon, text label, graph line, and gauge fill) toward the widget's `highlight_color` as the stat rises. Each stat has an **activity threshold** and a **critical threshold**, configured globally under `[system.monitor]`:
 
 ```toml
 [system.monitor]
-cpu_usage_activity_threshold = 10     # %
-cpu_usage_critical_threshold = 100    # %
+cpu_usage_activity_threshold = 50     # %
+cpu_usage_critical_threshold = 90     # %
 cpu_temp_activity_threshold  = 60     # °C
 cpu_temp_critical_threshold  = 85     # °C
 gpu_temp_activity_threshold  = 60     # °C
 gpu_temp_critical_threshold  = 85     # °C
-gpu_usage_activity_threshold = 40     # %
-gpu_usage_critical_threshold = 70     # %
-gpu_vram_activity_threshold  = 20     # %
-gpu_vram_critical_threshold  = 80     # %
-ram_pct_activity_threshold   = 30     # %
+gpu_usage_activity_threshold = 50     # %
+gpu_usage_critical_threshold = 95     # %
+gpu_vram_activity_threshold  = 50     # %
+gpu_vram_critical_threshold  = 90     # %
+ram_pct_activity_threshold   = 60     # %
 ram_pct_critical_threshold   = 90     # %
-swap_pct_activity_threshold  = 70     # %
-swap_pct_critical_threshold  = 90     # %
+swap_pct_activity_threshold  = 20     # %
+swap_pct_critical_threshold  = 80     # %
 disk_pct_activity_threshold  = 80     # %
-disk_pct_critical_threshold  = 99     # %
-net_rx_activity_threshold    = 0.2    # MB/s
-net_rx_critical_threshold    = 10     # MB/s
-net_tx_activity_threshold    = 0.2    # MB/s
-net_tx_critical_threshold    = 10     # MB/s
+disk_pct_critical_threshold  = 95     # %
+net_rx_activity_threshold    = 1      # MB/s
+net_rx_critical_threshold    = 50     # MB/s
+net_tx_activity_threshold    = 1      # MB/s
+net_tx_critical_threshold    = 50     # MB/s
 ```
 
-The value's color is interpolated between the widget's regular foreground color and its `highlight_color` (set per widget — see the [`sysmon` widget](/v5/bar/widgets/#sysmon)). Below the activity threshold the color stays near the regular color; between the activity and critical thresholds it ramps toward `highlight_color`, reaching it fully at or above the critical threshold. Set the critical threshold to `0` to disable highlighting for that stat.
+The value's color is interpolated between the widget's regular foreground color (its `color` setting) and its `highlight_color` (set per widget — see the [`sysmon` widget](/v5/bar/widgets/#sysmon)). Below the activity threshold the value stays at its regular color; the moment it crosses the activity threshold it jumps to a small highlight tint, then ramps the rest of the way to the full `highlight_color`, reaching it at or above the critical threshold. Set the critical threshold to `0` to disable highlighting for that stat.
 
 | Key | Default | Unit | Stat |
 |-----|---------|------|------|
-| `cpu_usage_activity_threshold` / `cpu_usage_critical_threshold` | `10` / `100` | % | CPU usage |
+| `cpu_usage_activity_threshold` / `cpu_usage_critical_threshold` | `50` / `90` | % | CPU usage |
 | `cpu_temp_activity_threshold` / `cpu_temp_critical_threshold` | `60` / `85` | °C | CPU temperature |
 | `gpu_temp_activity_threshold` / `gpu_temp_critical_threshold` | `60` / `85` | °C | GPU temperature |
-| `gpu_usage_activity_threshold` / `gpu_usage_critical_threshold` | `40` / `70` | % | GPU usage |
-| `gpu_vram_activity_threshold` / `gpu_vram_critical_threshold` | `20` / `80` | % | GPU VRAM usage |
-| `ram_pct_activity_threshold` / `ram_pct_critical_threshold` | `30` / `90` | % | RAM usage (also `ram_used`) |
-| `swap_pct_activity_threshold` / `swap_pct_critical_threshold` | `70` / `90` | % | Swap usage |
-| `disk_pct_activity_threshold` / `disk_pct_critical_threshold` | `80` / `99` | % | Disk usage |
-| `net_rx_activity_threshold` / `net_rx_critical_threshold` | `0.2` / `10` | MB/s | Network download |
-| `net_tx_activity_threshold` / `net_tx_critical_threshold` | `0.2` / `10` | MB/s | Network upload |
+| `gpu_usage_activity_threshold` / `gpu_usage_critical_threshold` | `50` / `95` | % | GPU usage |
+| `gpu_vram_activity_threshold` / `gpu_vram_critical_threshold` | `50` / `90` | % | GPU VRAM usage |
+| `ram_pct_activity_threshold` / `ram_pct_critical_threshold` | `60` / `90` | % | RAM usage (also `ram_used`) |
+| `swap_pct_activity_threshold` / `swap_pct_critical_threshold` | `20` / `80` | % | Swap usage |
+| `disk_pct_activity_threshold` / `disk_pct_critical_threshold` | `80` / `95` | % | Disk usage |
+| `net_rx_activity_threshold` / `net_rx_critical_threshold` | `1` / `50` | MB/s | Network download |
+| `net_tx_activity_threshold` / `net_tx_critical_threshold` | `1` / `50` | MB/s | Network upload |
 
-The `ram_used` and `ram_pct` stats share the `ram_pct_*` thresholds, since both are driven by the same RAM usage percentage. You can also adjust every threshold in **Settings → Services** when the system monitor is enabled; the activity and critical sliders for a stat are linked so the activity threshold can never exceed its critical threshold.
+The `ram_used` and `ram_pct` stats share the `ram_pct_*` thresholds, since both are driven by the same RAM usage percentage. You can also adjust every threshold in **Settings → Services** when the system monitor is enabled; each stat has a single dual-handle range slider — the left handle sets the activity threshold and the right handle the critical threshold, and the handles cannot cross, so the activity threshold can never exceed its critical threshold.

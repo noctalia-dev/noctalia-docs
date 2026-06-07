@@ -499,8 +499,7 @@ System resource monitor. Shows an icon and value for one configurable stat. Mult
 | `stat` | string | `"cpu_usage"` | Which stat to display (see table below) |
 | `path` | string | `"/"` | Mount path for `disk_pct` (ignored otherwise) |
 | `display` | string | `"gauge"` | `"gauge"` = icon + vertical fill bar; `"graph"` = icon + sparkline; `"text"` = icon + value |
-| `gauge_color` | string | `"primary"` | Color role (or fixed hex) for the gauge fill bar when `display = "gauge"` |
-| `highlight_color` | string | `"error"` | Color role (or fixed hex) the value (icon, label, and graph line) is tinted toward as the stat rises through its [thresholds](/v5/services/system-monitor/#value-highlighting) |
+| `highlight_color` | string | `"error"` | Color role (or fixed hex) every part of the widget (icon, label, graph line, and gauge fill) is tinted toward as the stat rises through its [thresholds](/v5/services/system-monitor/#value-highlighting) |
 | `show_label` | bool | `true` | Show the text value next to the graph or gauge (always shown in `"text"` mode) |
 | `label_min_width` | float | `0` | Minimum label width in pixels to prevent resizing as values change. Only relevant when `show_label` is enabled. |
 
