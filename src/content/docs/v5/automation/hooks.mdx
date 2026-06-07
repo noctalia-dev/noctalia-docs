@@ -28,8 +28,9 @@ Noctalia's own feedback.
 | `shutting_down` | Immediately before the session panel runs shutdown. |
 | `wifi_enabled` / `wifi_disabled` | When NetworkManager's Wi-Fi radio toggles (not on first snapshot). |
 | `bluetooth_enabled` / `bluetooth_disabled` | When the default adapter's powered state toggles (not on first snapshot). |
-| `battery_charging` | When the battery enters charging after the previous tracked charging/discharging direction was not charging. Intermediate UPower states do not retrigger it. |
-| `battery_discharging` | When the battery enters discharging after the previous tracked charging/discharging direction was not discharging. Intermediate UPower states do not retrigger it. |
+| `battery_charging` | When the battery enters charging after the previous tracked battery hook state was not charging. Intermediate UPower states do not retrigger it. |
+| `battery_discharging` | When the battery enters discharging after the previous tracked battery hook state was not discharging. Intermediate UPower states do not retrigger it. |
+| `battery_plugged` | When the battery enters fully charged or pending charge after the previous tracked battery hook state was not plugged. Intermediate UPower states do not retrigger it. |
 | `battery_percentage_changed` | When the normalized whole battery percentage changes. Sets `NOCTALIA_BATTERY_STATE` (`charging`, `discharging`, `empty`, `fully_charged`, `pending_charge`, `pending_discharge`, or `unknown`) and `NOCTALIA_BATTERY_PERCENT`. |
 | `power_profile_changed` | When the active UPower power profile changes (for example `performance`, `balanced`, or `power-saver`). Sets `NOCTALIA_POWER_PROFILE`, `NOCTALIA_POWER_PROFILE_PREVIOUS`, and `NOCTALIA_POWER_PROFILE_ORIGIN` (`noctalia` or `external`). |
 
@@ -126,6 +127,7 @@ bluetooth_disabled = "logger -t noctalia-hooks 'Bluetooth powered off'"
 
 battery_charging           = "logger -t noctalia-hooks 'Battery charging'"
 battery_discharging        = "logger -t noctalia-hooks 'Battery discharging'"
+battery_plugged            = "logger -t noctalia-hooks 'Battery plugged'"
 battery_percentage_changed = "logger -t noctalia-hooks \"Battery: $NOCTALIA_BATTERY_STATE $NOCTALIA_BATTERY_PERCENT%\""
 power_profile_changed   = "logger -t noctalia-hooks \"Power profile: $NOCTALIA_POWER_PROFILE_PREVIOUS -> $NOCTALIA_POWER_PROFILE ($NOCTALIA_POWER_PROFILE_ORIGIN)\""
 
