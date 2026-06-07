@@ -477,6 +477,7 @@ Left-click cycles layouts using the compositor backend when supported. Override 
 | `show_icon` | bool | `true` | Show the keyboard glyph |
 | `show_label` | bool | `true` | Show the layout text label next to the keyboard glyph |
 | `display` | string | `"short"` | `"short"` = compact code; `"full"` = full layout name. Ignored when `show_label = false`. |
+| `custom_labels` | table | `{}` | Exact layout-name to label overrides. Matching labels override `display`; unmatched layouts still use `short` or `full`. |
 
 At least one of `show_icon` or `show_label` must be `true`.
 
@@ -487,6 +488,10 @@ hide_when_single_layout = false
 show_icon = true
 show_label = true
 display = "short"   # short | full
+
+[widget.keyboard_layout.custom_labels]
+"German (Neo 2)" = "Neo2"
+"English (US)" = "EN"
 ```
 
 ---
