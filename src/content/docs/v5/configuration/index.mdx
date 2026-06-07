@@ -85,6 +85,21 @@ Export the full effective config, including built-in defaults:
 noctalia config export full > noctalia-full-config.toml
 ```
 
+Because export writes TOML to stdout, you can pipe it into TOML-aware query tools. For example, with
+[`yq`](https://github.com/mikefarah/yq):
+
+```sh
+noctalia config export full | yq -p toml -r '.theme.mode'
+noctalia config export full | yq -p toml -r '.shell.offline_mode'
+noctalia config export full | yq -p toml '.bar.default'
+```
+
+If you prefer normal `jq` filters, convert the TOML stream to JSON first:
+
+```sh
+noctalia config export full | yq -p toml -o json '.' | jq -r '.theme.mode'
+```
+
 The Settings actions menu includes **Export Config...**. It opens a chooser with two export modes:
 
 - **Merged User Config** is recommended for dotfiles. It merges your explicit config files and GUI-managed overrides into one TOML file, while leaving built-in defaults implicit.

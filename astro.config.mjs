@@ -124,43 +124,42 @@ export default defineConfig({
             {
               label: "Configuration",
               items: [
-                {
-                  label: "Basics",
-                  autogenerate: { directory: "v5/basics" },
-                },
-                {
-                  label: "Bar",
-                  autogenerate: { directory: "v5/bar" },
-                },
-                {
-                  label: "Dock",
-                  autogenerate: { directory: "v5/dock" },
-                },
-                {
-                  label: "Launcher",
-                  autogenerate: { directory: "v5/launcher" },
-                },
-                {
-                  label: "Control Center",
-                  autogenerate: { directory: "v5/control-center" },
-                },
-                {
-                  label: "Desktop",
-                  autogenerate: { directory: "v5/desktop" },
-                },
-                {
-                  label: "Automation",
-                  autogenerate: { directory: "v5/automation" },
-                },
-                {
-                  label: "Theming",
-                  autogenerate: { directory: "v5/theming" },
-                },
-                {
-                  label: "Services",
-                  autogenerate: { directory: "v5/services" },
-                },
+                { label: "How configuration works", link: "v5/configuration/" },
+                { label: "Shell", link: "v5/configuration/shell/" },
+                { label: "Date format tokens", link: "v5/configuration/date-format-tokens/" },
               ],
+            },
+            {
+              label: "Bar",
+              autogenerate: { directory: "v5/bar" },
+            },
+            {
+              label: "Dock",
+              autogenerate: { directory: "v5/dock" },
+            },
+            {
+              label: "Launcher",
+              autogenerate: { directory: "v5/launcher" },
+            },
+            {
+              label: "Control Center",
+              autogenerate: { directory: "v5/control-center" },
+            },
+            {
+              label: "Desktop",
+              autogenerate: { directory: "v5/desktop" },
+            },
+            {
+              label: "Theming",
+              autogenerate: { directory: "v5/theming" },
+            },
+            {
+              label: "Services",
+              autogenerate: { directory: "v5/services" },
+            },
+            {
+              label: "Automation",
+              autogenerate: { directory: "v5/automation" },
             },
           ],
         },
