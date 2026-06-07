@@ -18,10 +18,11 @@ enabled = true
 [desktop_widgets.widget.clock_main]
 type     = "clock"
 output   = "DP-1"
-cx       = 960.0
-cy       = 540.0
-scale    = 1.5
-rotation = 0.0
+cx         = 960.0
+cy         = 540.0
+box_width  = 360.0
+box_height = 120.0
+rotation   = 0.0
 
 [desktop_widgets.widget.clock_main.settings]
 format = "{:%H:%M}"
@@ -46,16 +47,19 @@ You can also turn edit mode on from **Settings → Desktop → Toggle Editor**. 
 |--------|--------|
 | Drag widget body | Move |
 | Drag outer selection ring | Rotate |
-| Drag bottom-right handle | Scale uniformly |
+| Drag a corner handle | Resize the tile (content scales to fill) |
 | Drag toolbar handle | Reposition the editor toolbar on that output |
 | `G` | Toggle snap grid |
 | `Shift` + drag | Temporarily disable snapping |
 | `Delete` / `Backspace` | Remove selected widget |
 | `Escape` / click `Done` | Exit edit mode |
 
-When the snap grid is active, moving a widget snaps the nearest outer edge or center line to the grid, screen edges, and
-nearby widgets. Scaling keeps the opposite edge anchored and snaps the dragged edge to the same guides, with a horizontal
-bias for corner drags so matching widget widths is easier.
+A widget's tile size (`box_width` × `box_height`) is the grid's unit of layout: content is scaled to fill the tile,
+so changing the tile size resizes the widget. When the snap grid is active, moving a widget snaps the nearest outer
+edge or center line to the grid, screen edges, and nearby widgets, and resizing quantizes the tile to whole `cell_size`
+cells on both axes — so widgets line up on the grid. With snapping off (grid hidden or `Shift` held) moving and
+resizing are free/continuous. Resizing keeps the opposite corner anchored (hold `Alt` to resize about the center).
+Toggling the grid never changes a widget's size.
 
 Primary-colored center guides are always shown in edit mode. Dragging a widget snaps its center to the monitor center
 when nearby, even if the snap grid is hidden or temporarily disabled with `Shift`.
@@ -72,7 +76,7 @@ When `widget_order` is present, it is the authoritative widget list and order; u
 ```toml
 [desktop_widgets]
 enabled = true
-schema_version = 1
+schema_version = 2
 widget_order = ["clock_main"]
 
 [desktop_widgets.grid]
@@ -83,10 +87,11 @@ major_interval        = 4
 [desktop_widgets.widget.clock_main]
 type     = "clock"
 output   = "DP-1"
-cx       = 960.0
-cy       = 540.0
-scale    = 1.5
-rotation = 0.0
+cx         = 960.0
+cy         = 540.0
+box_width  = 360.0
+box_height = 120.0
+rotation   = 0.0
 
 [desktop_widgets.widget.clock_main.settings]
 format = "{:%H:%M}"
@@ -100,8 +105,12 @@ format = "{:%H:%M}"
 | `type` | string | (required) | Widget type (`clock`, `weather`, `media_player`, etc.) |
 | `output` | string | — | Monitor name (e.g. `"DP-1"`) |
 | `cx`, `cy` | float | — | Center position in logical pixels |
-| `scale` | float | `1.0` | Widget scale factor |
+| `box_width`, `box_height` | float | `0` | Tile size in logical pixels. `0` auto-fits the content's natural size; the editor's resize handle sets explicit values. Content is scaled to fill the tile (aspect-preserved) and centered. |
 | `rotation` | float | `0.0` | Rotation in radians |
+
+The old `scale` field (schema v1) is migrated automatically: a widget still using `scale` keeps its
+size, and the next time you open the editor that size is baked into `box_width`/`box_height` and
+`scale` is dropped.
 | `enabled` | bool | `true` | Set to `false` to temporarily hide a widget without removing it |
 
 ```toml
@@ -129,17 +138,19 @@ background       = true
 background_color = "surface"
 ```
 
-The `clock`, `weather`, `media_player`, and `sysmon` widget types additionally support text styling:
+The `clock`, `weather`, `media_player`, `label`, and `sysmon` widget types additionally support text styling:
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `color` | string | `"on_surface"` | Text/glyph color role (e.g. `"primary"`, `"tertiary"`); fixed hex colors are also supported |
+| `font_family` | string | `""` | Font family for all text in the widget. Empty (or omitted) inherits the shell font (`[shell] font_family`). The editor offers a dropdown of installed families; the widget's bold/regular hierarchy is preserved with any family. A family that isn't installed on the current machine is still kept in the config. |
 | `shadow` | bool | `true` | Draw a drop shadow behind text and glyphs for readability on wallpapers |
 
 ```toml
 [desktop_widgets.widget.clock_main.settings]
-color  = "primary"
-shadow = true
+color       = "primary"
+font_family = "JetBrains Mono"
+shadow      = true
 ```
 
 ---
@@ -150,10 +161,11 @@ shadow = true
 [desktop_widgets.widget.clock_main]
 type     = "clock"
 output   = "DP-1"
-cx       = 960.0
-cy       = 540.0
-scale    = 1.5
-rotation = 0.0
+cx         = 960.0
+cy         = 540.0
+box_width  = 360.0
+box_height = 120.0
+rotation   = 0.0
 
 [desktop_widgets.widget.clock_main.settings]
 format = "{:%H:%M}"
@@ -169,16 +181,17 @@ shadow = true
 
 ### audio_visualizer
 
-Desktop audio visualizers store an `aspect_ratio` setting for shape while `scale` controls overall size. They also accept optional `mirrored`, `centered`, `show_when_idle`, `low_color`, and `high_color` settings; both colors default to `primary`.
+Desktop audio visualizers store an `aspect_ratio` setting for the bars' natural shape; the tile size (`box_width` × `box_height`) controls overall size. They also accept optional `mirrored`, `centered`, `show_when_idle`, `low_color`, and `high_color` settings; both colors default to `primary`.
 
 ```toml
 [desktop_widgets.widget.audio_main]
 type     = "audio_visualizer"
 output   = "DP-1"
-cx       = 1040.0
-cy       = 620.0
-scale    = 1.25
-rotation = 0.0
+cx         = 1040.0
+cy         = 620.0
+box_width  = 480.0
+box_height = 200.0
+rotation   = 0.0
 
 [desktop_widgets.widget.audio_main.settings]
 bands        = 32
@@ -210,10 +223,11 @@ Draws the current weather glyph alongside the temperature and short condition, d
 [desktop_widgets.widget.weather_main]
 type     = "weather"
 output   = "DP-1"
-cx       = 320.0
-cy       = 200.0
-scale    = 1.0
-rotation = 0.0
+cx         = 320.0
+cy         = 200.0
+box_width  = 240.0
+box_height = 120.0
+rotation   = 0.0
 
 [desktop_widgets.widget.weather_main.settings]
 color  = "on_surface"
@@ -230,10 +244,11 @@ MPRIS media player showing album art, track title, artist, and playback controls
 [desktop_widgets.widget.media_main]
 type     = "media_player"
 output   = "DP-1"
-cx       = 500.0
-cy       = 700.0
-scale    = 1.5
-rotation = 0.0
+cx         = 500.0
+cy         = 700.0
+box_width  = 480.0
+box_height = 160.0
+rotation   = 0.0
 
 [desktop_widgets.widget.media_main.settings]
 layout = "horizontal"
@@ -257,10 +272,11 @@ Displays an image file on the desktop. PNG, JPEG, WebP, SVG, and GIF are support
 [desktop_widgets.widget.sticker_main]
 type     = "sticker"
 output   = "DP-1"
-cx       = 800.0
-cy       = 400.0
-scale    = 1.0
-rotation = 0.0
+cx         = 800.0
+cy         = 400.0
+box_width  = 200.0
+box_height = 200.0
+rotation   = 0.0
 
 [desktop_widgets.widget.sticker_main.settings]
 image_path = "/path/to/image.png"
@@ -282,10 +298,11 @@ Static title and description text block. The title uses a larger bold line; the 
 [desktop_widgets.widget.note_main]
 type     = "label"
 output   = "DP-1"
-cx       = 400.0
-cy       = 300.0
-scale    = 1.0
-rotation = 0.0
+cx         = 400.0
+cy         = 300.0
+box_width  = 320.0
+box_height = 140.0
+rotation   = 0.0
 
 [desktop_widgets.widget.note_main.settings]
 title       = "Welcome"
@@ -312,10 +329,11 @@ GPU-accelerated system monitor graph with smooth cubic curves and optional text 
 [desktop_widgets.widget.sysmon_main]
 type     = "sysmon"
 output   = "DP-1"
-cx       = 200.0
-cy       = 800.0
-scale    = 1.0
-rotation = 0.0
+cx         = 200.0
+cy         = 800.0
+box_width  = 220.0
+box_height = 110.0
+rotation   = 0.0
 
 [desktop_widgets.widget.sysmon_main.settings]
 stat       = "cpu_usage"

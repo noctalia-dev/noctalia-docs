@@ -19,16 +19,19 @@ enabled = true
 [lockscreen_widgets.widget.clock_main]
 type     = "clock"
 output   = "DP-1"
-cx       = 1600.0
-cy       = 120.0
-scale    = 1.5
-rotation = 0.0
+cx         = 1600.0
+cy         = 120.0
+box_width  = 360.0
+box_height = 120.0
+rotation   = 0.0
 
 [lockscreen_widgets.widget.clock_main.settings]
 format = "{:%H:%M}"
 ```
 
-When enabled, widgets render inside each lock surface (same wallpaper/tint stack as the built-in lock UI). If a **clock** widget is placed on a monitor, the built-in corner clock on that output is hidden so you do not get duplicate clocks.
+When enabled, widgets render on each lock surface, over the same blurred and tinted wallpaper as the rest of the lock screen. To show a clock on the lock screen, add a **clock** widget.
+
+Text widgets (clock, weather, media player, label, sysmon) support a per-widget `font_family` setting just like desktop widgets — empty inherits the shell font. See [Desktop widgets — Common settings](/v5/desktop/widgets/#common-settings).
 
 ---
 
@@ -45,12 +48,12 @@ You can also use **Settings → Security → Lock screen → Toggle Editor**.
 
 ### Controls
 
-Same interaction model as desktop widget edit mode (move, rotate, scale, grid snap, center guides, toolbar), except the **login box** widget is mandatory per monitor and can only be moved. See [Desktop widgets — Edit mode](/v5/desktop/widgets/#edit-mode).
+Same interaction model as desktop widget edit mode (move, rotate, resize, grid snap, center guides, toolbar), except the **login box** widget is mandatory per monitor and can only be moved. See [Desktop widgets — Edit mode](/v5/desktop/widgets/#edit-mode).
 
 ---
 
 ## Config format
 
-The schema mirrors `[desktop_widgets]`: `enabled`, `schema_version`, optional `[lockscreen_widgets.grid]`, `widget_order`, and `[lockscreen_widgets.widget.<id>]` tables with `type`, `output`, `cx`, `cy`, `scale`, `rotation`, `enabled`, and `[lockscreen_widgets.widget.<id>.settings]`.
+The schema mirrors `[desktop_widgets]`: `enabled`, `schema_version`, optional `[lockscreen_widgets.grid]`, `widget_order`, and `[lockscreen_widgets.widget.<id>]` tables with `type`, `output`, `cx`, `cy`, `box_width`, `box_height`, `rotation`, `enabled`, and `[lockscreen_widgets.widget.<id>.settings]`.
 
 Widget IDs generated in the editor use the `lockscreen-widget-` prefix. Login box placement uses fixed IDs `lockscreen-login-box@<output>` with `type = "login_box"` (not shown in the add-widget list).
