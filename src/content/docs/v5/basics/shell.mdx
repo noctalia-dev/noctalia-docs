@@ -150,7 +150,9 @@ scale = 1.0              # OSD size multiplier on top of shell.ui_scale
 # monitors = ["DP-1"]    # connector names; omit or leave empty for all monitors
 
 [osd.kinds]
-volume = true            # output and input volume
+volume = true            # master volume OSD toggle
+volume_output = true     # output (speaker) volume; requires volume = true
+volume_input = true      # input (microphone) volume; requires volume = true
 brightness = true        # display brightness
 wifi = true              # Wi-Fi toggle
 bluetooth = true         # Bluetooth toggle
@@ -168,7 +170,8 @@ and external/IPC power-profile popups, and defaults to `top_center` with a horiz
 `monitors` limits OSD popups to the listed connector names (same matching rules as notification toasts and the dock);
 leave it empty to show on every connected output. If none of the configured monitors are connected, OSD falls back to all
 outputs until one reconnects.
-Each popup kind can be toggled independently under `[osd.kinds]`. `lock_keys = false` disables Caps/Num/Scroll Lock popups; when no `lock_keys` bar widget is configured, this also stops
+Each popup kind can be toggled independently under `[osd.kinds]`. The volume master toggle enables both output and input
+OSDs by default; set `volume_output` or `volume_input` to `false` to disable one side only. `lock_keys = false` disables Caps/Num/Scroll Lock popups; when no `lock_keys` bar widget is configured, this also stops
 lock-key state polling. `keyboard_layout = false` disables layout-change popups.
 
 ---
