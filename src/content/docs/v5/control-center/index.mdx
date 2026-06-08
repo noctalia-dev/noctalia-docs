@@ -1,21 +1,29 @@
 ---
 title: Control Center
-description: Control center shortcut buttons and their configuration.
+description: Control Center tabs, sidebar behavior, and IPC tab contexts.
 sidebar:
   order: 3
 ---
 
-## Home
+The Control Center is Noctalia's panel for session controls, system status, media, notifications, weather, and service-specific tools. Open it from the control-center bar widget, by right-clicking empty space on a bar, or with IPC:
 
-The Home tab shows your user card, current media, date/time, weather summary, and shortcut buttons. Click the avatar in
-the user card to pick a custom image; Noctalia saves the selected path as `[shell].avatar_path`.
+```sh
+noctalia msg panel-toggle control-center
+```
+
+Pass a context to jump straight to a tab:
+
+```sh
+noctalia msg panel-toggle control-center audio
+noctalia msg panel-open control-center system
+```
 
 ## Sidebar
 
 Set `sidebar` under `[control_center]` for tab navigation when Control Center opens on **Home** (control center widget, bar background click, or `noctalia msg panel-toggle control-center` with no tab name).
 Use `"full"` for icons and labels, `"compact"` for icon-only tabs, or `"none"` to hide the sidebar.
 
-Set `sidebar_section` for opens that jump **straight to a tab** (volume, network, and media bar widgets, or `noctalia msg panel-toggle control-center audio`).
+Set `sidebar_section` for opens that jump straight to a tab (volume, network, and media bar widgets, or `noctalia msg panel-toggle control-center audio`).
 
 ```toml
 [control_center]
@@ -28,83 +36,78 @@ sidebar = "compact"
 | `sidebar` | string | `"compact"` | Sidebar on Home / general open: `"full"`, `"compact"`, or `"none"` |
 | `sidebar_section` | string | `"compact"` | Sidebar when opening straight to a tab: `"full"`, `"compact"`, or `"none"` |
 
-## Shortcuts
+## Tabs
 
-The Home tab displays a row of shortcut buttons at the bottom. Up to 6 shortcuts are shown.
-You can also edit this list from **Settings → Panels → Control Center**.
+Use these context IDs with `noctalia msg panel-toggle control-center <context>` or
+`noctalia msg panel-open control-center <context>` to open a specific tab.
 
-```toml
-[[control_center.shortcuts]]
-type = "wifi"
+| Context | Tab | What it shows |
+|---------|-----|---------------|
+| `home` | Home | User card, media summary, date/time, weather summary, and shortcut buttons |
+| `media` | Media | MPRIS players, playback controls, queue-style player switching, and artwork |
+| `audio` | Audio | Output/input volume, mute controls, devices, streams, and media-related audio controls |
+| `monitor` | Monitor | Brightness controls for displays that expose writable backlight devices |
+| `system` | System | Distro/kernel, hardware summary, uptime, CPU/RAM/GPU/network graphs, and resource details |
+| `network` | Network | Wi-Fi state, connection status, known wireless controls, and NetworkManager-backed actions |
+| `bluetooth` | Bluetooth | Adapter power, discoverability, paired devices, connection controls, and pairing flows |
+| `weather` | Weather | Current conditions, forecast, location status, and weather service diagnostics |
+| `calendar` | Calendar | Month view and configured calendar account events |
+| `notifications` | Notifications | Notification history, Do Not Disturb, and notification cleanup controls |
+| `screen-time` | Screen Time | Foreground app usage totals and charts for today, three days, or fourteen days |
 
-[[control_center.shortcuts]]
-type = "bluetooth"
+`weather`, `system`, and `screen-time` open only when their corresponding services are enabled; otherwise Noctalia falls back to the first visible tab.
 
-[[control_center.shortcuts]]
-type = "nightlight"
+## Home
 
-[[control_center.shortcuts]]
-type = "notification"
+The Home tab is the default Control Center landing view. It combines frequently checked status with a compact shortcut grid.
 
-[[control_center.shortcuts]]
-type = "wallpaper"
+Click the avatar in the user card to pick a custom image. Noctalia saves the selected path as `[shell].avatar_path`.
 
-[[control_center.shortcuts]]
-type = "session"
-```
+The shortcut buttons are configured separately; see [Control Center shortcuts](/v5/control-center/shortcuts/).
 
-### Shortcut entry fields
+## Media
 
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `type` | string | *required* | Shortcut type from the list below |
+The Media tab shows active MPRIS players and exposes playback controls independent of any bar media widget. It is useful when multiple players are running or when artwork and track metadata need more room than a bar capsule can provide.
 
-### Available shortcut types
+## Audio
 
-| Type | Label | Behavior | Right-click |
-|------|-------|----------|-------------|
-| `wifi` | Wi-Fi | Toggle wireless on/off | Open network tab |
-| `bluetooth` | Bluetooth | Toggle adapter on/off | Open bluetooth tab |
-| `nightlight` | Night Light | Toggle blue-light filter (forced → scheduled-on) | Toggle always-on (force) |
-| `notification` | DND | Toggle Do Not Disturb | Open notifications tab |
-| `dark_mode` | Dark Mode | Toggle light/dark theme | -- |
-| `caffeine` | Caffeine | Toggle idle/sleep prevention | -- |
-| `audio` | Audio | Toggle output mute | Open audio tab |
-| `mic_mute` | Microphone | Toggle mic mute | Open audio tab |
-| `power_profile` | Current profile | Cycle power profile | Open system tab |
-| `media` | Media | Play/Pause active player | Open media tab |
-| `weather` | Temperature | Open weather tab | Open weather tab |
-| `sysmon` | System | Open system tab | Open system tab |
-| `screen_time` | Screen Time | Open screen time tab | Open screen time tab |
-| `keyboard_layout` | Current layout | Cycle keyboard layout | -- |
-| `screen_recorder` | Recorder | Toggle recording | Toggle replay buffer |
-| `wallpaper` | Wallpaper | Open wallpaper panel | -- |
-| `session` | Session | Open session panel | -- |
-| `clipboard` | Clipboard | Open clipboard panel | -- |
+The Audio tab groups PipeWire output, input, device, and stream controls. Use it for volume changes, muting, selecting devices, and inspecting application streams without opening an external mixer.
 
-## Related IPC
+## Monitor
 
-For opening Control Center from scripts or keybinds, see
-[Shell & UI → Panels](/v5/ipc/shell-and-ui/#panels).
+The Monitor tab exposes brightness controls when Noctalia has a controllable backlight for the display. If no writable brightness device is available, the tab remains available but has no write controls to expose.
 
-Many shortcut buttons trigger the same canonical IPC commands documented elsewhere:
+## System
 
-- [System Controls](/v5/ipc/system-controls/) for Wi-Fi, Bluetooth, night light, audio, caffeine, and power profile
-- [Shell & UI → Notifications](/v5/ipc/shell-and-ui/#notifications) for DND
-- [Shell & UI → Media](/v5/ipc/shell-and-ui/#media) for media controls
-- [Shell & UI → Theme](/v5/ipc/shell-and-ui/#theme) for dark mode
-- [Shell & UI → Session](/v5/ipc/shell-and-ui/#session) for session actions
+The System tab summarizes the machine and live resource usage. It shows distribution/kernel details, board/CPU/GPU information, uptime, install age, load averages, memory and swap, and graphs driven by the shared system monitor service.
 
-Toggle shortcuts show an active/inactive visual state. `power_profile`, `weather`, and `keyboard_layout` display dynamic labels (current profile, temperature, or layout name).
+System monitor sampling is configured globally under `[system.monitor]`; see [System monitor](/v5/services/system-monitor/).
 
-`screen_recorder` requires a `[widget.screen_recorder]` scripted widget (running `scripts/screen_recorder.lua`) to be configured; without it the shortcut stays disabled.
+## Network
 
-When no `[[control_center.shortcuts]]` entries are defined, the default set is: `wifi`, `bluetooth`, `caffeine`, `nightlight`, `notification`, `power_profile`.
-Set `shortcuts = []` under `[control_center]` to hide all Home shortcut buttons.
+The Network tab uses the configured network backend to show wireless state and connection details. It is the destination for Wi-Fi shortcuts and network-related right-click actions.
+
+## Bluetooth
+
+The Bluetooth tab shows adapter power state, paired devices, and connection controls. It is backed by Noctalia's Bluetooth service and agent.
+
+## Weather
+
+The Weather tab expands the Home weather summary into current conditions, forecast detail, and location/status information. It is hidden when `[weather].enabled = false`.
+
+Weather configuration is documented under [Weather](/v5/services/weather/).
+
+## Calendar
+
+The Calendar tab shows the month view and events from configured calendar accounts. Calendar accounts and sync behavior are documented under [Calendar](/v5/services/calendar/).
+
+## Notifications
+
+The Notifications tab shows notification history and notification actions, including Do Not Disturb. Notification daemon and history behavior are documented under [Notifications](/v5/services/notifications/).
 
 ## Screen Time
 
-The **Screen Time** tab shows how long each application was in the foreground today. Noctalia tracks focus using the active `zwlr_foreign_toplevel` window and stores daily totals under `$XDG_STATE_HOME/noctalia/screen_time.json` (about 14 days retained).
+The Screen Time tab shows how long each application was in the foreground today. Noctalia tracks focus using the active `zwlr_foreign_toplevel` window and stores daily totals under `$XDG_STATE_HOME/noctalia/screen_time.json` (about 14 days retained).
 
 - **Range** toggle: today (hourly chart), last 3 days, or last 14 days (daily bars)
 - **Total** time for the selected range, with a stacked bar chart (hourly or per-day)
@@ -112,3 +115,8 @@ The **Screen Time** tab shows how long each application was in the foreground to
 - **Most used** apps with icons, usage bars, and duration for the selected range
 
 Open it from the control center sidebar (`screen-time` context) or add a Home shortcut with `type = "screen_time"`.
+
+## Related IPC
+
+For opening Control Center from scripts or keybinds, see
+[Shell & UI -> Panels](/v5/ipc/shell-and-ui/#panels).
