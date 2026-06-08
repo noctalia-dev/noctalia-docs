@@ -148,7 +148,7 @@ Requires compositor support for `wlr-screencopy-unstable-v1`. Uses the global `[
 
 | Action | Command | Description |
 |--------|---------|-------------|
-| Lock session | <IpcCommand command="session lock" /> | Lock the current session. |
+| Lock session | <IpcCommand command="session lock" /> | Lock the current session. `loginctl lock-session` uses the same path when Noctalia is running. |
 | Suspend system | <IpcCommand command="session suspend" /> | Suspend without locking first. |
 | Lock and suspend | <IpcCommand command="session lock-and-suspend" /> | Lock the session, then suspend once the lock is active. |
 | Log out | <IpcCommand command="session logout" /> | End the graphical session (compositor-native when available). |
