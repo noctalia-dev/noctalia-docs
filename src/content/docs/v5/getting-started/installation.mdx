@@ -168,7 +168,7 @@ The Git repository of Noctalia is also available as a [Guix channel](https://gui
 (channel
   (name 'noctalia)
   (url "https://github.com/noctalia-dev/noctalia")
-  (branch "v5"))
+  (branch "main"))
 ```
 
 To use this channel, add it into your `~/.config/guix/channels.scm`.  For example:
@@ -177,7 +177,7 @@ To use this channel, add it into your `~/.config/guix/channels.scm`.  For exampl
 (list (channel
         (name 'noctalia)
         (url "https://github.com/noctalia-dev/noctalia")
-        (branch "v5"))
+        (branch "main"))
       %default-guix-channel)
 ```
 
@@ -291,7 +291,7 @@ Sanitizer runtime packages are only needed for ASan/UBSan builds configured with
 **Step 2**: Prepear directory
 
 ```bash
-git clone https://github.com/noctalia-dev/noctalia --branch v5
+git clone https://github.com/noctalia-dev/noctalia --branch main
 cd noctalia
 ```
 
