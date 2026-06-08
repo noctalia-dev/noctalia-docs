@@ -167,7 +167,7 @@ The Git repository of Noctalia is also available as a [Guix channel](https://gui
 ```scheme
 (channel
   (name 'noctalia)
-  (url "https://github.com/noctalia-dev/noctalia-shell")
+  (url "https://github.com/noctalia-dev/noctalia")
   (branch "v5"))
 ```
 
@@ -176,7 +176,7 @@ To use this channel, add it into your `~/.config/guix/channels.scm`.  For exampl
 ```scheme
 (list (channel
         (name 'noctalia)
-        (url "https://github.com/noctalia-dev/noctalia-shell")
+        (url "https://github.com/noctalia-dev/noctalia")
         (branch "v5"))
       %default-guix-channel)
 ```
@@ -291,8 +291,8 @@ Sanitizer runtime packages are only needed for ASan/UBSan builds configured with
 **Step 2**: Prepear directory
 
 ```bash
-git clone https://github.com/noctalia-dev/noctalia-shell --branch v5
-cd noctalia-shell
+git clone https://github.com/noctalia-dev/noctalia --branch v5
+cd noctalia
 ```
 
 **Step 3**: Building and installing Noctalia
@@ -362,5 +362,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md#runtime-assets) for the full runtime asset
 If you encounter issues during installation:
 
 - Check our [FAQ](/v4/getting-started/faq/) for common problems
-- Visit our [GitHub Issues](https://github.com/noctalia-dev/noctalia-shell/issues) page
+- Visit our [GitHub Issues](https://github.com/noctalia-dev/noctalia/issues) page
 - Join our community on [Discord](https://discord.noctalia.dev) for real-time support

@@ -51,7 +51,7 @@ These commands open, close, or toggle Noctalia UI surfaces.
 | Get wallpaper | <IpcCommand command="wallpaper-get" /> | Print the default wallpaper path persisted in `settings.toml`. |
 | Get wallpaper (one monitor) | <IpcCommand command="wallpaper-get <connector>" /> | Print the effective wallpaper path for the monitor named by **connector** (e.g. `DP-1`). |
 | Set wallpaper (all monitors) | <IpcCommand command="wallpaper-set <path>" /> | Set every connected monitor and the default wallpaper, persisted to `settings.toml` (per-monitor entries plus `wallpaper.default.path`). Same behavior as choosing **All monitors** in the wallpaper panel. Use an image path (`~` expanded) or `color:#RRGGBB` / `color:#RRGGBBAA`; non-color paths must exist at call time. |
-| Set wallpaper (one monitor) | <IpcCommand command="wallpaper-set <connector> <path>" /> | Set only the monitor named by **connector** (e.g. `DP-1` — same value as per-monitor keys in config and the wallpaper panel). Remaining tokens are joined as the path. Other monitors are unchanged. Same path and color rules as the all-monitor form. |
+| Set wallpaper (one monitor) | <IpcCommand command="wallpaper-set <connector> <path>" /> | Set only the monitor named by **connector** (e.g. `DP-1` - same value as per-monitor keys in config and the wallpaper panel). Remaining tokens are joined as the path. Other monitors are unchanged. Same path and color rules as the all-monitor form. |
 
 The CLI forwards everything after the command as one string (`noctalia msg wallpaper-set …`), so `noctalia msg wallpaper-set DP-1 /home/you/My Pictures/wall.jpg` still yields a correct path when the shell passes separate arguments after the command (they are rejoined with spaces for parsing).
 
@@ -110,8 +110,27 @@ DND enable/disable IPC commands show a short OSD for the new state.
 | Toggle theme mode | <IpcCommand command="theme-mode-toggle" /> | Switch between dark and light theme mode (same as the bar control when `[theme].mode` is not `auto`). |
 | Set theme mode | <IpcCommand command="theme-mode-set dark" /> | Persist `[theme].mode` in `settings.toml` and reload. Pass `dark`, `light`, or `auto` (example shows `dark`). |
 | Get color scheme | <IpcCommand command="color-scheme-get" /> | Print the active palette selection as two tokens: `builtin Noctalia`, `wallpaper m3-content`, `community Oxocarbon`, or `custom MyScheme` (matches `[theme].source` and the corresponding palette field). |
-| Set color scheme | <IpcCommand command="color-scheme-set builtin Noctalia" /> | Persist `[theme].source` and the palette for that source, then reload. **builtin** — built-in palette name (e.g. `Noctalia`). **wallpaper** — generator scheme (`m3-tonal-spot`, `m3-content`, `m3-fruit-salad`, `m3-rainbow`, `m3-monochrome`, `vibrant`, `faithful`, `dysfunctional`, `muted`). **community** — community palette id. **custom** — palette file name without `.json` under `~/.config/noctalia/palettes/`. |
+| Set color scheme | <IpcCommand command="color-scheme-set builtin Noctalia" /> | Persist `[theme].source` and the palette for that source, then reload. **builtin** - built-in palette name (e.g. `Noctalia`). **wallpaper** - generator scheme (`m3-tonal-spot`, `m3-content`, `m3-fruit-salad`, `m3-rainbow`, `m3-monochrome`, `vibrant`, `faithful`, `dysfunctional`, `muted`). **community** - community palette id. **custom** - palette file name without `.json` under `~/.config/noctalia/palettes/`. |
 | Apply templates | <IpcCommand command="templates-apply" /> | Rerender the enabled configured theme templates for the current palette without changing theme mode or firing shell palette hooks. |
+
+## Window switcher
+
+Alt+Tab-style overlay: a dimmed fullscreen layer with a centered grid of open windows (application icon, title, optional app name). There is no `[shell.window_switcher]` configuration block yet - wire your compositor shortcut to the IPC commands below (for example Hyprland `bind = ALT, Tab, exec, noctalia msg window-switcher`).
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Open | <IpcCommand command="window-switcher" /> | Show the switcher on the preferred monitor (pointer, keyboard focus, or first output). |
+| Close | <IpcCommand command="window-switcher close" /> | Hide the overlay without changing focus. `hide` is an alias. |
+
+While the overlay is open it takes exclusive keyboard focus on its layer surface:
+
+- **Tab** / **Shift+Tab** - cycle selection
+- **Arrow keys** - move within the grid (up to five columns)
+- **Enter** - focus the selected window and close
+- **Escape** - close without switching
+- **Pointer** - click a tile to switch; click the close control on a tile to close that window
+
+The window list refreshes while the overlay stays open (new windows, closed windows, and title changes such as Discord channel switches). Selection stays on the same window when its title updates.
 
 ## Screenshots
 
