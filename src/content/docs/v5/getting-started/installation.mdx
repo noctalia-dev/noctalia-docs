@@ -88,15 +88,26 @@ Noctalia is available via [home:neifua:Noctalia](https://build.opensuse.org/pack
 
 **Step 2**: Refresh and install noctalia:
 
-```bash
-sudo zypper refresh
-sudo zypper install noctalia-git
-```
+<Tabs>
+	<TabItem label="Stable (recommended)">
+	```bash
+	sudo zypper refresh
+	sudo zypper install noctalia
+	```
+	</TabItem>
+	<TabItem label="Unstable">
+	```bash
+	sudo zypper refresh
+	sudo zypper install noctalia-git
+	```
+	</TabItem>
+</Tabs>
 
 :::note
 v5 will only be available for **Tumbleweed** and **Slowroll**. **Leap 16.0** is unable to build because *sdbus-c++* is still on v1.6.0 while v5 requires >= v2.x.x
 
-The `--refresh` flag is to enable auto refresh for the repo because everytime there's a new commit `noctalia` will be automatically rebuild on the OBS, so you just have to run `sudo zypper up` to update the package
+- **[Stable version](https://build.opensuse.org/package/show/home:neifua:Noctalia/noctalia)**: Updated when a new release is tagged
+- **[Unstable version](https://build.opensuse.org/package/show/home:neifua:Noctalia/noctalia-git)**: Automatically rebuilt on OBS whenever a new commit is pushed
 :::
 
 ---
