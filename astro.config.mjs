@@ -14,6 +14,8 @@ export default defineConfig({
     "/": "/v4/",
     /** wpa_supplicant troubleshooting moved into the v5 FAQ */
     "/v5/system/network/wpa_supplicant/": "/v5/getting-started/faq/#wpa-supplicant",
+    /** Scripted widgets replaced by the plugin system */
+    "/v5/bar/scripted-widgets/": "/v5/plugins/",
   },
   integrations: [
     starlight({
@@ -160,6 +162,10 @@ export default defineConfig({
             {
               label: "Automation",
               autogenerate: { directory: "v5/automation" },
+            },
+            {
+              label: "Plugins",
+              autogenerate: { directory: "v5/plugins" },
             },
           ],
         },

@@ -1,0 +1,100 @@
+---
+title: Using Plugins
+description: Install, enable, update, and configure Noctalia plugins from git or local sources.
+sidebar:
+  label: Using Plugins
+  order: 1
+---
+
+:::caution[Experimental — under heavy development]
+The plugin system is under **heavy development** and subject to breaking changes at any time. Treat it as experimental —
+use it for tinkering, not in a setup you depend on. Community plugin submissions are **not accepted yet**.
+:::
+
+Plugins extend Noctalia with **bar widgets**, **control-center shortcuts**, and headless **background services** — all
+driven by sandboxed [Luau](https://luau.org) scripts. A plugin is a directory containing a static `plugin.toml` manifest
+and one or more `.luau` entry scripts.
+
+Plugins come from **sources**. Two git sources ship by default:
+
+- **official** — `https://github.com/noctalia-dev/official-plugins`
+- **community** — `https://github.com/noctalia-dev/community-plugins`
+
+You can also add your own git repos or local directories.
+
+## Enabling a plugin
+
+Nothing is active until you enable it — installed ≠ enabled. Enabling a plugin from a git source fetches just that
+plugin's files (a sparse checkout); the code is cached under `$XDG_STATE_HOME/noctalia/plugins/sources/`.
+
+### From the settings GUI
+
+Open **Settings → Plugins**. Each configured source is listed with **Update** / **Remove** buttons, and every
+discovered plugin has an **enable toggle**. Toggle a plugin on to fetch + activate it; toggle off to deactivate it.
+Incompatible plugins (see [Compatibility](#compatibility)) are shown but cannot be enabled.
+
+### From the command line
+
+```sh
+noctalia msg plugins list                              # every plugin across all sources, with enabled state
+noctalia msg plugins enable noctalia/screen_recorder   # fetch (if needed) + enable
+noctalia msg plugins disable noctalia/screen_recorder  # disable; code + settings are retained
+noctalia msg plugins update official                   # git pull a source, then hot-reload its plugins
+```
+
+Manage sources too:
+
+```sh
+noctalia msg plugins source list
+noctalia msg plugins source add my-repo git https://github.com/me/my-plugins
+noctalia msg plugins source add my-dev path ~/dev/my-plugins
+noctalia msg plugins source remove my-repo
+```
+
+Enabling a plugin makes its entries available. Its **bar widget** then shows up in the Add-widget picker — add it to a
+bar just like any built-in widget (or place it by hand with `type = "<author>/<plugin>:<entry>"`). A **control-center
+shortcut** is added from the control-center shortcuts settings, like any other shortcut.
+
+## Configuration
+
+Plugin state lives under `[plugins]`. The `enabled` list and the sources are user intent (declarative-friendly); the app
+also writes runtime toggles to its state file, and both are merged.
+
+```toml
+[plugins]
+# Fully-qualified ids ("<author>/<plugin>") that are active.
+enabled = ["noctalia/screen_recorder"]
+
+# A git source: cloned, pulled, and sparse-checked-out by Noctalia.
+[[plugins.source]]
+name        = "official"
+kind        = "git"
+location    = "https://github.com/noctalia-dev/official-plugins"
+auto_update = false   # opt-in background pull on startup (off by default)
+
+# A path source: an immutable local directory Noctalia treats read-only
+# (no git ops). Ideal for local development or Nix-managed plugins.
+[[plugins.source]]
+name     = "my-dev"
+kind     = "path"
+location = "~/dev/my-plugins"
+```
+
+Plugins placed by hand under `$XDG_DATA_HOME/noctalia/plugins/<plugin>/` are discovered as a built-in **local** source —
+handy for development. Like every plugin, they must be enabled before they activate.
+
+## Updating
+
+`noctalia msg plugins update <source>` updates the source and hot-reloads its enabled plugins. Git sources can opt into
+`auto_update` for a background update on startup. Updates are safe: Noctalia reads the new revision's `min_noctalia`
+(from the catalog) **before** applying anything, and **skips** the update if it would require a newer Noctalia than you
+run — your working version stays untouched.
+
+## Compatibility
+
+Every plugin declares a mandatory `min_noctalia` in its manifest. A plugin requiring a newer Noctalia than you run is
+shown but badged **"requires newer Noctalia"** and cannot be enabled.
+
+## Writing your own
+
+Want to build a plugin? See **[Plugin Development](/v5/plugins/development/)**.

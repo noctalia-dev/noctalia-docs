@@ -28,7 +28,8 @@ These commands open, close, or toggle Noctalia UI surfaces.
 
 | Action | Command | Description |
 |--------|---------|-------------|
-| Send event | <IpcCommand command="scripted-widget <widget-name> <target[:bar-name]> <event> [payload]" /> | Dispatch an event to a scripted bar widget. Target can be `focused`, `all`, a monitor selector such as `DP-1`, or a bar-qualified target such as `focused:default`. |
+| Send event to a plugin | <IpcCommand command="plugin <author/plugin:entry> <target[:bar-name]> <event> [payload]" /> | Dispatch an event to a plugin entry's `onIpc`. Target can be `focused`, `all`, a monitor selector such as `DP-1`, or a bar-qualified target such as `focused:default`. |
+| Manage plugins | <IpcCommand command="plugins <subcommand> ..." /> | List, enable, disable, or update plugins and manage sources (`list`, `enable`, `disable`, `update`, `source`). See [Plugins](/v5/plugins/). |
 
 ## Panels
 

@@ -772,20 +772,12 @@ glyph = "photo"
 
 ---
 
-## `scripted`
+## Plugin widgets
 
-Custom widget driven by a Luau script. See [Scripted widgets](/v5/bar/scripted-widgets/) for the full Lua API reference, callbacks, and examples.
-
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `script` | string | `""` | Path to the Luau script file (`~` is expanded) |
-| `hot_reload` | bool | `false` | Watch the script file and reload on change (dev tool) |
-| `scope` | string | `"instance"` | `"instance"` runs one runtime per live widget placement. `"shared"` runs one runtime per widget config key and shares state across bars. |
+Custom bar widgets are provided by **plugins**. A plugin's bar-widget entry is referenced by its fully-qualified id; the
+plugin's manifest declares any settings it exposes. See [Plugins](/v5/plugins/) for installing, enabling, and authoring.
 
 ```toml
 [widget.my_widget]
-type       = "scripted"
-script     = "~/.config/noctalia/scripts/my_widget.lua"
-hot_reload = true
-scope      = "instance"
+type = "<author>/<plugin>:<entry>"   # e.g. "noctalia/screen_recorder:recorder"
 ```
