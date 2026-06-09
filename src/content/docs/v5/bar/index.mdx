@@ -16,7 +16,7 @@ position           = "top"       # top | bottom | left | right
 enabled            = true
 auto_hide          = false       # slide out after pointer leaves; reveal from edge trigger strip
 reserve_space      = true        # reserve compositor exclusive zone / push windows away
-layer              = "top"       # top | overlay — attached panels use the same layer
+layer              = "top"       # top | overlay; overlay appears above fullscreen apps
 
 thickness          = 34          # bar cross-axis size in pixels (height for horizontal, width for vertical)
 background_opacity = 1.0         # 0.0 (transparent) to 1.0 (opaque)
@@ -111,7 +111,7 @@ When `auto_hide = true`, the bar:
 
 `reserve_space` controls whether the bar keeps a compositor exclusive zone. With `auto_hide = false`, `reserve_space = true` keeps windows pushed away; `reserve_space = false` overlays the bar on top of full-screen clients. With `auto_hide = true`, `reserve_space = false` retracts the bar as an overlay (no gap); `reserve_space = true` keeps the gap while the bar slides out of view.
 
-`layer` selects the wlr-layer-shell layer for the bar (`top` or `overlay`). Attached panels (for example Control Center when it attaches to the bar) are placed on the same layer as the bar that opened them. Centered or floating panel placements keep each panel's own layer (typically overlay).
+`layer = "overlay"` shows the bar above fullscreen apps. Attached panels (for example Control Center when it attaches to the bar) follow the bar's layer. Centered or floating panel placements keep each panel's own layer (typically overlay).
 
 ---
 
