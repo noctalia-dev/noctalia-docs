@@ -75,8 +75,38 @@ entry = "ticker.luau"
 
 ### Settings schema
 
-Each `[[<entry>.setting]]` becomes a typed control in the settings GUI and is read back via `barWidget.getConfig(key)`.
-Only declared keys resolve — reading an undeclared key logs a loud warning and returns `nil` (no silent fallbacks).
+A setting becomes a typed control in the settings GUI and is read back via `noctalia.getConfig(key)` (or
+`barWidget.getConfig(key)` in a widget — same value). Only declared keys resolve — reading an undeclared key logs a loud
+warning and returns `nil` (no silent fallbacks).
+
+Settings come in two scopes:
+
+- **Plugin-level** — a `[[setting]]` block at the **manifest root**. One shared set for the whole plugin, edited under
+  **Settings → Plugins** (the gear on the plugin's row), and seeded into **every** entry — widget, shortcut, and
+  service. Use this for configuration the service needs (it has no per-placement settings of its own).
+- **Per-instance** — a `[[<entry>.setting]]` block under a `[[widget]]`. One value **per placement** on a bar, edited in
+  the bar widget's settings. Use this for presentation tweaks that differ per copy.
+
+When both declare the same key, the per-instance value wins for that widget. Both scopes use the same field schema:
+
+```toml
+# Plugin-level: shared by widget + shortcut + service, edited in Settings → Plugins.
+[[setting]]
+key     = "interval"
+type    = "int"
+label   = "Refresh seconds"
+default = 5
+
+[[widget]]
+id    = "hello"
+entry = "widget.luau"
+
+  # Per-instance: this widget only.
+  [[widget.setting]]
+  key     = "label"
+  type    = "string"
+  default = "Hello"
+```
 
 | Field | Notes |
 |-------|-------|
@@ -147,7 +177,7 @@ end
 
 | Group | Functions |
 |-------|-----------|
-| Runtime | `setUpdateInterval(ms)`, `log(msg)`, `isDarkMode()`, `focusedOutputName()` |
+| Runtime | `setUpdateInterval(ms)`, `log(msg)`, `isDarkMode()`, `focusedOutputName()`, `getConfig(key)` |
 | Notify | `notify(title, body)`, `notifyError(title, body)` |
 | Subprocess | `runAsync(cmd [, cb])`, `runStream(cmd, onLine)`, `runInTerminal(cmd)`, `commandExists(name)`, `processMatches(cb, ...needles)`, `flatpakAppInstalled(id)`, `portalAvailable()`, `getenv(name)`, `expandPath(path)` |
 | Clipboard | `copyToClipboard(text [, mime])` |
@@ -186,11 +216,18 @@ end)
 
 Drop your plugin under `$XDG_DATA_HOME/noctalia/plugins/<plugin>/` (or add a `path` source pointing at your dev
 directory), then enable it once. Edits to `.luau` files hot-reload automatically; manifest changes are picked up on the
-next config reload. Drive a widget's IPC handler from the shell to test:
+next config reload. Drive an entry's `onIpc` handler from the shell to test:
 
 ```sh
+# A bar widget — target a specific output (focused / connector / a-bar-name) or all:
 noctalia msg plugin me/hello:hello focused greet "hi there"
+
+# A service — it is a singleton with no output, so address it with the `all` target:
+noctalia msg plugin me/hello:ticker all refresh
 ```
+
+The target picks which live instances receive the event: `focused` (the focused output), a connector or
+`<connector>:<bar-name>`, or `all`. Services and other non-bar entries have no output, so they only match `all`.
 
 ## Publishing
 

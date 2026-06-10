@@ -33,6 +33,11 @@ Open **Settings → Plugins**. Each configured source is listed with **Update** 
 discovered plugin has an **enable toggle**. Toggle a plugin on to fetch + activate it; toggle off to deactivate it.
 Incompatible plugins (see [Compatibility](#compatibility)) are shown but cannot be enabled.
 
+Plugins that expose **plugin-level settings** show a **gear** on their row — open it to configure options shared across
+all of the plugin's parts (for example the screen recorder's codec, quality, and output folder). Settings persist to the
+state dir, so a read-only config directory is fine. A bar widget may add its own per-placement settings on top, edited in
+that widget's settings.
+
 ### From the command line
 
 ```sh
