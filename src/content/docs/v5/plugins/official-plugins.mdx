@@ -1,0 +1,71 @@
+---
+title: Official plugins
+description: The plugins shipped by the official source, and the IPC commands each one accepts.
+sidebar:
+  label: Official plugins
+  order: 3
+---
+
+:::caution[Experimental — under heavy development]
+The plugin system is under **heavy development** and subject to breaking changes at any time. Treat it as experimental —
+use it for tinkering, not in a setup you depend on. Community plugin submissions are **not accepted yet**.
+:::
+
+These ship from the default **official** source
+([`github.com/noctalia-dev/official-plugins`](https://github.com/noctalia-dev/official-plugins)). Each is installed and
+enabled like any other plugin — see [Using Plugins](/v5/plugins/). Once enabled, an entry can be driven over IPC:
+
+```sh
+noctalia msg plugin <author/plugin:entry> <target> <event> [payload]
+```
+
+`<target>` selects which live instances receive the event:
+
+- **`focused`** — the entry on the focused output (bar widgets)
+- **`<connector>`** or **`<connector>:<bar-name>`** — a specific output / bar
+- **`all`** — every instance; **also how you address a `[[service]]`**, since a service is a singleton with no output
+
+---
+
+## example — `noctalia/example`
+
+A reference plugin that exercises every entry kind: a bar **widget**, a headless **service** (ticks once a second and
+publishes to the plugin's state channel), and a control-center **shortcut**. Good starting point for reading real code.
+
+| Command | Effect |
+|---------|--------|
+| `noctalia msg plugin noctalia/example:hello focused set "New label"` | set the widget's text |
+| `noctalia msg plugin noctalia/example:hello focused fetch "https://example.com"` | async HTTP GET; notifies with the status + body size |
+
+---
+
+## screen_recorder — `noctalia/screen_recorder`
+
+Screen recording and a replay buffer via [`gpu-screen-recorder`](https://git.dec05eba.com/gpu-screen-recorder/) (must
+be installed, natively or as the Flatpak). The recording logic lives in a headless **service** that runs for the whole
+session, so it works with **no bar widget placed** — the widget and control-center shortcut are thin clients. Options
+(codec, quality, output folder, replay buffer, …) are plugin-level settings, edited under **Settings → Plugins**.
+
+The service is a singleton, so address it with **`all`**:
+
+| Command | Effect |
+|---------|--------|
+| `noctalia msg plugin noctalia/screen_recorder:service all start` | start recording |
+| `noctalia msg plugin noctalia/screen_recorder:service all stop` | stop recording |
+| `noctalia msg plugin noctalia/screen_recorder:service all toggle` | start/stop recording |
+| `noctalia msg plugin noctalia/screen_recorder:service all replay-start` | start the replay buffer |
+| `noctalia msg plugin noctalia/screen_recorder:service all replay-stop` | stop the replay buffer |
+| `noctalia msg plugin noctalia/screen_recorder:service all replay-toggle` | start/stop the replay buffer |
+| `noctalia msg plugin noctalia/screen_recorder:service all replay-save` | save the last buffered seconds |
+
+---
+
+## bongocat — `noctalia/bongocat`
+
+A bar cat that taps along to your keystrokes (via `evtest`) or to the audio spectrum. Single bar **widget**.
+
+| Command | Effect |
+|---------|--------|
+| `noctalia msg plugin noctalia/bongocat:cat focused pause` | freeze the cat |
+| `noctalia msg plugin noctalia/bongocat:cat focused resume` | resume tapping |
+| `noctalia msg plugin noctalia/bongocat:cat focused toggle` | pause/resume |
