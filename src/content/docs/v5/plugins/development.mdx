@@ -12,8 +12,8 @@ changes at any time. Build plugins for experimentation only. Community plugin su
 :::
 
 A plugin is a directory with a static `plugin.toml` manifest and one or more [Luau](https://luau.org) entry scripts.
-Each entry runs in its own sandboxed Luau VM, off the UI thread, with per-call time budgets — a slow or crashing script
-never stalls the shell.
+Each entry runs in its own isolated Luau VM, off the UI thread, with per-call time budgets — a slow or crashing script
+never stalls the shell. Plugins are trusted code: installing one is equivalent to running a user-owned script.
 
 ```
 my-plugin/
@@ -54,7 +54,7 @@ optional settings schema. The supported entry kinds:
 | `[[shortcut]]` | Control-center tile | A toggle tile in the control center |
 | `[[service]]` | Headless service | Background loop, no UI — feeds the plugin's other entries |
 
-An entry is addressed `<author>/<plugin>:<entry-id>` — e.g. a bar widget is placed with
+An entry is addressed `<author>/<plugin>:<entry-id>` — e.g. a bar widget is configured with
 `type = "me/hello:hello"`.
 
 ```toml
@@ -83,11 +83,11 @@ Settings come in two scopes:
 
 - **Plugin-level** — a `[[setting]]` block at the **manifest root**. One shared set for the whole plugin, edited under
   **Settings → Plugins** (the gear on the plugin's row), and seeded into **every** entry — widget, shortcut, and
-  service. Use this for configuration the service needs (it has no per-placement settings of its own).
-- **Per-instance** — a `[[<entry>.setting]]` block under a `[[widget]]`. One value **per placement** on a bar, edited in
-  the bar widget's settings. Use this for presentation tweaks that differ per copy.
+  service. Use this for configuration the service needs.
+- **Widget entry settings** — a `[[<entry>.setting]]` block under a `[[widget]]`. These are edited with the bar widget's
+  own settings. Use this for widget presentation tweaks; they are not a second enabled plugin instance.
 
-When both declare the same key, the per-instance value wins for that widget. Both scopes use the same field schema:
+When both declare the same key, the widget entry value wins for that widget. Both scopes use the same field schema:
 
 ```toml
 # Plugin-level: shared by widget + shortcut + service, edited in Settings → Plugins.
@@ -101,11 +101,23 @@ default = 5
 id    = "hello"
 entry = "widget.luau"
 
-  # Per-instance: this widget only.
+  # Widget entry setting: this bar widget only.
   [[widget.setting]]
   key     = "label"
   type    = "string"
   default = "Hello"
+```
+
+You can define multiple named bar widgets with the same plugin entry and different widget settings:
+
+```toml
+[widget.hello-main]
+type  = "me/hello:hello"
+label = "Main"
+
+[widget.hello-short]
+type  = "me/hello:hello"
+label = "Short"
 ```
 
 | Field | Notes |

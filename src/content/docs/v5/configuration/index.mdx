@@ -82,14 +82,15 @@ Where Noctalia keeps everything, by purpose:
 | Internal UI state | `~/.local/state/noctalia/state.toml` | app-managed (calendar account tokens, last-used values) |
 | Custom palettes | `~/.config/noctalia/palettes/` | your own color palette files |
 | Local plugins | `~/.local/share/noctalia/plugins/` | plugins you install or place by hand |
-| Plugin source clones | `~/.local/state/noctalia/plugins/sources/` | git-source clones, re-fetchable |
+| Plugin source repos | `~/.local/state/noctalia/plugins/sources/` | git-source repo caches, re-fetchable |
+| Exported plugin files | `~/.local/state/noctalia/plugins/materialized/` | runtime files exported from git sources |
 | Community palettes / templates | `~/.local/state/noctalia/community-*/` | downloaded catalogs, re-fetchable |
 
 It comes down to **two buckets**:
 
 - **Yours** — `~/.config/noctalia/` (settings you write) and `~/.local/share/noctalia/` (plugins you install).
 - **Noctalia's** — `~/.local/state/noctalia/` (everything the app writes or fetches: GUI overrides, UI state, plugin
-  clones, downloaded catalogs) — app-managed and regenerable, so it's always safe to delete.
+  repo caches, exported plugin files, downloaded catalogs) — app-managed and regenerable, so it's always safe to delete.
 
 Every path honors the standard `XDG_CONFIG_HOME` / `XDG_STATE_HOME` / `XDG_DATA_HOME` variables (and the
 `NOCTALIA_CONFIG_HOME` / `NOCTALIA_STATE_HOME` / `NOCTALIA_DATA_HOME` overrides).
