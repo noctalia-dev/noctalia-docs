@@ -1,0 +1,115 @@
+---
+title: Installation
+description: Install noctalia-greeter, configure greetd, sync appearance from Noctalia, and fix common issues.
+sidebar:
+  order: 0
+---
+
+[Noctalia Greeter](https://github.com/noctalia-dev/noctalia-greeter) is the screen you see before your desktop session starts. It lets you pick a user, enter your password, choose a Wayland session, and pick a color scheme - with the same visual language as Noctalia.
+
+It is built for **[greetd](https://github.com/kennylevinsen/greetd)**: greetd starts a small Wayland compositor ([Cage](https://github.com/cage-kiosk/cage)), and the greeter runs inside that session. It is a login UI only, not a desktop shell or compositor replacement.
+
+Pair it with **Noctalia v5** if you want your wallpaper and palette copied from the shell to the login screen (optional).
+
+- [Installing](#installing)
+- [Setting up greetd](#setting-up-greetd)
+- [Matching your Noctalia desktop](#matching-your-noctalia-desktop)
+- [Keyboard](#keyboard)
+- [Troubleshooting](#troubleshooting)
+
+---
+
+## Installing
+
+Install **noctalia-greeter** from your distribution if a package is available. You also need **greetd**, **Cage**, **wlr-randr**, **D-Bus**, and **polkit** on the machine where greetd runs.
+
+Your desktop sessions (niri, Hyprland, and so on) are separate - install those as you normally would.
+
+If your distro does not package the greeter yet, see the [noctalia-greeter repository](https://github.com/noctalia-dev/noctalia-greeter) for build and install steps. After installing, run the included system setup script as root so `/var/lib/noctalia-greeter/` and `greeter.conf` are created for the greetd user.
+
+---
+
+## Setting up greetd
+
+Point greetd at the installed session wrapper. Use the path on your system - do not assume `/usr/local` if you installed from a package:
+
+```sh
+which noctalia-greeter-session
+```
+
+Example for a manual install to `/usr/local` (replace the path if `which` shows something else, e.g. `/usr/bin/noctalia-greeter-session`):
+
+```toml
+[default_session]
+command = "/usr/local/bin/noctalia-greeter-session"
+user = "greeter"
+```
+
+Use the `user` value that matches your greetd config. The greeter setup script prints a ready-to-paste `config.toml` block with the path it finds.
+
+### Default session
+
+To open the greeter with a specific session already selected, pass `--session` on the command line. The name must match a session from the greeter picker exactly (for example `niri`):
+
+```toml
+command = "/usr/bin/noctalia-greeter-session -- --session niri"
+```
+
+List valid session names:
+
+```sh
+noctalia-greeter sessions
+```
+
+You can also set `default_session` in [greeter.conf](/v5/greeter/configuration/) - that overrides the last session you picked unless `--session` is passed on the command line.
+
+Restart greetd after changing its config:
+
+```sh
+sudo systemctl restart greetd
+```
+
+On runit:
+
+```sh
+sudo sv restart greetd
+```
+
+---
+
+## Matching your Noctalia desktop
+
+With Noctalia v5 and the greeter both installed, open **Settings → Shell → Security → Noctalia Greeter → Sync Now**. Noctalia copies your wallpaper and palette to the greeter (you will be prompted for admin access via polkit).
+
+After syncing, log out or restart greetd to see the changes on the login screen.
+
+The greeter adds a **Synced** color scheme when sync data is present. Session and scheme choices you make on the login screen are remembered in `/var/lib/noctalia-greeter/greeter.conf`.
+
+For monitor selection, UI scale, and other admin settings, see [Configuration](/v5/greeter/configuration/).
+
+---
+
+## Keyboard
+
+The greeter works without a mouse.
+
+| Key | Action |
+|-----|--------|
+| `Tab` / `Shift+Tab` | Move focus |
+| `↑` / `↓` | Move focus, or move in an open menu |
+| `Enter` | Submit password / activate / confirm menu |
+| `Space` | Activate focused control |
+| `Esc` | Close menu or leave password step |
+| `F3` | Session picker |
+| `F7` | Color scheme picker |
+
+---
+
+## Troubleshooting
+
+- **Blank screen** - Check `/var/log/noctalia-greeter.log` and `/var/lib/noctalia-greeter/greeter.log`.
+- **`Failed to spawn client` / wrong path in greetd config** - `command` must be the full path from `which noctalia-greeter-session` (often `/usr/bin/...` on packaged installs, not `/usr/local/bin/...`).
+- **`WAYLAND_DISPLAY is not set`** - greetd must use `noctalia-greeter-session` (it starts Cage). Fix `command` in `/etc/greetd/config.toml`.
+- **Wrong session on startup** - If `default_session` is set in `greeter.conf`, it wins over last-used `session`. Run `noctalia-greeter sessions` for exact **Name** spelling.
+- **Synced look missing** - Install Noctalia v5, the greeter, and the polkit policy; sync again from Settings; restart greetd or log out once.
+- **UI too small or too large on a high-DPI monitor** - Set `scale` in `greeter.conf`. See [Configuration](/v5/greeter/configuration/#ui-scale).

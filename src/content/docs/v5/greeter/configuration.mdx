@@ -1,0 +1,111 @@
+---
+title: Configuration
+description: greeter.conf settings for sessions, color scheme, monitors, and UI scale.
+sidebar:
+  order: 1
+---
+
+The greeter stores its settings in a simple key-value file:
+
+```text
+/var/lib/noctalia-greeter/greeter.conf
+```
+
+Lines use `key = value` syntax. Lines starting with `#` are comments.
+
+- [Keys the greeter remembers](#keys-the-greeter-remembers)
+- [Admin-only keys](#admin-only-keys)
+- [Multi-monitor](#multi-monitor)
+- [UI scale](#ui-scale)
+- [Helper commands](#helper-commands)
+
+---
+
+## Keys the greeter remembers
+
+When you change session or color scheme on the login screen, the greeter writes:
+
+| Key | Purpose |
+|-----|---------|
+| `session` | Last Wayland session you picked (by **Name** from the session picker) |
+| `scheme` | Last color scheme you picked |
+
+These are updated automatically — you do not need to edit them by hand unless you want to reset them.
+
+---
+
+## Admin-only keys
+
+Set these yourself. The greeter UI does not change them.
+
+| Key | Purpose |
+|-----|---------|
+| `default_session` | Session selected when the greeter opens. Overrides last-used `session` unless you pass `--session` on the greetd command line. |
+| `greeter_user` | greetd account name (written during setup; used for logging) |
+| `output` | Wayland connector name to show the greeter on (see [Multi-monitor](#multi-monitor)) |
+| `scale` | Manual UI scale factor (see [UI scale](#ui-scale)) |
+
+Example:
+
+```ini
+default_session = niri
+output = "DP-2"
+scale = 1.5
+```
+
+---
+
+## Multi-monitor
+
+The greeter runs inside Cage, which can span all connected outputs. By default it shows on the **primary monitor only** (largest by pixel area). After connecting to Wayland it uses `wlr-randr` to turn off the other connectors so the login UI does not stretch across every display.
+
+To pin the greeter to a specific connector:
+
+```ini
+output = "DP-2"
+```
+
+`wlr-randr` must be installed. If `output` is missing, empty, or names a disconnected connector, the greeter falls back to the primary display only.
+
+When `wlr-randr` cannot disable every other connector (some setups keep the primary on), the greeter letterboxes onto the chosen or primary output inside Cage's combined desktop instead of stretching the UI.
+
+List connector names from a running Wayland session:
+
+```sh
+noctalia-greeter outputs
+```
+
+Restart greetd after changing `output`:
+
+```sh
+sudo systemctl restart greetd
+```
+
+---
+
+## UI scale
+
+On high-DPI panels (for example 4K without fractional scaling), the greeter scales its UI from the monitor's physical size when EDID reports it, otherwise from resolution. Scale is capped at 2×.
+
+To override auto scaling, set `scale`:
+
+```ini
+scale = 1.5
+```
+
+If `scale` is missing or invalid (not a positive number), the greeter falls back to auto scaling.
+
+:::note
+Manual `scale` is separate from compositor or desktop scaling. It only affects the greeter's own UI sizing.
+:::
+
+---
+
+## Helper commands
+
+```sh
+noctalia-greeter sessions   # list valid session names for default_session / --session
+noctalia-greeter outputs    # list Wayland connector names for output
+```
+
+Sessions come from `wayland-sessions` `.desktop` files under `/usr/share`, each path in `XDG_DATA_DIRS`, and on NixOS `/run/current-system/sw/share`.

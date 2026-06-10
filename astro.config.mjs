@@ -167,6 +167,10 @@ export default defineConfig({
               label: "Plugins",
               autogenerate: { directory: "v5/plugins" },
             },
+            {
+              label: "Greeter",
+              autogenerate: { directory: "v5/greeter" },
+            },
           ],
         },
       ],
