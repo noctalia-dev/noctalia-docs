@@ -24,8 +24,9 @@ You can also add your own git repos or local directories.
 
 ## Enabling a plugin
 
-Nothing is active until you enable it — installed ≠ enabled. Enabling a plugin from a git source materializes just that
-plugin's directory from the source clone; the code is cached under `$XDG_STATE_HOME/noctalia/plugins/sources/`.
+Nothing is active until you enable it — installed ≠ enabled. Enabling a plugin from a git source exports just that
+plugin's directory from the source repo cache into `$XDG_STATE_HOME/noctalia/plugins/materialized/`. Noctalia owns both
+the repo cache and exported runtime files.
 
 ### From the settings GUI
 
@@ -73,7 +74,7 @@ also writes runtime toggles to its state file, and both are merged.
 # Fully-qualified ids ("<author>/<plugin>") that are active.
 enabled = ["noctalia/screen_recorder"]
 
-# A git source: cloned and updated by Noctalia.
+# A git source: cached and updated by Noctalia.
 [[plugins.source]]
 name        = "official"
 kind        = "git"
@@ -94,6 +95,8 @@ handy for development. Like every plugin, they must be enabled before they activ
 
 Git source operations are non-interactive. Private repos must be reachable through an already-working credential helper,
 SSH agent, or SSH config; otherwise clone/update fails and Noctalia continues without prompting for a password.
+Git source runtime files are exported caches, not editable plugin state. Use a `path` source or
+`~/.local/share/noctalia/plugins/` for local plugin development.
 
 ## Updating
 
