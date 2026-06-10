@@ -98,6 +98,10 @@ SSH agent, or SSH config; otherwise clone/update fails and Noctalia continues wi
 Git source runtime files are exported caches, not editable plugin state. Use a `path` source or
 `~/.local/share/noctalia/plugins/` for local plugin development.
 
+A source `name` is its identity. Replacing a git source with the same name but a different `location` deletes
+Noctalia's app-managed repo cache and exported runtime files for that source, then re-fetches from the new location when
+needed.
+
 ## Updating
 
 `noctalia msg plugins update <source>` updates the source and hot-reloads its enabled plugins. Git sources can opt into
