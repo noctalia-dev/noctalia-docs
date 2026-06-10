@@ -71,6 +71,29 @@ Treat `~/.local/state/noctalia/settings.toml` as an app-managed override file. I
 
 Both layers are watched for changes and hot-reloaded. If neither layer exists, Noctalia uses its built-in defaults.
 
+## File locations
+
+Where Noctalia keeps everything, by purpose:
+
+| What | Where | Purpose |
+|------|-------|---------|
+| Your config | `~/.config/noctalia/config.toml` | hand-written / declarative — the base layer |
+| GUI overrides | `~/.local/state/noctalia/settings.toml` | written by Settings; wins over your config |
+| Internal UI state | `~/.local/state/noctalia/state.toml` | app-managed (calendar account tokens, last-used values) |
+| Custom palettes | `~/.config/noctalia/palettes/` | your own color palette files |
+| Local plugins | `~/.local/share/noctalia/plugins/` | plugins you install or place by hand |
+| Plugin source clones | `~/.local/state/noctalia/plugins/sources/` | git-source clones, re-fetchable |
+| Community palettes / templates | `~/.local/state/noctalia/community-*/` | downloaded catalogs, re-fetchable |
+
+It comes down to **two buckets**:
+
+- **Yours** — `~/.config/noctalia/` (settings you write) and `~/.local/share/noctalia/` (plugins you install).
+- **Noctalia's** — `~/.local/state/noctalia/` (everything the app writes or fetches: GUI overrides, UI state, plugin
+  clones, downloaded catalogs) — app-managed and regenerable, so it's always safe to delete.
+
+Every path honors the standard `XDG_CONFIG_HOME` / `XDG_STATE_HOME` / `XDG_DATA_HOME` variables (and the
+`NOCTALIA_CONFIG_HOME` / `NOCTALIA_STATE_HOME` / `NOCTALIA_DATA_HOME` overrides).
+
 ## Exporting config
 
 Export the merged user config from the command line:
