@@ -60,6 +60,9 @@ noctalia msg plugins source add my-dev path ~/dev/my-plugins
 noctalia msg plugins source remove my-repo
 ```
 
+The built-in `official` and `community` sources can be updated but are protected from removal in Settings and IPC.
+Custom git/path sources are removable.
+
 Enabling a plugin makes its entries available. Its **bar widget** then shows up in the Add-widget picker — add a widget
 instance just like any built-in widget (or configure one by hand with `type = "<author>/<plugin>:<entry>"`). A
 **control-center shortcut** is added from the control-center shortcuts settings, like any other shortcut.
