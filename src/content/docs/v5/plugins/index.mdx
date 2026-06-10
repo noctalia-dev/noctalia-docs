@@ -12,8 +12,8 @@ use it for tinkering, not in a setup you depend on. Community plugin submissions
 :::
 
 Plugins extend Noctalia with **bar widgets**, **control-center shortcuts**, and headless **background services** — all
-driven by sandboxed [Luau](https://luau.org) scripts. A plugin is a directory containing a static `plugin.toml` manifest
-and one or more `.luau` entry scripts.
+driven by trusted [Luau](https://luau.org) scripts running in isolated VMs. A plugin is a directory containing a static
+`plugin.toml` manifest and one or more `.luau` entry scripts.
 
 Plugins come from **sources**. Two git sources ship by default:
 
@@ -24,8 +24,8 @@ You can also add your own git repos or local directories.
 
 ## Enabling a plugin
 
-Nothing is active until you enable it — installed ≠ enabled. Enabling a plugin from a git source fetches just that
-plugin's files (a sparse checkout); the code is cached under `$XDG_STATE_HOME/noctalia/plugins/sources/`.
+Nothing is active until you enable it — installed ≠ enabled. Enabling a plugin from a git source materializes just that
+plugin's directory from the source clone; the code is cached under `$XDG_STATE_HOME/noctalia/plugins/sources/`.
 
 ### From the settings GUI
 
@@ -35,8 +35,8 @@ Incompatible plugins (see [Compatibility](#compatibility)) are shown but cannot 
 
 Plugins that expose **plugin-level settings** show a **gear** on their row — open it to configure options shared across
 all of the plugin's parts (for example the screen recorder's codec, quality, and output folder). Settings persist to the
-state dir, so a read-only config directory is fine. A bar widget may add its own per-placement settings on top, edited in
-that widget's settings.
+state dir, so a read-only config directory is fine. Bar-widget entries can also declare widget settings, edited where
+that widget is configured.
 
 ### From the command line
 
@@ -44,7 +44,7 @@ that widget's settings.
 noctalia msg plugins list                              # every plugin across all sources, with enabled state
 noctalia msg plugins enable noctalia/screen_recorder   # fetch (if needed) + enable
 noctalia msg plugins disable noctalia/screen_recorder  # disable; code + settings are retained
-noctalia msg plugins update official                   # git pull a source, then hot-reload its plugins
+noctalia msg plugins update official                   # update a source, then hot-reload its plugins
 ```
 
 Manage sources too:
@@ -56,9 +56,9 @@ noctalia msg plugins source add my-dev path ~/dev/my-plugins
 noctalia msg plugins source remove my-repo
 ```
 
-Enabling a plugin makes its entries available. Its **bar widget** then shows up in the Add-widget picker — add it to a
-bar just like any built-in widget (or place it by hand with `type = "<author>/<plugin>:<entry>"`). A **control-center
-shortcut** is added from the control-center shortcuts settings, like any other shortcut.
+Enabling a plugin makes its entries available. Its **bar widget** then shows up in the Add-widget picker — add a widget
+instance just like any built-in widget (or configure one by hand with `type = "<author>/<plugin>:<entry>"`). A
+**control-center shortcut** is added from the control-center shortcuts settings, like any other shortcut.
 
 ## Configuration
 
@@ -70,7 +70,7 @@ also writes runtime toggles to its state file, and both are merged.
 # Fully-qualified ids ("<author>/<plugin>") that are active.
 enabled = ["noctalia/screen_recorder"]
 
-# A git source: cloned, pulled, and sparse-checked-out by Noctalia.
+# A git source: cloned and updated by Noctalia.
 [[plugins.source]]
 name        = "official"
 kind        = "git"
