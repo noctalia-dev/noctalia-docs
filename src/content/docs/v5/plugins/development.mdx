@@ -149,13 +149,15 @@ end
 |-------|-----------|
 | Runtime | `setUpdateInterval(ms)`, `log(msg)`, `isDarkMode()`, `focusedOutputName()` |
 | Notify | `notify(title, body)`, `notifyError(title, body)` |
-| Subprocess | `runAsync(cmd [, cb])`, `runInTerminal(cmd)`, `commandExists(name)`, `processMatches(cb, ...needles)`, `flatpakAppInstalled(id)`, `portalAvailable()`, `getenv(name)`, `expandPath(path)` |
+| Subprocess | `runAsync(cmd [, cb])`, `runStream(cmd, onLine)`, `runInTerminal(cmd)`, `commandExists(name)`, `processMatches(cb, ...needles)`, `flatpakAppInstalled(id)`, `portalAvailable()`, `getenv(name)`, `expandPath(path)` |
 | Clipboard | `copyToClipboard(text [, mime])` |
 | Filesystem | `readFile(path)`, `writeFile(path, content)`, `fileExists(path)`, `listDir(path)`, `pluginDir()` — relative paths resolve against the plugin's own directory |
 | i18n | `tr(key [, subst])`, `trp(key, count [, subst])` — against `translations/<lang>.json` |
 | HTTP | `http({ url = … }, cb)`, `download(url, dest, cb)` — async; the callback fires when the request lands |
 
-Filesystem and HTTP run safely off the UI thread; results arrive via callbacks.
+Filesystem and HTTP run safely off the UI thread; results arrive via callbacks. `runAsync` runs a command to completion
+and calls its callback once with the output; `runStream` runs a long-lived command and calls `onLine(line)` for each
+output line as it arrives — the process is terminated automatically when the script reloads or the widget is removed.
 
 ## Sharing state across entries
 
