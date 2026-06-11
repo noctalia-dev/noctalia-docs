@@ -177,6 +177,7 @@ export default defineConfig({
     }),
   ],
   markdown: {
+    gfm: true,
     remarkPlugins: [remarkHeadingId],
   },
 });
