@@ -20,7 +20,7 @@ Global UI settings that apply across all shell surfaces.
 [shell]
 ui_scale              = 1.0             # content scale for panels and non-bar shell UI
 font_family           = "sans-serif"    # Pango family string; Fontconfig handles fallback
-lang                  = "en"            # override language detection
+lang                  = "en"            # override language detection; BCP-47 or POSIX locale
 time_format           = "{:%H:%M}"      # default time format for shell UI without its own setting
 date_format           = "%A, %x"        # default date format for shell UI without its own setting
 offline_mode          = false           # block all outgoing HTTP requests
@@ -100,6 +100,7 @@ Notes:
 - `middle_click_opens_widget_settings`: when `true`, middle-clicking a bar widget opens Settings directly to that widget's configuration. Set it to `false` if a scripted widget needs `onMiddleClick()`.
 - `show_location`: when `false`, weather location text/coordinates are hidden in shell surfaces.
 - `app_icon_colorize` and `app_icon_color`: global application icon tinting for the dock, system tray (bar and drawer), taskbar, active-window widget, and launcher panel results. See [App icon colorization](#app-icon-colorization). Bar `launcher` / `control-center` widgets can optionally tint `custom_image` via `custom_image_colorize` using the widget **Color** setting (Presentation group in the widget editor).
+- `lang`: empty follows `$LC_ALL`, `$LC_MESSAGES`, then `$LANG`. Values may be BCP-47 tags (`pt-BR`, `zh-Hans`) or POSIX locale names (`pt_BR.UTF-8`, `zh_CN.UTF-8`). Chinese region locales infer script before matching catalogs, so `zh_CN` and `zh_SG` match `zh-Hans`, while `zh_TW`, `zh_HK`, and `zh_MO` match `zh-Hant`.
 - `clipboard_enabled`: when `false`, disables clipboard **history** only — the history is no longer recorded or persisted, and the clipboard panel and bar/control-center shortcuts are unavailable. The live clipboard transport stays active, so basic copy/cut/paste in text fields and launcher math/emoji copy-to-clipboard actions keep working.
 - `clipboard_history_max_entries`: caps how many **unpinned** clipboard history rows Noctalia keeps (default `100`, range `10`–`10000`). Pinned entries stay outside this limit. Lowering the value trims older unpinned rows on reload.
 - `clipboard_confirm_clear_history`: when `true` (default), the clipboard panel asks before **Clear history** and before deleting an **unpinned** entry (trash in the preview, or double-click a row). When `false`, those actions apply immediately: sidebar clear removes unpinned rows and keeps pins when any exist, or clears everything when nothing is pinned; unpinned single deletes are immediate. **Pinned** entries still require confirmation before delete. With confirmation enabled, the clear dialog only offers **Keep pinned** when both pinned and unpinned rows exist; if history is all pinned or all unpinned, the description matches that case. Toggle in **Settings → Shell → Clipboard**.
