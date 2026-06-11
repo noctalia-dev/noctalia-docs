@@ -67,7 +67,7 @@ If you are confused about why a hand-written value is not taking effect, inspect
 
 Use `~/.config/noctalia/` for curated config: the things you want to keep in dotfiles, copy to another machine, or manage declaratively.
 
-Treat `~/.local/state/noctalia/settings.toml` as an app-managed override file. It is useful to inspect when debugging GUI changes, and safe to delete when you want to clear those overrides. Keeping it outside `~/.config` also lets the GUI save changes when your config directory is read-only, for example on NixOS.
+Treat `~/.local/state/noctalia/settings.toml` as an app-managed override file. It is useful to inspect when debugging GUI changes, and safe to delete when you want to clear those overrides. Keeping it outside `~/.config` also lets the GUI save changes when your config directory is read-only, for example on NixOS. Support reports include config sources and `settings.toml`, but omit `state.toml` contents because they can contain private runtime data.
 
 Both layers are watched for changes and hot-reloaded. If neither layer exists, Noctalia uses its built-in defaults.
 
