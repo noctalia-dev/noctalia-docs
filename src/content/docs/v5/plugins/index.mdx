@@ -30,9 +30,10 @@ the repo cache and exported runtime files.
 
 ### From the settings GUI
 
-Open **Settings → Plugins**. Each configured source is listed with **Update** / **Remove** buttons, and every
-discovered plugin has an **enable toggle**. Toggle a plugin on to fetch + activate it; toggle off to deactivate it.
-Incompatible plugins (see [Compatibility](#compatibility)) are shown but cannot be enabled.
+Open **Settings → Plugins**. Use **Add source** to add a git repo or local directory. Each configured source is listed
+with **Update** where applicable and **Remove** for custom sources, and every discovered plugin has an **enable toggle**.
+Toggle a plugin on to fetch + activate it; toggle off to deactivate it. Incompatible plugins (see
+[Compatibility](#compatibility)) are shown but cannot be enabled.
 
 Plugins that expose **plugin-level settings** show a **gear** on their row — open it to configure options shared across
 all of the plugin's parts (for example the screen recorder's codec, quality, and output folder). Settings persist to the
@@ -60,8 +61,8 @@ noctalia msg plugins source add my-dev path ~/dev/my-plugins
 noctalia msg plugins source remove my-repo
 ```
 
-The built-in `official` and `community` sources can be updated but are protected from removal in Settings and IPC.
-Custom git/path sources are removable.
+The built-in `official` and `community` sources can be updated and have their **Update on startup** toggle changed in
+Settings, but are protected from removal in Settings and IPC. Custom git/path sources are removable.
 
 Enabling a plugin makes its entries available. Its **bar widget** then shows up in the Add-widget picker — add a widget
 instance just like any built-in widget (or configure one by hand with `type = "<author>/<plugin>:<entry>"`). A
@@ -108,9 +109,10 @@ needed.
 ## Updating
 
 `noctalia msg plugins update <source>` updates the source and hot-reloads its enabled plugins. Git sources can opt into
-`auto_update` for a background update on startup. Updates are safe: Noctalia reads the new revision's `min_noctalia`
-(from the catalog) **before** applying anything, and **skips** the update if it would require a newer Noctalia than you
-run — your working version stays untouched.
+`auto_update` for a background update on startup. Updates are safe per enabled plugin: if one enabled plugin's new
+version requires a newer Noctalia, Noctalia keeps that plugin's previous exported copy, still updates compatible enabled
+plugins from the same source, and advances the source catalog. After Noctalia is updated, the held plugin can catch up
+from the already-updated source revision.
 
 ## Compatibility
 
