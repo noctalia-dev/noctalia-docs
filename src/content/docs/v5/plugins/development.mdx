@@ -35,13 +35,18 @@ name         = "Hello"
 version      = "1.0.0"
 min_noctalia = "5.0.0"        # mandatory: minimum Noctalia version
 author       = "me"
+license      = "MIT"          # optional; defaults to MIT
+deprecated   = false          # optional; defaults to false
 icon         = "puzzle"       # optional
 description  = "A friendly greeter."
 tags         = ["demo"]       # optional, for catalog search
 ```
 
-`min_noctalia` is required — a manifest without it is rejected. It gates enable, the catalog badge, and the post-update
-safety rollback.
+`name` and `min_noctalia` are required — a manifest without either is rejected. `min_noctalia` gates enable, the
+catalog badge, and the post-update safety rollback.
+
+`license` defaults to `MIT` when omitted. `deprecated = true` marks the plugin as deprecated in plugin listings; it is a
+soft status marker, not a compatibility gate.
 
 ### Entries
 
@@ -253,9 +258,15 @@ id           = "me/hello"
 name         = "Hello"
 version      = "1.0.0"
 author       = "me"
+license      = "MIT"
+icon         = "puzzle"
+description  = "A friendly greeter."
+deprecated   = false
 min_noctalia = "5.0.0"
 tags         = ["demo"]
 ```
+
+Catalog rows require `id` and `name`; rows without either are ignored.
 
 Users add your repo with `noctalia msg plugins source add <name> git <url>`, then enable plugins from it. To contribute
 to the official catalog, open a PR against
