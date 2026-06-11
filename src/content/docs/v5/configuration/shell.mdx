@@ -179,20 +179,24 @@ lock-key state polling. `keyboard_layout = false` disables layout-change popups.
 
 ## Lock screen
 
-When `wlr-screencopy` is available, Noctalia can capture the desktop **before** the session lock engages and use that snapshot as the lock screen background instead of the wallpaper. Disabled by default.
+Set **`[lockscreen].enabled = false`** to turn off session lock entirely: no `ext-session-lock-v1` engagement, no logind lock/unlock integration, and lock actions are hidden or no-op (idle lock, session panel, launcher, and `noctalia msg session lock`). **`lock-and-suspend`** falls back to suspend-only while the lock screen is disabled.
+
+When enabled and `wlr-screencopy` is available, Noctalia can capture the desktop **before** the session lock engages and use that snapshot as the lock screen background instead of the wallpaper. Desktop capture is disabled by default.
 
 Configure under **`[lockscreen]`** in TOML, or use **Settings → Security → Lock Screen**. The **Desktop capture** toggle appears only when your compositor supports screencopy. Use **Wallpaper** to pick a custom lock screen image (empty uses the desktop wallpaper per output).
 
 ```toml
 [lockscreen]
-blurred_desktop = false   # use a desktop snapshot as the lock screen background
-blur_intensity  = 0.5     # background blur (0.0 = none, 1.0 = maximum)
-tint_intensity  = 0.3     # surface-color tint over the background (0.0 = none, 1.0 = opaque)
+enabled         = true      # master switch for session lock
+blurred_desktop = false     # use a desktop snapshot as the lock screen background
+blur_intensity  = 0.5       # background blur (0.0 = none, 1.0 = maximum)
+tint_intensity  = 0.3       # surface-color tint over the background (0.0 = none, 1.0 = opaque)
 wallpaper       = ""        # optional image path; empty uses the desktop wallpaper per output
 ```
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
+| `enabled` | bool | `true` | Master switch for session lock, logind integration, and lock actions. |
 | `blurred_desktop` | bool | `false` | Capture each output before lock and use it as the lock screen background. |
 | `blur_intensity` | float | `0.5` | Blur strength for the active lock screen background (`0.0`–`1.0`). |
 | `tint_intensity` | float | `0.3` | Surface-color tint over the active lock screen background (`0.0`–`1.0`). |

@@ -29,7 +29,7 @@ margin_edge         = 8          # distance from the nearest screen edge (positi
 
 show_running        = true       # also show running apps not in the pinned list
 auto_hide           = false      # fade out when pointer leaves; fade in on approach
-reserve_space       = false      # keep exclusive zone even when auto-hidden
+reserve_space       = true       # reserve compositor exclusive zone / push windows away
 
 active_scale        = 1.0        # icon scale for the focused app (clamped 0.1–1.75)
 inactive_scale      = 0.85       # icon scale for non-focused apps (clamped 0.1–1.0)
@@ -90,12 +90,9 @@ When `magnification = true` (default), icons grow as the pointer moves along the
 
 ## Auto-hide
 
-When `auto_hide = true`, the dock:
-- Does **not** reserve compositor exclusive zone.
-- Fades out after the pointer leaves (slow ease-in animation).
-- Fades back in when the pointer enters the thin edge trigger strip.
+When `auto_hide = true`, the dock fades out after the pointer leaves and fades back in when the pointer enters the thin edge trigger strip.
 
-Set `reserve_space = true` to keep the exclusive zone while auto-hidden.
+`reserve_space` controls whether the dock keeps a compositor exclusive zone. With `auto_hide = false`, `reserve_space = true` keeps windows pushed away; `reserve_space = false` overlays the dock on top of full-screen clients. With `auto_hide = true`, `reserve_space = false` retracts the dock as an overlay (no gap); `reserve_space = true` keeps the gap while the dock slides out of view.
 
 ---
 
