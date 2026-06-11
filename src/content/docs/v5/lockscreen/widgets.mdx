@@ -37,7 +37,7 @@ Text widgets (clock, weather, media player, label, sysmon) support a per-widget 
 
 ## Edit mode
 
-Edit mode is only available while the session is **unlocked**. The editor shows a dimmed full-screen preview with a movable **login box** preview on each monitor (one per output, move-only).
+Edit mode is only available while the session is **unlocked**. The editor shows a dimmed full-screen preview with a movable **login box** preview on each monitor (one per output).
 
 ### Related IPC
 
@@ -48,7 +48,7 @@ You can also use **Settings → Security → Lock screen → Toggle Editor**.
 
 ### Controls
 
-Same interaction model as desktop widget edit mode (move, rotate, resize, grid snap, center guides, toolbar), except the **login box** widget is mandatory per monitor and can only be moved. See [Desktop widgets — Edit mode](/v5/desktop/widgets/#edit-mode).
+Same interaction model as desktop widget edit mode (move, rotate, resize, grid snap, center guides, toolbar), except the **login box** widget is mandatory per monitor and can only be moved (not resized or rotated). Select it and open the settings inspector to adjust panel and input styling; **Reset to Defaults** at the bottom restores all login box settings. See [Desktop widgets — Edit mode](/v5/desktop/widgets/#edit-mode).
 
 ---
 
@@ -57,3 +57,28 @@ Same interaction model as desktop widget edit mode (move, rotate, resize, grid s
 The schema mirrors `[desktop_widgets]`: `enabled`, `schema_version`, optional `[lockscreen_widgets.grid]`, `widget_order`, and `[lockscreen_widgets.widget.<id>]` tables with `type`, `output`, `cx`, `cy`, `box_width`, `box_height`, `rotation`, `enabled`, and `[lockscreen_widgets.widget.<id>.settings]`.
 
 Widget IDs generated in the editor use the `lockscreen-widget-` prefix. Login box placement uses fixed IDs `lockscreen-login-box@<output>` with `type = "login_box"` (not shown in the add-widget list).
+
+### Login box settings
+
+The login box uses the same inspector layout as other lockscreen widgets:
+
+- **Widget** — login button visibility, password field opacity and corner radius (`show_login_button`, `input_opacity`, `input_radius`)
+- **Background** — outer bar color, opacity, and corner radius (`background_color`, `background_opacity`, `background_radius`)
+
+| Setting | Default | Range | Description |
+| --- | --- | --- | --- |
+| `background_color` | `surface_variant` | color role | Outer login bar fill |
+| `background_opacity` | `0.88` | `0.0`–`1.0` | Outer login bar opacity |
+| `background_radius` | `12` | `0`–`32` | Outer login bar corner radius (logical px) |
+| `show_login_button` | `true` | bool | Show the check button beside the password field |
+| `input_opacity` | `1.0` | `0.0`–`1.0` | Password field background opacity |
+| `input_radius` | `6` | `0`–`32` | Password field corner radius (logical px) |
+
+```toml
+[lockscreen_widgets.widget."lockscreen-login-box@DP-1".settings]
+background_color = "surface_variant"
+background_opacity = 0.75
+background_radius = 16.0
+input_opacity = 0.9
+input_radius = 8.0
+```
