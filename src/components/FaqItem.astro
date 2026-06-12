@@ -76,7 +76,10 @@ const slug =
 
     // Inject TOC entries under each section
     for (const [sectionId, items] of sections) {
-      const sectionLink = toc.querySelector<HTMLAnchorElement>(`a[href="#${sectionId}"]`);
+      // Match by URL hash so links rewritten to ?section=xxx#xxx still resolve (see section-deeplink.js).
+      const sectionLink = Array.from(toc.querySelectorAll<HTMLAnchorElement>("a")).find(
+        (a) => decodeURIComponent(a.hash.slice(1)) === sectionId
+      );
       if (!sectionLink) continue;
       const sectionLi = sectionLink.closest("li");
       if (!sectionLi) continue;

@@ -45,7 +45,9 @@ import Default from '@astrojs/starlight/components/TableOfContents.astro';
       const navHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sl-nav-height') || '0');
       this.topMargin = navHeight + 32;
 
-      const links = Array.from(this.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'));
+      // Match by URL hash (not literal "#" prefix) so links rewritten to the
+      // Discord-shareable ?section=xxx#xxx form are still tracked. See section-deeplink.js.
+      const links = Array.from(this.querySelectorAll<HTMLAnchorElement>('a[href*="#"]'));
 
       // Build a map from heading ID to TOC link index
       const idToLinkIndex = new Map<string, number>();
@@ -139,7 +141,9 @@ import Default from '@astrojs/starlight/components/TableOfContents.astro';
       // Skip if this TOC is hidden (mobile vs desktop)
       if (!this.isVisible()) return;
 
-      const links = Array.from(this.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'));
+      // Match by URL hash (not literal "#" prefix) so links rewritten to the
+      // Discord-shareable ?section=xxx#xxx form are still tracked. See section-deeplink.js.
+      const links = Array.from(this.querySelectorAll<HTMLAnchorElement>('a[href*="#"]'));
 
       // Copy visible indices and update link attributes
       const visibleIndices = new Set(this.visibleLinkIndices);

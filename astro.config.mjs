@@ -43,6 +43,13 @@ export default defineConfig({
             defer: true,
           },
         },
+        {
+          tag: "script",
+          attrs: {
+            src: "/section-deeplink.js",
+            defer: true,
+          },
+        },
       ],
       title: "Noctalia",
       logo: {
