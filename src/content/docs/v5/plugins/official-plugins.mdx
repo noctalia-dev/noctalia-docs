@@ -6,6 +6,9 @@ sidebar:
   order: 3
 ---
 
+import IpcCommand from '../../../../components/IpcCommand.astro';
+import PluginMeta from '../../../../components/PluginMeta.astro';
+
 :::caution[Experimental — under heavy development]
 The plugin system is under **heavy development** and subject to breaking changes at any time. Treat it as experimental —
 use it for tinkering, not in a setup you depend on. Community plugin submissions are **not accepted yet**.
@@ -27,19 +30,23 @@ noctalia msg plugin <author/plugin:entry> <target> <event> [payload]
 
 ---
 
-## example — `noctalia/example`
+## Example {#example}
+
+<PluginMeta icon="puzzle" id="noctalia/example" />
 
 A reference plugin that exercises every entry kind: a bar **widget**, a headless **service** (ticks once a second and
 publishes to the plugin's state channel), and a control-center **shortcut**. Good starting point for reading real code.
 
 | Command | Effect |
 |---------|--------|
-| `noctalia msg plugin noctalia/example:hello focused set "New label"` | set the widget's text |
-| `noctalia msg plugin noctalia/example:hello focused fetch "https://example.com"` | async HTTP GET; notifies with the status + body size |
+| <IpcCommand command='plugin noctalia/example:hello focused set "New label"' /> | set the widget's text |
+| <IpcCommand command='plugin noctalia/example:hello focused fetch "https://example.com"' /> | async HTTP GET; notifies with the status + body size |
 
 ---
 
-## screen_recorder — `noctalia/screen_recorder`
+## Screen Recorder {#screen_recorder}
+
+<PluginMeta icon="video" id="noctalia/screen_recorder" />
 
 Screen recording and a replay buffer via [`gpu-screen-recorder`](https://git.dec05eba.com/gpu-screen-recorder/) (must
 be installed, natively or as the Flatpak). The recording logic lives in a headless **service** that runs for the whole
@@ -50,17 +57,19 @@ The service is a singleton, so address it with **`all`**:
 
 | Command | Effect |
 |---------|--------|
-| `noctalia msg plugin noctalia/screen_recorder:service all start` | start recording |
-| `noctalia msg plugin noctalia/screen_recorder:service all stop` | stop recording |
-| `noctalia msg plugin noctalia/screen_recorder:service all toggle` | start/stop recording |
-| `noctalia msg plugin noctalia/screen_recorder:service all replay-start` | start the replay buffer |
-| `noctalia msg plugin noctalia/screen_recorder:service all replay-stop` | stop the replay buffer |
-| `noctalia msg plugin noctalia/screen_recorder:service all replay-toggle` | start/stop the replay buffer |
-| `noctalia msg plugin noctalia/screen_recorder:service all replay-save` | save the last buffered seconds |
+| <IpcCommand command="plugin noctalia/screen_recorder:service all start" /> | start recording |
+| <IpcCommand command="plugin noctalia/screen_recorder:service all stop" /> | stop recording |
+| <IpcCommand command="plugin noctalia/screen_recorder:service all toggle" /> | start/stop recording |
+| <IpcCommand command="plugin noctalia/screen_recorder:service all replay-start" /> | start the replay buffer |
+| <IpcCommand command="plugin noctalia/screen_recorder:service all replay-stop" /> | stop the replay buffer |
+| <IpcCommand command="plugin noctalia/screen_recorder:service all replay-toggle" /> | start/stop the replay buffer |
+| <IpcCommand command="plugin noctalia/screen_recorder:service all replay-save" /> | save the last buffered seconds |
 
 ---
 
-## translator — `noctalia/translator`
+## Translator {#translator}
+
+<PluginMeta icon="language" id="noctalia/translator" />
 
 Translate text straight from the launcher via Google Translate. A **launcher provider** behind the `/tr` prefix — type
 `/tr <lang> <text>` (e.g. `/tr es hello world`) and press **Enter** on a result to copy the translation. If the first
@@ -69,12 +78,14 @@ word isn't a language, the whole query is translated to the **default target lan
 
 ---
 
-## bongocat — `noctalia/bongocat`
+## Bongo Cat {#bongocat}
+
+<PluginMeta icon="cat" id="noctalia/bongocat" />
 
 A bar cat that taps along to your keystrokes (via `evtest`) or to the audio spectrum. Single bar **widget**.
 
 | Command | Effect |
 |---------|--------|
-| `noctalia msg plugin noctalia/bongocat:cat focused pause` | freeze the cat |
-| `noctalia msg plugin noctalia/bongocat:cat focused resume` | resume tapping |
-| `noctalia msg plugin noctalia/bongocat:cat focused toggle` | pause/resume |
+| <IpcCommand command="plugin noctalia/bongocat:cat focused pause" /> | freeze the cat |
+| <IpcCommand command="plugin noctalia/bongocat:cat focused resume" /> | resume tapping |
+| <IpcCommand command="plugin noctalia/bongocat:cat focused toggle" /> | pause/resume |
