@@ -174,7 +174,8 @@ Shows the active window icon and title for the current output. The window icon u
 | `max_length` | number | `260` | Maximum widget length in pixels |
 | `icon_size` | number | `14` | Icon size in pixels |
 | `title_scroll` | string | `"none"` | Title scrolling mode: `"none"`, `"always"`, or `"on_hover"` |
-| `icon_only` | bool | `false` | On horizontal bars, show only the window icon. Vertical bars always show the icon only. |
+| `display` | string | `"icon_and_text"` | Content mode on horizontal bars: `"icon_and_text"`, `"icon_only"`, or `"text_only"`. Vertical bars show the icon only when a window is focused. |
+| `show_empty_label` | bool | `false` | When enabled, show "No active window" instead of hiding the widget when no window is focused |
 
 ```toml
 [widget.active_window]
@@ -182,7 +183,8 @@ min_length = 80
 max_length = 260
 icon_size = 14
 title_scroll = "on_hover"
-icon_only = true
+display = "icon_and_text"
+show_empty_label = true
 ```
 
 ---
@@ -323,8 +325,8 @@ Horizontal audio spectrum using the current PipeWire monitor stream.
 | `mirrored` | bool | `true` | Mirror the spectrum around the center line |
 | `centered` | bool | `true` | Center bars on the cross axis instead of aligning them to the edge |
 | `show_when_idle` | bool | `false` | Keep the widget visible even when no media is playing |
-| `low_color` | string | `"primary"` | Color role or hex color for the first bars |
-| `high_color` | string | `"primary"` | Color role or hex color for the last bars |
+| `color_1` | string | `"primary"` | First gradient color role; fixed hex colors are also supported |
+| `color_2` | string | `"primary"` | Second gradient color role; fixed hex colors are also supported |
 
 The widget height fills the available bar space automatically.
 
@@ -335,30 +337,29 @@ width      = 64
 bands      = 20
 centered   = true
 show_when_idle = true
-low_color  = "primary"
-high_color = "secondary"
+color_1 = "primary"
+color_2 = "secondary"
 ```
 
 ---
 
 ## `media`
 
-Shows the current media artwork and track title from MPRIS.
+Shows the current media artwork and track title from MPRIS. On vertical bars (`left` / `right`), only the artwork is shown. On horizontal bars, enable `album_art_only` for the same compact look.
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `min_length` | number | `80` | Minimum widget length in pixels |
-| `max_length` | number | `220` | Maximum widget length in pixels |
+| `album_art_only` | bool | `false` | Show only circular album artwork (horizontal bars; hidden in Settings on vertical bars) |
+| `min_length` | number | `80` | Minimum widget length in pixels (hidden when `album_art_only` is enabled) |
+| `max_length` | number | `220` | Maximum widget length in pixels (hidden when `album_art_only` is enabled) |
 | `art_size` | number | `16` | Artwork size in pixels before scale |
-| `title_scroll` | string | `"none"` | Media title scrolling mode: `"none"`, `"always"`, or `"on_hover"` |
+| `title_scroll` | string | `"none"` | Media title scrolling mode: `"none"`, `"always"`, or `"on_hover"` (hidden when `album_art_only` is enabled) |
 | `hide_when_no_media` | bool | `false` | Hide the widget when no MPRIS player is active |
 
 ```toml
 [widget.media]
-min_length = 80
-max_length = 220
-art_size   = 24
-title_scroll = "on_hover"
+album_art_only = true
+art_size       = 24
 hide_when_no_media = true
 ```
 

@@ -179,7 +179,7 @@ circle = true
 
 ### audio_visualizer
 
-Desktop audio visualizers store an `aspect_ratio` setting for shape while `scale` controls overall size. They also accept optional `mirrored`, `centered`, `show_when_idle`, `low_color`, and `high_color` settings; both colors default to `primary`.
+Desktop audio visualizers store an `aspect_ratio` setting for shape while `scale` controls overall size. They also accept optional `mirrored`, `centered`, `show_when_idle`, `color_1`, and `color_2` settings; both colors default to `primary`.
 
 ```toml
 [desktop_widgets.widget.audio_main]
@@ -196,8 +196,8 @@ aspect_ratio = 2.5
 mirrored     = true
 centered     = true
 show_when_idle = false
-low_color    = "primary"
-high_color   = "secondary"
+color_1      = "primary"
+color_2      = "secondary"
 ```
 
 | Setting | Type | Default | Description |
@@ -207,8 +207,8 @@ high_color   = "secondary"
 | `mirrored` | bool | `true` | Mirror the spectrum horizontally |
 | `centered` | bool | `true` | Center bars vertically instead of aligning them to the bottom edge |
 | `show_when_idle` | bool | `false` | Keep the widget visible even when no media is playing |
-| `low_color` | string | `"primary"` | Gradient low-end color role; fixed hex colors are also supported |
-| `high_color` | string | `"primary"` | Gradient high-end color role; fixed hex colors are also supported |
+| `color_1` | string | `"primary"` | First gradient color role; fixed hex colors are also supported |
+| `color_2` | string | `"primary"` | Second gradient color role; fixed hex colors are also supported |
 
 ---
 
