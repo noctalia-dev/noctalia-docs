@@ -60,6 +60,15 @@ The service is a singleton, so address it with **`all`**:
 
 ---
 
+## translator — `noctalia/translator`
+
+Translate text straight from the launcher via Google Translate. A **launcher provider** behind the `/tr` prefix — type
+`/tr <lang> <text>` (e.g. `/tr es hello world`) and press **Enter** on a result to copy the translation. If the first
+word isn't a language, the whole query is translated to the **default target language** (a plugin setting, default
+`en`). Language can be a code (`fr`) or a name (`french`, `français`).
+
+---
+
 ## bongocat — `noctalia/bongocat`
 
 A bar cat that taps along to your keystrokes (via `evtest`) or to the audio spectrum. Single bar **widget**.
