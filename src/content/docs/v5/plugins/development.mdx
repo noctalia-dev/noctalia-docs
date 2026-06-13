@@ -58,6 +58,7 @@ optional settings schema. The supported entry kinds:
 | `[[widget]]` | Bar widget | Placed on a bar; ticks + handles clicks/IPC |
 | `[[shortcut]]` | Control-center tile | A toggle tile in the control center |
 | `[[launcher_provider]]` | Launcher provider | Answers launcher queries with results, behind a prefix |
+| `[[desktop_widget]]` | Desktop widget | A tile on the desktop; declares its UI as a `ui.*` tree |
 | `[[service]]` | Headless service | Background loop, no UI — feeds the plugin's other entries |
 
 An entry is addressed `<author>/<plugin>:<entry-id>` — e.g. a bar widget is configured with
@@ -142,14 +143,15 @@ label = "Short"
 A script defines **global functions** that Noctalia calls, and drives the UI through the API namespaces. Which globals
 apply depends on the entry kind:
 
-| Function | Widget | Shortcut | Launcher | Service | When |
-|----------|:------:|:--------:|:--------:|:-------:|------|
-| `update()` | ✓ | | | ✓ | every update interval |
-| `onClick()` / `onRightClick()` | ✓ | ✓ | | | pointer press |
-| `onMiddleClick()` | ✓ | | | | middle press |
-| `onQuery(text)` | | | ✓ | | launcher text changed (behind the prefix) |
-| `onActivate(id)` | | | ✓ | | a launcher result was selected |
-| `onIpc(event, payload)` | ✓ | ✓ | ✓ | ✓ | `noctalia msg plugin …` |
+| Function | Widget | Shortcut | Launcher | Desktop | Service | When |
+|----------|:------:|:--------:|:--------:|:-------:|:-------:|------|
+| `update()` | ✓ | | | ✓ | ✓ | every update interval |
+| `onClick()` / `onRightClick()` | ✓ | ✓ | | | | pointer press |
+| `onMiddleClick()` | ✓ | | | | | middle press |
+| `onQuery(text)` | | | ✓ | | | launcher text changed (behind the prefix) |
+| `onActivate(id)` | | | ✓ | | | a launcher result was selected |
+| `onFrameTick(deltaMs)` | | | | ✓ | | every frame, after `desktopWidget.setNeedsFrameTick(true)` |
+| `onIpc(event, payload)` | ✓ | ✓ | ✓ | ✓ | ✓ | `noctalia msg plugin …` |
 
 The top level of the script runs once at load — set up state and register `noctalia.state.watch` handlers there.
 
@@ -241,6 +243,64 @@ function onActivate(id)
   noctalia.copyToClipboard(id, "text/plain")
 end
 ```
+
+### `desktopWidget.*` — declarative desktop widget UI
+
+A desktop widget does not patch a fixed control — it **describes its whole UI as a tree** and hands it to
+`desktopWidget.render(tree)`. The host diffs the new tree against the previous one and updates the retained native
+controls in place, so calling `render()` with an unchanged tree is free. Build trees with the `ui.*` constructors
+(available in every desktop-widget script); each takes a props table and an optional children array:
+
+`render(tree)` · `setWantsSecondTicks(bool)` · `setNeedsFrameTick(bool)` · `getConfig(key)`
+
+```lua
+local color = desktopWidget.getConfig("color")
+
+function update()
+  desktopWidget.setWantsSecondTicks(true) -- tick update() on second boundaries
+  desktopWidget.render(ui.column({ gap = 10, align = "center" }, {
+    ui.label({ text = os.date("%H:%M:%S"), fontSize = 32, fontWeight = "bold", color = color }),
+    ui.row({ gap = 8 }, {
+      ui.button({ text = "Ping", variant = "primary", onClick = "ping" }),
+    }),
+  }))
+end
+
+function ping()
+  noctalia.notify("Desktop widget", "button clicked")
+end
+```
+
+The available controls and their props (sizes are logical px, scaled with the widget):
+
+| Constructor | Props |
+|-------------|-------|
+| `ui.column` / `ui.row` | `gap`, `padding`, `paddingH`, `paddingV`, `align` (`start`/`center`/`end`/`stretch`), `justify` (`start`/`center`/`end`/`space_between`), `fill`, `radius`, `border`, `borderWidth`, `minWidth`, `minHeight` |
+| `ui.label` | `text`, `fontSize`, `color`, `fontWeight` (`thin`…`heavy`), `maxWidth`, `maxLines`, `textAlign` |
+| `ui.glyph` | `name` (Tabler/Nerd-Font glyph), `size`, `color` |
+| `ui.image` | `path` (plugin-relative or absolute), `width`, `height`, `radius`, `fit` (`contain`/`cover`/`stretch`) |
+| `ui.box` | `fill`, `radius`, `border`, `borderWidth`, `width`, `height` |
+| `ui.separator` | `thickness`, `color`, `spacing`, `orientation` (`auto`/`horizontal`/`vertical`) |
+| `ui.spacer` | flexible filler (use `flexGrow`) |
+| `ui.progress` | `progress` (0–1), `fill`, `track`, `radius`, `width`, `height` |
+| `ui.button` | `text`, `glyph`, `fontSize`, `glyphSize`, `variant` (`default`/`primary`/`secondary`/`destructive`/`outline`/`ghost`), `enabled`, `onClick`, `onRightClick` |
+| `ui.graph` | `values` / `values2` (arrays of 0–1 numbers), `color` / `color2`, `lineWidth`, `fillOpacity`, `width`, `height` |
+
+Every control also accepts `width`, `height`, `flexGrow`, `opacity`, and `visible`. Colors are a palette role token
+(`primary`, `on_surface`, …) or a hex value (`#rrggbb`). An unknown control type or prop is logged and skipped — typos
+surface in the log instead of failing silently.
+
+- **Callbacks**: `onClick = "name"` names a **global function in your script**; the host calls it when the button is
+  clicked.
+- **Identity**: give list children a `key` prop so reordering reuses the same native controls.
+- **Ticks**: `setWantsSecondTicks(true)` runs `update()` on second boundaries (clocks/timers).
+  `setNeedsFrameTick(true)` additionally delivers `onFrameTick(deltaMs)` every frame for continuous animation — frames
+  are coalesced, a slow script only ever sees the latest one.
+- **Position is host-owned**: the user places, sizes, and rotates the tile in the desktop-widgets editor; the script
+  only renders content and reads its declared settings.
+
+The reference implementation is the official `noctalia/timer` plugin — a countdown timer with start/pause/reset
+buttons and a progress bar.
 
 ### `noctalia.*` — host capabilities
 
