@@ -29,7 +29,9 @@ If you are using the Quickshell-based version, use the [v4 documentation](/v4/) 
 
 <FaqItem question="How do I start Noctalia automatically?">
 
-Use your compositor's autostart mechanism. Examples for each supported compositor:
+Noctalia does not manage session autostart from its Settings app. Use your compositor's autostart mechanism instead.
+
+Examples for each supported compositor:
 
 :::note[Niri]
 Add to `~/.config/niri/config.kdl`:
@@ -76,11 +78,55 @@ If your compositor expects startup commands to return after the shell has initia
 
 <FaqItem question="Where should I put my config, and why is my setting ignored?">
 
-Put hand-written config in `~/.config/noctalia/`. Noctalia reads every `*.toml` file in that directory, sorted alphabetically, and merges them.
+If you only use Settings, you normally do not need to edit config files. Settings writes your changes to
+`~/.local/state/noctalia/settings.toml`.
 
-Settings changed through the UI are written to `~/.local/state/noctalia/settings.toml`. That file loads after your config files, so it wins when both layers define the same setting.
+If you write config by hand, put it in `~/.config/noctalia/`. Noctalia reads every `*.toml` file in that directory,
+sorted alphabetically, and merges them.
+
+Settings changes load after hand-written config, so they win when both layers define the same setting. If a value in your
+file looks ignored, check Settings first, or inspect `~/.local/state/noctalia/settings.toml`.
 
 See [How configuration works](/v5/configuration/) for the full load order and export options.
+
+</FaqItem>
+
+<FaqItem question="Why do two copies of the same widget share settings?">
+
+Widget settings are attached to the widget name used in the bar list. If you place the same name twice, both entries use
+the same configuration.
+
+In Settings, open the Add widget selector and turn on the **Named Widget** toggle at the top before choosing the widget
+type. Create one named widget for each copy you want to configure separately. Middle-click a widget to open the Settings
+page for that exact instance.
+
+In text config, give each copy its own name, then set `type` to the widget you want:
+
+```toml
+[bar.main]
+end = ["sysmon-left", "sysmon-right"]
+
+[widget.sysmon-left]
+type = "sysmon"
+# settings for the first sysmon
+
+[widget.sysmon-right]
+type = "sysmon"
+# settings for the second sysmon
+```
+
+See [Widget definitions](/v5/bar/widgets/#widget-definitions) for more examples.
+
+</FaqItem>
+
+<FaqItem question="How do I choose Monday or Sunday as the first day of the week?">
+
+This is not a Noctalia setting. There is no Settings toggle or TOML key for it in v5.
+
+Noctalia follows your system locale, so set the first day of the week through your system's `LC_TIME` locale.
+
+This is different from v4, which had a Noctalia-specific override. In v5, calendar and localized date behavior come from
+the active system locale.
 
 </FaqItem>
 
@@ -88,19 +134,25 @@ See [How configuration works](/v5/configuration/) for the full load order and ex
 
 Start with compositor output scaling. That is the correct way to handle HiDPI monitors and affects all Wayland clients consistently.
 
-For Noctalia-specific sizing:
+For Noctalia-specific sizing in Settings:
 
-- Use `shell.ui_scale` for non-bar shell UI such as panels, launcher, clipboard, and settings.
-- Use `bar.scale` for bar widget content.
-- Use widget-specific size settings where available.
+- Use **Appearance → Interface → UI scale** for non-bar shell UI such as panels, launcher, clipboard, and settings.
+- Use **Bar → Layout → Content scale** for bar widget content.
+- Middle-click a bar widget to open widget-specific size settings where available.
 
-See [Shell settings](/v5/shell/#shell-settings) and [Bars](/v5/bar/).
+In text config, the main keys are `shell.ui_scale`, `[bar.<name>].scale`, and `[widget.<name>].scale`.
+
+See [Shell settings](/v5/configuration/shell/#shell-settings) and [Bars](/v5/bar/).
 
 </FaqItem>
 
 <FaqItem question="How can I get Noctalia to display in my language?">
 
-Noctalia follows your system locale by default. You can override language detection with `shell.lang`:
+Noctalia follows your system locale by default.
+
+In Settings, use **Appearance → Interface → Language**.
+
+In text config, set `shell.lang`:
 
 ```toml
 [shell]
@@ -116,7 +168,15 @@ matches `zh-Hans`.
 
 <FaqItem question="How do I use Noctalia colors with an external wallpaper app?">
 
-If you manage wallpapers with another tool such as waypaper, swww, or hyprpaper, disable Noctalia's wallpaper rendering and keep wallpaper-driven theme generation enabled:
+If you manage wallpapers with another tool such as waypaper, swww, or hyprpaper, let that app draw the wallpaper and let
+Noctalia use the image only for color extraction.
+
+In Settings:
+
+1. Turn off **Wallpaper → General → Enabled**.
+2. Set **Appearance → Theme → Palette source** to **Wallpaper**.
+
+In text config:
 
 ```toml
 # Disable Noctalia wallpaper display
@@ -150,6 +210,9 @@ Check these points first:
 3. Verify that your compositor bind syntax is correct.
 4. Test the command in a terminal before putting it in a compositor config.
 
+Noctalia Settings does not create compositor keybinds. Keybinds belong in your compositor's configuration; Noctalia only
+receives the IPC command.
+
 See the [IPC overview](/v5/ipc/) and [Shell & UI commands](/v5/ipc/shell-and-ui/).
 
 </FaqItem>
@@ -164,7 +227,10 @@ On NixOS, enable:
 services.upower.enable = true;
 ```
 
-The battery widget defaults to the system battery. If you want to show a peripheral or second battery, configure the widget's `device` setting. See the [`battery` widget docs](/v5/bar/widgets/#battery).
+The battery widget defaults to the system battery. If you want to show a peripheral or second battery, middle-click the
+battery widget and choose its **Device** setting. In text config, set the widget's `device` key.
+
+See the [`battery` widget docs](/v5/bar/widgets/#battery).
 
 </FaqItem>
 
@@ -183,9 +249,17 @@ For dock pins, match the desktop entry ID, `StartupWMClass`, display name, or fu
 
 <FaqItem question="Why are weather or Night Light not working?">
 
-Weather requires `[weather] enabled = true` plus a resolved location — set `[location] auto_locate = true` or an `[location] address`. The weather widget also requires the weather service to be enabled.
+Weather and Night Light both use **Settings → Location**. Set **Auto locate** or enter an **Address** there first.
 
-Weather, Theme `auto`, and Night Light all share the `[location]` source (`auto_locate`/`address` coordinates, manual `latitude`/`longitude`, or fixed `sunset`/`sunrise`). Night Light also needs compositor support for the `wlr-gamma-control` protocol.
+For Weather, also enable **Location → Weather**. The bar `weather` widget requires the weather service to be enabled.
+
+For Night Light, also enable **Location → Night Light**. Night Light requires compositor support for the
+`wlr-gamma-control` protocol.
+
+In text config, Weather requires `[weather] enabled = true` plus a resolved `[location]` source such as
+`auto_locate = true` or `address = "..."`.
+
+Weather, Theme `auto`, and Night Light all share the same location source.
 
 See [Location](/v5/services/location/), [Theme](/v5/theming/#mode), and [Night Light](/v5/services/night-light/).
 
