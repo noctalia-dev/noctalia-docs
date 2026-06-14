@@ -85,7 +85,7 @@ After syncing, log out or restart greetd to see the changes on the login screen.
 
 The greeter adds a **Synced** color scheme when sync data is present. Session and scheme choices you make on the login screen are remembered in `/var/lib/noctalia-greeter/greeter.conf`.
 
-For monitor selection, UI scale, and other admin settings, see [Configuration](/v5/greeter/configuration/).
+For monitor selection, UI scale, cursor theme, and other admin settings, see [Configuration](/v5/greeter/configuration/).
 
 ---
 
@@ -114,3 +114,4 @@ The greeter works without a mouse.
 - **Synced look missing** - Install Noctalia v5, the greeter, and the polkit policy; sync again from Settings; restart greetd or log out once.
 - **Sync fails with no privilege escalator** - Greeter sync needs `pkexec` or `run0` on `PATH` (for example when `pkexec` is disabled on NixOS, install `run0` from systemd ≥ 256). A polkit authentication agent must be running in your session.
 - **UI too small or too large on a high-DPI monitor** - Set `scale` in `greeter.conf`. See [Configuration](/v5/greeter/configuration/#ui-scale).
+- **Wrong or default cursor theme** - Set `cursor_theme` (and `cursor_size`) in `greeter.conf`, or the `XCURSOR_*` variables in the greetd command. If the theme is not on the default search path, also set `cursor_path` / `XCURSOR_PATH`. See [Cursor theme](/v5/greeter/configuration/#cursor-theme).
