@@ -146,6 +146,26 @@ See [Shell settings](/v5/configuration/shell/#shell-settings) and [Bars](/v5/bar
 
 </FaqItem>
 
+<FaqItem question="How do I tweak the seam between the bar and attached panels?">
+
+Attached panels (like the control center) sit flush against the bar, so the line where they meet — the seam — can show a faint cut, a hairline gap, or a doubled edge depending on your compositor and display scaling. These artifacts mostly show up with a highly transparent bar, where the seam between the two surfaces has nothing opaque to hide behind. If the seam bothers you, the simplest fix is to raise `background_opacity` toward `1.0`; the settings below help when you want to keep the transparency. Three settings control how that seam looks.
+
+**Hide or tune the cut with `panel_overlap`.** This sets how many logical pixels an attached panel is pulled into the bar so the two surfaces share one edge. The default is `1`. If you see a faint seam line, try `0`; if a gap appears, raise it; negative values push the panel away from the bar. The right value depends on the output's fractional scale, so on a mixed-scale multi-monitor setup you can set it per monitor with a `[bar.<name>.monitor.*]` override. In Settings it lives under **Bar → Layout → Advanced**.
+
+**Embrace the cut with `contact_shadow`.** Instead of hiding the seam, this draws a dark gradient where the panel meets the bar, giving the panel a lifted-off-the-bar feel. It is independent of the bar's `shadow` and only affects attached panels; the change applies the next time a panel opens. In Settings it lives under **Bar → Effects**.
+
+**Mind the compositor blur.** The bar and an attached panel are separate Wayland surfaces, so the compositor blurs each one on its own. With a large blur sampling offset the two blur passes don't line up at the seam, and the gap between them becomes visible. How much shows up depends on the compositor: Hyprland handles it well, while Niri tends to reveal the split more. If the seam looks off with blur, lower your compositor's blur size/passes (or its sampling offset) rather than chasing it with `panel_overlap`.
+
+```toml
+[bar.main]
+panel_overlap  = 0      # 1 is default; 0 removes the overlap, negative pushes the panel away
+contact_shadow = true   # dark gradient at the seam for a lifted look
+```
+
+See [Bars](/v5/bar/) for the full per-bar and per-monitor field list.
+
+</FaqItem>
+
 <FaqItem question="How can I get Noctalia to display in my language?">
 
 Noctalia follows your system locale by default.
