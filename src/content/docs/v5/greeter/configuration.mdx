@@ -61,17 +61,15 @@ scale = 1.5
 
 ## Multi-monitor
 
-The greeter runs inside Cage, which can span all connected outputs. By default it shows on the **primary monitor only** (largest by pixel area). After connecting to Wayland it uses `wlr-randr` to turn off the other connectors so the login UI does not stretch across every display.
+The greeter runs inside the bundled wlroots compositor (`noctalia-greeter-compositor`). By default it shows the **same login UI on every connected monitor**, with each display sized to its own resolution and scale.
 
-To pin the greeter to a specific connector:
+To pin the greeter to a single connector:
 
 ```ini
 output = "DP-2"
 ```
 
-`wlr-randr` must be installed. If `output` is missing, empty, or names a disconnected connector, the greeter falls back to the primary display only.
-
-When `wlr-randr` cannot disable every other connector (some setups keep the primary on), the greeter letterboxes onto the chosen or primary output inside Cage's combined desktop instead of stretching the UI.
+When `output` is set, the compositor disables the other connectors at the KMS level. If `output` is missing, empty, or names a disconnected connector, the greeter falls back to showing on all outputs.
 
 List connector names from a running Wayland session:
 
@@ -89,7 +87,7 @@ sudo systemctl restart greetd
 
 ## UI scale
 
-On high-DPI panels (for example 4K without fractional scaling), the greeter scales its UI from the monitor's physical size when EDID reports it, otherwise from resolution. Scale is capped at 2×.
+On high-DPI panels (for example 4K without fractional scaling), the compositor scales output from the monitor's physical size when EDID reports it, otherwise from resolution. Scale is capped at 2×. The greeter client lays out at logical size and renders HiDPI buffers via Wayland fractional scale.
 
 To override auto scaling, set `scale`:
 
@@ -97,10 +95,10 @@ To override auto scaling, set `scale`:
 scale = 1.5
 ```
 
-If `scale` is missing or invalid (not a positive number), the greeter falls back to auto scaling.
+If `scale` is missing or invalid (not a positive number), the compositor falls back to auto scaling.
 
 :::note
-Manual `scale` is separate from compositor or desktop scaling. It only affects the greeter's own UI sizing.
+Manual `scale` is separate from compositor or desktop scaling. It only affects the greeter session's output scaling.
 :::
 
 ---

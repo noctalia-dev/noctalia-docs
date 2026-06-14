@@ -7,7 +7,7 @@ sidebar:
 
 [Noctalia Greeter](https://github.com/noctalia-dev/noctalia-greeter) is the screen you see before your desktop session starts. It lets you pick a user, enter your password, choose a Wayland session, and pick a color scheme - with the same visual language as Noctalia.
 
-It is built for **[greetd](https://github.com/kennylevinsen/greetd)**: greetd starts a small Wayland compositor ([Cage](https://github.com/cage-kiosk/cage)), and the greeter runs inside that session. It is a login UI only, not a desktop shell or compositor replacement.
+It is built for **[greetd](https://github.com/kennylevinsen/greetd)**: greetd starts the bundled wlroots compositor (`noctalia-greeter-compositor`), and the greeter runs inside that session. It is a login UI only, not a desktop shell or compositor replacement.
 
 Pair it with **Noctalia v5** if you want your wallpaper and palette copied from the shell to the login screen (optional).
 
@@ -21,7 +21,7 @@ Pair it with **Noctalia v5** if you want your wallpaper and palette copied from 
 
 ## Installing
 
-Install **noctalia-greeter** from your distribution if a package is available. You also need **greetd**, **Cage**, **wlr-randr**, **D-Bus**, and **polkit** on the machine where greetd runs.
+Install **noctalia-greeter** from your distribution if a package is available. You also need **greetd**, **D-Bus**, and **polkit** on the machine where greetd runs.
 
 Your desktop sessions (niri, Hyprland, and so on) are separate - install those as you normally would.
 
@@ -79,7 +79,7 @@ sudo sv restart greetd
 
 ## Matching your Noctalia desktop
 
-With Noctalia v5 and the greeter both installed, open **Settings → Shell → Security → Noctalia Greeter → Sync Now**. Noctalia copies your wallpaper and palette to the greeter (you will be prompted for admin access via polkit, through `pkexec` or `run0`).
+With Noctalia v5 and the greeter both installed, open **Settings → Security → Noctalia Greeter → Sync Now**. Noctalia copies your wallpaper and palette to the greeter (you will be prompted for admin access via polkit, through `pkexec` or `run0`).
 
 After syncing, log out or restart greetd to see the changes on the login screen.
 
@@ -102,14 +102,16 @@ The greeter works without a mouse.
 | `Esc` | Close menu or leave password step |
 | `F3` | Session picker |
 | `F7` | Color scheme picker |
+| `Ctrl+Alt+F1`–`F12` | Switch to virtual terminal (TTY) |
 
 ---
 
 ## Troubleshooting
 
-- **Blank screen** - Check `/var/log/noctalia-greeter.log` and `/var/lib/noctalia-greeter/greeter.log`.
+- **Blank screen** - Check `/var/log/noctalia-greeter.log` and `/var/lib/noctalia-greeter/greeter.log`. If the log files are missing, run `just setup-log-dir` from the greeter source tree (or create them manually with the greetd user as owner).
 - **`Failed to spawn client` / wrong path in greetd config** - `command` must be the full path from `which noctalia-greeter-session` (often `/usr/bin/...` on packaged installs, not `/usr/local/bin/...`).
-- **`WAYLAND_DISPLAY is not set`** - greetd must use `noctalia-greeter-session` (it starts Cage). Fix `command` in `/etc/greetd/config.toml`.
+- **`WAYLAND_DISPLAY is not set`** - greetd must use `noctalia-greeter-session` (it starts `noctalia-greeter-compositor`). Fix `command` in `/etc/greetd/config.toml`.
+- **Black screen after reboot** - Session logs are written to `/var/log/noctalia-greeter.log` and `/var/lib/noctalia-greeter/greeter.log` when those paths are writable. Create them once during setup if needed.
 - **Wrong session on startup** - If `default_session` is set in `greeter.conf`, it wins over last-used `session`. Run `noctalia-greeter sessions` for exact **Name** spelling.
 - **Synced look missing** - Install Noctalia v5, the greeter, and the polkit policy; sync again from Settings; restart greetd or log out once.
 - **Sync fails with no privilege escalator** - Greeter sync needs `pkexec` or `run0` on `PATH` (for example when `pkexec` is disabled on NixOS, install `run0` from systemd ≥ 256). A polkit authentication agent must be running in your session.
