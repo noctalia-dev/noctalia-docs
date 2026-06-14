@@ -53,6 +53,27 @@ end    = ["media", "tray", "notifications", "clipboard", "network", "bluetooth",
 
 Radius precedence: `radius` is the global fallback; per-corner values override it when provided.
 
+#### Concave (inverted) corners
+
+A **negative** per-corner radius carves a concave corner instead of a convex
+round-off: the corner bulges *outward* into a rounded spike that hugs the screen edge,
+so the bar appears to melt into the screen. The spike's size is the absolute value
+(e.g. `radius_bottom_left = -16` gives a 16 px spike).
+
+Concave spikes only render on the bar's two **inner** corners — the corners facing away
+from the screen edge — because the bar can't grow along the edge it's anchored to:
+
+| Bar position | Inner corners (set these negative) |
+| --- | --- |
+| `top`    | `radius_bottom_left`, `radius_bottom_right` |
+| `bottom` | `radius_top_left`, `radius_top_right` |
+| `left`   | `radius_top_right`, `radius_bottom_right` |
+| `right`  | `radius_top_left`, `radius_bottom_left` |
+
+The spike depth is capped at half the bar `thickness`. A negative value on an outer
+(screen-edge) corner has no room to grow and is clipped, so leave those at `0` or a
+positive radius.
+
 Multiple `[bar.*]` entries are supported — each is independently configured and rendered on all monitors.
 
 `[bar].order` controls the order Noctalia creates bar layer-shell surfaces. This matters only for bars with
