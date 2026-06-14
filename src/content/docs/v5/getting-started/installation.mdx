@@ -17,6 +17,7 @@ Noctalia is available on the following distributions:
 - [NixOS](/v5/getting-started/nixos/)
 - [Fedora](#fedora)
 - [openSUSE](#opensuse)
+- [Gentoo](#gentoo)
 - [Void Linux](#void)
 - [GNU Guix](#guix)
 - [AerynOS](#aeryn)
@@ -109,6 +110,34 @@ v5 will only be available for **Tumbleweed** and **Slowroll**. **Leap 16.0** is 
 - **[Stable version](https://build.opensuse.org/package/show/home:neifua:Noctalia/noctalia)**: Updated when a new release is tagged
 - **[Unstable version](https://build.opensuse.org/package/show/home:neifua:Noctalia/noctalia-git)**: Automatically rebuilt on OBS whenever a new commit is pushed
 :::
+
+---
+
+## Gentoo {#gentoo}
+
+Noctalia is available in the Gentoo [Guru](https://wiki.gentoo.org/wiki/Project:GURU) repository.
+
+First enable and sync the repository as described at [Guru Information for End Users](https://wiki.gentoo.org/wiki/Project:GURU/Information_for_End_Users):
+
+```bash
+# eselect repository enable guru
+# emerge --sync guru
+```
+
+Next, update the /etc/portage/package.accept_keywords file/folder to enable the unstable keyword on the gui-apps/noctalia and gui-apps/noctalia-qs packages:
+
+```toml
+gui-apps/noctalia ~amd64
+gui-apps/noctalia-qs ~amd64
+```
+
+Now the package can be installed through emerge:
+
+```bash
+# emerge gui-apps/noctalia
+```
+
+Read the post-install emerge messages for information on optional dependencies and emerge them as well if desired.
 
 ---
 
