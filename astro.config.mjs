@@ -12,6 +12,8 @@ export default defineConfig({
   redirects: {
     /** Default landing (v4 = current production shell docs) */
     "/": "/v4/",
+    /** Shell docs live under configuration/, but are linked as the short /v5/shell/ */
+    "/v5/shell/": "/v5/configuration/shell/",
     /** wpa_supplicant troubleshooting moved into the v5 FAQ */
     "/v5/system/network/wpa_supplicant/": "/v5/getting-started/faq/#wpa-supplicant",
     /** Scripted widgets replaced by the plugin system */
@@ -40,6 +42,13 @@ export default defineConfig({
           tag: "script",
           attrs: {
             src: "/search-breadcrumb.js",
+            defer: true,
+          },
+        },
+        {
+          tag: "script",
+          attrs: {
+            src: "/section-deeplink.js",
             defer: true,
           },
         },

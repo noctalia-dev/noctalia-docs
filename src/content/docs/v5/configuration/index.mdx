@@ -143,6 +143,12 @@ With no argument it checks the merged configuration exactly as the shell loads i
 noctalia config validate ./my-config-dir
 ```
 
+Pass a file to validate only that TOML file, without scanning default locations or merging `settings.toml`. This is useful for generated configs, including NixOS-managed config files:
+
+```sh
+noctalia config validate ./config.toml
+```
+
 It reports two severities:
 
 - **Errors** — problems that stop the configuration from loading correctly: TOML syntax errors (with file, line, and column) and values that fail to parse, such as an invalid color. These exit with status `1`.

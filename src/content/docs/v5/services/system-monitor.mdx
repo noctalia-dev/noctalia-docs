@@ -8,6 +8,7 @@ sidebar:
 ```toml
 [system.monitor]
 enabled = true                      # sample CPU, memory, network, load, temperature, GPU VRAM, and disk statistics
+cpu_temp_sensor_path = ""           # exact temp*_input path for CPU temperature override; empty = auto
 cpu_poll_seconds = 2.0              # CPU usage, CPU temperature, and load average
 gpu_poll_seconds = 0.0              # GPU temperature and VRAM usage (0 = disabled by default)
 memory_poll_seconds = 2.0           # RAM usage
@@ -30,6 +31,30 @@ Poll intervals are configured globally under `[system.monitor]`, not per widget.
 CPU usage and CPU temperature share `cpu_poll_seconds` because both are tied to the same CPU sampling pass. GPU temperature and VRAM share `gpu_poll_seconds`. Swap and disk usage share `disk_poll_seconds`. Network Rx and Tx share `network_poll_seconds` because they come from the same `/proc/net/dev` read.
 
 Bar and desktop `sysmon` widgets in **graph** mode, plus the Control Center System graphs, scroll using the same cadence as the fastest poll interval above (the minimum of the enabled, non-zero intervals). There is no separate graph-only setting. If every metric is set to `0`, no history is recorded and the graphs stop updating.
+
+CPU temperature auto-detection prefers known CPU hwmon drivers such as `k10temp`, `zenpower`, and `coretemp`. On AMD systems this normally selects the `Tctl` sensor exposed as `temp1_input`. To force a specific sensor, set `cpu_temp_sensor_path` to the exact sysfs input file:
+
+```toml
+[system.monitor]
+cpu_temp_sensor_path = "/sys/class/hwmon/hwmon3/temp1_input"
+```
+
+When `cpu_temp_sensor_path` is set, Noctalia uses only that file. If the path is missing, unreadable, not a `temp*_input` file, or cannot be parsed, CPU temperature is reported as unavailable until the configuration is fixed.
+
+To list available hwmon temperature inputs with their driver names, labels, and raw values:
+
+```sh
+for h in /sys/class/hwmon/hwmon*; do
+  name="$(cat "$h/name" 2>/dev/null || echo unknown)"
+  for input in "$h"/temp*_input; do
+    [ -e "$input" ] || continue
+    base="${input%_input}"
+    label="$(cat "${base}_label" 2>/dev/null || basename "$base")"
+    value="$(cat "$input" 2>/dev/null || echo unreadable)"
+    printf '%s name=%s label=%s raw=%s\n' "$input" "$name" "$label" "$value"
+  done
+done
+```
 
 GPU temperature is read from Linux hwmon when available, with an NVML fallback for NVIDIA proprietary drivers. GPU VRAM is read from AMDGPU DRM sysfs when available, with the same NVML fallback.
 

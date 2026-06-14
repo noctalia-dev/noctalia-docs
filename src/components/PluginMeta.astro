@@ -1,0 +1,78 @@
+---
+// Meta strip shown under an official-plugin heading: the plugin's Tabler icon
+// (from its catalog entry) plus its `author/plugin` id as a badge linking to
+// the plugin's source folder. Keeps the id out of the heading itself.
+interface Props {
+  icon: string;
+  id: string;
+}
+
+const { icon, id } = Astro.props;
+const folder = id.split("/")[1] ?? id;
+const repo = `https://github.com/noctalia-dev/official-plugins/tree/main/${folder}`;
+
+// Tabler outline icon inner markup (24x24, currentColor stroke).
+const icons: Record<string, string> = {
+  puzzle:
+    '<path d="M4 7h3a1 1 0 0 0 1 -1v-1a2 2 0 0 1 4 0v1a1 1 0 0 0 1 1h3a1 1 0 0 1 1 1v3a1 1 0 0 0 1 1h1a2 2 0 0 1 0 4h-1a1 1 0 0 0 -1 1v3a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1v-1a2 2 0 0 0 -4 0v1a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h1a2 2 0 0 0 0 -4h-1a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1" />',
+  video:
+    '<path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4" /><path d="M3 8a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2l0 -8" />',
+  cat:
+    '<path d="M20 3v10a8 8 0 1 1 -16 0v-10l3.432 3.432a7.963 7.963 0 0 1 4.568 -1.432c1.769 0 3.403 .574 4.728 1.546l3.272 -3.546" /><path d="M2 16h5l-4 4" /><path d="M22 16h-5l4 4" /><path d="M11 16a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M9 11v.01" /><path d="M15 11v.01" />',
+  language:
+    '<path d="M9 6.371c0 4.418 -2.239 6.629 -5 6.629" /><path d="M4 6.371h7" /><path d="M5 9c0 2.144 2.252 3.908 6 4" /><path d="M12 20l4 -9l4 9" /><path d="M19.1 18h-6.2" /><path d="M6.694 3l.793 .582" />',
+};
+const svg = icons[icon] ?? "";
+---
+
+<span class="plugin-meta">
+  <span class="plugin-icon" aria-hidden="true">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      set:html={svg}></svg>
+  </span>
+  <a class="plugin-id" href={repo} target="_blank" rel="noopener">{id}</a>
+</span>
+
+<style>
+  .plugin-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.1rem 0 1.25rem;
+  }
+  .plugin-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 8px;
+    color: var(--sl-color-accent-high);
+    background: var(--sl-color-accent-low);
+    flex-shrink: 0;
+  }
+  .plugin-id {
+    font-family: var(--sl-font-mono);
+    font-size: 0.85rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    background-color: var(--sl-color-bg-soft);
+    border: 1px solid var(--sl-color-hairline);
+    color: var(--sl-color-text);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .plugin-id:hover {
+    border-color: var(--sl-color-accent);
+    color: var(--sl-color-accent-high);
+  }
+</style>

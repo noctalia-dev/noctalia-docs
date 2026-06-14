@@ -57,6 +57,8 @@ optional settings schema. The supported entry kinds:
 |-------|------|------|
 | `[[widget]]` | Bar widget | Placed on a bar; ticks + handles clicks/IPC |
 | `[[shortcut]]` | Control-center tile | A toggle tile in the control center |
+| `[[launcher_provider]]` | Launcher provider | Answers launcher queries with results, behind a prefix |
+| `[[desktop_widget]]` | Desktop widget | A tile on the desktop; declares its UI as a `ui.*` tree |
 | `[[service]]` | Headless service | Background loop, no UI — feeds the plugin's other entries |
 
 An entry is addressed `<author>/<plugin>:<entry-id>` — e.g. a bar widget is configured with
@@ -141,12 +143,15 @@ label = "Short"
 A script defines **global functions** that Noctalia calls, and drives the UI through the API namespaces. Which globals
 apply depends on the entry kind:
 
-| Function | Widget | Shortcut | Service | When |
-|----------|:------:|:--------:|:-------:|------|
-| `update()` | ✓ | | ✓ | every update interval |
-| `onClick()` / `onRightClick()` | ✓ | ✓ | | pointer press |
-| `onMiddleClick()` | ✓ | | | middle press |
-| `onIpc(event, payload)` | ✓ | ✓ | ✓ | `noctalia msg plugin …` |
+| Function | Widget | Shortcut | Launcher | Desktop | Service | When |
+|----------|:------:|:--------:|:--------:|:-------:|:-------:|------|
+| `update()` | ✓ | | | ✓ | ✓ | every update interval |
+| `onClick()` / `onRightClick()` | ✓ | ✓ | | | | pointer press |
+| `onMiddleClick()` | ✓ | | | | | middle press |
+| `onQuery(text)` | | | ✓ | | | launcher text changed (behind the prefix) |
+| `onActivate(id)` | | | ✓ | | | a launcher result was selected |
+| `onFrameTick(deltaMs)` | | | | ✓ | | every frame, after `desktopWidget.setNeedsFrameTick(true)` |
+| `onIpc(event, payload)` | ✓ | ✓ | ✓ | ✓ | ✓ | `noctalia msg plugin …` |
 
 The top level of the script runs once at load — set up state and register `noctalia.state.watch` handlers there.
 
@@ -190,6 +195,113 @@ function onClick()
 end
 ```
 
+### `launcher.*` — launcher provider
+
+A launcher provider answers queries behind a **prefix** declared in the manifest. The user types the prefix, and
+everything after it is passed to `onQuery(text)`; the provider replies with `launcher.setResults(query, results)`.
+`onActivate(id)` runs when a result is selected (the `id` is whatever you set on that result).
+
+Manifest fields on a `[[launcher_provider]]` entry: `prefix` (the trigger — use a leading `/` to match the built-in
+providers and appear in the launcher's `/` overview), `glyph` (default result icon), `include_in_global_search`
+(also answer the un-prefixed search; default `false`), and `debounce_ms` (wait this long after the last keystroke
+before running `onQuery` — set it for network-backed providers so you aren't called on every character; default `0`).
+
+`setResults(query, results)` · `getConfig(key)`
+
+- `query` **must echo** the `text` from `onQuery`, so late results map back to the query they answer — the latest one
+  wins. Calling it with an empty list clears the provider's results.
+- Each result is a table: `{ id, title, subtitle?, glyph?, icon?, badge?, score? }`. `id` is passed back to
+  `onActivate`. Results are ordered by `score` (descending), then insertion order.
+- `glyph` (a Tabler/Nerd-Font name) or `icon` (a themed icon name) is the row's leading visual. `badge` is a short
+  string (e.g. an emoji or `=`) drawn *in place of* the icon — setting it hides `glyph`/`icon`. Use the `subtitle` for
+  secondary text.
+
+Queries run off the UI thread, so a result can arrive after `onQuery` returns — publish a placeholder synchronously,
+then call `setResults` again from an async callback (HTTP, subprocess) when the real answer lands.
+
+```toml
+[[launcher_provider]]
+id     = "translate"
+entry  = "translator.luau"
+prefix = "/tr"
+glyph  = "language"
+```
+
+```lua
+function onQuery(text)
+  if text == "" then
+    launcher.setResults(text, { { id = "hint", title = "Type something to translate" } })
+    return
+  end
+  launcher.setResults(text, { { id = "loading", title = "Translating…", glyph = "loader" } })
+  noctalia.http({ url = endpoint(text) }, function(res)
+    launcher.setResults(text, { { id = res.body, title = res.body, glyph = "language" } })
+  end)
+end
+
+function onActivate(id)
+  noctalia.copyToClipboard(id, "text/plain")
+end
+```
+
+### `desktopWidget.*` — declarative desktop widget UI
+
+A desktop widget does not patch a fixed control — it **describes its whole UI as a tree** and hands it to
+`desktopWidget.render(tree)`. The host diffs the new tree against the previous one and updates the retained native
+controls in place, so calling `render()` with an unchanged tree is free. Build trees with the `ui.*` constructors
+(available in every desktop-widget script); each takes a props table and an optional children array:
+
+`render(tree)` · `setWantsSecondTicks(bool)` · `setNeedsFrameTick(bool)` · `getConfig(key)`
+
+```lua
+local color = desktopWidget.getConfig("color")
+
+function update()
+  desktopWidget.setWantsSecondTicks(true) -- tick update() on second boundaries
+  desktopWidget.render(ui.column({ gap = 10, align = "center" }, {
+    ui.label({ text = os.date("%H:%M:%S"), fontSize = 32, fontWeight = "bold", color = color }),
+    ui.row({ gap = 8 }, {
+      ui.button({ text = "Ping", variant = "primary", onClick = "ping" }),
+    }),
+  }))
+end
+
+function ping()
+  noctalia.notify("Desktop widget", "button clicked")
+end
+```
+
+The available controls and their props (sizes are logical px, scaled with the widget):
+
+| Constructor | Props |
+|-------------|-------|
+| `ui.column` / `ui.row` | `gap`, `padding`, `paddingH`, `paddingV`, `align` (`start`/`center`/`end`/`stretch`), `justify` (`start`/`center`/`end`/`space_between`), `fill`, `radius`, `border`, `borderWidth`, `minWidth`, `minHeight` |
+| `ui.label` | `text`, `fontSize`, `color`, `fontWeight` (`thin`…`heavy`), `maxWidth`, `maxLines`, `textAlign` |
+| `ui.glyph` | `name` (Tabler/Nerd-Font glyph), `size`, `color` |
+| `ui.image` | `path` (plugin-relative or absolute), `width`, `height`, `radius`, `fit` (`contain`/`cover`/`stretch`) |
+| `ui.box` | `fill`, `radius`, `border`, `borderWidth`, `width`, `height` |
+| `ui.separator` | `thickness`, `color`, `spacing`, `orientation` (`auto`/`horizontal`/`vertical`) |
+| `ui.spacer` | flexible filler (use `flexGrow`) |
+| `ui.progress` | `progress` (0–1), `fill`, `track`, `radius`, `width`, `height` |
+| `ui.button` | `text`, `glyph`, `fontSize`, `glyphSize`, `variant` (`default`/`primary`/`secondary`/`destructive`/`outline`/`ghost`), `enabled`, `onClick`, `onRightClick` |
+| `ui.graph` | `values` / `values2` (arrays of 0–1 numbers), `color` / `color2`, `lineWidth`, `fillOpacity`, `width`, `height` |
+
+Every control also accepts `width`, `height`, `flexGrow`, `opacity`, and `visible`. Colors are a palette role token
+(`primary`, `on_surface`, …) or a hex value (`#rrggbb`). An unknown control type or prop is logged and skipped — typos
+surface in the log instead of failing silently.
+
+- **Callbacks**: `onClick = "name"` names a **global function in your script**; the host calls it when the button is
+  clicked.
+- **Identity**: give list children a `key` prop so reordering reuses the same native controls.
+- **Ticks**: `setWantsSecondTicks(true)` runs `update()` on second boundaries (clocks/timers).
+  `setNeedsFrameTick(true)` additionally delivers `onFrameTick(deltaMs)` every frame for continuous animation — frames
+  are coalesced, a slow script only ever sees the latest one.
+- **Position is host-owned**: the user places, sizes, and rotates the tile in the desktop-widgets editor; the script
+  only renders content and reads its declared settings.
+
+The reference implementation is the official `noctalia/timer` plugin — a countdown timer with start/pause/reset
+buttons and a progress bar.
+
 ### `noctalia.*` — host capabilities
 
 | Group | Functions |
@@ -201,7 +313,9 @@ end
 | Filesystem | `readFile(path)`, `writeFile(path, content)`, `fileExists(path)`, `listDir(path)`, `pluginDir()` — relative paths resolve against the plugin's own directory |
 | i18n | `tr(key [, subst])`, `trp(key, count [, subst])` — against `translations/<lang>.json` |
 | HTTP | `http({ url = … }, cb)`, `download(url, dest, cb)` — async; the callback fires when the request lands |
+| JSON | `json.decode(str)` → value, or `nil, err` on malformed input; `json.encode(value [, pretty])` → string |
 
+`json.decode`/`json.encode` are synchronous pure transforms (no callback), unlike HTTP and filesystem.
 Filesystem and HTTP run safely off the UI thread; results arrive via callbacks. `runAsync` runs a command to completion
 and calls its callback once with the output; `runStream` runs a long-lived command and calls `onLine(line)` for each
 output line as it arrives — the process is terminated automatically when the script reloads or the widget is removed.
@@ -234,6 +348,14 @@ end)
 Drop your plugin under `$XDG_DATA_HOME/noctalia/plugins/<plugin>/` (or add a `path` source pointing at your dev
 directory), then enable it once. Edits to `.luau` files hot-reload automatically; manifest changes are picked up on the
 next config reload. Drive an entry's `onIpc` handler from the shell to test:
+
+:::tip[Source precedence]
+A plugin id is canonical — only one copy of a given `author/plugin` ever loads. When the same id ships from more than
+one source, the **highest-precedence** copy wins: the local data dir overrides everything, a later-added source
+overrides an earlier one, and user sources override the built-in `official`/`community` sources. So you can clone the
+official or community repo, add it as a source, and edit plugins in place to override the built-in copies — no need to
+rename ids. (Working on a single plugin? The data-dir drop-in above is simplest and outranks all sources.)
+:::
 
 ```sh
 # A bar widget — target a specific output (focused / connector / a-bar-name) or all:
