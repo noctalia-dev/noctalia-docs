@@ -1,6 +1,6 @@
 ---
 title: Configuration
-description: greeter.conf settings for sessions, color scheme, monitors, and UI scale.
+description: greeter.conf settings for sessions, color scheme, monitors, UI scale, and cursor theme.
 sidebar:
   order: 1
 ---
@@ -17,6 +17,7 @@ Lines use `key = value` syntax. Lines starting with `#` are comments.
 - [Admin-only keys](#admin-only-keys)
 - [Multi-monitor](#multi-monitor)
 - [UI scale](#ui-scale)
+- [Cursor theme](#cursor-theme)
 - [Helper commands](#helper-commands)
 
 ---
@@ -44,6 +45,9 @@ Set these yourself. The greeter UI does not change them.
 | `greeter_user` | greetd account name (written during setup; used for logging) |
 | `output` | Wayland connector name to show the greeter on (see [Multi-monitor](#multi-monitor)) |
 | `scale` | Manual UI scale factor (see [UI scale](#ui-scale)) |
+| `cursor_theme` | Cursor theme name (e.g. `Adwaita`); missing → wlroots default cursor (see [Cursor theme](#cursor-theme)) |
+| `cursor_size` | Cursor size in pixels (e.g. `24`); missing → `24` |
+| `cursor_path` | Colon-separated theme search path (sets `XCURSOR_PATH`); needed when the theme is not on the default search path (`~/.icons:/usr/share/icons:/usr/share/pixmaps`) |
 
 Example:
 
@@ -98,6 +102,56 @@ If `scale` is missing or invalid (not a positive number), the greeter falls back
 :::note
 Manual `scale` is separate from compositor or desktop scaling. It only affects the greeter's own UI sizing.
 :::
+
+---
+
+## Cursor theme
+
+The compositor resolves the cursor theme, size, and search path in this order:
+
+1. `cursor_theme` / `cursor_size` / `cursor_path` in `greeter.conf`
+2. The `XCURSOR_THEME`, `XCURSOR_SIZE`, and `XCURSOR_PATH` environment variables
+3. The wlroots defaults (built-in cursor at size `24`)
+
+Set the keys in `greeter.conf`:
+
+```ini
+cursor_theme = Adwaita
+cursor_size = 24
+```
+
+If the theme is not under the default search path (`~/.icons:/usr/share/icons:/usr/share/pixmaps`), also set `cursor_path` to the directory that contains it:
+
+```ini
+cursor_path = /usr/share/icons
+```
+
+### Using environment variables
+
+greetd starts greeters with an empty environment, so the `XCURSOR_*` variables must be set in the greetd session **command** rather than the service environment, for example in `/etc/greetd/config.toml`:
+
+```toml
+[default_session]
+command = "env XCURSOR_THEME=Adwaita XCURSOR_SIZE=24 /usr/bin/noctalia-greeter-session"
+```
+
+### On NixOS
+
+Use the `programs.noctalia-greeter.settings.cursor` options instead of editing `greeter.conf` or the greetd command by hand. They inject the matching `XCURSOR_*` variables into the greetd session command and add the theme package's `share/icons` to `XCURSOR_PATH`:
+
+```nix
+programs.noctalia-greeter.settings.cursor = {
+  theme = "Adwaita";
+  size = 24;
+  package = pkgs.adwaita-icon-theme;
+};
+```
+
+| Option | Purpose |
+|--------|---------|
+| `theme` | Cursor theme name (`XCURSOR_THEME`) |
+| `size` | Cursor size in pixels (`XCURSOR_SIZE`) |
+| `package` | Package providing the theme; its `share/icons` is added to `XCURSOR_PATH` |
 
 ---
 
