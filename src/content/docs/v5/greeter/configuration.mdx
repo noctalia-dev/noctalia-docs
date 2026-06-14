@@ -45,6 +45,7 @@ Set these yourself. The greeter UI does not change them.
 | `default_user` | Username to select on startup. Opens the password step immediately. `--user` on the greetd command line wins. Press **Esc** or **Back** to pick another user. |
 | `greeter_user` | greetd account name (written during setup; used for logging) |
 | `output` | Wayland connector name to show the greeter on (see [Multi-monitor](#multi-monitor)) |
+| `output_layout` | Multi-monitor positions as `NAME:X,Y; ...` in logical pixels (see [Multi-monitor](#multi-monitor)) |
 | `scale` | Manual UI scale factor (see [UI scale](#ui-scale)) |
 | `cursor_theme` | Cursor theme name (e.g. `Adwaita`); missing → wlroots default cursor (see [Cursor theme](#cursor-theme)) |
 | `cursor_size` | Cursor size in pixels (e.g. `24`); missing → `24` |
@@ -72,6 +73,18 @@ output = "DP-2"
 ```
 
 When `output` is set, the compositor disables the other connectors at the KMS level. If `output` is missing, empty, or names a disconnected connector, the greeter falls back to showing on all outputs.
+
+On multiple monitors, cursor movement follows the layout in `output_layout`. Without it, the greeter places outputs left-to-right by connector name, which often does not match your desk.
+
+**Sync from Noctalia:** When you use **Settings → Security → Noctalia Greeter → Sync Now**, Noctalia copies monitor positions from your desktop compositor (via xdg-output) into `output_layout`. Sync skips layout when only one monitor is connected, xdg-output is unavailable, outputs are still enumerating, or all monitors report the same origin.
+
+Set positions manually if needed:
+
+```ini
+output_layout = "DP-1:0,0; DP-2:2560,0"
+```
+
+Coordinates are logical pixels (same space your compositor uses). Monitors to the left of the origin can use negative X values. Outputs not listed are still enabled but placed to the right of the configured layout.
 
 List connector names from a running Wayland session:
 
