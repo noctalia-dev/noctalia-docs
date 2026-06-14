@@ -307,6 +307,7 @@ buttons and a progress bar.
 | Group | Functions |
 |-------|-----------|
 | Runtime | `setUpdateInterval(ms)`, `log(msg)`, `isDarkMode()`, `focusedOutputName()`, `getConfig(key)` |
+| Time | `formatTime(pattern [, unixSeconds])` |
 | Notify | `notify(title, body)`, `notifyError(title, body)` |
 | Subprocess | `runAsync(cmd [, cb])`, `runStream(cmd, onLine)`, `runInTerminal(cmd)`, `commandExists(name)`, `processMatches(cb, ...needles)`, `flatpakAppInstalled(id)`, `portalAvailable()`, `getenv(name)`, `expandPath(path)` |
 | Clipboard | `copyToClipboard(text [, mime])` |
@@ -314,6 +315,8 @@ buttons and a progress bar.
 | i18n | `tr(key [, subst])`, `trp(key, count [, subst])` — against `translations/<lang>.json` |
 | HTTP | `http({ url = … }, cb)`, `download(url, dest, cb)` — async; the callback fires when the request lands |
 | JSON | `json.decode(str)` → value, or `nil, err` on malformed input; `json.encode(value [, pretty])` → string |
+
+`formatTime` uses the same date-format tokens as Noctalia clock and filename settings. `unixSeconds` is optional; when omitted, it formats the current local time. `%s` expands to Unix epoch seconds.
 
 `json.decode`/`json.encode` are synchronous pure transforms (no callback), unlike HTTP and filesystem.
 Filesystem and HTTP run safely off the UI thread; results arrive via callbacks. `runAsync` runs a command to completion
