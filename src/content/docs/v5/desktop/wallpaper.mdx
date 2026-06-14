@@ -69,11 +69,11 @@ When automation is enabled, Noctalia picks one image from the resolved browse fo
 
 ## Favorites
 
-All favorite management happens in the **wallpaper panel** - there is no separate Settings page.
+There is no separate Settings page for favorites. The wallpaper panel manages image favorites through tile stars, and advanced users can also declare favorites with `[[wallpaper.favorite]]` in Noctalia config.
 
-Starred wallpapers appear at the **top of the browse grid** at the wallpaper root (before folders and images from that folder). Inside a subfolder, only favorites whose files live in that folder (or under it when **Flatten** is on) are pinned at the top. Solid `color:#…` favorites only appear at the root. Star a tile to bookmark it; star again to remove it. The monitor selector (**ALL** vs one output) works the same for favorites and browse entries.
+Starred wallpapers appear at the **top of the browse grid** at the wallpaper root (before folders and images from that folder). Inside a subfolder, only favorites whose files live in that folder (or under it when **Flatten** is on) are pinned at the top. Solid `color:#RRGGBB` favorites can be declared in config and only appear at the root. The panel can display and remove those declarative color favorites, but it does not create them from the color picker because colors are applied through a dialog, not selected from the grid. Star an image tile to bookmark it; star again to remove it. The monitor selector (**ALL** vs one output) works the same for favorites and browse entries.
 
-Favorites are stored in `settings.toml`:
+Declare favorites with `[[wallpaper.favorite]]`:
 
 ```toml
 [[wallpaper.favorite]]
@@ -89,9 +89,9 @@ palette_source = "builtin"
 builtin_palette = "Noctalia"
 ```
 
-Select any image tile (favorite or not) to show the **Theme** and **Colors** row under the toolbar. Adjusting those controls applies the selected wallpaper with the chosen theme settings immediately, so you can try palettes without opening Settings or starring the image. For favorited wallpapers, changes are also saved on the favorite entry. For non-favorites, only the live session theme in `settings.toml` is updated until you star the wallpaper.
+The **Theme** and **Colors** row is always available under the toolbar. When no favorited image is selected, those controls persist a live global theme override, the same as changing theme mode or palette source in Settings. When the selected image is already a favorite, adjusting the controls also saves the favorite preset and re-applies that wallpaper with the updated settings.
 
-Starring a wallpaper bookmarks the path only, except when that image is the wallpaper currently applied to the selected monitor (including solid `color:#…` entries): the favorite is saved with the active `theme_mode`, `palette_source`, and palette selection so re-applying it restores the look you already have. Clicking a favorite applies the wallpaper together with its stored theme settings.
+Starring an image wallpaper bookmarks the path only, except when that image is the wallpaper currently applied to the selected monitor: the favorite is saved with the active `theme_mode`, `palette_source`, and palette selection so re-applying it restores the look you already have. Declarative `color:#RRGGBB` favorites use the same stored theme fields when present. Clicking a favorite applies the wallpaper together with its stored theme settings.
 
 ---
 
