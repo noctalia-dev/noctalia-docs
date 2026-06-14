@@ -84,7 +84,7 @@ Set positions manually if needed:
 output_layout = "DP-1:0,0; DP-2:2560,0"
 ```
 
-Coordinates are logical pixels (same space your compositor uses). Monitors to the left of the origin can use negative X values. Outputs not listed are still enabled but placed to the right of the configured layout.
+Coordinates are logical pixels from your desktop compositor. The greeter compositor uses them for **order and row grouping**, then places outputs edge-to-edge using its own output scale (so cursor movement stays continuous).
 
 List connector names from a running Wayland session:
 
