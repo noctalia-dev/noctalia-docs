@@ -63,6 +63,16 @@ noctalia-greeter sessions
 
 You can also set `default_session` in [greeter.conf](/v5/greeter/configuration/) - that overrides the last session you picked unless `--session` is passed on the command line.
 
+### Default user
+
+To skip the user list and open the password step for a specific account (similar to tuigreet's default user), set `default_user` in [greeter.conf](/v5/greeter/configuration/) or pass `--user` on the command line:
+
+```toml
+command = "/usr/bin/noctalia-greeter-session -- --user lysec"
+```
+
+Use the exact login name from `/etc/passwd`. **Esc** or the back button returns to the user list if you need another account.
+
 Restart greetd after changing its config:
 
 ```sh

@@ -42,6 +42,7 @@ Set these yourself. The greeter UI does not change them.
 | Key | Purpose |
 |-----|---------|
 | `default_session` | Session selected when the greeter opens. Overrides last-used `session` unless you pass `--session` on the greetd command line. |
+| `default_user` | Username to select on startup. Opens the password step immediately. `--user` on the greetd command line wins. Press **Esc** or **Back** to pick another user. |
 | `greeter_user` | greetd account name (written during setup; used for logging) |
 | `output` | Wayland connector name to show the greeter on (see [Multi-monitor](#multi-monitor)) |
 | `scale` | Manual UI scale factor (see [UI scale](#ui-scale)) |
@@ -53,6 +54,7 @@ Example:
 
 ```ini
 default_session = niri
+default_user = lysec
 output = "DP-2"
 scale = 1.5
 ```
