@@ -120,6 +120,7 @@ export default defineConfig({
         {
           label: "Noctalia v5",
           items: [
+            { label: "Overview", link: "v5/" },
             {
               label: "Getting started",
               items: [

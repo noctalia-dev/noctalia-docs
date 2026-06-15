@@ -9,7 +9,7 @@ Noctalia date and time settings render the current local time. Clock widgets, `s
 
 You can write either a bare `strftime` pattern such as `%H:%M`, or wrap the same pattern in a C++ chrono field such as `{:%H:%M}`. Literal text is copied through, `\n` becomes a line break, `%%` prints a literal percent sign, and `{{` / `}}` print literal braces when a format uses brace fields.
 
-Percent tokens are resolved with the system `strftime(3)` formatter, so localized names and locale-preferred formats follow `LC_TIME`, and timezone values follow the local system timezone.
+Percent tokens use Noctalia's strftime-compatible formatter, so localized names and locale-preferred formats follow `LC_TIME`, and timezone values follow the local system timezone. `%s` is handled by Noctalia as Unix epoch seconds so it does not depend on platform-specific `strftime(3)` extensions.
 
 For example, if the current local time is Monday, May 4, 2026 at 09:05:07:
 

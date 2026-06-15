@@ -19,6 +19,16 @@ See the [Installation guide](/v5/getting-started/installation/) for distro-speci
 
 </FaqItem>
 
+<FaqItem question="Will Noctalia v4 automatically upgrade to v5?">
+
+No. Noctalia v5 is a fresh install, not an automatic upgrade from the Quickshell-based v4 line. It ships as a separate package, your package manager will not replace v4 with v5, and v4 settings are not migrated.
+
+If you are moving from v4, expect to recreate your compositor keybinds for opening the launcher, panels, and other Noctalia commands. The good part is that v5 ships with sane defaults, so you can get started quickly and customize from there.
+
+See the [Installation guide](/v5/getting-started/installation/) and [Running Noctalia](/v5/getting-started/running-the-shell/) for setup steps.
+
+</FaqItem>
+
 <FaqItem question="Should I use v4 or noctalia-qs instructions with v5?">
 
 No. Noctalia v5 is a native C++ and OpenGL ES shell launched with `noctalia`. The v4 line is Quickshell-based and uses `qs` / `noctalia-qs`, so v4 commands and configuration examples should not be copied into a v5 setup.
@@ -143,6 +153,14 @@ For Noctalia-specific sizing in Settings:
 In text config, the main keys are `shell.ui_scale`, `[bar.<name>].scale`, and `[widget.<name>].scale`.
 
 See [Shell settings](/v5/configuration/shell/#shell-settings) and [Bars](/v5/bar/).
+
+</FaqItem>
+
+<FaqItem question="How do I turn off blur behind a transparent bar?">
+
+On Niri, making a bar transparent only changes Noctalia surface opacity. When Niri `ext-background-effects` support is active, Noctalia still publishes blur regions for its layer surfaces, so the compositor can keep blurring behind the bar.
+
+To disable that blur, keep the Noctalia `layer-rule` in your Niri config and set `blur false` inside its `background-effect` block. See [Niri compositor settings: Blur](/v5/compositor-settings/niri/?section=blur) for the full rule and notes.
 
 </FaqItem>
 
