@@ -181,6 +181,13 @@ export default defineConfig({
               label: "Greeter",
               autogenerate: { directory: "v5/greeter" },
             },
+            {
+              label: "Templates",
+              items: [
+                { label: "Official Templates", autogenerate: { directory: "v5/templates/official" } },
+                { label: "Community Templates", autogenerate: { directory: "v5/templates/community" } },
+              ],
+            },
           ],
         },
       ],

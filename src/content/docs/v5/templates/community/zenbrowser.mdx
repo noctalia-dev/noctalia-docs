@@ -1,0 +1,33 @@
+---
+title: Zen Browser
+description: Theming Zen Browser with Noctalia
+sidebar:
+  order: 9
+---
+
+Zen Browser can load Noctalia's generated CSS through your profile's `userChrome.css` file.
+
+## Setup
+
+1. **Enable profile stylesheets:**
+   - Open `about:config`
+   - Set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`
+
+2. **Set the Zen theme to Auto:**
+   - Open **Settings → General**
+   - Set **Website Appeararance** to **Auto** so Zen applies the colors from the Noctalia CSS
+
+3. **Reload colors after changes:**
+   - Restart Zen Browser to load the updated color scheme from Noctalia
+
+## Remove the theme
+
+Delete these lines from your profile's `userChrome.css` and `userContent.css` to revert to the default styling:
+
+```css
+@import "/home/YOURUSERNAME/.cache/noctalia/zen-browser/zen-userChrome.css";
+```
+
+```css
+@import "/home/YOURUSERNAME/.cache/noctalia/zen-browser/zen-userContent.css";
+```
