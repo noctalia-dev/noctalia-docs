@@ -20,7 +20,6 @@ Noctalia v5 is available on the following distributions:
 - [Gentoo](#gentoo)
 - [Void Linux](#void)
 - [GNU Guix](#guix)
-- [AerynOS](#aeryn)
 
 You can also [install manually](#manual-install) on any other Linux distribution.
 
@@ -161,31 +160,6 @@ sudo xbps-install noctalia
 
 :::note
 If your noctalia fails on run install sdbus from UniversalRepository because its up-to-update
-:::
----
-
-## AerynOS {#aeryn}
-
-Noctalia is available through a custom repository (Experimental).
-
-**Step 1**: Add the repository source
-
-```
-boulder profile add \
-    --repo name=beyond,uri=https://witchlliee.github.io/aeryn-beyond/x86_64/stone.index,priority=5 \
-   beyond-x86_64
-sudo moss repo add beyond https://witchlliee.github.io/aeryn-beyond/x86_64/stone.index -p 5
-```
-
-**Step 2**: Sync and install noctalia
-
-```
-sudo moss sync -u
-sudo moss it noctalia
-```
-
-:::note
-This is an unofficial repository (community maintained) and not supported at all by the AerynOS team
 :::
 ---
 
