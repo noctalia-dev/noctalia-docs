@@ -9,8 +9,9 @@ Brightness control uses the kernel backlight interface by default. `ddcutil` sup
 
 ```toml
 [brightness]
-enable_ddcutil = false
-ignore_mmids   = []   # e.g. ["ACI-ROG_PG279Q-10220"] — skip in all ddcutil commands
+enable_ddcutil     = false
+ignore_mmids       = []     # e.g. ["ACI-ROG_PG279Q-10220"] — skip in all ddcutil commands
+minimum_brightness = 0.0    # never let brightness drop below this floor (0.0 to 1.0)
 
 [brightness.monitor.eDP-1]
 backend = "backlight"   # auto | none | backlight | ddcutil
@@ -22,6 +23,7 @@ backend = "ddcutil"
 Notes:
 - `enable_ddcutil = true` only enables DDC/CI discovery — it does not force every monitor to `ddcutil`.
 - `ignore_mmids` passes `--ignore-mmid` to every `ddcutil` invocation. Run `ddcutil --verbose detect` to find monitor model id strings.
+- `minimum_brightness` is an opt-in floor (default `0.0` = disabled). Any brightness change is clamped to at least this value, and the control center slider cannot go below it — useful to keep the screen from going completely dark.
 - Per-monitor overrides use the same connector/description matching rules as bar monitor overrides.
 - `backend = "auto"` prefers kernel backlight when available and falls back to `ddcutil`.
 - `backend = "none"` hides brightness control for the matched monitor.
