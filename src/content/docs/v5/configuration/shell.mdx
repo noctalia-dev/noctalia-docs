@@ -193,16 +193,18 @@ Configure under **`[lockscreen]`** in TOML, or use **Settings → Security → L
 
 ```toml
 [lockscreen]
-enabled         = true      # master switch for session lock
-blurred_desktop = false     # use a desktop snapshot as the lock screen background
-blur_intensity  = 0.5       # background blur (0.0 = none, 1.0 = maximum)
-tint_intensity  = 0.3       # surface-color tint over the background (0.0 = none, 1.0 = opaque)
-wallpaper       = ""        # optional image path; empty uses the desktop wallpaper per output
+enabled               = true      # master switch for session lock
+allow_empty_password  = false     # submit Enter with an empty password (security-key PAM stacks)
+blurred_desktop       = false     # use a desktop snapshot as the lock screen background
+blur_intensity        = 0.5       # background blur (0.0 = none, 1.0 = maximum)
+tint_intensity        = 0.3       # surface-color tint over the background (0.0 = none, 1.0 = opaque)
+wallpaper             = ""        # optional image path; empty uses the desktop wallpaper per output
 ```
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `enabled` | bool | `true` | Master switch for session lock, logind integration, and lock actions. |
+| `allow_empty_password` | bool | `false` | When `true`, Enter can submit an empty password (needed for some security-key PAM stacks). When `false`, empty submits are ignored to avoid accidental `pam_faillock` lockouts from wake keys. |
 | `blurred_desktop` | bool | `false` | Capture each output before lock and use it as the lock screen background. |
 | `blur_intensity` | float | `0.5` | Blur strength for the active lock screen background (`0.0`–`1.0`). |
 | `tint_intensity` | float | `0.3` | Surface-color tint over the active lock screen background (`0.0`–`1.0`). |
