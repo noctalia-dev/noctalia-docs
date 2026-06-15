@@ -146,6 +146,14 @@ See [Shell settings](/v5/configuration/shell/#shell-settings) and [Bars](/v5/bar
 
 </FaqItem>
 
+<FaqItem question="How do I turn off blur behind a transparent bar?">
+
+On Niri, making a bar transparent only changes Noctalia surface opacity. When Niri `ext-background-effects` support is active, Noctalia still publishes blur regions for its layer surfaces, so the compositor can keep blurring behind the bar.
+
+To disable that blur, keep the Noctalia `layer-rule` in your Niri config and set `blur false` inside its `background-effect` block. See [Niri compositor settings: Blur](/v5/compositor-settings/niri/?section=blur) for the full rule and notes.
+
+</FaqItem>
+
 <FaqItem question="How do I tweak the seam between the bar and attached panels?">
 
 Attached panels (like the control center) sit flush against the bar, so the line where they meet — the seam — can show a faint cut, a hairline gap, or a doubled edge depending on your compositor and display scaling. These artifacts mostly show up with a highly transparent bar, where the seam between the two surfaces has nothing opaque to hide behind. If the seam bothers you, the simplest fix is to raise `background_opacity` toward `1.0`; the settings below help when you want to keep the transparency. Three settings control how that seam looks.
