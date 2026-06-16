@@ -61,7 +61,7 @@ wallpaper_placement      = "attached" # attached | floating | centered
 session_placement        = "attached" # attached | floating | centered
 open_near_click_control_center = false  # attached/floating: follow the bar click instead of bar-center
 open_near_click_launcher       = false  # attached/floating: follow the bar click instead of bar-center
-launcher_categories            = true   # show launcher category filters; Tab toggles them while open
+launcher_categories            = true   # show launcher category filters; F6 reveals, then cycles
 launcher_show_icons            = true   # show application icons in launcher results
 launcher_compact               = false  # smaller icons and tighter rows; hides subtitles
 launcher_session_search        = false  # include session actions in general search, not only behind /session
@@ -117,7 +117,7 @@ Notes:
 - `shell.panel.launcher_placement`, `clipboard_placement`, `control_center_placement`, `wallpaper_placement`, and `session_placement` accept `attached`, `floating`, or `centered`. `attached` merges the panel with the host bar when the bar allows `attach_panels`; `floating` keeps the panel detached but near the bar; `centered` opens it in the middle of the monitor. Defaults are centered for Launcher and Clipboard, attached for Control Center, Wallpaper, and Session.
 - When multiple enabled bars resolve to the same edge on one monitor, exact source-bar attachment is ambiguous. In that case attached/floating panels use the compositor's reserved edge area and open outside the bar stack instead of trying to merge with one bar.
 - `shell.panel.open_near_click_control_center`, `open_near_click_launcher`, `open_near_click_clipboard`, `open_near_click_wallpaper`, and `open_near_click_session` position attached or floating panels near the click location on the bar instead of centering them along the bar. They are ignored when the corresponding placement is `centered`.
-- `shell.panel.launcher_categories` shows compact category filters in the launcher for providers that expose categories, currently Applications and Emoji. **All** leaves results unfiltered. With a prefixed provider such as `/emo`, the filters come from that provider. Press `Tab` while the launcher is open to hide/show the filters; the left/right keybind actions move between filters.
+- `shell.panel.launcher_categories` shows compact category filters in the launcher for providers that expose categories, currently Applications and Emoji. **All** leaves results unfiltered. With a prefixed provider such as `/emo`, the filters come from that provider. Press `F6` while the launcher is open to reveal hidden filters without changing the active filter. Once the filters are visible, press `F6` to move to the next filter or `Shift+F6` to move to the previous filter.
 - `shell.panel.launcher_show_icons` toggles application icons in launcher result rows. Prefixed-provider rows (for example emoji) still show their leading character when icons are hidden.
 - `shell.panel.launcher_compact` uses smaller icons, tighter padding, and single-line rows (subtitles hidden).
 - `shell.panel.launcher_sort_by_usage` boosts frequently launched apps toward the top of results and exposes a **Recently Used** category filter. Disable it for strictly alphabetical ordering within each provider.
