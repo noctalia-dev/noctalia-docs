@@ -72,6 +72,9 @@ The CLI forwards everything after the command as one string (`noctalia msg wallp
 | Enter edit mode | <IpcCommand command="desktop-widgets-edit" /> | Start moving, resizing, rotating, and removing desktop widgets. |
 | Exit edit mode | <IpcCommand command="desktop-widgets-exit" /> | Leave desktop widget edit mode. |
 | Toggle edit mode | <IpcCommand command="desktop-widgets-toggle-edit" /> | Switch edit mode on or off. |
+| Show widgets | <IpcCommand command="desktop-widgets-show" /> | Reveal desktop widgets now, even when the saved setting is disabled. Runtime only — does not change the saved setting, and resets on restart. |
+| Hide widgets | <IpcCommand command="desktop-widgets-hide" /> | Hide desktop widgets now, tearing down their instances so rendering and compute stop. Runtime only — does not change the saved setting, and resets on restart. |
+| Toggle widgets | <IpcCommand command="desktop-widgets-toggle" /> | Flip current visibility; prints `shown` or `hidden`. Runtime only — does not change the saved setting. Changing the saved Desktop &gt; Widgets toggle cancels the override. |
 
 ## Lockscreen widgets
 
