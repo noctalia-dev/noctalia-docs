@@ -390,6 +390,7 @@ rotation = 0.0
 [desktop_widgets.widget.sysmon_main.settings]
 stat       = "cpu_usage"
 stat2      = "cpu_temp"
+interface  = ""
 color      = "primary"
 color2     = "secondary"
 show_label = true
@@ -401,9 +402,12 @@ background = true
 |---------|------|---------|-------------|
 | `stat` | string | `"cpu_usage"` | Primary stat: `"cpu_usage"`, `"cpu_temp"`, `"gpu_temp"`, `"gpu_vram"`, `"ram_pct"`, `"swap_pct"`, `"net_rx"`, `"net_tx"` |
 | `stat2` | string | — | Optional secondary stat (same values as `stat`). Omit for single curve. |
+| `interface` | string | `""` | Network interface to monitor for `net_rx`/`net_tx`; empty uses the total across all non-loopback interfaces |
 | `color` | string | `"primary"` | Primary line color role; fixed hex colors are also supported |
 | `color2` | string | `"secondary"` | Secondary line color role; fixed hex colors are also supported when `stat2` is set |
 | `show_label` | bool | `true` | Show the current value as text next to the icon |
+
+For `net_rx` and `net_tx`, set `interface` to an exact kernel interface name from `/proc/net/dev` (for example `wlan0` or `enp5s0`) to show only that interface. Leave it empty to show the total across all non-loopback interfaces.
 
 GPU temperature is read from Linux hwmon when available, with an NVML fallback for NVIDIA proprietary drivers.
 GPU VRAM is read from AMDGPU DRM sysfs when available, with an NVML fallback for NVIDIA proprietary drivers.

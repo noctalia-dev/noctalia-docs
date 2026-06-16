@@ -28,7 +28,7 @@ Poll intervals are configured globally under `[system.monitor]`, not per widget.
 | `network_poll_seconds` | `3.0` | Network download and upload throughput |
 | `disk_poll_seconds` | `10.0` | Disk usage % for paths used by bar `sysmon` widgets with `stat = "disk_pct"`, plus swap usage % and used/total MB |
 
-CPU usage and CPU temperature share `cpu_poll_seconds` because both are tied to the same CPU sampling pass. GPU temperature and VRAM share `gpu_poll_seconds`. Swap and disk usage share `disk_poll_seconds`. Network Rx and Tx share `network_poll_seconds` because they come from the same `/proc/net/dev` read.
+CPU usage and CPU temperature share `cpu_poll_seconds` because both are tied to the same CPU sampling pass. GPU temperature and VRAM share `gpu_poll_seconds`. Swap and disk usage share `disk_poll_seconds`. Network Rx and Tx share `network_poll_seconds` because they come from the same `/proc/net/dev` read. The aggregate network values exclude loopback; bar and desktop `sysmon` widgets can set `interface` to an exact `/proc/net/dev` interface name to show only that interface.
 
 Bar and desktop `sysmon` widgets in **graph** mode, plus the Control Center System graphs, scroll using the same cadence as the fastest poll interval above (the minimum of the enabled, non-zero intervals). There is no separate graph-only setting. If every metric is set to `0`, no history is recorded and the graphs stop updating.
 
