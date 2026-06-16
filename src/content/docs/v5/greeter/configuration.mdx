@@ -1,6 +1,6 @@
 ---
 title: Configuration
-description: greeter.conf settings for sessions, color scheme, monitors, UI scale, and cursor theme.
+description: greeter.conf settings for sessions, color scheme, monitors, UI scale, cursor theme, and keyboard layout.
 sidebar:
   order: 1
 ---
@@ -18,6 +18,7 @@ Lines use `key = value` syntax. Lines starting with `#` are comments.
 - [Multi-monitor](#multi-monitor)
 - [UI scale](#ui-scale)
 - [Cursor theme](#cursor-theme)
+- [Keyboard layout](#keyboard-layout)
 - [Helper commands](#helper-commands)
 
 ---
@@ -50,6 +51,9 @@ Set these yourself. The greeter UI does not change them.
 | `cursor_theme` | Cursor theme name (e.g. `Adwaita`); missing → wlroots default cursor (see [Cursor theme](#cursor-theme)) |
 | `cursor_size` | Cursor size in pixels (e.g. `24`); missing → `24` |
 | `cursor_path` | Colon-separated theme search path (sets `XCURSOR_PATH`); needed when the theme is not on the default search path (`~/.icons:/usr/share/icons:/usr/share/pixmaps`) |
+| `keyboard_layout` | XKB layout code(s), e.g. `cz`, `us`, `de,cz` (comma-separated for multiple layouts; see [Keyboard layout](#keyboard-layout)) |
+| `keyboard_variant` | XKB variant(s), e.g. `qwertz` (optional; comma-separated when multiple layouts) |
+| `keyboard_options` | XKB options string, e.g. `grp:alt_shift_toggle` (optional) |
 
 Example:
 
@@ -165,6 +169,38 @@ programs.noctalia-greeter.settings.cursor = {
 | `theme` | Cursor theme name (`XCURSOR_THEME`) |
 | `size` | Cursor size in pixels (`XCURSOR_SIZE`) |
 | `package` | Package providing the theme; its `share/icons` is added to `XCURSOR_PATH` |
+
+---
+
+## Keyboard layout
+
+The compositor loads the XKB keymap in this order:
+
+1. `keyboard_layout` / `keyboard_variant` / `keyboard_options` in `greeter.conf`
+2. The `XKB_DEFAULT_LAYOUT`, `XKB_DEFAULT_VARIANT`, and `XKB_DEFAULT_OPTIONS` environment variables
+3. The system default keymap
+
+Example for Czech QWERTZ:
+
+```ini
+keyboard_layout = cz
+```
+
+Multiple layouts (cycle with `keyboard_options`, e.g. `grp:alt_shift_toggle`):
+
+```ini
+keyboard_layout = us,cz
+keyboard_options = grp:alt_shift_toggle
+```
+
+Use standard [XKB layout codes](https://www.freedesktop.org/wiki/Software/XKeyboard-config/Rules/) (`de`, `fr`, `ru`, …). List layouts on your system with `localectl list-x11-keymap-layouts` or check `/usr/share/X11/xkb/rules/base.lst`.
+
+greetd starts greeters with an empty environment, so set layout in `greeter.conf` or prefix the greetd session command:
+
+```toml
+[default_session]
+command = "env XKB_DEFAULT_LAYOUT=cz /usr/bin/noctalia-greeter-session"
+```
 
 ---
 
