@@ -216,6 +216,9 @@ before running `onQuery` — set it for network-backed providers so you aren't c
   string (e.g. an emoji or `=`) drawn *in place of* the icon — setting it hides `glyph`/`icon`. Use the `subtitle` for
   secondary text.
 
+Use `noctalia.fuzzyScore(pattern, text)` to rank local lists with Noctalia's native fuzzy matcher. It returns a numeric
+score, or `nil` when `pattern` does not match `text`.
+
 Queries run off the UI thread, so a result can arrive after `onQuery` returns — publish a placeholder synchronously,
 then call `setResults` again from an async callback (HTTP, subprocess) when the real answer lands.
 
