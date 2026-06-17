@@ -170,6 +170,7 @@ clock_style = "digital"
 format = "{:%H:%M}"
 color  = "on_surface"
 shadow = true
+center_text = false
 circle = true
 ```
 
@@ -177,6 +178,7 @@ circle = true
 |---------|------|---------|-------------|
 | `clock_style` | string | `"digital"` | `"digital"` renders a formatted text clock; `"analog"` renders a circular clock with hour, minute, and second hands. |
 | `format` | string | `"{:%H:%M}"` | Digital clock format string. Ignored when `clock_style = "analog"`. Supports the same syntax and tokens as the bar clock `format`; see [Date format tokens](/v5/configuration/date-format-tokens/). |
+| `center_text` | bool | `false` | Digital only. Center-aligns the formatted time inside the clock box. When `false`, the clock keeps the leading edge stable as digits change width. |
 | `circle` | bool | `true` | Analog only. Shows the outer ring and minute tick marks around the dial. When disabled, only the hands are drawn. |
 
 ---
