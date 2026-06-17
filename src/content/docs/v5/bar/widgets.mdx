@@ -214,6 +214,7 @@ System resource monitor. Shows an icon and value for one configurable stat. Mult
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `stat` | string | `"cpu_usage"` | Which stat to display (see table below) |
+| `glyph` | string | `""` | Custom bar glyph name (Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint). Leave empty to use the icon for the selected stat |
 | `path` | string | `"/"` | Mount path for `disk_pct` (ignored otherwise) |
 | `interface` | string | `""` | Network interface to monitor for `net_rx`/`net_tx`; empty uses the total across all non-loopback interfaces |
 | `display` | string | `"gauge"` | `"gauge"` = icon + vertical fill bar; `"graph"` = icon + sparkline; `"text"` = icon + value |
@@ -509,6 +510,7 @@ Left-click cycles layouts using the compositor backend when supported. Override 
 | `cycle_command` | string | `""` | Optional override command run on left click instead of compositor backend |
 | `hide_when_single_layout` | bool | `false` | Hide the widget unless more than one keyboard layout is configured |
 | `show_icon` | bool | `true` | Show the keyboard glyph |
+| `glyph` | string | `"keyboard"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint. Shown only when `show_icon = true` |
 | `show_label` | bool | `true` | Show the layout text label next to the keyboard glyph |
 | `display` | string | `"short"` | `"short"` = compact code; `"full"` = full layout name. Ignored when `show_label = false`. |
 | `custom_labels` | table | `{}` | Exact layout-name to label overrides. Matching labels override `display`; unmatched layouts still use `short` or `full`. |
