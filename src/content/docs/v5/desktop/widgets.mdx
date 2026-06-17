@@ -30,7 +30,7 @@ rotation = 0.0
 format = "{:%H:%M}"
 ```
 
-When enabled, Noctalia renders each desktop widget as its own tightly-sized layer-shell surface on the `Bottom` layer. The current implementation ships `clock`, `label`, `audio_visualizer`, `fancy_audio_visualizer`, `sticker`, `weather`, `media_player`, and `sysmon` widget types plus an interactive edit mode.
+When enabled, Noctalia renders each desktop widget as its own tightly-sized layer-shell surface on the `Bottom` layer. The current implementation ships `button`, `clock`, `label`, `audio_visualizer`, `fancy_audio_visualizer`, `sticker`, `weather`, `media_player`, and `sysmon` widget types plus an interactive edit mode.
 
 ---
 
@@ -313,6 +313,41 @@ hide_when_no_media = true
 |---------|------|---------|-------------|
 | `layout` | string | `"horizontal"` | `"horizontal"` (cover on left) or `"vertical"` (cover on top) |
 | `hide_when_no_media` | bool | `false` | Hide the widget when no MPRIS player is active |
+
+---
+
+### button
+
+Clickable button with an optional glyph and label. Runs a shell command on left click. Size auto-fits the content when `box_width` and `box_height` are `0.0`; when a box is set, the button stretches to fill it and scales its text and glyph to match.
+
+```toml
+[desktop_widgets.widget.launcher_main]
+type     = "button"
+output   = "DP-1"
+cx       = 960.0
+cy       = 540.0
+box_width  = 0.0
+box_height = 0.0
+rotation = 0.0
+
+[desktop_widgets.widget.launcher_main.settings]
+glyph            = "terminal"
+label            = "Terminal"
+command          = "alacritty"
+variant          = "default"
+hover_background = "hover"
+background       = true
+```
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `glyph` | string | `""` | Tabler glyph name shown before the label; omit for text-only |
+| `label` | string | `""` | Button text; omit for glyph-only |
+| `command` | string | `""` | Shell command run on left click |
+| `background` | bool | `true` | Show the button's own fill and border; when `false`, only the label and glyph are drawn |
+| `variant` | string | `"default"` | Button style: `default`, `primary`, `secondary`, `outline`, `ghost`, `destructive` |
+| `color` | string | *(variant default)* | Label and glyph color role or fixed hex; omit to use the variant's default foreground |
+| `hover_background` | string | `"hover"` | Background color role on hover; fixed hex colors are also supported |
 
 ---
 
