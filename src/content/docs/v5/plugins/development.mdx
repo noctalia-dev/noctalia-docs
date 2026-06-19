@@ -101,7 +101,8 @@ When both declare the same key, the widget entry value wins for that widget. Bot
 [[setting]]
 key     = "interval"
 type    = "int"
-label   = "Refresh seconds"
+label_key = "settings.interval.label"
+description_key = "settings.interval.description"
 default = 5
 
 [[widget]]
@@ -131,12 +132,22 @@ label = "Short"
 |-------|-------|
 | `key` | required; the config key |
 | `type` | `string`, `string_list`, `bool`, `int`, `double`, `select`, `file`, `folder`, `glyph`, `color` |
-| `label` / `description` | shown in the settings GUI |
+| `label` / `description` | literal text shown in the settings GUI |
+| `label_key` / `description_key` | translation keys resolved from `translations/en.json` and the active language file; do not combine with the literal field |
 | `default` | seeded value (must match the type) |
 | `min` / `max` | for `int` / `double` |
-| `options` | for `select`: array of `{ value, label }` |
+| `options` | for `select`: array of `{ value, label }` or `{ value, label_key }` |
 | `visible_when` | `{ key = "other_key", values = ["true"] }` — conditional visibility |
 | `advanced` | hide behind the "show advanced" toggle |
+
+Translated setting labels live in the same optional `translations/<lang>.json` files as script strings:
+
+```json
+{
+  "settings.interval.label": "Refresh seconds",
+  "settings.interval.description": "How often the service refreshes data."
+}
+```
 
 ## Entry scripts
 
