@@ -80,6 +80,22 @@ Multiple `[bar.*]` entries are supported — each is independently configured an
 `reserve_space = true`, and the compositor still owns the final exclusive-zone arrangement. Names omitted from `order`
 are appended after the listed names.
 
+### Dead zone actions
+
+The **dead zone** is the bar margin outside the start/center/end widget sections — typically the inset created by `margin_ends`. Configure shell commands under `[bar.<name>.dead_zone]`:
+
+```toml
+[bar.main.dead_zone]
+command = "noctalia msg launcher toggle"   # left click
+right_command = ""                         # empty = open Control Center (default)
+scroll_up_command = "..."
+scroll_down_command = "..."
+```
+
+Right-click still opens Control Center when `right_command` is empty. Set `right_command` to override that on dead-zone clicks only. While an attached panel is open, right-click anywhere on the bar still toggles Control Center unless a dead-zone `right_command` is configured and the click lands in the dead zone.
+
+Per-monitor overrides can set any dead-zone command under `[bar.<name>.monitor.<match>.dead_zone]`; unset fields inherit from the bar defaults.
+
 ---
 
 ## Per-monitor overrides
@@ -112,7 +128,7 @@ end                = ["volume", "clock"]
 
 `match` defaults to the subtable key name when omitted, so `[bar.main.monitor."DP-1"]` without a `match` field works too.
 
-Only the fields you specify are overridden; everything else falls through to the `[bar.*]` defaults. Supported override fields: all bar fields including `position`, plus `auto_hide`, `reserve_space`, `layer`, `scale`, `background_opacity`, `color`, `font_family`, and all `capsule_*` keys.
+Only the fields you specify are overridden; everything else falls through to the `[bar.*]` defaults. Supported override fields: all bar fields including `position`, `dead_zone`, plus `auto_hide`, `reserve_space`, `layer`, `scale`, `background_opacity`, `color`, `font_family`, and all `capsule_*` keys.
 
 Shadow blur, offset, and alpha are global under `[shell.shadow]`. Bars only expose `shadow = true|false`.
 
