@@ -95,7 +95,11 @@ Settings: countdown duration, accent color, and progress-bar visibility.
 
 <PluginMeta icon="cat" id="noctalia/bongocat" />
 
-A bar cat that taps along to your keystrokes (via `evtest`) or to the audio spectrum. Single bar **widget**.
+A bar cat that taps along to input events (via `evtest`) or to the audio spectrum. Single bar **widget**.
+
+For input reactivity, set `input_devices` to one or more evdev paths or glob patterns. Prefer stable symlinks such as
+`/dev/input/by-id/*-event-*` or `/dev/input/by-path/*-event-*`; `/dev/input/eventN` paths can change after kernel or
+device updates.
 
 | Command | Effect |
 |---------|--------|

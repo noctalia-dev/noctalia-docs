@@ -29,12 +29,14 @@ Set `sidebar_section` for opens that jump straight to a tab (volume, network, an
 [control_center]
 sidebar = "compact"
 # sidebar_section = "compact"  # optional; defaults to the same as sidebar
+# width = 680  # full-sidebar width in pixels (600–1200)
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `sidebar` | string | `"compact"` | Sidebar on Home / general open: `"full"`, `"compact"`, or `"none"` |
 | `sidebar_section` | string | `"compact"` | Sidebar when opening straight to a tab: `"full"`, `"compact"`, or `"none"` |
+| `width` | int | `680` | Control Center width in pixels (`600`–`1200`). This is the full-sidebar width; the compact and no-sidebar modes scale down from it. |
 
 ### Sidebar Tabs
 
