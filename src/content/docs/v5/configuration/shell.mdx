@@ -170,9 +170,10 @@ caffeine = true          # idle inhibitor toggle
 dnd = true               # Do Not Disturb toggle
 lock_keys = true         # Caps/Num/Scroll Lock popups
 keyboard_layout = true   # input keyboard layout changes
+privacy = true           # microphone/camera/screen share capture changes
 ```
 
-The OSD powers volume, brightness, DND, caffeine, lock-key, keyboard-layout, external/IPC Wi-Fi, external/IPC Bluetooth,
+The OSD powers volume, brightness, DND, caffeine, lock-key, keyboard-layout, privacy, external/IPC Wi-Fi, external/IPC Bluetooth,
 and external/IPC power-profile popups, and defaults to `top_center` with a horizontal layout. Set
 `orientation = "vertical"` for a taller vertical gauge. `scale` multiplies the effective OSD size on top of
 `shell.ui_scale` (for example `1.25` makes volume, brightness, and lock-key popups 25% larger than the default).
@@ -181,7 +182,8 @@ leave it empty to show on every connected output. If none of the configured moni
 outputs until one reconnects.
 Each popup kind can be toggled independently under `[osd.kinds]`. The volume master toggle enables both output and input
 OSDs by default; set `volume_output` or `volume_input` to `false` to disable one side only. `lock_keys = false` disables Caps/Num/Scroll Lock popups; when no `lock_keys` bar widget is configured, this also stops
-lock-key state polling. `keyboard_layout = false` disables layout-change popups.
+lock-key state polling. `keyboard_layout = false` disables layout-change popups. `privacy = false` disables popups shown
+when microphone, camera, or screen share capture starts or stops.
 
 ---
 
