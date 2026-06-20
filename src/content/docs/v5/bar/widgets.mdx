@@ -218,7 +218,7 @@ System resource monitor. Shows an icon and value for one configurable stat. Mult
 | `path` | string | `"/"` | Mount path for `disk_pct` (ignored otherwise) |
 | `interface` | string | `""` | Network interface to monitor for `net_rx`/`net_tx`; empty uses the total across all non-loopback interfaces |
 | `display` | string | `"gauge"` | `"gauge"` = icon + vertical fill bar; `"graph"` = icon + sparkline; `"text"` = icon + value |
-| `gauge_color` | string | `"primary"` | Color role (or fixed hex) for the gauge fill bar when `display = "gauge"` |
+| `highlight_color` | string | `"error"` | Color role (or fixed hex) the value tints toward as the stat rises past its activity/critical thresholds. See [System Monitor](/v5/services/system-monitor/). |
 | `show_label` | bool | `true` | Show the text value next to the graph or gauge (always shown in `"text"` mode) |
 | `label_min_width` | float | `0` | Minimum label width in pixels to prevent resizing as values change. Only relevant when `show_label` is enabled. |
 
