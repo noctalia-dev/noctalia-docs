@@ -183,9 +183,10 @@ nightlight = true        # night light toggle
 dnd = true               # Do Not Disturb toggle
 lock_keys = true         # Caps/Num/Scroll Lock popups
 keyboard_layout = true   # input keyboard layout changes
+privacy = true           # microphone/camera/screen share capture changes
 ```
 
-The OSD powers volume, brightness, DND, caffeine, lock-key, keyboard-layout, external/IPC Wi-Fi, external/IPC Bluetooth,
+The OSD powers volume, brightness, DND, caffeine, lock-key, keyboard-layout, privacy, external/IPC Wi-Fi, external/IPC Bluetooth,
 and external/IPC power-profile popups, and defaults to `top_center` with a horizontal layout. Set
 `orientation = "vertical"` for a taller vertical gauge on volume and brightness sliders; text-only popups (media, lock
 keys, keyboard layout, privacy, and similar) always use horizontal layout for readability. `position` controls placement
@@ -198,7 +199,8 @@ outputs until one reconnects. `background_opacity` sets popup background opacity
 absolute margins from the screen edge for the chosen `position`.
 Each popup kind can be toggled independently under `[osd.kinds]`. The volume master toggle enables both output and input
 OSDs by default; set `volume_output` or `volume_input` to `false` to disable one side only. `lock_keys = false` disables Caps/Num/Scroll Lock popups; when no `lock_keys` bar widget is configured, this also stops
-lock-key state polling. `keyboard_layout = false` disables layout-change popups.
+lock-key state polling. `keyboard_layout = false` disables layout-change popups. `privacy = false` disables popups shown
+when microphone, camera, or screen share capture starts or stops.
 
 ---
 
