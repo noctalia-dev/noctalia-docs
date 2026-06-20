@@ -19,6 +19,7 @@ Global UI settings that apply across all shell surfaces.
 ```toml
 [shell]
 ui_scale              = 1.0             # content scale for panels and non-bar shell UI
+corner_radius_scale   = 1.0             # 0 = square, 1 = default, 2 = extra rounded
 font_family           = "sans-serif"    # Pango family string; Fontconfig handles fallback
 lang                  = "en"            # override language detection; BCP-47 or POSIX locale
 time_format           = "{:%H:%M}"      # default time format for shell UI without its own setting
@@ -33,6 +34,8 @@ avatar_path           = "~/Pictures/avatar.png"
 settings_show_advanced = false          # show advanced settings by default in Settings
 middle_click_opens_widget_settings = true # middle-click bar widgets to open their Settings entry
 show_location         = true            # show weather location text in shell UI
+launch_apps_as_systemd_services = false # launch apps as transient systemd scopes
+screen_time_enabled   = false           # track per-app usage time for the Control Center screen-time view
 app_icon_colorize     = false           # recolor application icons across the shell
 app_icon_color        = "on_surface"    # ColorSpec when colorize is enabled; see App icon colorization below
 clipboard_enabled     = true            # false disables clipboard history/panel (basic copy & paste still work)
@@ -41,6 +44,7 @@ clipboard_confirm_clear_history = true  # confirm before clear history / delete 
 clipboard_auto_paste  = "auto"          # off | auto | ctrl_v | ctrl_shift_v | shift_insert
 clipboard_image_action_command = ""     # image clipboard action; e.g. "gimp {path}" or "satty -f -"
 shared_gl_context     = true            # startup-only; share GPU textures across surfaces
+disable_mipmaps       = false           # startup-only; disable texture mipmaps if downscaled icons/wallpaper show GPU artifacts
 
 [shell.animation]
 enabled = true
@@ -109,13 +113,17 @@ Notes:
 - `clipboard_confirm_clear_history`: when `true` (default), the clipboard panel asks before **Clear history** and before deleting an **unpinned** entry (trash in the preview, or double-click a row). When `false`, those actions apply immediately: sidebar clear removes unpinned rows and keeps pins when any exist, or clears everything when nothing is pinned; unpinned single deletes are immediate. **Pinned** entries still require confirmation before delete. With confirmation enabled, the clear dialog only offers **Keep pinned** when both pinned and unpinned rows exist; if history is all pinned or all unpinned, the description matches that case. Toggle in **Settings → Shell → Clipboard**.
 - `clipboard_auto_paste`: `auto` = image entries use `Ctrl+V`, text entries use `Ctrl+Shift+V`; `off` = copy only, no automatic paste.
 - `clipboard_image_action_command`: when non-empty, image clipboard previews show an action button. Use `{path}` to receive an exported image file path. Use `{stdin}` (expanded to `-`) or omit `{path}` to receive the image bytes on stdin, matching the v4 annotation tool behavior (`satty -f -`, `gradia`, etc.).
+- `corner_radius_scale` scales rounded corners across shell surfaces: `0` = square, `1` = default, `2` = extra rounded.
+- `launch_apps_as_systemd_services`: when `true`, apps launched from the launcher, dock, and taskbar run as transient systemd scopes (`systemd-run --user --scope`) so they survive a shell restart and get their own cgroup.
+- `screen_time_enabled`: when `true`, Noctalia tracks per-app usage time for the Control Center screen-time view and its shortcut. Disabled by default; no usage is recorded while off.
 - `shared_gl_context`: when `true` (default), all rendering surfaces share a single EGL context group so wallpaper and icon textures are uploaded once in VRAM and reused across monitors. Set to `false` if you see corrupted textures (e.g. vertical stripe artifacts) on older GPUs with buggy cross-context texture sharing. Each surface then creates its own standalone context, which uses more VRAM on multi-monitor setups. Restart required.
+- `disable_mipmaps`: when `true`, Noctalia skips mipmap generation for textures. Startup-only — try it if downscaled application icons or wallpapers look blurry or show GPU mipmap artifacts.
 - `shell.animation.enabled` disables all animated transitions globally. `speed` scales durations globally.
 - `shell.shadow` defines the shared shadow style for shell surfaces and xdg-popup chrome such as panels, menus, pickers, and select dropdowns. `direction` controls which way the shadow is cast; blur is fixed at 12 px. Components such as panels, bars, and the dock only opt in/out with `shadow = true|false`.
 - `shell.panel.transparency_mode` controls panel glass styling. `solid` keeps cards opaque and floating/centered panels solid, `soft` makes floating/centered panels lightly translucent and cards subtly translucent, and `glass` makes both visibly translucent while clamping card opacity high enough for readable text. Attached panels continue to use the effective panel background opacity inherited from the host bar.
 - `shell.panel.borders` draws an outline on detached panel shells and on section cards inside panels (control center tabs, clipboard preview, setup wizard steps, etc.). Attached bar-merged panels stay borderless on the shell edge. Default is `true`; set to `false` for a flatter, borderless look.
 - `shell.panel.shadow` toggles the rendered drop shadow on attached, floating, and centered panels. Shadow direction and alpha come from `[shell.shadow]`.
-- `shell.panel.launcher_placement`, `clipboard_placement`, `control_center_placement`, `wallpaper_placement`, and `session_placement` accept `attached`, `floating`, or `centered`. `attached` merges the panel with the host bar when the bar allows `attach_panels`; `floating` keeps the panel detached but near the bar; `centered` opens it in the middle of the monitor. Defaults are centered for Launcher and Clipboard, attached for Control Center, Wallpaper, and Session.
+- `shell.panel.launcher_placement`, `clipboard_placement`, `control_center_placement`, `wallpaper_placement`, and `session_placement` accept `attached`, `floating`, or `centered`. `attached` merges the panel with the host bar where the bar's position and placement allow it; `floating` keeps the panel detached but near the bar; `centered` opens it in the middle of the monitor. Defaults are centered for Launcher and Clipboard, attached for Control Center, Wallpaper, and Session.
 - `shell.panel.floating_offset` sets the gap in pixels between a floating or detached panel and the bar edge (default `8`). It applies to `floating` placement and to panels using the reserved edge area when multiple bars share an edge; `attached` and `centered` panels ignore it.
 - When multiple enabled bars resolve to the same edge on one monitor, exact source-bar attachment is ambiguous. In that case attached/floating panels use the compositor's reserved edge area and open outside the bar stack instead of trying to merge with one bar.
 - `shell.panel.open_near_click_control_center`, `open_near_click_launcher`, `open_near_click_clipboard`, `open_near_click_wallpaper`, and `open_near_click_session` position attached or floating panels near the click location on the bar instead of centering them along the bar. They are ignored when the corresponding placement is `centered`.
@@ -157,6 +165,9 @@ position = "top_center"  # top_right | top_left | top_center | bottom_right | bo
 position_vertical = "top_center"  # same options; used when orientation = "vertical"
 orientation = "horizontal" # horizontal | vertical (volume/brightness sliders only)
 scale = 1.0              # OSD size multiplier on top of shell.ui_scale
+background_opacity = 0.97 # background opacity of OSD popups
+offset_x = 20            # absolute horizontal margin from the screen edge
+offset_y = 8             # absolute vertical margin from the screen edge
 # monitors = ["DP-1"]    # connector names; omit or leave empty for all monitors
 
 [osd.kinds]
@@ -183,7 +194,8 @@ effective OSD size on top of
 `shell.ui_scale` (for example `1.25` makes volume, brightness, and lock-key popups 25% larger than the default).
 `monitors` limits OSD popups to the listed connector names (same matching rules as notification toasts and the dock);
 leave it empty to show on every connected output. If none of the configured monitors are connected, OSD falls back to all
-outputs until one reconnects.
+outputs until one reconnects. `background_opacity` sets popup background opacity, and `offset_x` / `offset_y` are the
+absolute margins from the screen edge for the chosen `position`.
 Each popup kind can be toggled independently under `[osd.kinds]`. The volume master toggle enables both output and input
 OSDs by default; set `volume_output` or `volume_input` to `false` to disable one side only. `lock_keys = false` disables Caps/Num/Scroll Lock popups; when no `lock_keys` bar widget is configured, this also stops
 lock-key state polling. `keyboard_layout = false` disables layout-change popups.
@@ -201,21 +213,25 @@ Configure under **`[lockscreen]`** in TOML, or use **Settings → Security → L
 ```toml
 [lockscreen]
 enabled               = true      # master switch for session lock
+fingerprint           = true      # allow fingerprint (PAM) authentication on the lock screen
 allow_empty_password  = false     # submit Enter with an empty password (security-key PAM stacks)
 blurred_desktop       = false     # use a desktop snapshot as the lock screen background
 blur_intensity        = 0.5       # background blur (0.0 = none, 1.0 = maximum)
 tint_intensity        = 0.3       # surface-color tint over the background (0.0 = none, 1.0 = opaque)
 wallpaper             = ""        # optional image path; empty uses the desktop wallpaper per output
+monitors              = []        # connectors that show the lock screen; empty = all outputs, others stay black
 ```
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `enabled` | bool | `true` | Master switch for session lock, logind integration, and lock actions. |
+| `fingerprint` | bool | `true` | When `true`, fingerprint (PAM) authentication is offered on the lock screen alongside the password field. Set `false` to require password entry only. |
 | `allow_empty_password` | bool | `false` | When `true`, Enter can submit an empty password (needed for some security-key PAM stacks). When `false`, empty submits are ignored to avoid accidental `pam_faillock` lockouts from wake keys. |
 | `blurred_desktop` | bool | `false` | Capture each output before lock and use it as the lock screen background. |
 | `blur_intensity` | float | `0.5` | Blur strength for the active lock screen background (`0.0`–`1.0`). |
 | `tint_intensity` | float | `0.3` | Surface-color tint over the active lock screen background (`0.0`–`1.0`). |
 | `wallpaper` | string | `""` | Optional image path for the lock screen. When empty, each output uses its desktop wallpaper. Ignored when desktop capture is active. |
+| `monitors` | array | `[]` | Connector names that show the lock screen. Empty shows it on all outputs; listed-only mode leaves other outputs black. |
 
 If capture fails (missing protocol, permission denied, etc.), the lock screen falls back to the normal per-output wallpaper. The snapshot lives in memory only until unlock. Blur and tint sliders can be adjusted live from Settings while the session is locked.
 
@@ -283,7 +299,7 @@ Configure under **`[shell.session]`** in TOML, or use **Settings → Power → S
 | `label` | string | *unset* | Optional button label (otherwise translated defaults). |
 | `glyph` | string | *unset* | Optional bar-style icon id (otherwise defaults per action). Under **Session menu** in Settings → Power, open a row’s settings (cog) editor and use the icon preview to pick a glyph. |
 | `shortcut` | string | `"1"`–`"5"` | Optional keyboard shortcut that triggers the action while the session panel is open. Any XKB key name (e.g. `1`, `F1`, `Escape`) or modifier combo (`Ctrl+1`). Clear to disable. |
-| `destructive` | bool | `false` | Use the destructive (warning) button style. |
+| `variant` | string | `"default"` | Button style: `default`, `primary`, `secondary`, `destructive` (warning), or `outline`. |
 
 Omitting `[[shell.session.actions]]` entirely keeps the default five actions. To define your own list, declare one or more tables. An explicit empty array hides all session buttons:
 
@@ -308,5 +324,5 @@ command = "systemctl suspend"
 
 [[shell.session.actions]]
 action = "shutdown"
-destructive = true
+variant = "destructive"
 ```

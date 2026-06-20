@@ -12,6 +12,7 @@ A standalone application dock that displays pinned and running apps. Disabled by
 enabled             = false      # set true to activate
 position            = "bottom"   # top | bottom | left | right
 active_monitor_only = false      # when true, only show apps/windows from the active monitor
+monitors            = []         # connector names to show on; empty = all outputs
 
 icon_size           = 48
 main_axis_padding   = 16          # inner padding along the icon row (main axis)
@@ -38,6 +39,10 @@ magnification_scale = 1.35       # max scale multiplier at the pointer center (1
 active_opacity      = 1.0
 inactive_opacity    = 0.85
 show_instance_count = true       # badge with window count when an app has 2+ windows
+show_dots           = false      # running-window indicator dots beside app icons
+
+launcher_position   = "none"     # none | start | end — optional launcher button on the dock
+launcher_icon       = "grid-dots" # Tabler glyph for the launcher button
 
 # Desktop entry IDs, StartupWMClass, or human-readable names
 pinned = ["firefox", "code", "kitty"]
