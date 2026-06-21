@@ -7,7 +7,7 @@ sidebar:
 
 The greeter stores its settings in `/var/lib/noctalia-greeter/greeter.toml` using grouped TOML tables (same style as Noctalia shell config).
 
-If the file is missing, the greeter uses built-in defaults (auto UI scale, all monitors, system keymap, and so on). Setup creates a minimal file with `greeter_user` when you run the system install script.
+If the file is missing, the greeter uses built-in defaults (auto UI scale, all monitors, system keymap, and so on). Setup ensures `/var/lib/noctalia-greeter/` exists and is owned by the greetd session user from `/etc/greetd/config.toml`.
 
 - [Keys the greeter remembers](#keys-the-greeter-remembers)
 - [Admin-only keys](#admin-only-keys)
@@ -38,7 +38,6 @@ Set these yourself. The greeter UI does not change them.
 
 | Key | Purpose |
 |-----|---------|
-| `greeter_user` | greetd account name (written during setup; used for logging) |
 | `[session].default` | Session selected when the greeter opens. Overrides last-used `[session].last` unless you pass `--session` on the greetd command line. |
 | `[user].default` | Username to select on startup. Opens the password step immediately. `--user` on the greetd command line wins. Press **Esc** or **Back** to pick another user. |
 | `[output].name` | Wayland connector name to show the greeter on (see [Multi-monitor](#multi-monitor)) |
@@ -54,8 +53,6 @@ Set these yourself. The greeter UI does not change them.
 Example:
 
 ```toml
-greeter_user = "greeter"
-
 [session]
 default = "niri"
 last = "niri"
