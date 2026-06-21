@@ -185,7 +185,7 @@ circle = true
 
 ### audio_visualizer
 
-Desktop audio visualizers store an `aspect_ratio` setting for shape. `box_width` and `box_height` control the fitted widget box size; leave both `0.0` to auto-fit the content. They also accept optional `mirrored`, `centered`, `show_when_idle`, `color_1`, and `color_2` settings; both colors default to `primary`.
+Desktop audio visualizers fill their widget box: the spectrum spans the full box width and the bars use the full box height. `box_width` and `box_height` set the box size — resize the box to change the visualizer's shape; leave both `0.0` to start from the default footprint. They also accept optional `mirrored`, `centered`, `show_when_idle`, `color_1`, and `color_2` settings; both colors default to `primary`.
 
 ```toml
 [desktop_widgets.widget.audio_main]
@@ -199,7 +199,6 @@ rotation = 0.0
 
 [desktop_widgets.widget.audio_main.settings]
 bands        = 32
-aspect_ratio = 2.5
 mirrored     = true
 centered     = true
 show_when_idle = false
@@ -210,7 +209,6 @@ color_2      = "secondary"
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `bands` | int | `32` | Number of frequency bands |
-| `aspect_ratio` | float | `2.5` | Width-to-height ratio |
 | `mirrored` | bool | `true` | Mirror the spectrum horizontally |
 | `centered` | bool | `true` | Center bars vertically instead of aligning them to the bottom edge |
 | `show_when_idle` | bool | `false` | Keep the widget visible even when no media is playing |
