@@ -1,17 +1,13 @@
 ---
 title: Configuration
-description: greeter.conf settings for sessions, color scheme, monitors, UI scale, cursor theme, and keyboard layout.
+description: greeter.toml settings for sessions, color scheme, monitors, UI scale, cursor theme, and keyboard layout.
 sidebar:
   order: 1
 ---
 
-The greeter stores its settings in a simple key-value file:
+The greeter stores its settings in `/var/lib/noctalia-greeter/greeter.toml` using grouped TOML tables (same style as Noctalia shell config).
 
-```text
-/var/lib/noctalia-greeter/greeter.conf
-```
-
-Lines use `key = value` syntax. Lines starting with `#` are comments.
+If the file is missing, the greeter uses built-in defaults (auto UI scale, all monitors, system keymap, and so on). Setup creates a minimal file with `greeter_user` when you run the system install script.
 
 - [Keys the greeter remembers](#keys-the-greeter-remembers)
 - [Admin-only keys](#admin-only-keys)
@@ -29,8 +25,8 @@ When you change session or color scheme on the login screen, the greeter writes:
 
 | Key | Purpose |
 |-----|---------|
-| `session` | Last Wayland session you picked (by **Name** from the session picker) |
-| `scheme` | Last color scheme you picked |
+| `[session].last` | Last Wayland session you picked (by **Name** from the session picker) |
+| `[appearance].scheme` | Last color scheme you picked |
 
 These are updated automatically — you do not need to edit them by hand unless you want to reset them.
 
@@ -42,26 +38,48 @@ Set these yourself. The greeter UI does not change them.
 
 | Key | Purpose |
 |-----|---------|
-| `default_session` | Session selected when the greeter opens. Overrides last-used `session` unless you pass `--session` on the greetd command line. |
-| `default_user` | Username to select on startup. Opens the password step immediately. `--user` on the greetd command line wins. Press **Esc** or **Back** to pick another user. |
 | `greeter_user` | greetd account name (written during setup; used for logging) |
-| `output` | Wayland connector name to show the greeter on (see [Multi-monitor](#multi-monitor)) |
-| `output_layout` | Multi-monitor positions as `NAME:X,Y; ...` in logical pixels (see [Multi-monitor](#multi-monitor)) |
-| `scale` | Manual UI scale factor (see [UI scale](#ui-scale)) |
-| `cursor_theme` | Cursor theme name (e.g. `Adwaita`); missing → wlroots default cursor (see [Cursor theme](#cursor-theme)) |
-| `cursor_size` | Cursor size in pixels (e.g. `24`); missing → `24` |
-| `cursor_path` | Colon-separated theme search path (sets `XCURSOR_PATH`); needed when the theme is not on the default search path (`~/.icons:/usr/share/icons:/usr/share/pixmaps`) |
-| `keyboard_layout` | XKB layout code(s), e.g. `cz`, `us`, `de,cz` (comma-separated for multiple layouts; see [Keyboard layout](#keyboard-layout)) |
-| `keyboard_variant` | XKB variant(s), e.g. `qwertz` (optional; comma-separated when multiple layouts) |
-| `keyboard_options` | XKB options string, e.g. `grp:alt_shift_toggle` (optional) |
+| `[session].default` | Session selected when the greeter opens. Overrides last-used `[session].last` unless you pass `--session` on the greetd command line. |
+| `[user].default` | Username to select on startup. Opens the password step immediately. `--user` on the greetd command line wins. Press **Esc** or **Back** to pick another user. |
+| `[output].name` | Wayland connector name to show the greeter on (see [Multi-monitor](#multi-monitor)) |
+| `[output].layout` | Multi-monitor positions as `NAME:X,Y; ...` in logical pixels (see [Multi-monitor](#multi-monitor)) |
+| `[output].scale` | Manual UI scale factor (see [UI scale](#ui-scale)) |
+| `[cursor].theme` | Cursor theme name (e.g. `Adwaita`); missing → wlroots default cursor (see [Cursor theme](#cursor-theme)) |
+| `[cursor].size` | Cursor size in pixels (e.g. `24`); missing → `24` |
+| `[cursor].path` | Colon-separated theme search path (sets `XCURSOR_PATH`); needed when the theme is not on the default search path (`~/.icons:/usr/share/icons:/usr/share/pixmaps`) |
+| `[keyboard].layout` | XKB layout code(s), e.g. `cz`, `us`, `de,cz` (comma-separated for multiple layouts; see [Keyboard layout](#keyboard-layout)) |
+| `[keyboard].variant` | XKB variant(s), e.g. `qwertz` (optional; comma-separated when multiple layouts) |
+| `[keyboard].options` | XKB options string, e.g. `grp:alt_shift_toggle` (optional) |
 
 Example:
 
-```ini
-default_session = niri
-default_user = lysec
-output = "DP-2"
+```toml
+greeter_user = "greeter"
+
+[session]
+default = "niri"
+last = "niri"
+
+[user]
+default = "lysec"
+
+[appearance]
+scheme = "Synced"
+
+[output]
+name = "DP-2"
+layout = "DP-1:0,0; DP-2:2560,0"
 scale = 1.5
+
+[cursor]
+theme = "Adwaita"
+size = 24
+path = "/usr/share/icons"
+
+[keyboard]
+layout = "us,cz"
+variant = "qwertz"
+options = "grp:alt_shift_toggle"
 ```
 
 ---
@@ -72,20 +90,22 @@ The greeter runs inside the bundled wlroots compositor (`noctalia-greeter-compos
 
 To pin the greeter to a single connector:
 
-```ini
-output = "DP-2"
+```toml
+[output]
+name = "DP-2"
 ```
 
-When `output` is set, the compositor disables the other connectors at the KMS level. If `output` is missing, empty, or names a disconnected connector, the greeter falls back to showing on all outputs.
+When `[output].name` is set, the compositor disables the other connectors at the KMS level. If it is missing, empty, or names a disconnected connector, the greeter falls back to showing on all outputs.
 
-On multiple monitors, cursor movement follows the layout in `output_layout`. Without it, the greeter places outputs left-to-right by connector name, which often does not match your desk.
+On multiple monitors, cursor movement follows `[output].layout`. Without it, the greeter places outputs left-to-right by connector name, which often does not match your desk.
 
-**Sync from Noctalia:** When you use **Settings → Security → Noctalia Greeter → Sync Now**, Noctalia copies monitor positions from your desktop compositor (via xdg-output) into `output_layout`. Sync skips layout when only one monitor is connected, xdg-output is unavailable, outputs are still enumerating, or all monitors report the same origin.
+**Sync from Noctalia:** When you use **Settings → Security → Noctalia Greeter → Sync Now**, Noctalia copies monitor positions from your desktop compositor (via xdg-output) into `[output].layout`. Sync skips layout when only one monitor is connected, xdg-output is unavailable, outputs are still enumerating, or all monitors report the same origin.
 
 Set positions manually if needed:
 
-```ini
-output_layout = "DP-1:0,0; DP-2:2560,0"
+```toml
+[output]
+layout = "DP-1:0,0; DP-2:2560,0"
 ```
 
 Coordinates are logical pixels from your desktop compositor. The greeter compositor uses them for **order and row grouping**, then places outputs edge-to-edge using its own output scale (so cursor movement stays continuous).
@@ -96,7 +116,7 @@ List connector names from a running Wayland session:
 noctalia-greeter outputs
 ```
 
-Restart greetd after changing `output`:
+Restart greetd after changing `[output].name`:
 
 ```sh
 sudo systemctl restart greetd
@@ -108,16 +128,17 @@ sudo systemctl restart greetd
 
 On high-DPI panels (for example 4K without fractional scaling), the compositor scales output from the monitor's physical size when EDID reports it, otherwise from resolution. Scale is capped at 2×. The greeter client lays out at logical size and renders HiDPI buffers via Wayland fractional scale.
 
-To override auto scaling, set `scale`:
+To override auto scaling, set `[output].scale`:
 
-```ini
+```toml
+[output]
 scale = 1.5
 ```
 
-If `scale` is missing or invalid (not a positive number), the compositor falls back to auto scaling.
+If `[output].scale` is missing or invalid (not a positive number), the compositor falls back to auto scaling.
 
 :::note
-Manual `scale` is separate from compositor or desktop scaling. It only affects the greeter session's output scaling.
+Manual `[output].scale` is separate from compositor or desktop scaling. It only affects the greeter session's output scaling.
 :::
 
 ---
@@ -126,21 +147,23 @@ Manual `scale` is separate from compositor or desktop scaling. It only affects t
 
 The compositor resolves the cursor theme, size, and search path in this order:
 
-1. `cursor_theme` / `cursor_size` / `cursor_path` in `greeter.conf`
+1. `[cursor].theme` / `[cursor].size` / `[cursor].path` in `greeter.toml`
 2. The `XCURSOR_THEME`, `XCURSOR_SIZE`, and `XCURSOR_PATH` environment variables
 3. The wlroots defaults (built-in cursor at size `24`)
 
-Set the keys in `greeter.conf`:
+Set the keys in `greeter.toml`:
 
-```ini
-cursor_theme = Adwaita
-cursor_size = 24
+```toml
+[cursor]
+theme = "Adwaita"
+size = 24
 ```
 
-If the theme is not under the default search path (`~/.icons:/usr/share/icons:/usr/share/pixmaps`), also set `cursor_path` to the directory that contains it:
+If the theme is not under the default search path (`~/.icons:/usr/share/icons:/usr/share/pixmaps`), also set `[cursor].path` to the directory that contains it:
 
-```ini
-cursor_path = /usr/share/icons
+```toml
+[cursor]
+path = "/usr/share/icons"
 ```
 
 ### Using environment variables
@@ -154,7 +177,7 @@ command = "env XCURSOR_THEME=Adwaita XCURSOR_SIZE=24 /usr/bin/noctalia-greeter-s
 
 ### On NixOS
 
-Use the `programs.noctalia-greeter.settings.cursor` options instead of editing `greeter.conf` or the greetd command by hand. They inject the matching `XCURSOR_*` variables into the greetd session command and add the theme package's `share/icons` to `XCURSOR_PATH`:
+Use the `programs.noctalia-greeter.settings.cursor` options instead of editing `greeter.toml` or the greetd command by hand. They inject the matching `XCURSOR_*` variables into the greetd session command and add the theme package's `share/icons` to `XCURSOR_PATH`:
 
 ```nix
 programs.noctalia-greeter.settings.cursor = {
@@ -176,26 +199,28 @@ programs.noctalia-greeter.settings.cursor = {
 
 The compositor loads the XKB keymap in this order:
 
-1. `keyboard_layout` / `keyboard_variant` / `keyboard_options` in `greeter.conf`
+1. `[keyboard].layout` / `[keyboard].variant` / `[keyboard].options` in `greeter.toml`
 2. The `XKB_DEFAULT_LAYOUT`, `XKB_DEFAULT_VARIANT`, and `XKB_DEFAULT_OPTIONS` environment variables
 3. The system default keymap
 
 Example for Czech QWERTZ:
 
-```ini
-keyboard_layout = cz
+```toml
+[keyboard]
+layout = "cz"
 ```
 
-Multiple layouts (cycle with `keyboard_options`, e.g. `grp:alt_shift_toggle`):
+Multiple layouts (cycle with `[keyboard].options`, e.g. `grp:alt_shift_toggle`):
 
-```ini
-keyboard_layout = us,cz
-keyboard_options = grp:alt_shift_toggle
+```toml
+[keyboard]
+layout = "us,cz"
+options = "grp:alt_shift_toggle"
 ```
 
 Use standard [XKB layout codes](https://www.freedesktop.org/wiki/Software/XKeyboard-config/Rules/) (`de`, `fr`, `ru`, …). List layouts on your system with `localectl list-x11-keymap-layouts` or check `/usr/share/X11/xkb/rules/base.lst`.
 
-greetd starts greeters with an empty environment, so set layout in `greeter.conf` or prefix the greetd session command:
+greetd starts greeters with an empty environment, so set layout in `greeter.toml` or prefix the greetd session command:
 
 ```toml
 [default_session]
@@ -207,8 +232,8 @@ command = "env XKB_DEFAULT_LAYOUT=cz /usr/bin/noctalia-greeter-session"
 ## Helper commands
 
 ```sh
-noctalia-greeter sessions   # list valid session names for default_session / --session
-noctalia-greeter outputs    # list Wayland connector names for output
+noctalia-greeter sessions   # list valid session names for [session].default / --session
+noctalia-greeter outputs    # list Wayland connector names for [output].name
 ```
 
 Sessions come from `wayland-sessions` `.desktop` files under `/usr/share`, each path in `XDG_DATA_DIRS`, and on NixOS `/run/current-system/sw/share`.

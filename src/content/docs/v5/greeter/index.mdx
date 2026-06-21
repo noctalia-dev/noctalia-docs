@@ -25,7 +25,7 @@ Install **noctalia-greeter** from your distribution if a package is available. Y
 
 Your desktop sessions (niri, Hyprland, and so on) are separate - install those as you normally would.
 
-If your distro does not package the greeter yet, see the [noctalia-greeter repository](https://github.com/noctalia-dev/noctalia-greeter) for build and install steps. After installing, run the included system setup script as root so `/var/lib/noctalia-greeter/` and `greeter.conf` are created for the greetd user.
+If your distro does not package the greeter yet, see the [noctalia-greeter repository](https://github.com/noctalia-dev/noctalia-greeter) for build and install steps. After installing, run the included system setup script as root so `/var/lib/noctalia-greeter/` and `greeter.toml` are created for the greetd user.
 
 ---
 
@@ -61,11 +61,11 @@ List valid session names:
 noctalia-greeter sessions
 ```
 
-You can also set `default_session` in [greeter.conf](/v5/greeter/configuration/) - that overrides the last session you picked unless `--session` is passed on the command line.
+You can also set `[session].default` in [greeter.toml](/v5/greeter/configuration/) - that overrides the last session you picked unless `--session` is passed on the command line.
 
 ### Default user
 
-To skip the user list and open the password step for a specific account (similar to tuigreet's default user), set `default_user` in [greeter.conf](/v5/greeter/configuration/) or pass `--user` on the command line:
+To skip the user list and open the password step for a specific account (similar to tuigreet's default user), set `[user].default` in [greeter.toml](/v5/greeter/configuration/) or pass `--user` on the command line:
 
 ```toml
 command = "/usr/bin/noctalia-greeter-session -- --user lysec"
@@ -93,7 +93,7 @@ With Noctalia v5 and the greeter both installed, open **Settings → Security �
 
 After syncing, log out or restart greetd to see the changes on the login screen.
 
-The greeter adds a **Synced** color scheme when sync data is present. Session and scheme choices you make on the login screen are remembered in `/var/lib/noctalia-greeter/greeter.conf`.
+The greeter adds a **Synced** color scheme when sync data is present. Session and scheme choices you make on the login screen are remembered in `/var/lib/noctalia-greeter/greeter.toml`.
 
 For monitor selection, UI scale, cursor theme, and other admin settings, see [Configuration](/v5/greeter/configuration/).
 
@@ -122,8 +122,8 @@ The greeter works without a mouse.
 - **`Failed to spawn client` / wrong path in greetd config** - `command` must be the full path from `which noctalia-greeter-session` (often `/usr/bin/...` on packaged installs, not `/usr/local/bin/...`).
 - **`WAYLAND_DISPLAY is not set`** - greetd must use `noctalia-greeter-session` (it starts `noctalia-greeter-compositor`). Fix `command` in `/etc/greetd/config.toml`.
 - **Black screen after reboot** - Session logs are written to `/var/log/noctalia-greeter.log` and `/var/lib/noctalia-greeter/greeter.log` when those paths are writable. Create them once during setup if needed.
-- **Wrong session on startup** - If `default_session` is set in `greeter.conf`, it wins over last-used `session`. Run `noctalia-greeter sessions` for exact **Name** spelling.
+- **Wrong session on startup** - If `[session].default` is set in `greeter.toml`, it wins over last-used `[session].last`. Run `noctalia-greeter sessions` for exact **Name** spelling.
 - **Synced look missing** - Install Noctalia v5, the greeter, and the polkit policy; sync again from Settings; restart greetd or log out once.
 - **Sync fails with no privilege escalator** - Greeter sync needs `pkexec` or `run0` on `PATH` (for example when `pkexec` is disabled on NixOS, install `run0` from systemd ≥ 256). A polkit authentication agent must be running in your session.
-- **UI too small or too large on a high-DPI monitor** - Set `scale` in `greeter.conf`. See [Configuration](/v5/greeter/configuration/#ui-scale).
-- **Wrong or default cursor theme** - Set `cursor_theme` (and `cursor_size`) in `greeter.conf`, or the `XCURSOR_*` variables in the greetd command. If the theme is not on the default search path, also set `cursor_path` / `XCURSOR_PATH`. See [Cursor theme](/v5/greeter/configuration/#cursor-theme).
+- **UI too small or too large on a high-DPI monitor** - Set `[output].scale` in `greeter.toml`. See [Configuration](/v5/greeter/configuration/#ui-scale).
+- **Wrong or default cursor theme** - Set `[cursor].theme` (and `[cursor].size`) in `greeter.toml`, or the `XCURSOR_*` variables in the greetd command. If the theme is not on the default search path, also set `[cursor].path` / `XCURSOR_PATH`. See [Cursor theme](/v5/greeter/configuration/#cursor-theme).
