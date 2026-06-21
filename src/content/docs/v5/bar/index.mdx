@@ -23,6 +23,8 @@ background_opacity = 1.0         # 0.0 (transparent) to 1.0 (opaque)
 border             = "outline"   # color role or #RRGGBB for the bar outline
 border_width       = 0.0         # inside outline width in pixels; 0 disables it
 shadow             = true        # cast the global [shell.shadow]
+contact_shadow     = false       # dark gradient between an attached panel and the bar (depth at the seam)
+panel_overlap      = 1           # logical px an attached panel overlaps the bar edge to hide the seam
 radius             = 12          # global corner radius fallback
 radius_top_left    = 12
 radius_top_right   = 12
@@ -30,6 +32,7 @@ radius_bottom_left = 12
 radius_bottom_right = 12
 margin_ends        = 180         # inset from each end of the bar along its main axis
 margin_edge        = 10          # distance from the nearest screen edge (positive values float the bar)
+margin_opposite_edge = 0         # extra reserved space on the inward side of the bar (below for top, above for bottom)
 padding            = 14          # main-axis padding from bar edges to start/end widget sections
 widget_spacing     = 6           # gap between widgets within a section
 scale              = 1.0         # content scale multiplier for icons and text
@@ -78,6 +81,23 @@ Multiple `[bar.*]` entries are supported — each is independently configured an
 `reserve_space = true`, and the compositor still owns the final exclusive-zone arrangement. Names omitted from `order`
 are appended after the listed names.
 
+### Dead zone actions
+
+The **dead zone** is the bar margin outside the start/center/end widget sections — typically the inset created by `margin_ends`. Configure shell commands under `[bar.<name>.dead_zone]`:
+
+```toml
+[bar.main.dead_zone]
+command = "noctalia msg launcher toggle"   # left click
+right_command = ""                         # empty = open Control Center (default)
+middle_command = "..."                     # middle click
+scroll_up_command = "..."
+scroll_down_command = "..."
+```
+
+Right-click still opens Control Center when `right_command` is empty. Set `right_command` to override that on dead-zone clicks only. While an attached panel is open, right-click anywhere on the bar still toggles Control Center unless a dead-zone `right_command` is configured and the click lands in the dead zone.
+
+Per-monitor overrides can set any dead-zone command under `[bar.<name>.monitor.<match>.dead_zone]`; unset fields inherit from the bar defaults.
+
 ---
 
 ## Per-monitor overrides
@@ -110,9 +130,13 @@ end                = ["volume", "clock"]
 
 `match` defaults to the subtable key name when omitted, so `[bar.main.monitor."DP-1"]` without a `match` field works too.
 
-Only the fields you specify are overridden; everything else falls through to the `[bar.*]` defaults. Supported override fields: all bar fields including `position`, plus `auto_hide`, `reserve_space`, `layer`, `scale`, `background_opacity`, `color`, `font_family`, and all `capsule_*` keys.
+Only the fields you specify are overridden; everything else falls through to the `[bar.*]` defaults. Supported override fields: all bar fields including `position`, `dead_zone`, plus `auto_hide`, `reserve_space`, `layer`, `scale`, `background_opacity`, `color`, `font_family`, and all `capsule_*` keys.
 
 Shadow blur, offset, and alpha are global under `[shell.shadow]`. Bars only expose `shadow = true|false`.
+
+`contact_shadow = true` adds a dark gradient at the seam between an attached panel and the bar, giving the panel a slight lifted-off-the-bar feel. It is independent of `shadow` and only takes effect on attached panels; the change applies on the next panel open.
+
+`panel_overlap` controls how many logical pixels an attached panel is pulled into the bar so the two surfaces share an edge instead of leaving a hairline gap. The ideal value depends on your compositor and the output's fractional scale (it comes down to physical-pixel rounding), so it is tunable rather than fixed. The default is `1`. If you see a faint seam line, try `0`; if a gap appears, raise it. Negative values push the panel away from the bar. Because the right value tracks fractional scale, you can set it per monitor with a `[bar.<name>.monitor.*]` override on a mixed-scale multi-monitor setup. In the Settings GUI it lives under **Bar → Layout → Advanced**.
 
 `capsule_thickness` sets the widget capsule size across the bar (its height on a horizontal bar, width on a vertical bar) as a fraction of the bar thickness. The default is `0.76`; `1.0` makes capsules fill the full bar thickness and lower values shrink them, leaving more margin on either side. It applies to every capsule on the bar regardless of per-widget content scale. In the Settings GUI it lives under **Bar → Capsules**.
 
@@ -131,6 +155,8 @@ When `auto_hide = true`, the bar:
 - IPC `bar-show`, `bar-hide`, and `bar-toggle` accept optional `[bar-name] [monitor-selector]` arguments; omit both to affect every bar instance. They use the same hide/reveal animation instead of tearing down surfaces. With `auto_hide`, they retract or reveal the bar like pointer auto-hide; edge reveal still works after `bar-hide`. With `auto_hide` off, `bar-hide` hides the bar and always frees the compositor gap until `bar-show` (or `bar-toggle` while showing), regardless of `reserve_space`.
 
 `reserve_space` controls whether the bar keeps a compositor exclusive zone. With `auto_hide = false`, `reserve_space = true` keeps windows pushed away; `reserve_space = false` overlays the bar on top of full-screen clients. With `auto_hide = true`, `reserve_space = false` retracts the bar as an overlay (no gap); `reserve_space = true` keeps the gap while the bar slides out of view.
+
+`margin_opposite_edge` adds extra reserved space on the inward side of the bar (below a top bar, above a bottom bar, and so on for vertical bars). The bar itself does not move; the compositor exclusive zone grows so tiled and maximized windows stop further away. Use it when a compositor ignores or under-reserves struts — for example Labwc with a maximized window that still touches the bar. Requires `reserve_space = true`. The default is `0`.
 
 `layer = "overlay"` shows the bar above fullscreen apps. Attached panels (for example Control Center when it attaches to the bar) follow the bar's layer. Centered or floating panel placements keep each panel's own layer (typically overlay).
 

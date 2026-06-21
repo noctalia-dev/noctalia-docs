@@ -90,7 +90,9 @@ Pill styling and `capsule_radius` are ignored when `minimal = true`.
 | `display` | string | `"id"` | Label mode: `"none"`, `"id"`, or `"name"`. `"none"` is not available when `minimal = true`. |
 | `minimal` | bool | `false` | Text-only labels (id/name) without pill backgrounds or slide animation. |
 | `max_label_chars` | int | `1` | Maximum characters for workspace name labels; longer names are truncated. Only affects non-numeric labels (workspace IDs like `10`, `11` are never truncated). |
-| `pill_scale` | float | `1.0` | Scale workspace pill height (pill style only). |
+| `pill_scale` | float | `1.0` | Scale workspace pill thickness (cross-axis size; pill style only). |
+| `active_pill_size` | float | `2.2` | Minimum active pill length along the bar, as a multiple of pill thickness. Labels may expand beyond this. |
+| `inactive_pill_size` | float | `1.0` | Minimum inactive pill length along the bar, as a multiple of pill thickness. Labels may expand beyond this. |
 | `focused_color` | string | `"primary"` | Color role or hex color for the focused workspace pill |
 | `occupied_color` | string | `"secondary"` | Color role or hex color for occupied (non-focused) workspace pills |
 | `empty_color` | string | `"secondary"` | Color role or hex color for empty workspace pills |
@@ -104,6 +106,9 @@ minimal = false         # true = text-only labels, no animated pills
 max_label_chars = 2     # truncate long workspace names (e.g. "VESKTOP" → "VE")
 labels_only_when_occupied = true  # (1) (2*) ( ) (4) — occupied tags and the active tag show labels (*active but empty)
 hide_when_empty = true
+pill_scale = 1.0
+active_pill_size = 2.2
+inactive_pill_size = 1.0
 focused_color = "primary"
 occupied_color = "secondary"
 empty_color = "surface_variant"
@@ -218,7 +223,7 @@ System resource monitor. Shows an icon and value for one configurable stat. Mult
 | `path` | string | `"/"` | Mount path for `disk_pct` (ignored otherwise) |
 | `interface` | string | `""` | Network interface to monitor for `net_rx`/`net_tx`; empty uses the total across all non-loopback interfaces |
 | `display` | string | `"gauge"` | `"gauge"` = icon + vertical fill bar; `"graph"` = icon + sparkline; `"text"` = icon + value |
-| `gauge_color` | string | `"primary"` | Color role (or fixed hex) for the gauge fill bar when `display = "gauge"` |
+| `highlight_color` | string | `"error"` | Color role (or fixed hex) the value tints toward as the stat rises past its activity/critical thresholds. See [System Monitor](/v5/services/system-monitor/). |
 | `show_label` | bool | `true` | Show the text value next to the graph or gauge (always shown in `"text"` mode) |
 | `label_min_width` | float | `0` | Minimum label width in pixels to prevent resizing as values change. Only relevant when `show_label` is enabled. |
 
@@ -283,12 +288,14 @@ Shows PipeWire output (speaker) or input (microphone) volume and mute state.
 | `device` | string | `"output"` | Audio target: `"output"` (default sink) or `"input"` (default source / microphone) |
 | `scroll_step` | int | `5` | Percentage change applied on each mouse wheel step (1–25) |
 | `show_label` | bool | `true` | Show the volume percentage next to the glyph (horizontal and vertical bars) |
+| `mute_color` | string | `"error"` | Color role or hex color for the icon and label when muted |
 
 ```toml
 [widget.volume]
 device = "output"   # output | input
 scroll_step = 10
 show_label = false
+mute_color = "error"
 
 [widget.input-volume]
 type = "volume"
