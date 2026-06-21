@@ -146,10 +146,20 @@ Noctalia is available through a custom XBPS repository.
 
 **Step 1**: Add the repository source
 
-```bash
-echo "repository=https://universalrepository.pages.dev/void" \
-  | sudo tee /etc/xbps.d/10-noctalia.conf
-```
+<Tabs>
+  <TabItem label="GLibc">
+    ```bash
+	echo "repository=https://universalrepository.pages.dev/void" \
+  	| sudo tee /etc/xbps.d/10-noctalia.conf
+	```
+  </TabItem>
+  <TabItem label="Musl">
+    ```bash
+	echo "repository=https://universalrepository.pages.dev/void-musl" \
+  	| sudo tee /etc/xbps.d/10-noctalia.conf
+	```
+  </TabItem>
+</Tabs>
 
 **Step 2**: Sync and install noctalia
 
