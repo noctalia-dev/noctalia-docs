@@ -49,6 +49,7 @@ Set these yourself. The greeter UI does not change them.
 | `[keyboard].layout` | XKB layout code(s), e.g. `cz`, `us`, `de,cz` (comma-separated for multiple layouts; see [Keyboard layout](#keyboard-layout)) |
 | `[keyboard].variant` | XKB variant(s), e.g. `qwertz` (optional; comma-separated when multiple layouts) |
 | `[keyboard].options` | XKB options string, e.g. `grp:alt_shift_toggle` (optional) |
+| `[appearance].password_style` | Password mask on the login field: `default` (filled circles) or `random` (cycles through multiple glyph shapes, same as Noctalia shell `password_style`) |
 
 Example:
 
@@ -62,6 +63,7 @@ default = "lysec"
 
 [appearance]
 scheme = "Synced"
+password_style = "random"
 
 [output]
 name = "DP-2"
