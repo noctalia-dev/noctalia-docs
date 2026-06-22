@@ -47,12 +47,57 @@ Noctalia writes this file when you change settings through the UI, setup flows, 
 
 `NOCTALIA_CONFIG_HOME` and `NOCTALIA_STATE_HOME` have the same "home root" shape as the XDG variables. For example, `NOCTALIA_CONFIG_HOME=/tmp/profile` reads `/tmp/profile/noctalia/`. Use these Noctalia-specific variables when you want a separate shell profile without changing the environment inherited by apps launched from Noctalia.
 
+## Including extra files
+
+Automatic loading only sees `*.toml` files sitting directly in the config folder. To pull in files from subdirectories, load a specific file, or control load order without renaming files, add an `[include]` table:
+
+```toml
+# ~/.config/noctalia/config.toml
+[include]
+files = [
+  "widgets/",                  # a directory: every *.toml inside it (sorted, non-recursive)
+  "bars/top.toml",             # a single file
+  "~/.config/shared/base.toml", # ~ , $VAR and ${VAR} are expanded
+]
+
+# the rest of this file's settings go here as usual
+[theme]
+mode = "dark"
+```
+
+Each entry is either a directory (which loads every `*.toml` directly inside it, sorted alphabetically) or a single file. Relative paths resolve against the directory of the file doing the including, so a file in `profiles/work.toml` can reach a shared bundle with `"../widgets/"`. Paths starting with `~`, or containing `$VAR` / `${VAR}`, are expanded.
+
+**The including file wins.** Included files are merged first, as a reusable base, and then the file's own settings are layered on top. So a value you set directly in `config.toml` overrides the same value pulled in from an include:
+
+```toml
+[include]
+files = ["bars/base.toml"]   # base.toml sets bar.top.thickness = 30
+
+[bar.top]
+thickness = 40               # this wins — the bar ends up 40
+```
+
+Includes can nest (an included file can include more files), and each file is loaded at most once — if two files include the same file, it is merged once and a cycle is detected and skipped rather than looping forever.
+
+### Switching profiles
+
+By default, every `*.toml` in the config folder still loads automatically alongside your includes. If you keep alternative setups in the root that should not all load at once — say `profile_a.toml` and `profile_b.toml` — set `autoload = false` in your entry file. Then **only** the file(s) that set it (plus whatever they include) load, and the other root files are ignored:
+
+```toml
+# ~/.config/noctalia/config.toml
+[include]
+autoload = false
+files = ["profiles/work.toml"]
+```
+
+`autoload` only has an effect in a file loaded directly from the config folder; it is ignored in included files. `[include]` is honored in your config files only — it has no effect in the app-managed `settings.toml`.
+
 ## Which value wins?
 
 Noctalia loads configuration in this order:
 
 1. Built-in defaults
-2. Your `*.toml` files in the resolved config directory
+2. Your `*.toml` files in the resolved config directory — for each file, anything it pulls in via `[include]` first, then the file's own settings on top
 3. GUI-managed overrides in the resolved state directory's `settings.toml`
 
 Because `settings.toml` loads last, it wins when it contains the same setting as your hand-written config layer.
@@ -109,6 +154,8 @@ Export the full effective config, including built-in defaults:
 noctalia config export full > noctalia-full-config.toml
 ```
 
+Export stops with an error (and writes nothing) if a config file fails to parse or an `[include]` points at a file that does not exist, so a broken config never produces a misleading partial export. (The running shell is more forgiving: it loads what it can and surfaces the problem as a notification.)
+
 Because export writes TOML to stdout, you can pipe it into TOML-aware query tools. For example, with
 [`yq`](https://github.com/mikefarah/yq):
 
@@ -151,7 +198,7 @@ noctalia config validate ./config.toml
 
 It reports two severities:
 
-- **Errors** — problems that stop the configuration from loading correctly: TOML syntax errors (with file, line, and column) and values that fail to parse, such as an invalid color. These exit with status `1`.
+- **Errors** — problems that stop the configuration from loading correctly: TOML syntax errors (with file, line, and column), values that fail to parse such as an invalid color, an `[include]` whose `files` entry points at a path that does not exist, or a malformed `[include]` table (`autoload` that is not a boolean, `files` that is not a list of strings). These exit with status `1`.
 - **Warnings** — things the shell loads fine but quietly ignores or adjusts: unknown/obsolete sections and settings (misspelled or left over from an older version), values outside the allowed range (clamped), and invalid enum choices. Warnings are advisory and do **not** fail the check. Unknown widget and desktop-widget settings are checked against each widget type's known options.
 
 A config with only warnings still prints `✓ Config is valid` and exits `0` (with the warnings listed), so unknown keys won't break a pre-commit hook or CI step — they're surfaced as cleanup hints. Only genuine errors exit `1`.
