@@ -69,6 +69,7 @@ open_near_click_launcher       = false  # attached/floating: follow the bar clic
 launcher_categories            = true   # show launcher category filters; Tab toggles them while open
 launcher_show_icons            = true   # show application icons in launcher results
 launcher_compact               = false  # smaller icons and tighter rows; hides subtitles
+launcher_app_grid              = false  # icon grid with labels underneath when results are apps only
 launcher_session_search        = false  # include session actions in general search, not only behind /session
 launcher_sort_by_usage         = true   # boost frequently used apps and show Recently Used filter
 open_near_click_clipboard      = false  # attached/floating: follow the bar click instead of bar-center
@@ -130,6 +131,7 @@ Notes:
 - `shell.panel.launcher_categories` shows compact category filters in the launcher for providers that expose categories, currently Applications and Emoji. **All** leaves results unfiltered. With a prefixed provider such as `/emo`, the filters come from that provider. Press `Tab` while the launcher is open to hide/show the filters; the left/right keybind actions move between filters.
 - `shell.panel.launcher_show_icons` toggles application icons in launcher result rows. Prefixed-provider rows (for example emoji) still show their leading character when icons are hidden.
 - `shell.panel.launcher_compact` uses smaller icons, tighter padding, and single-line rows (subtitles hidden).
+- `shell.panel.launcher_app_grid` switches to a multi-column icon grid with labels underneath when every visible result is an application. Mixed results (global search, prefixed providers, session actions, and so on) stay in the default list layout.
 - `shell.panel.launcher_sort_by_usage` boosts frequently launched apps toward the top of results and exposes a **Recently Used** category filter. Disable it for strictly alphabetical ordering within each provider.
 - Reset stored launcher usage data from **Settings → Panels → Launcher → Reset Usage Data** (clears `usage_counts.json` and `recently_used.json` while Noctalia is running).
 - `shell.panel.launcher_session_search` surfaces session actions (lock, suspend, reboot, shutdown, logout) in the general launcher search once you type at least two characters, instead of only behind the `/session` prefix. Disabled by default.
