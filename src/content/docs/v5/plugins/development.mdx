@@ -40,6 +40,7 @@ deprecated   = false          # optional; defaults to false
 icon         = "puzzle"       # optional
 description  = "A friendly greeter."
 tags         = ["demo"]       # optional, for catalog search
+dependencies = ["slurp"]      # optional, external tools/packages users must install
 ```
 
 `name` and `min_noctalia` are required — a manifest without either is rejected. `min_noctalia` gates enable, the
@@ -47,6 +48,9 @@ catalog badge, and the post-update safety rollback.
 
 `license` defaults to `MIT` when omitted. `deprecated = true` marks the plugin as deprecated in plugin listings; it is a
 soft status marker, not a compatibility gate.
+
+`dependencies` is optional metadata for external packages or tools the plugin expects the user to have installed. It is
+shown in plugin listings but does not block enabling the plugin.
 
 ### Entries
 
@@ -217,15 +221,18 @@ providers and appear in the launcher's `/` overview), `glyph` (default result ic
 (also answer the un-prefixed search; default `false`), and `debounce_ms` (wait this long after the last keystroke
 before running `onQuery` — set it for network-backed providers so you aren't called on every character; default `0`).
 
-`setResults(query, results)` · `getConfig(key)`
+`setResults(query, results)` · `setQuery(query)` · `getConfig(key)`
 
 - `query` **must echo** the `text` from `onQuery`, so late results map back to the query they answer — the latest one
   wins. Calling it with an empty list clears the provider's results.
-- Each result is a table: `{ id, title, subtitle?, glyph?, icon?, badge?, score? }`. `id` is passed back to
-  `onActivate`. Results are ordered by `score` (descending), then insertion order.
+- Each result is a table: `{ id, title, subtitle?, glyph?, icon?, badge?, query?, score? }`. `id` is passed back to
+  `onActivate` unless `query` is set. Results are ordered by `score` (descending), then insertion order.
 - `glyph` (a Tabler/Nerd-Font name) or `icon` (a themed icon name) is the row's leading visual. `badge` is a short
   string (e.g. an emoji or `=`) drawn *in place of* the icon — setting it hides `glyph`/`icon`. Use the `subtitle` for
   secondary text.
+- `setQuery(query)` replaces the open launcher's raw input text. A result-level `query` does the same when selected and
+  keeps the launcher open, which is useful for autocomplete. Include your prefix if you want to stay routed to the same
+  provider, e.g. `"/tr french "`.
 
 Use `noctalia.fuzzyScore(pattern, text)` to rank local lists with Noctalia's native fuzzy matcher. It returns a numeric
 score, or `nil` when `pattern` does not match `text`.
@@ -403,6 +410,7 @@ description  = "A friendly greeter."
 deprecated   = false
 min_noctalia = "5.0.0"
 tags         = ["demo"]
+dependencies = ["slurp"]
 ```
 
 Catalog rows require `id` and `name`; rows without either are ignored.
