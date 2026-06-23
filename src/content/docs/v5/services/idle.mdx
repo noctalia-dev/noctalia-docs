@@ -40,7 +40,7 @@ resume_command = "notify-send 'Idle' 'Back from idle'"
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `enabled` | bool | `true` | Enable or disable this behavior |
-| `timeout` | int | `0` | Seconds before the behavior triggers; `0` disables this behavior |
+| `timeout` | number | `0` | Seconds before the behavior triggers; fractional values are allowed (e.g. `0.3`); `0` disables this behavior |
 | `command` | string | `""` | Shell command or `noctalia:` IPC subcommand |
 | `resume_command` | string | `""` | Shell command or `noctalia:` IPC subcommand to run when activity resumes after this behavior triggered |
 | `lock_before_suspend` | bool | `true` | For a suspend behavior (`command = "noctalia:session suspend"`), lock the session first. Set `false` to suspend without locking. |
