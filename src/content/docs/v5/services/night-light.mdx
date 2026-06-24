@@ -6,6 +6,7 @@ sidebar:
 ---
 
 Applies color temperature shifts using the Wayland `wlr-gamma-control` protocol. Supported on compositors that implement gamma control (Hyprland, Sway, etc.). Follows the [`[location]`](/v5/services/location/) schedule when enabled; use `force` to ignore the schedule.
+At shell startup, Noctalia applies the current scheduled or forced temperature immediately; later toggles still ramp smoothly.
 
 ```toml
 [nightlight]
