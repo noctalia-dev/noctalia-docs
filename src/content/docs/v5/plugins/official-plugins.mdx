@@ -36,7 +36,8 @@ noctalia msg plugin <author/plugin:entry> <target> <event> [payload]
 
 A reference plugin that exercises every entry kind: a bar **widget**, a headless **service** (ticks once a second and
 publishes to the plugin's state channel), a control-center **shortcut**, a **launcher provider** behind the `/ex`
-prefix, and a **panel** of interactive controls (toggle, slider, text input, select). Good starting point for reading
+prefix, and a **panel** of interactive controls (toggle, slider, text input, select). The panel defaults to
+**floating** at **center**; change placement under **Settings → Plugins**. Good starting point for reading
 real code.
 
 | Command | Effect |
@@ -118,7 +119,8 @@ device updates.
 
 Browse [Wallhaven](https://wallhaven.cc), download a wallpaper into your configured wallpaper directory, and apply it
 to all monitors. A **panel** browser (`browser`) with tag search, category/purity/sort filters, and a thumbnail grid,
-plus a bar **widget** (`wallhaven`) that toggles the panel.
+plus a bar **widget** (`wallhaven`) that toggles the panel. The browser panel defaults to **attached** at the bar;
+placement is configurable under **Settings → Plugins** (floating + screen position, open-near-click, etc.).
 
 Requires network access (`[shell].offline_mode` must be off). NSFW results require a Wallhaven API key (plugin setting).
 

@@ -362,12 +362,40 @@ any callback that changes state):
 Panel **size is host-owned**: declare `width` and `height` (logical px) on the `[[panel]]` entry, so the surface is the
 same size on every open. There is no `setSize` at runtime.
 
+**Placement** matches built-in shell panels (`attached` merges with the bar, `floating` opens detached). The host
+injects three standard settings for every `[[panel]]` entry — you do **not** declare them as `[[panel.setting]]` unless
+you need a custom key. They appear in **Settings → Plugins** (gear on the plugin row) with the same controls as built-in
+panels: a segmented **Attached / Floating** toggle, a **Position** dropdown (only when floating), and **Open Near
+Click**.
+
+| `[[panel]]` manifest key | `plugin_settings` key | Notes |
+|--------------------------|-------------------------|-------|
+| `placement` | `<entry>_placement` | `attached` or `floating` (default `floating`) |
+| `position` | `<entry>_position` | `auto`, `center`, or a screen anchor; only applies when floating |
+| `open_near_click` | `<entry>_open_near_click` | Open near the bar widget that toggled the panel (default `false`) |
+
+Declare defaults on the `[[panel]]` table; users override through the plugin settings GUI or
+`[plugin_settings."author/plugin"]`. Position and open-near-click follow the same rules as built-in panels (pinned
+screen positions disable open-near-click).
+
+Official defaults: `noctalia/example:panel` ships `floating` + `center`; `noctalia/wallhaven:browser` ships `attached` +
+`auto`.
+
 ```toml
 [[panel]]
 id = "settings"
 entry = "panel.luau"
 width = 420
 height = 410
+placement = "floating"
+position = "center"
+open_near_click = false
+```
+
+```toml
+[plugin_settings."noctalia/wallhaven"]
+browser_placement = "floating"
+browser_position = "bottom_left"
 ```
 
 ```lua
