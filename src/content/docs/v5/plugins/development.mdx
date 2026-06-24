@@ -94,10 +94,12 @@ warning and returns `nil` (no silent fallbacks).
 Settings come in two scopes:
 
 - **Plugin-level** — a `[[setting]]` block at the **manifest root**. One shared set for the whole plugin, edited under
-  **Settings → Plugins** (the gear on the plugin's row), and seeded into **every** entry — widget, shortcut, and
-  service. Use this for configuration the service needs.
+  **Settings → Plugins** (the gear on the plugin's row), and seeded into **every** entry — widget, shortcut, panel, and
+  service. Use this for configuration the service or panel needs.
 - **Widget entry settings** — a `[[<entry>.setting]]` block under a `[[widget]]`. These are edited with the bar widget's
   own settings. Use this for widget presentation tweaks; they are not a second enabled plugin instance.
+- **Panel entry settings** — a `[[panel.setting]]` block under a `[[panel]]`. These also appear in **Settings → Plugins**
+  (the gear on the plugin row) and are read with `panel.getConfig(key)` in the panel script.
 
 When both declare the same key, the widget entry value wins for that widget. Both scopes use the same field schema:
 
@@ -297,7 +299,8 @@ function ping()
 end
 ```
 
-The available controls and their props (sizes are logical px, scaled with the widget):
+The available controls and their props (sizes are logical px, scaled with the surface). **Desktop widgets and panels
+share this vocabulary** — panels additionally use the interactive controls below (`ui.input`, `ui.select`, etc.).
 
 | Constructor | Props |
 |-------------|-------|
@@ -305,16 +308,16 @@ The available controls and their props (sizes are logical px, scaled with the wi
 | `ui.scroll` | a vertically scrolling container; same layout props as a column plus `fill`, `radius`, `border`, `borderWidth` |
 | `ui.label` | `text`, `fontSize`, `color`, `fontWeight` (`thin`…`heavy`), `maxWidth`, `maxLines`, `textAlign` |
 | `ui.glyph` | `name` (Tabler/Nerd-Font glyph), `size`, `color` |
-| `ui.image` | `path` (plugin-relative or absolute), `width`, `height`, `radius`, `fit` (`contain`/`cover`/`stretch`) |
-| `ui.box` | `fill`, `radius`, `border`, `borderWidth`, `width`, `height` |
+| `ui.image` | `path` (plugin-relative, `~`, or absolute), `width`, `height`, `radius`, `fit` (`contain`/`cover`/`stretch`), `border`, `borderWidth`, `onClick` |
+| `ui.box` | `fill`, `radius`, `border`, `borderWidth`, `softness`, `width`, `height`, `onClick` |
 | `ui.separator` | `thickness`, `color`, `spacing`, `orientation` (`auto`/`horizontal`/`vertical`) |
 | `ui.spacer` | flexible filler (use `flexGrow`) |
 | `ui.progress` | `progress` (0–1), `fill`, `track`, `radius`, `width`, `height` |
-| `ui.button` | `text`, `glyph`, `fontSize`, `glyphSize`, `variant` (`default`/`primary`/`secondary`/`destructive`/`outline`/`ghost`), `enabled`, `onClick`, `onRightClick` |
+| `ui.button` | `text`, `glyph`, `fontSize`, `glyphSize`, `variant` (`default`/`primary`/`secondary`/`destructive`/`outline`/`ghost`), `enabled`, `selected`, `onClick`, `onRightClick` |
 | `ui.graph` | `values` / `values2` (arrays of 0–1 numbers), `color` / `color2`, `lineWidth`, `fillOpacity`, `width`, `height` |
 | `ui.toggle` | `checked` (bool), `enabled`, `onChange` |
 | `ui.slider` | `min`, `max`, `step`, `value`, `enabled`, `onChange`, `onDragEnd` |
-| `ui.select` | `options` (array of strings), `selectedIndex`, `placeholder`, `enabled`, `onChange` |
+| `ui.select` | `options` (array of strings), `selectedIndex`, `placeholder`, `enabled`, `width`, `height`, `onChange` |
 | `ui.input` | `value` (initial text only — see below), `placeholder`, `fontSize`, `password` (bool), `enabled`, `onChange`, `onSubmit` |
 
 Every control also accepts `width`, `height`, `flexGrow`, `opacity`, and `visible`. Colors are a palette role token
@@ -333,6 +336,11 @@ surface in the log instead of failing silently.
   owns the text as the user types — re-rendering never overwrites it. Read edits through `onChange`/`onSubmit`, and give
   the input a stable `key` so it keeps its text across renders.
 - **Identity**: give list children a `key` prop so reordering reuses the same native controls.
+- **Images**: `ui.image` loads **local files only** — download remote previews with `noctalia.download(url, dest, cb)`
+  first, then pass the saved path. `onClick` on `ui.image` and `ui.box` wraps the visual in a click target (thumbnail
+  grids, placeholder tiles).
+- **Glyph-only buttons**: when only `glyph` is set, any previous `text` is cleared so retained buttons do not keep
+  stale labels across re-renders.
 - **Ticks**: `setWantsSecondTicks(true)` runs `update()` on second boundaries (clocks/timers).
   `setNeedsFrameTick(true)` additionally delivers `onFrameTick(deltaMs)` every frame for continuous animation — frames
   are coalesced, a slow script only ever sees the latest one.
@@ -387,13 +395,14 @@ noctalia msg panel-toggle noctalia/example:panel
 ```
 
 The reference implementation is the `panel` entry of the official `noctalia/example` plugin — a settings-style panel
-exercising every interactive control.
+exercising every interactive control. `noctalia/wallhaven:browser` is a network-backed panel (thumbnail grid, filters,
+download + apply via `noctalia.wallpaperDirectory()` and `noctalia msg wallpaper-set`).
 
 ### `noctalia.*` — host capabilities
 
 | Group | Functions |
 |-------|-----------|
-| Runtime | `setUpdateInterval(ms)`, `log(msg)`, `isDarkMode()`, `focusedOutputName()`, `getConfig(key)` |
+| Runtime | `setUpdateInterval(ms)`, `log(msg)`, `isDarkMode()`, `focusedOutputName()`, `wallpaperDirectory()`, `getConfig(key)` |
 | Time | `formatTime(pattern [, unixSeconds])` |
 | Notify | `notify(title, body)`, `notifyError(title, body)` |
 | Subprocess | `runAsync(cmd [, cb])`, `runStream(cmd, onLine)`, `runInTerminal(cmd)`, `commandExists(name)`, `processMatches(cb, ...needles)`, `flatpakAppInstalled(id)`, `portalAvailable()`, `getenv(name)`, `expandPath(path)` |
@@ -403,7 +412,11 @@ exercising every interactive control.
 | HTTP | `http({ url = … }, cb)`, `download(url, dest, cb)` — async; the callback fires when the request lands |
 | JSON | `json.decode(str)` → value, or `nil, err` on malformed input; `json.encode(value [, pretty])` → string |
 
-`formatTime` uses the same date-format tokens as Noctalia clock and filename settings. `unixSeconds` is optional; when omitted, it formats the current local time. `%s` expands to Unix epoch seconds.
+`formatTime` uses the same date-format tokens as Noctalia clock and filename settings. `unixSeconds` is optional; when
+omitted, it formats the current local time. `%s` expands to Unix epoch seconds.
+
+`wallpaperDirectory()` returns the resolved global wallpaper folder for the current theme mode (light/dark), or `nil`
+when unset. Paths are already expanded — use them for download targets or to mirror built-in wallpaper behavior.
 
 `json.decode`/`json.encode` are synchronous pure transforms (no callback), unlike HTTP and filesystem.
 Filesystem and HTTP run safely off the UI thread; results arrive via callbacks. `runAsync` runs a command to completion
@@ -453,6 +466,9 @@ noctalia msg plugin me/hello:hello focused greet "hi there"
 
 # A service — it is a singleton with no output, so address it with the `all` target:
 noctalia msg plugin me/hello:ticker all refresh
+
+# A panel — toggle by full entry id:
+noctalia msg panel-toggle me/hello:panel
 ```
 
 The target picks which live instances receive the event: `focused` (the focused output), a connector or

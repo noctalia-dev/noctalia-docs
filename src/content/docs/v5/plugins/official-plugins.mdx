@@ -109,3 +109,19 @@ device updates.
 | <IpcCommand command="plugin noctalia/bongocat:cat focused pause" /> | freeze the cat |
 | <IpcCommand command="plugin noctalia/bongocat:cat focused resume" /> | resume tapping |
 | <IpcCommand command="plugin noctalia/bongocat:cat focused toggle" /> | pause/resume |
+
+---
+
+## Wallhaven {#wallhaven}
+
+<PluginMeta icon="photo" id="noctalia/wallhaven" />
+
+Browse [Wallhaven](https://wallhaven.cc), download a wallpaper into your configured wallpaper directory, and apply it
+to all monitors. A **panel** browser (`browser`) with tag search, category/purity/sort filters, and a thumbnail grid,
+plus a bar **widget** (`open`) that toggles the panel.
+
+Requires network access (`[shell].offline_mode` must be off). NSFW results require a Wallhaven API key (plugin setting).
+
+| Command | Effect |
+|---------|--------|
+| <IpcCommand command="panel-toggle noctalia/wallhaven:browser" /> | open or close the Wallhaven browser |
