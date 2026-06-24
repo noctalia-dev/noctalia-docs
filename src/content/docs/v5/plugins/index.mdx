@@ -11,9 +11,9 @@ The plugin system is under **heavy development** and subject to breaking changes
 use it for tinkering, not in a setup you depend on. Community plugin submissions are **not accepted yet**.
 :::
 
-Plugins extend Noctalia with **bar widgets**, **desktop widgets**, **control-center shortcuts**, **launcher
-providers**, and headless **background services** — all driven by trusted [Luau](https://luau.org) scripts running in
-isolated VMs. A plugin is a directory containing a static
+Plugins extend Noctalia with **bar widgets**, **desktop widgets**, **shell panels**, **control-center shortcuts**,
+**launcher providers**, and headless **background services** — all driven by trusted [Luau](https://luau.org) scripts
+running in isolated VMs. A plugin is a directory containing a static
 `plugin.toml` manifest and one or more `.luau` entry scripts.
 
 Plugins come from **sources**. Two git sources ship by default:
@@ -67,7 +67,8 @@ Settings, but are protected from removal in Settings and IPC. Custom git/path so
 
 Enabling a plugin makes its entries available. Its **bar widget** then shows up in the Add-widget picker — add a widget
 instance just like any built-in widget (or configure one by hand with `type = "<author>/<plugin>:<entry>"`). A
-**control-center shortcut** is added from the control-center shortcuts settings, like any other shortcut.
+**control-center shortcut** is added from the control-center shortcuts settings, like any other shortcut. A **panel**
+opens with `noctalia msg panel-toggle <author>/<plugin>:<entry>` (or from a bar widget that runs the same command).
 
 ## Configuration
 
