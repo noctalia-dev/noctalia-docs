@@ -19,37 +19,44 @@ pre_action_fade_seconds = 2.0
 
 While a fade is in progress, the overlay is click-through so pointer/keyboard activity still reaches the compositor; if the session becomes active again during that window, the pending command is cancelled. The dim is a layer-shell **overlay** that covers the full monitor (including the bar).
 
+Each behavior picks an **`action`**. The built-in actions are native — they need no `command`. Use `action = "command"` only when you want to run something Noctalia doesn't have a native action for (a shell command, or an internal `noctalia:` command).
+
 ```toml
 [idle.behavior.lock]
 timeout = 600
-command = "noctalia:session lock"
+action = "lock"
 enabled = false             # explicitly disabled in the default config
 
 [idle.behavior.screen-off]
 timeout = 660
-command = "noctalia:dpms-off"
-resume_command = "noctalia:dpms-on"
+action = "screen_off"       # turns monitors off, and back on when you return
 enabled = false             # explicitly disabled in the default config
+
+[idle.behavior.suspend]
+timeout = 900
+action = "lock_and_suspend" # or action = "suspend" with lock_before_suspend = false
 
 [idle.behavior.custom]
 timeout = 48
+action = "command"
 command = "notify-send 'Idle' 'Going idle'"
 resume_command = "notify-send 'Idle' 'Back from idle'"
 ```
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
+| `action` | string | `"command"` | What the behavior does: `lock`, `screen_off`, `suspend`, `lock_and_suspend`, or `command` |
 | `enabled` | bool | `true` | Enable or disable this behavior |
 | `timeout` | number | `0` | Seconds before the behavior triggers; fractional values are allowed (e.g. `0.3`); `0` disables this behavior |
-| `command` | string | `""` | Shell command or `noctalia:` IPC subcommand |
-| `resume_command` | string | `""` | Shell command or `noctalia:` IPC subcommand to run when activity resumes after this behavior triggered |
-| `lock_before_suspend` | bool | `true` | For a suspend behavior (`command = "noctalia:session suspend"`), lock the session first. Set `false` to suspend without locking. |
+| `command` | string | `""` | Only for `action = "command"`: a shell command or `noctalia:` IPC subcommand to run when idle |
+| `resume_command` | string | `""` | Only for `action = "command"`: a shell command or `noctalia:` IPC subcommand to run when activity resumes |
+| `lock_before_suspend` | bool | `true` | For `action = "suspend"`, lock the session first (equivalent to `action = "lock_and_suspend"`). Set `false` to suspend without locking. |
 
-For screen-off behaviors, pair `command = "noctalia:dpms-off"` with `resume_command = "noctalia:dpms-on"`. Noctalia also applies a monitor-on resume action automatically when `resume_command` is empty and the idle command is a known display-off command (`noctalia:dpms-off`, `wlr-dpms`, `wlr-randr --off`, and similar), so waking from idle does not leave monitors powered off — including when a later idle behavior locks the session while outputs are still off.
+`action = "screen_off"` turns the monitors off on idle and **back on automatically** when you return — no `command`/`resume_command` needed. (This automatic monitor-on resume applies only to the native `screen_off` action; a custom `action = "command"` that powers monitors off must set its own `resume_command` to turn them back on.)
 
-## `noctalia:` commands in idle
+## `noctalia:` commands (`action = "command"`)
 
-The `noctalia:` prefix runs the rest of the string through the IPC command registry — the same as `noctalia msg <subcommand>`. Examples:
+For `action = "command"`, the `noctalia:` prefix runs the rest of the string through the IPC command registry — the same as `noctalia msg <subcommand>` — so a behavior can trigger any internal action. Examples:
 
 ```
 noctalia:session lock
