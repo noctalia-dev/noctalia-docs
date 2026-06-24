@@ -230,9 +230,12 @@ before running `onQuery` — set it for network-backed providers so you aren't c
 - `glyph` (a Tabler/Nerd-Font name) or `icon` (a themed icon name) is the row's leading visual. `badge` is a short
   string (e.g. an emoji or `=`) drawn *in place of* the icon — setting it hides `glyph`/`icon`. Use the `subtitle` for
   secondary text.
-- `setQuery(query)` replaces the open launcher's raw input text. A result-level `query` does the same when selected and
-  keeps the launcher open, which is useful for autocomplete. Include your prefix if you want to stay routed to the same
-  provider, e.g. `"/tr french "`.
+- `setQuery(query)` replaces the open launcher's raw input text. Call it from `onActivate` to treat a result as a
+  drill-in step: the launcher rewrites the input and **stays open** instead of closing, then re-runs `onQuery` with the
+  new text. A result-level `query` field does the same declaratively — when that result is selected the launcher
+  replaces the input with it and stays open, no `onActivate` needed. Either way, include your prefix to stay routed to
+  the same provider, e.g. `"/tr french "`. (An `onActivate` that does *not* call `setQuery` closes the launcher as
+  usual.)
 
 Use `noctalia.fuzzyScore(pattern, text)` to rank local lists with Noctalia's native fuzzy matcher. It returns a numeric
 score, or `nil` when `pattern` does not match `text`.
