@@ -160,6 +160,15 @@ When `auto_hide = true`, the bar:
 
 `layer = "overlay"` shows the bar above fullscreen apps. Attached panels (for example Control Center when it attaches to the bar) follow the bar's layer. Centered or floating panel placements keep each panel's own layer (typically overlay).
 
+The IPC `bar-layer-set <top|overlay> [bar-name] [monitor-selector]` switches the layer of matching bar instance(s) at runtime; omit `bar-name` to update every bar. The change is transient and resets to the configured `layer` on the next config reload. This is handy for peeking the bar above a fullscreen window on a keybind, for example in niri:
+
+```kdl
+binds {
+    Mod+B { spawn-sh "noctalia msg bar-layer-set overlay"; }
+    Mod+Shift+B { spawn-sh "noctalia msg bar-layer-set top"; }
+}
+```
+
 ---
 
 ## Widget Capsule

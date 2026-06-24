@@ -23,6 +23,7 @@ These commands open, close, or toggle Noctalia UI surfaces.
 | Hide bar | <IpcCommand command="bar-hide" /> [bar-name] [monitor-selector] | Hide matching bar instance(s) and block edge/pointer reveal until the next show/toggle. Omit both arguments to hide every bar. |
 | Toggle bar | <IpcCommand command="bar-toggle" /> [bar-name] [monitor-selector] | Toggle visibility for matching bar instance(s). Omit both arguments to toggle every bar. Does not block edge reveal on hide (use <IpcCommand command="bar-hide" /> to stay hidden until <IpcCommand command="bar-show" />). |
 | Set bar auto-hide | <IpcCommand command="bar-auto-hide-set" /> &lt;on\|off&gt; [bar-name] [monitor-selector] | Temporarily enable or disable auto-hide for matching bar instance(s). Omit `bar-name` to update every bar. |
+| Set bar layer | <IpcCommand command="bar-layer-set" /> &lt;top\|overlay&gt; [bar-name] [monitor-selector] | Temporarily move matching bar instance(s) to the `top` or `overlay` layer-shell layer. `overlay` shows the bar above fullscreen apps; attached panels follow the bar's layer. Omit `bar-name` to update every bar. |
 
 ## Scripted widgets
 
