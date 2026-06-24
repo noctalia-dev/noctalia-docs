@@ -63,6 +63,7 @@ optional settings schema. The supported entry kinds:
 | `[[shortcut]]` | Control-center tile | A toggle tile in the control center |
 | `[[launcher_provider]]` | Launcher provider | Answers launcher queries with results, behind a prefix |
 | `[[desktop_widget]]` | Desktop widget | A tile on the desktop; declares its UI as a `ui.*` tree |
+| `[[panel]]` | Panel | A pop-up surface; declares its UI as a `ui.*` tree, opened by id |
 | `[[service]]` | Headless service | Background loop, no UI — feeds the plugin's other entries |
 
 An entry is addressed `<author>/<plugin>:<entry-id>` — e.g. a bar widget is configured with
@@ -158,15 +159,16 @@ Translated setting labels live in the same optional `translations/<lang>.json` f
 A script defines **global functions** that Noctalia calls, and drives the UI through the API namespaces. Which globals
 apply depends on the entry kind:
 
-| Function | Widget | Shortcut | Launcher | Desktop | Service | When |
-|----------|:------:|:--------:|:--------:|:-------:|:-------:|------|
-| `update()` | ✓ | | | ✓ | ✓ | every update interval |
-| `onClick()` / `onRightClick()` | ✓ | ✓ | | | | pointer press |
-| `onMiddleClick()` | ✓ | | | | | middle press |
-| `onQuery(text)` | | | ✓ | | | launcher text changed (behind the prefix) |
-| `onActivate(id)` | | | ✓ | | | a launcher result was selected |
-| `onFrameTick(deltaMs)` | | | | ✓ | | every frame, after `desktopWidget.setNeedsFrameTick(true)` |
-| `onIpc(event, payload)` | ✓ | ✓ | ✓ | ✓ | ✓ | `noctalia msg plugin …` |
+| Function | Widget | Shortcut | Launcher | Desktop | Panel | Service | When |
+|----------|:------:|:--------:|:--------:|:-------:|:-----:|:-------:|------|
+| `update()` | ✓ | | | ✓ | ✓ | ✓ | every update interval |
+| `onClick()` / `onRightClick()` | ✓ | ✓ | | | | | pointer press |
+| `onMiddleClick()` | ✓ | | | | | | middle press |
+| `onQuery(text)` | | | ✓ | | | | launcher text changed (behind the prefix) |
+| `onActivate(id)` | | | ✓ | | | | a launcher result was selected |
+| `onOpen(context)` / `onClose()` | | | | | ✓ | | the panel is opened / closed |
+| `onFrameTick(deltaMs)` | | | | ✓ | | | every frame, after `desktopWidget.setNeedsFrameTick(true)` |
+| `onIpc(event, payload)` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | `noctalia msg plugin …` |
 
 The top level of the script runs once at load — set up state and register `noctalia.state.watch` handlers there.
 
@@ -300,6 +302,7 @@ The available controls and their props (sizes are logical px, scaled with the wi
 | Constructor | Props |
 |-------------|-------|
 | `ui.column` / `ui.row` | `gap`, `padding`, `paddingH`, `paddingV`, `align` (`start`/`center`/`end`/`stretch`), `justify` (`start`/`center`/`end`/`space_between`), `fill`, `radius`, `border`, `borderWidth`, `minWidth`, `minHeight` |
+| `ui.scroll` | a vertically scrolling container; same layout props as a column plus `fill`, `radius`, `border`, `borderWidth` |
 | `ui.label` | `text`, `fontSize`, `color`, `fontWeight` (`thin`…`heavy`), `maxWidth`, `maxLines`, `textAlign` |
 | `ui.glyph` | `name` (Tabler/Nerd-Font glyph), `size`, `color` |
 | `ui.image` | `path` (plugin-relative or absolute), `width`, `height`, `radius`, `fit` (`contain`/`cover`/`stretch`) |
@@ -309,13 +312,26 @@ The available controls and their props (sizes are logical px, scaled with the wi
 | `ui.progress` | `progress` (0–1), `fill`, `track`, `radius`, `width`, `height` |
 | `ui.button` | `text`, `glyph`, `fontSize`, `glyphSize`, `variant` (`default`/`primary`/`secondary`/`destructive`/`outline`/`ghost`), `enabled`, `onClick`, `onRightClick` |
 | `ui.graph` | `values` / `values2` (arrays of 0–1 numbers), `color` / `color2`, `lineWidth`, `fillOpacity`, `width`, `height` |
+| `ui.toggle` | `checked` (bool), `enabled`, `onChange` |
+| `ui.slider` | `min`, `max`, `step`, `value`, `enabled`, `onChange`, `onDragEnd` |
+| `ui.select` | `options` (array of strings), `selectedIndex`, `placeholder`, `enabled`, `onChange` |
+| `ui.input` | `value` (initial text only — see below), `placeholder`, `fontSize`, `password` (bool), `enabled`, `onChange`, `onSubmit` |
 
 Every control also accepts `width`, `height`, `flexGrow`, `opacity`, and `visible`. Colors are a palette role token
 (`primary`, `on_surface`, …) or a hex value (`#rrggbb`). An unknown control type or prop is logged and skipped — typos
 surface in the log instead of failing silently.
 
-- **Callbacks**: `onClick = "name"` names a **global function in your script**; the host calls it when the button is
-  clicked.
+- **Layout default**: `ui.column` / `ui.row` / `ui.scroll` **stretch** their children across the cross axis (a column
+  fills its width, a row fills its height), like CSS flexbox. Override per node with `align` — e.g. a row of
+  vertically-centered items uses `align = "center"`.
+- **Callbacks**: a callback prop names a **global function in your script** (not a closure). `onClick = "name"` fires on
+  a button click; `onChange = "name"` fires when a toggle/slider/select/input value changes (the value is passed to the
+  global as a string — `"true"`/`"false"` for a toggle, a number for a slider, the text for an input, the index for a
+  select); `onSubmit` fires when the user presses Enter in an input.
+- **Controlled vs. uncontrolled**: `toggle`/`slider`/`select` are **value-driven** — pass the current value on every
+  render and update it from the callback. `ui.input` is **uncontrolled**: `value` seeds the field once, then the host
+  owns the text as the user types — re-rendering never overwrites it. Read edits through `onChange`/`onSubmit`, and give
+  the input a stable `key` so it keeps its text across renders.
 - **Identity**: give list children a `key` prop so reordering reuses the same native controls.
 - **Ticks**: `setWantsSecondTicks(true)` runs `update()` on second boundaries (clocks/timers).
   `setNeedsFrameTick(true)` additionally delivers `onFrameTick(deltaMs)` every frame for continuous animation — frames
@@ -325,6 +341,53 @@ surface in the log instead of failing silently.
 
 The reference implementation is the official `noctalia/timer` plugin — a countdown timer with start/pause/reset
 buttons and a progress bar.
+
+### `panel.*` — declarative panel UI
+
+A panel is a pop-up surface that describes its UI as a `ui.*` tree, exactly like a desktop widget — but it is
+**opened by id** rather than placed, and it can hold the **interactive** controls (`ui.input`, `ui.select`,
+`ui.slider`, `ui.toggle`, `ui.scroll`) because it takes keyboard focus while open. Render in `onOpen` (and again from
+any callback that changes state):
+
+`render(tree)` · `close()` · `setWantsSecondTicks(bool)` · `getConfig(key)`
+
+Panel **size is host-owned**: declare `width` and `height` (logical px) on the `[[panel]]` entry, so the surface is the
+same size on every open. There is no `setSize` at runtime.
+
+```toml
+[[panel]]
+id = "settings"
+entry = "panel.luau"
+width = 420
+height = 410
+```
+
+```lua
+local enabled = true
+
+local function render()
+  panel.render(ui.column({ gap = 16 }, {
+    ui.row({ align = "center", justify = "space_between" }, {
+      ui.label({ text = "My Panel", fontSize = 16, fontWeight = "bold", color = "primary", flexGrow = 1 }),
+      ui.button({ glyph = "close", onClick = "onCloseClicked" }),
+    }),
+    ui.toggle({ checked = enabled, onChange = "onToggle" }),
+  }))
+end
+
+function onOpen(context) render() end   -- context is the optional string from `panel-open <id> [context]`
+function onToggle(value) enabled = value == "true"; render() end
+function onCloseClicked() panel.close() end
+```
+
+Open, close, or toggle a panel by its full entry id (`author/plugin:entry`) over IPC:
+
+```sh
+noctalia msg panel-toggle noctalia/example:panel
+```
+
+The reference implementation is the `panel` entry of the official `noctalia/example` plugin — a settings-style panel
+exercising every interactive control.
 
 ### `noctalia.*` — host capabilities
 

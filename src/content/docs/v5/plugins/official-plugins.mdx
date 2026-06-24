@@ -35,12 +35,15 @@ noctalia msg plugin <author/plugin:entry> <target> <event> [payload]
 <PluginMeta icon="puzzle" id="noctalia/example" />
 
 A reference plugin that exercises every entry kind: a bar **widget**, a headless **service** (ticks once a second and
-publishes to the plugin's state channel), and a control-center **shortcut**. Good starting point for reading real code.
+publishes to the plugin's state channel), a control-center **shortcut**, a **launcher provider** behind the `/ex`
+prefix, and a **panel** of interactive controls (toggle, slider, text input, select). Good starting point for reading
+real code.
 
 | Command | Effect |
 |---------|--------|
 | <IpcCommand command='plugin noctalia/example:hello focused set "New label"' /> | set the widget's text |
 | <IpcCommand command='plugin noctalia/example:hello focused fetch "https://example.com"' /> | async HTTP GET; notifies with the status + body size |
+| <IpcCommand command='panel-toggle noctalia/example:panel' /> | open / close the example panel |
 
 ---
 
