@@ -20,6 +20,7 @@ Noctalia v5 is available on the following distributions:
 - [Gentoo](#gentoo)
 - [Void Linux](#void)
 - [GNU Guix](#guix)
+- [Debian](#debian) (including Ubuntu)
 
 You can also [install manually](#manual-install) on any other Linux distribution.
 
@@ -240,6 +241,58 @@ or [whole-system configuration](https://guix.gnu.org/manual/devel/en/html_node/S
 
 ---
 
+## Debian {#debian}
+
+Noctalia provides an APT repository for Debian-based distributions.
+
+:::caution[Alpha builds]
+The Debian repository currently ships alpha builds built directly from the `main` branch. There are no stable releases yet.
+:::
+
+**Step 1**: Import the repository signing key
+
+```bash
+curl -fsSL https://pkg.noctalia.dev/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/noctalia.gpg
+```
+
+**Step 2**: Add the repository
+
+<Tabs>
+  <TabItem label="Debian Trixie">
+    ```bash
+    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt trixie main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    ```
+  </TabItem>
+  <TabItem label="Debian Sid">
+    ```bash
+    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt sid main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    ```
+  </TabItem>
+  <TabItem label="Ubuntu 25.04">
+    ```bash
+    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt plucky main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    ```
+  </TabItem>
+  <TabItem label="Ubuntu 25.10">
+    ```bash
+    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt questing main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    ```
+  </TabItem>
+</Tabs>
+
+**Step 3**: Install noctalia
+
+```bash
+sudo apt update
+sudo apt install noctalia
+```
+
+:::note
+The APT repository provides `amd64` packages only. The same binary is served across all supported distributions.
+:::
+
+---
+
 ## Manual Installation {#manual-install}
 
 :::caution[Not Recommended]
@@ -284,7 +337,7 @@ If you prefer to install Noctalia locally or want more control over the installa
       libxkbcommon-dev libglib2.0-dev \
       libsdbus-c++-dev libpipewire-0.3-dev \
       libpam0g-dev libpolkit-agent-1-dev libpolkit-gobject-1-dev \
-      libcurl4-openssl-dev libwebp-dev librsvg2-dev
+      libcurl4-gnutls-dev libwebp-dev librsvg2-dev
     ```
   </TabItem>
 </Tabs>
