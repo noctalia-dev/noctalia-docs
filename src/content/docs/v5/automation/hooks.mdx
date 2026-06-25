@@ -18,7 +18,7 @@ Noctalia's own feedback.
 | Key | When it fires |
 |-----|---------------|
 | `started` | Once after Noctalia finishes startup (IPC ready). |
-| `wallpaper_changed` | After a persisted wallpaper path change is applied. |
+| `wallpaper_changed` | After a persisted wallpaper path change is applied. Sets `NOCTALIA_WALLPAPER_PATH` and `NOCTALIA_WALLPAPER_CONNECTOR` (for example `DP-1`; empty when the change is not tied to a live connector). |
 | `colors_changed` | After the theme palette is resolved and terminal templates are updated. |
 | `theme_mode_changed` | When the resolved theme mode changes between `light` and `dark`. Sets `NOCTALIA_THEME_MODE`, `NOCTALIA_THEME_MODE_PREVIOUS`, and `NOCTALIA_THEME_MODE_CONFIGURED` (`dark`, `light`, or `auto`). |
 | `session_locked` | When the compositor confirms the session lock. |
@@ -88,6 +88,17 @@ if (( previous >= threshold && percent < threshold )); then
 fi
 ```
 
+## Wallpaper hooks
+
+Wallpaper hook values are exposed as environment variables, not positional arguments. `NOCTALIA_WALLPAPER_PATH` is the
+applied path, and `NOCTALIA_WALLPAPER_CONNECTOR` is the output connector for that wallpaper change.
+When multiple outputs change, the hook runs once per changed connector.
+
+```toml
+[hooks]
+wallpaper_changed = "logger -t noctalia-hooks \"Wallpaper on $NOCTALIA_WALLPAPER_CONNECTOR: $NOCTALIA_WALLPAPER_PATH\""
+```
+
 ## Examples
 
 ```toml
@@ -95,8 +106,8 @@ fi
 # Start a user unit after Noctalia IPC is ready.
 started = "systemctl --user start noctalia-ready.target"
 
-# Reload tools that consume generated wallpaper/theme files.
-wallpaper_changed = "systemctl --user restart wallpaper-sync.service"
+# Log wallpaper changes with the connector-specific payload.
+wallpaper_changed = "logger -t noctalia-hooks \"wallpaper: $NOCTALIA_WALLPAPER_CONNECTOR $NOCTALIA_WALLPAPER_PATH\""
 colors_changed = [
   "systemctl --user reload foot-server.service",
   "logger -t noctalia-hooks 'palette colors changed'",
