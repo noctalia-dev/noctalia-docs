@@ -244,7 +244,7 @@ If capture fails (missing protocol, permission denied, etc.), the lock screen fa
 
 ## Keybinds
 
-Centralized keyboard actions for shell panels (`launcher`, `session`, `clipboard`, `wallpaper`), panel close/cancel, and dismissing interactive region screenshot selection (including while `freeze_screen` pre-capture is in progress).
+Centralized keyboard actions for shell panels (`launcher`, `session`, `clipboard`, `wallpaper`), panel close/cancel, dismissing interactive region screenshot selection (including while `freeze_screen` pre-capture is in progress), and keyboard navigation inside Noctalia surfaces such as **Settings**, **Control Center**, and the **session panel**.
 
 ```toml
 [keybinds]
@@ -254,6 +254,8 @@ left     = ["left"]
 right    = ["right"]
 up       = ["up"]
 down     = ["down"]
+tab_next = ["tab"]
+tab_previous = ["shift+tab", "iso_left_tab"]
 ```
 
 Each action accepts a single string chord or an array of chords.
@@ -264,16 +266,26 @@ Each action accepts a single string chord or an array of chords.
 
 **`super` bindings are rejected** (`super`, `win`, `windows`, `logo`, `meta`, `mod4`) and produce a config parse error.
 
-**Supported actions:** `validate`, `cancel`, `left`, `right`, `up`, `down`
+**Supported actions:** `validate`, `cancel`, `left`, `right`, `up`, `down`, `tab_next`, `tab_previous`
+
+| Action | Default role |
+|--------|----------------|
+| `validate` | Activate the focused control (open a select, toggle a switch, press a button, submit an input). |
+| `cancel` | Close a popup/panel or dismiss the current operation. |
+| `left` / `right` / `up` / `down` | Move within the focused region (list rows, launcher grid columns, slider nudge on left/right, and similar). |
+| `tab_next` / `tab_previous` | Move between major panes in split layouts (for example Settings sidebar ↔ content, or Control Center sidebar ↔ tab body). |
+
+On split-pane surfaces (**Settings** and **Control Center**), `tab_next` / `tab_previous` switch between the sidebar and the main content area. Arrow keys stay inside the active pane: the sidebar uses roving focus, and the content area moves between controls on up/down while leaving left/right to control-native behavior (such as slider nudge). The session panel uses arrow keys to move between actions once focus has entered the button list; it does not pre-select an action on open.
 
 ### Recording from the GUI
 
-Open **Settings → Keybinds** to bind chords interactively. Each action shows the current chord(s) and a trailing slot reading *"Click to add keybind"*.
+Open **Settings → Shell → Keybinds** to bind chords interactively. Actions are shown in a three-column grid. Each cell lists the current chord(s) for that action plus a trailing *"Click to add keybind"* slot. When you have not overridden an action in `settings.toml`, the GUI still shows the built-in defaults (the same chords Noctalia uses at runtime).
 
-- Click a slot, then press the key combination. The recorder previews held modifiers (e.g. `Ctrl + Shift + …`) and commits as soon as a non-modifier key is pressed.
+- Click a slot (or focus it and press a `validate` chord) to start recording, then press the key combination. The recorder previews held modifiers (e.g. `Ctrl + Shift + …`) and commits as soon as a non-modifier key is pressed.
 - Press a modifier-only chord (no regular key) and click away to abort the recording without changing the binding.
 - Pressing **Super / Windows** - either alone or as a modifier - cancels the recording and surfaces a transient toast explaining that compositor-reserved keys cannot be bound. Click the slot again to retry with a different chord.
-- Use the **×** next to a row to remove that specific binding. Removing every binding falls back to the value from your TOML config, or the built-in default if none is set.
+- Use the **×** next to a row to remove that specific binding. Removing every binding clears the GUI override and restores the built-in default for that action.
+- After you change a binding, **Override** and **Reset** appear below that action's list so the title and description keep the full column width.
 
 Chords recorded in the GUI are serialized as `ctrl+shift+Return`-style strings under `[keybinds]` in `~/.local/state/noctalia/settings.toml` and follow the same parsing rules as hand-written config.
 
