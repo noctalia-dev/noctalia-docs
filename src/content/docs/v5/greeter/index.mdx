@@ -91,6 +91,25 @@ sudo sv restart greetd
 
 With Noctalia v5 and the greeter both installed, open **Settings → Security → Noctalia Greeter → Sync Now**. Noctalia copies your wallpaper, palette, enabled session actions (`shell.session` plus `[shell.session.power]` overrides), and (when you use multiple monitors) monitor layout to the greeter (you will be prompted for admin access via polkit, through `pkexec` or `run0`).
 
+Sync Now shows a notification while it waits for that approval. If **logind** or **elogind** is running, enable **Settings → Security → Polkit agent** to approve from the desktop.
+
+**seatd without logind:** polkit has no graphical session to attach to, so Noctalia's polkit agent cannot register (`No session for pid` in the log). Sync Now stages files and shows the install command. Run it from a terminal:
+
+```sh
+pkexec noctalia-greeter-apply-appearance "$XDG_RUNTIME_DIR/noctalia-greeter-sync"
+```
+
+To run Sync Now from the desktop on seatd, set a custom privilege prefix (the apply helper path and staging directory are appended automatically):
+
+```toml
+[shell.greeter_sync]
+privilege_command = "ghostty -e pkexec"
+```
+
+Optional: install **elogind** if you want in-session polkit prompts without a terminal wrapper. seatd and elogind can coexist; elogind only provides session tracking for polkit, not power management.
+
+Synced data is installed to `/var/lib/noctalia-greeter/appearance.json` (root-owned, world-readable). `greeter.toml` in the same directory is separate greetd preferences.
+
 After syncing, log out or restart greetd to see the changes on the login screen.
 
 The greeter adds a **Synced** color scheme when sync data is present. Session and scheme choices you make on the login screen are remembered in `/var/lib/noctalia-greeter/greeter.toml`.
@@ -125,5 +144,7 @@ The greeter works without a mouse.
 - **Wrong session on startup** - If `[session].default` is set in `greeter.toml`, it wins over last-used `[session].last`. Run `noctalia-greeter sessions` for exact **Name** spelling.
 - **Synced look missing** - Install Noctalia v5, the greeter, and the polkit policy; sync again from Settings; restart greetd or log out once.
 - **Sync fails with no privilege escalator** - Greeter sync needs `pkexec` or `run0` on `PATH` (for example when `pkexec` is disabled on NixOS, install `run0` from systemd ≥ 256). A polkit authentication agent must be running in your session.
+- **Sync Now does nothing / no `appearance.json`** - Sync stages files first, then waits for polkit to authorize `noctalia-greeter-apply-appearance`. On **seatd without logind**, Noctalia's polkit agent cannot register; run the `pkexec` command from the Sync Now notification in a terminal. Sync Now warns after 90 seconds if approval is still pending.
+- **Polkit agent: `No session for pid`** - Expected on seatd-only setups. Install elogind for in-session prompts, or use terminal/console `pkexec` for greeter sync.
 - **UI too small or too large on a high-DPI monitor** - Set `[output].scale` in `greeter.toml`. See [Configuration](/v5/greeter/configuration/#ui-scale).
 - **Wrong or default cursor theme** - Set `[cursor].theme` (and `[cursor].size`) in `greeter.toml`, or the `XCURSOR_*` variables in the greetd command. If the theme is not on the default search path, also set `[cursor].path` / `XCURSOR_PATH`. See [Cursor theme](/v5/greeter/configuration/#cursor-theme).

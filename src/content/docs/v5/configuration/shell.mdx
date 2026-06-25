@@ -345,3 +345,14 @@ action = "shutdown"
 variant = "destructive"
 countdown_seconds = 5
 ```
+
+### Greeter sync privilege command
+
+**Settings → Security → Greeter Sync Privilege Command**, or in TOML:
+
+```toml
+[shell.greeter_sync]
+privilege_command = "ghostty -e pkexec"
+```
+
+Replaces the default `pkexec` or `run0` prefix for **Sync Now**. Noctalia appends the `noctalia-greeter-apply-appearance` path and staging directory. Leave empty for the default escalator. See [Noctalia Greeter](/v5/greeter/) for seatd and polkit notes.
