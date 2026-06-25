@@ -293,7 +293,7 @@ Chords recorded in the GUI are serialized as `ctrl+shift+Return`-style strings u
 
 ## Session panel
 
-The session (power) menu opened from the bar **Session** widget or Control Center lists **Lock**, **Log out**, **Lock & Suspend**, **Reboot**, and **Shut down** by default. The launcher also exposes the same enabled entries under `/session`. Log out uses compositor-native exits where available, including LabWC's `labwc --exit`. You can change which buttons appear, their order, whether each is enabled, and optionally replace the implementation with a **shell command** (still run after `logging_out` / `rebooting` / `shutting_down` [hooks](/v5/automation/hooks/) when the action is one of those three).
+The session (power) menu opened from the bar **Session** widget or Control Center lists **Lock**, **Log out**, **Lock & Suspend**, **Reboot**, and **Shut down** by default. The launcher also exposes the same enabled entries under `/session`. `noctalia msg session <action>` uses the same configured entries (including per-row `command` overrides and disabled actions). Log out uses compositor-native exits where available, including LabWC's `labwc --exit`, unless a row-level `command` is set. You can change which buttons appear, their order, whether each is enabled, and optionally replace the implementation with a **shell command** (still run after `logging_out` / `rebooting` / `shutting_down` [hooks](/v5/automation/hooks/) when the action is one of those three).
 
 Built-in suspend/reboot/shutdown actions resolve from prioritized backend lists (systemd/logind first, then distro/runtime fallbacks) and cache the working backend in-memory for the current session. Override each built-in action globally under `[shell.session.power]` when auto-detection is not enough:
 
@@ -304,7 +304,7 @@ reboot = "sudo -n reboot"
 shutdown = "sudo -n poweroff"
 ```
 
-When an override is set, Noctalia runs that command for the built-in suspend/reboot/shutdown actions (session panel, launcher, IPC, and idle). Per-row `command` still overrides a single menu button when you need one-off behavior.
+When an override is set, Noctalia runs that command for the built-in suspend/reboot/shutdown actions (session panel, launcher, IPC, idle, and greeter sync). Per-row `command` still overrides a single menu button when you need one-off behavior (including logout via `noctalia msg session logout`).
 
 Configure under **`[shell.session]`** in TOML, or use **Settings → Power → Session menu**: entries, reorder, and **Show** are listed inline; use the **settings** (cog) control on a row for behavior, label, command, icon, shortcut, countdown, and style. **Add action** appends a custom-command entry by default. The default five actions are assigned keyboard shortcuts **1**–**5**; pressing the key while the panel is open triggers the action (or starts its countdown when configured).
 
