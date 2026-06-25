@@ -431,6 +431,7 @@ download + apply via `noctalia.wallpaperDirectory()` and `noctalia msg wallpaper
 | Group | Functions |
 |-------|-----------|
 | Runtime | `setUpdateInterval(ms)`, `log(msg)`, `isDarkMode()`, `focusedOutputName()`, `wallpaperDirectory()`, `getConfig(key)` |
+| Outputs | `outputs()` → array of `{ name, description, width, height, x, y, scale, focused }`; `setWallpaperEnabled(connector, enabled)` |
 | Time | `formatTime(pattern [, unixSeconds])` |
 | Notify | `notify(title, body)`, `notifyError(title, body)` |
 | Subprocess | `runAsync(cmd [, cb])`, `runStream(cmd, onLine)`, `runInTerminal(cmd)`, `commandExists(name)`, `processMatches(cb, ...needles)`, `flatpakAppInstalled(id)`, `portalAvailable()`, `getenv(name)`, `expandPath(path)` |
@@ -439,6 +440,7 @@ download + apply via `noctalia.wallpaperDirectory()` and `noctalia msg wallpaper
 | i18n | `tr(key [, subst])`, `trp(key, count [, subst])` — against `translations/<lang>.json` |
 | HTTP | `http({ url = … }, cb)`, `download(url, dest, cb)` — async; the callback fires when the request lands |
 | JSON | `json.decode(str)` → value, or `nil, err` on malformed input; `json.encode(value [, pretty])` → string |
+| String | `string.trim(s)` → whitespace-trimmed copy; `string.urlEncode(s)` / `string.urlDecode(s)` → percent-encode/decode for URL query components |
 
 `formatTime` uses the same date-format tokens as Noctalia clock and filename settings. `unixSeconds` is optional; when
 omitted, it formats the current local time. `%s` expands to Unix epoch seconds.
@@ -446,7 +448,14 @@ omitted, it formats the current local time. `%s` expands to Unix epoch seconds.
 `wallpaperDirectory()` returns the resolved global wallpaper folder for the current theme mode (light/dark), or `nil`
 when unset. Paths are already expanded — use them for download targets or to mirror built-in wallpaper behavior.
 
-`json.decode`/`json.encode` are synchronous pure transforms (no callback), unlike HTTP and filesystem.
+`outputs()` returns the connected outputs (logical geometry, DRM connector `name`, and which one is `focused`) —
+the connector name matches what compositors and tools like `mpvpaper` expect. A `[[service]]` may define a global
+`onOutputsChanged()` function, called whenever the output set or geometry changes, to reconcile per-output work.
+`setWallpaperEnabled(connector, false)` tears down Noctalia's own wallpaper surface on that output (so an external
+source can draw there) and `true` restores it; the suppression is runtime-only and clears on restart.
+
+`json.*` and `string.*` are synchronous pure transforms (no callback), unlike HTTP and filesystem. Prefer
+`string.urlEncode` when building query strings for `http`/`download` rather than hand-rolling percent-encoding.
 Filesystem and HTTP run safely off the UI thread; results arrive via callbacks. `runAsync` runs a command to completion
 and calls its callback once with the output; `runStream` runs a long-lived command and calls `onLine(line)` for each
 output line as it arrives — the process is terminated automatically when the script reloads or the widget is removed.
