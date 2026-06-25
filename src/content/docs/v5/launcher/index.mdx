@@ -93,6 +93,24 @@ Find and focus any currently open window.
 
 ---
 
+## Dmenu mode
+
+`noctalia dmenu` is a stdin/stdout picker for scripts that already produce newline-separated choices:
+
+```sh
+printf 'alpha\nbeta\ngamma\n' | noctalia dmenu -p "Pick"
+```
+
+It opens the launcher scoped to those candidates, prints the selected line to stdout, and exits `0`. Closing the launcher
+or pressing Escape prints nothing and exits `1`. `-p` / `--prompt` sets the launcher input placeholder for that picker.
+A tab inside a candidate splits the display into title and description, but the full original line is still returned. If
+the current filter has no candidate match, pressing Enter returns the typed text.
+
+The command talks to the running Noctalia instance on the same `XDG_RUNTIME_DIR` and `WAYLAND_DISPLAY`; start Noctalia
+first, then call `noctalia dmenu` from scripts or compositor commands.
+
+---
+
 ## Configuration
 
 The launcher itself is mostly automatic, but its behavior is influenced by other sections of your config:
