@@ -119,11 +119,7 @@ When using the service, it is recommended to enable `launch_apps_as_systemd_serv
 
 Pre-built binaries are available on [Cachix](https://app.cachix.org/cache/noctalia), so you can skip compiling locally.
 
-:::caution
-To use the binary cache, you have to omit `inputs.nixpkgs.follows` from the Noctalia input.
-:::
-
-You can add the cache either to your flake, nixos configuration, or `/etc/nix/nix.conf`.
+You can configure the substituter either in your NixOS config, flake, or `/etc/nix/nix.conf`:
 
 <Tabs>
   <TabItem label="configuration.nix">
@@ -146,6 +142,38 @@ You can add the cache either to your flake, nixos configuration, or `/etc/nix/ni
     ```properties
     extra-substituters = https://noctalia.cachix.org
     extra-trusted-public-keys = noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=
+    ```
+  </TabItem>
+</Tabs>
+
+Overriding any of Noctalia's inputs (e.g. via `inputs.nixpkgs.follows` with flakes) changes the derivation hash, causing cache misses.
+
+Additionally, tracking `main` directly may pull in a commit that hasn't been cached yet by CI.
+
+To avoid this, the [`cachix`](https://github.com/noctalia-dev/noctalia/tree/cachix) branch always points to the latest cached commit. Pinning to this branch guarantees you always track the latest commit that has already been cached:
+
+<Tabs>
+  <TabItem label="flakes">
+    ```nix
+    noctalia.url = "github:noctalia-dev/noctalia/cachix";
+    ```
+  </TabItem>
+  <TabItem label="tack">
+    ```
+    tack add noctalia github:noctalia-dev/noctalia/cachix
+    ```
+  </TabItem>
+  <TabItem label="npins">
+    ```
+    npins add github noctalia-dev noctalia --branch cachix
+    ```
+  </TabItem>
+  <TabItem label="tarball">
+    ```nix
+    noctalia-src = fetchTarball {
+      url = "https://github.com/noctalia-dev/noctalia/archive/cachix.tar.gz";
+      sha256 = ""; # replace with hash from nix build output
+    };
     ```
   </TabItem>
 </Tabs>
