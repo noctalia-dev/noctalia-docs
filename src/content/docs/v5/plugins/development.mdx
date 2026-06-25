@@ -431,6 +431,7 @@ download + apply via `noctalia.wallpaperDirectory()` and `noctalia msg wallpaper
 | Group | Functions |
 |-------|-----------|
 | Runtime | `setUpdateInterval(ms)`, `log(msg)`, `isDarkMode()`, `focusedOutputName()`, `wallpaperDirectory()`, `getConfig(key)` |
+| Outputs | `outputs()` → array of `{ name, description, width, height, x, y, scale, focused }`; `setWallpaperEnabled(connector, enabled)` |
 | Time | `formatTime(pattern [, unixSeconds])` |
 | Notify | `notify(title, body)`, `notifyError(title, body)` |
 | Subprocess | `runAsync(cmd [, cb])`, `runStream(cmd, onLine)`, `runInTerminal(cmd)`, `commandExists(name)`, `processMatches(cb, ...needles)`, `flatpakAppInstalled(id)`, `portalAvailable()`, `getenv(name)`, `expandPath(path)` |
@@ -446,6 +447,12 @@ omitted, it formats the current local time. `%s` expands to Unix epoch seconds.
 
 `wallpaperDirectory()` returns the resolved global wallpaper folder for the current theme mode (light/dark), or `nil`
 when unset. Paths are already expanded — use them for download targets or to mirror built-in wallpaper behavior.
+
+`outputs()` returns the connected outputs (logical geometry, DRM connector `name`, and which one is `focused`) —
+the connector name matches what compositors and tools like `mpvpaper` expect. A `[[service]]` may define a global
+`onOutputsChanged()` function, called whenever the output set or geometry changes, to reconcile per-output work.
+`setWallpaperEnabled(connector, false)` tears down Noctalia's own wallpaper surface on that output (so an external
+source can draw there) and `true` restores it; the suppression is runtime-only and clears on restart.
 
 `json.*` and `string.*` are synchronous pure transforms (no callback), unlike HTTP and filesystem. Prefer
 `string.urlEncode` when building query strings for `http`/`download` rather than hand-rolling percent-encoding.

@@ -127,3 +127,20 @@ Requires network access (`[shell].offline_mode` must be off). NSFW results requi
 | Command | Effect |
 |---------|--------|
 | <IpcCommand command="panel-toggle noctalia/wallhaven:browser" /> | open or close the Wallhaven browser |
+
+## Video Wallpaper {#mpvpaper}
+
+<PluginMeta icon="movie" id="noctalia/mpvpaper" />
+
+Animated and video wallpapers via [mpvpaper](https://github.com/GhostNaN/mpvpaper). A headless **service**
+supervises one `mpvpaper` instance per output; a **panel** (`picker`) browses your video directory as a thumbnail
+grid and applies a video per output (or to all); a bar **widget** (`mpvpaper`) toggles the panel. When a video is
+assigned to an output, Noctalia drops its own wallpaper surface there so the video shows through — the bar and dock
+still draw above it. Assignments persist across restarts.
+
+Requires the external `mpvpaper` command (which pulls in `mpv`; `mpv` also renders the picker thumbnails). Works on
+`wlr-layer-shell` compositors (Niri, Hyprland, Sway, Mango). Supported files: `mp4`, `webm`, `mkv`, `mov`, `gif`.
+
+| Command | Effect |
+|---------|--------|
+| <IpcCommand command="panel-toggle noctalia/mpvpaper:picker" /> | open or close the video picker |

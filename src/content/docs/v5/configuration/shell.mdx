@@ -63,6 +63,8 @@ clipboard_placement      = "centered" # attached | floating | centered
 control_center_placement = "attached" # attached | floating | centered
 wallpaper_placement      = "attached" # attached | floating | centered
 session_placement        = "attached" # attached | floating | centered
+polkit_placement         = "floating" # attached | floating
+polkit_position          = "center"   # auto | center | top_left | … (floating only)
 floating_offset          = 8           # px gap between a floating/detached panel and the bar edge
 open_near_click_control_center = false  # attached/floating: follow the bar click instead of bar-center
 open_near_click_launcher       = false  # attached/floating: follow the bar click instead of bar-center
@@ -114,7 +116,7 @@ Notes:
 - `telemetry_enabled` sends a single anonymous POST to `api.noctalia.dev/ping` on each startup containing: a random instance ID, shell version, compositor name, OS name, RAM, monitor resolutions, and UI scale. No personal data is collected. The instance ID is a random UUID stored in `~/.local/state/noctalia/instance.id`.
 - `setup_wizard_enabled`: when `false`, Noctalia does not auto-open the setup wizard on startup even if `.setup-complete` is missing. Use this for declarative or preseeded deployments; the marker remains the normal completion state for interactive runs.
 - `niri_overview_type_to_launch_enabled` is opt-in. When `true` on niri, Noctalia keeps a tiny keyboard-focus layer surface while overview is open so typing a letter or number opens the launcher with that initial query. This gives up niri's exact native handling for some overview-only keyboard state, such as the app focus ring.
-- `polkit_agent` controls registration on `org.freedesktop.PolicyKit1`. Keep disabled if another desktop agent handles auth prompts.
+- `polkit_agent` controls registration on `org.freedesktop.PolicyKit1`. Keep disabled if another desktop agent handles auth prompts. When enabled, `shell.panel.polkit_placement` and `polkit_position` control whether the auth prompt attaches to the bar or floats (default: centered on screen).
 - Notification daemon ownership moved out of `[shell]`: use `[notification].enable_daemon` in [Services](/v5/services/notifications/).
 - `password_style`: `default` uses `circle-filled`; `random` cycles through multiple filled glyph shapes on polkit and lock screen inputs.
 - `settings_show_advanced`: when `true`, Settings opens with advanced entries visible.
@@ -137,7 +139,8 @@ Notes:
 - `shell.panel.transparency_mode` controls panel glass styling. `solid` keeps cards opaque and floating/centered panels solid, `soft` makes floating/centered panels lightly translucent and cards subtly translucent, and `glass` makes both visibly translucent while clamping card opacity high enough for readable text. Attached panels continue to use the effective panel background opacity inherited from the host bar.
 - `shell.panel.borders` draws an outline on detached panel shells and on section cards inside panels (control center tabs, clipboard preview, setup wizard steps, etc.). Attached bar-merged panels stay borderless on the shell edge. Default is `true`; set to `false` for a flatter, borderless look.
 - `shell.panel.shadow` toggles the rendered drop shadow on attached, floating, and centered panels. Shadow direction and alpha come from `[shell.shadow]`.
-- `shell.panel.launcher_placement`, `clipboard_placement`, `control_center_placement`, `wallpaper_placement`, and `session_placement` accept `attached`, `floating`, or `centered`. `attached` merges the panel with the host bar where the bar's position and placement allow it; `floating` keeps the panel detached but near the bar; `centered` opens it in the middle of the monitor. Defaults are centered for Launcher and Clipboard, attached for Control Center, Wallpaper, and Session.
+- `shell.panel.launcher_placement`, `clipboard_placement`, `control_center_placement`, `wallpaper_placement`, `session_placement`, and `polkit_placement` accept `attached` or `floating`. `attached` merges the panel with the host bar where the bar's position and placement allow it; `floating` keeps the panel detached. Defaults are floating for Launcher and Clipboard (with `*_position = "center"`), attached for Control Center, Wallpaper, and Session, and floating centered for the polkit auth prompt (`polkit_placement = "floating"`, `polkit_position = "center"`).
+- Per-panel `*_position` keys (`launcher_position`, `clipboard_position`, `control_center_position`, `wallpaper_position`, `session_position`, `polkit_position`) apply when placement is `floating`. `auto` keeps the panel bar-relative; `center` and the edge/corner tokens anchor on screen (same vocabulary as notification/OSD position).
 - `shell.panel.floating_offset` sets the gap in pixels between a floating or detached panel and the bar edge (default `8`). It applies to `floating` placement and to panels using the reserved edge area when multiple bars share an edge; `attached` and `centered` panels ignore it.
 - When multiple enabled bars resolve to the same edge on one monitor, exact source-bar attachment is ambiguous. In that case attached/floating panels use the compositor's reserved edge area and open outside the bar stack instead of trying to merge with one bar.
 - `shell.panel.open_near_click_control_center`, `open_near_click_launcher`, `open_near_click_clipboard`, `open_near_click_wallpaper`, and `open_near_click_session` position attached or floating panels near the click location on the bar instead of centering them along the bar. They are ignored when the corresponding placement is `centered`.
@@ -257,7 +260,7 @@ If capture fails (missing protocol, permission denied, etc.), the lock screen fa
 
 ## Keybinds
 
-Centralized keyboard actions for shell panels (`launcher`, `session`, `clipboard`, `wallpaper`), panel close/cancel, and dismissing interactive region screenshot selection (including while `freeze_screen` pre-capture is in progress).
+Centralized keyboard actions for shell panels (`launcher`, `session`, `clipboard`, `wallpaper`), panel close/cancel, dismissing interactive region screenshot selection (including while `freeze_screen` pre-capture is in progress), and keyboard navigation inside Noctalia surfaces such as **Settings**, **Control Center**, and the **session panel**.
 
 ```toml
 [keybinds]
@@ -267,6 +270,8 @@ left     = ["left"]
 right    = ["right"]
 up       = ["up"]
 down     = ["down"]
+tab_next = ["tab"]
+tab_previous = ["shift+tab", "iso_left_tab"]
 ```
 
 Each action accepts a single string chord or an array of chords.
@@ -277,16 +282,26 @@ Each action accepts a single string chord or an array of chords.
 
 **`super` bindings are rejected** (`super`, `win`, `windows`, `logo`, `meta`, `mod4`) and produce a config parse error.
 
-**Supported actions:** `validate`, `cancel`, `left`, `right`, `up`, `down`
+**Supported actions:** `validate`, `cancel`, `left`, `right`, `up`, `down`, `tab_next`, `tab_previous`
+
+| Action | Default role |
+|--------|----------------|
+| `validate` | Activate the focused control (open a select, toggle a switch, press a button, submit an input). |
+| `cancel` | Close a popup/panel or dismiss the current operation. |
+| `left` / `right` / `up` / `down` | Move within the focused region (list rows, launcher grid columns, slider nudge on left/right, and similar). |
+| `tab_next` / `tab_previous` | Move between major panes in split layouts (for example Settings sidebar ↔ content, or Control Center sidebar ↔ tab body). |
+
+On split-pane surfaces (**Settings** and **Control Center**), `tab_next` / `tab_previous` switch between the sidebar and the main content area. Arrow keys stay inside the active pane: the sidebar uses roving focus, and the content area moves between controls on up/down while leaving left/right to control-native behavior (such as slider nudge). The session panel uses arrow keys to move between actions once focus has entered the button list; it does not pre-select an action on open.
 
 ### Recording from the GUI
 
-Open **Settings → Keybinds** to bind chords interactively. Each action shows the current chord(s) and a trailing slot reading *"Click to add keybind"*.
+Open **Settings → Shell → Keybinds** to bind chords interactively. Actions are shown in a three-column grid. Each cell lists the current chord(s) for that action plus a trailing *"Click to add keybind"* slot. When you have not overridden an action in `settings.toml`, the GUI still shows the built-in defaults (the same chords Noctalia uses at runtime).
 
-- Click a slot, then press the key combination. The recorder previews held modifiers (e.g. `Ctrl + Shift + …`) and commits as soon as a non-modifier key is pressed.
+- Click a slot (or focus it and press a `validate` chord) to start recording, then press the key combination. The recorder previews held modifiers (e.g. `Ctrl + Shift + …`) and commits as soon as a non-modifier key is pressed.
 - Press a modifier-only chord (no regular key) and click away to abort the recording without changing the binding.
 - Pressing **Super / Windows** - either alone or as a modifier - cancels the recording and surfaces a transient toast explaining that compositor-reserved keys cannot be bound. Click the slot again to retry with a different chord.
-- Use the **×** next to a row to remove that specific binding. Removing every binding falls back to the value from your TOML config, or the built-in default if none is set.
+- Use the **×** next to a row to remove that specific binding. Removing every binding clears the GUI override and restores the built-in default for that action.
+- After you change a binding, **Override** and **Reset** appear below that action's list so the title and description keep the full column width.
 
 Chords recorded in the GUI are serialized as `ctrl+shift+Return`-style strings under `[keybinds]` in `~/.local/state/noctalia/settings.toml` and follow the same parsing rules as hand-written config.
 
@@ -294,7 +309,7 @@ Chords recorded in the GUI are serialized as `ctrl+shift+Return`-style strings u
 
 ## Session panel
 
-The session (power) menu opened from the bar **Session** widget or Control Center lists **Lock**, **Log out**, **Lock & Suspend**, **Reboot**, and **Shut down** by default. The launcher also exposes the same enabled entries under `/session`. Log out uses compositor-native exits where available, including LabWC's `labwc --exit`. You can change which buttons appear, their order, whether each is enabled, and optionally replace the implementation with a **shell command** (still run after `logging_out` / `rebooting` / `shutting_down` [hooks](/v5/automation/hooks/) when the action is one of those three).
+The session (power) menu opened from the bar **Session** widget or Control Center lists **Lock**, **Log out**, **Lock & Suspend**, **Reboot**, and **Shut down** by default. The launcher also exposes the same enabled entries under `/session`. `noctalia msg session <action>` uses the same configured entries (including per-row `command` overrides and disabled actions). Log out uses compositor-native exits where available, including LabWC's `labwc --exit`, unless a row-level `command` is set. You can change which buttons appear, their order, whether each is enabled, and optionally replace the implementation with a **shell command** (still run after `logging_out` / `rebooting` / `shutting_down` [hooks](/v5/automation/hooks/) when the action is one of those three).
 
 Built-in suspend/reboot/shutdown actions resolve from prioritized backend lists (systemd/logind first, then distro/runtime fallbacks) and cache the working backend in-memory for the current session. Override each built-in action globally under `[shell.session.power]` when auto-detection is not enough:
 
@@ -305,7 +320,7 @@ reboot = "sudo -n reboot"
 shutdown = "sudo -n poweroff"
 ```
 
-When an override is set, Noctalia runs that command for the built-in suspend/reboot/shutdown actions (session panel, launcher, IPC, and idle). Per-row `command` still overrides a single menu button when you need one-off behavior.
+When an override is set, Noctalia runs that command for the built-in suspend/reboot/shutdown actions (session panel, launcher, IPC, idle, and greeter sync). Per-row `command` still overrides a single menu button when you need one-off behavior (including logout via `noctalia msg session logout`).
 
 Configure under **`[shell.session]`** in TOML, or use **Settings → Power → Session menu**: entries, reorder, and **Show** are listed inline; use the **settings** (cog) control on a row for behavior, label, command, icon, shortcut, countdown, and style. **Add action** appends a custom-command entry by default. The default five actions are assigned keyboard shortcuts **1**–**5**; pressing the key while the panel is open triggers the action (or starts its countdown when configured).
 
@@ -346,3 +361,14 @@ action = "shutdown"
 variant = "destructive"
 countdown_seconds = 5
 ```
+
+### Greeter sync privilege command
+
+**Settings → Security → Greeter Sync Privilege Command**, or in TOML:
+
+```toml
+[shell.greeter_sync]
+privilege_command = "ghostty -e pkexec"
+```
+
+Replaces the default `pkexec` or `run0` prefix for **Sync Now**. Noctalia appends the `noctalia-greeter-apply-appearance` path and staging directory. Leave empty for the default escalator. See [Noctalia Greeter](/v5/greeter/) for seatd and polkit notes.
