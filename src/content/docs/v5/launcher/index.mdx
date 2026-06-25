@@ -38,7 +38,7 @@ Press `F6` while the launcher is open to reveal hidden filters without changing 
 
 The primary provider for finding and launching your installed apps.
 
-When `shell.panel.launcher_app_grid` is enabled and every visible result is an application, results switch from the default list to a multi-column icon grid with the app name underneath. Mixed searches (calculator hits, emoji, session actions, prefixed providers, and so on) keep the list layout. Left/right keybinds move between columns in grid mode; up/down move by row.
+When `shell.launcher.app_grid` is enabled and every visible result is an application, results switch from the default list to a multi-column icon grid with the app name underneath. Mixed searches (calculator hits, emoji, session actions, prefixed providers, and so on) keep the list layout. Left/right keybinds move between columns in grid mode; up/down move by row.
 
 - **Source**: Reads `.desktop` entries from standard XDG directories (e.g., `/usr/share/applications`, `~/.local/share/applications`).
 - **Search**: Matches against the application name, generic name, keywords, and categories.
@@ -98,6 +98,6 @@ Find and focus any currently open window.
 The launcher itself is mostly automatic, but its behavior is influenced by other sections of your config:
 
 - **[Keybinds](/v5/shell/#keybinds)**: Customize navigation (`up`, `down`) and activation (`validate`, `cancel`).
-- **[Shell](/v5/shell/#shell-settings)**: `ui_scale` and `font_family` affect the launcher's appearance. `shell.panel.launcher_categories` controls the category filters. `launcher_show_icons`, `launcher_compact`, `launcher_app_grid`, and `launcher_sort_by_usage` adjust result layout and ordering (Settings → Panels → Launcher).
+- **[Shell](/v5/shell/#shell-settings)**: `ui_scale` and `font_family` affect the launcher's appearance. `shell.launcher.categories` controls the category filters. `show_icons`, `compact`, `app_grid`, and `sort_by_usage` adjust result layout and ordering (Settings → Panels → Launcher). `[shell.launcher.dmenu.entry.<id>]` adds custom dmenu-style providers backed by a shell command.
 - **[Wallpaper](/v5/desktop/wallpaper/)**: Defines the search paths for the Wallpaper provider.
 - **[Session actions](/v5/shell/#session-panel)**: Defines the actions shown by the Session provider.
