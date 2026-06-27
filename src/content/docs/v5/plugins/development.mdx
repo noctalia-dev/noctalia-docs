@@ -416,7 +416,8 @@ function onToggle(value) enabled = value == "true"; render() end
 function onCloseClicked() panel.close() end
 ```
 
-Open, close, or toggle a panel by its full entry id (`author/plugin:entry`) over IPC:
+From a widget or shortcut script, toggle a panel by its full entry id with `noctalia.togglePanel("author/plugin:panel")`.
+The same panel can also be opened, closed, or toggled externally over IPC:
 
 ```sh
 noctalia msg panel-toggle noctalia/example:panel
@@ -424,7 +425,7 @@ noctalia msg panel-toggle noctalia/example:panel
 
 The reference implementation is the `panel` entry of the official `noctalia/example` plugin — a settings-style panel
 exercising every interactive control. `noctalia/wallhaven:browser` is a network-backed panel (thumbnail grid, filters,
-download + apply via `noctalia.wallpaperDirectory()` and `noctalia msg wallpaper-set`).
+download + apply via `noctalia.wallpaperDirectory()` and `noctalia.setWallpaper()`).
 
 ### `noctalia.*` — host capabilities
 
@@ -432,6 +433,8 @@ download + apply via `noctalia.wallpaperDirectory()` and `noctalia msg wallpaper
 |-------|-----------|
 | Runtime | `setUpdateInterval(ms)`, `log(msg)`, `isDarkMode()`, `focusedOutputName()`, `wallpaperDirectory()`, `getConfig(key)` |
 | Outputs | `outputs()` → array of `{ name, description, width, height, x, y, scale, focused }`; `setWallpaperEnabled(connector, enabled)` |
+| Wallpaper | `setWallpaper(path)` / `setWallpaper(connector, path)` — apply and persist a wallpaper image |
+| Panels | `togglePanel("author/plugin:panel")` — open/close one of this plugin's panels |
 | Time | `formatTime(pattern [, unixSeconds])` |
 | Notify | `notify(title, body)`, `notifyError(title, body)` |
 | Subprocess | `runAsync(cmd [, cb])`, `runStream(cmd, onLine)`, `runInTerminal(cmd)`, `commandExists(name)`, `processMatches(cb, ...needles)`, `flatpakAppInstalled(id)`, `portalAvailable()`, `getenv(name)`, `expandPath(path)` |
@@ -453,6 +456,11 @@ the connector name matches what compositors and tools like `mpvpaper` expect. A 
 `onOutputsChanged()` function, called whenever the output set or geometry changes, to reconcile per-output work.
 `setWallpaperEnabled(connector, false)` tears down Noctalia's own wallpaper surface on that output (so an external
 source can draw there) and `true` restores it; the suppression is runtime-only and clears on restart.
+
+`setWallpaper(path)` applies and persists an image as the wallpaper, exactly like the wallpaper panel — with one
+argument it targets every output, or pass `setWallpaper(connector, path)` for a single output. `togglePanel(id)` opens
+or closes a panel by its full entry id (`author/plugin:panel`). Prefer these over shelling out to the `noctalia` CLI:
+they run in-process, with no subprocess or IPC round-trip.
 
 `json.*` and `string.*` are synchronous pure transforms (no callback), unlike HTTP and filesystem. Prefer
 `string.urlEncode` when building query strings for `http`/`download` rather than hand-rolling percent-encoding.
