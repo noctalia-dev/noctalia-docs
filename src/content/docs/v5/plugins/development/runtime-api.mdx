@@ -11,54 +11,158 @@ The plugin system is under **heavy development** and the manifest format, APIs, 
 changes at any time.
 :::
 
-## `noctalia.*` — host capabilities
+Most `noctalia.*` functions are synchronous. Methods that start subprocesses, HTTP requests, or downloads return a
+boolean immediately to say whether the work was accepted, then deliver results to a callback.
 
-| Group | Functions |
-|-------|-----------|
-| Runtime | `setUpdateInterval(ms)`, `log(msg)`, `isDarkMode()`, `focusedOutputName()`, `wallpaperDirectory()`, `getConfig(key)` |
-| Outputs | `outputs()` → array of `{ name, description, width, height, x, y, scale, focused }`; `setWallpaperEnabled(connector, enabled)` |
-| Wallpaper | `setWallpaper(path)` / `setWallpaper(connector, path)` — apply and persist a wallpaper image |
-| Panels | `togglePanel("author/plugin:panel")` — open/close one of this plugin's panels |
-| Time | `formatTime(pattern [, unixSeconds])` |
-| Notify | `notify(title, body)`, `notifyError(title, body)` |
-| Subprocess | `runAsync(cmd [, cb])`, `runStream(cmd, onLine)`, `runInTerminal(cmd)`, `commandExists(name)`, `processMatches(cb, ...needles)`, `flatpakAppInstalled(id)`, `portalAvailable()`, `getenv(name)`, `expandPath(path)` |
-| Clipboard | `copyToClipboard(text [, mime])` |
-| Filesystem | `readFile(path)`, `writeFile(path, content)`, `fileExists(path)`, `listDir(path)`, `pluginDir()` — relative paths resolve against the plugin's own directory |
-| i18n | `tr(key [, subst])`, `trp(key, count [, subst])` — against `translations/<lang>.json` |
-| HTTP | `http({ url = … }, cb)`, `download(url, dest, cb)` — async; the callback fires when the request lands |
-| JSON | `json.decode(str)` → value, or `nil, err` on malformed input; `json.encode(value [, pretty])` → string |
-| String | `string.trim(s)` → whitespace-trimmed copy; `string.urlEncode(s)` / `string.urlDecode(s)` → percent-encode/decode for URL query components |
+## Runtime and settings
 
-`formatTime` uses the same date-format tokens as Noctalia clock and filename settings. `unixSeconds` is optional; when
-omitted, it formats the current local time. `%s` expands to Unix epoch seconds.
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `noctalia.setUpdateInterval(ms)` | nothing | Sets how often this entry's `update()` function runs. Values below 16 ms are clamped. |
+| `noctalia.log(msg)` | nothing | Writes a message to Noctalia's log with this plugin's script context. |
+| `noctalia.isDarkMode()` | bool | Returns whether the active theme mode is dark. |
+| `noctalia.focusedOutputName()` | string or `nil` | Returns the focused output's connector name, falling back to the preferred interactive output when needed. |
+| `noctalia.getConfig(key)` | setting value or `nil` | Reads a declared plugin or entry setting. Undeclared keys log a warning and return `nil`. |
 
-`wallpaperDirectory()` returns the resolved global wallpaper folder for the current theme mode (light/dark), or `nil`
-when unset. Paths are already expanded — use them for download targets or to mirror built-in wallpaper behavior.
+## Outputs, wallpaper, and panels
 
-`outputs()` returns the connected outputs (logical geometry, DRM connector `name`, and which one is `focused`) —
-the connector name matches what compositors and tools like `mpvpaper` expect. A `[[service]]` may define a global
-`onOutputsChanged()` function, called whenever the output set or geometry changes, to reconcile per-output work.
-`setWallpaperEnabled(connector, false)` tears down Noctalia's own wallpaper surface on that output (so an external
-source can draw there) and `true` restores it; the suppression is runtime-only and clears on restart.
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `noctalia.outputs()` | array | Returns connected outputs as `{ name, description, width, height, x, y, scale, focused }` tables. |
+| `noctalia.setWallpaperEnabled(connector, enabled)` | nothing | Enables or disables Noctalia's own wallpaper surface on one output. This is runtime-only and clears on restart. |
+| `noctalia.setWallpaper(path)` | nothing | Applies and persists a wallpaper image on every output. |
+| `noctalia.setWallpaper(connector, path)` | nothing | Applies and persists a wallpaper image on one output. |
+| `noctalia.wallpaperDirectory()` | string or `nil` | Returns the resolved wallpaper folder for the current theme mode, or `nil` when unset. |
+| `noctalia.togglePanel("author/plugin:panel")` | nothing | Opens or closes a plugin panel by full entry id. |
 
-`setWallpaper(path)` applies and persists an image as the wallpaper, exactly like the wallpaper panel — with one
-argument it targets every output, or pass `setWallpaper(connector, path)` for a single output. `togglePanel(id)` opens
-or closes a panel by its full entry id (`author/plugin:panel`). Prefer these over shelling out to the `noctalia` CLI:
-they run in-process, with no subprocess or IPC round-trip.
+`outputs()` uses the DRM connector name in `name`; that is the same connector string expected by compositor tools such
+as `mpvpaper`. A `[[service]]` may also define `onOutputsChanged()`, which Noctalia calls whenever the output set or
+geometry changes.
 
-`json.*` and `string.*` are synchronous pure transforms (no callback), unlike HTTP and filesystem. Prefer
-`string.urlEncode` when building query strings for `http`/`download` rather than hand-rolling percent-encoding.
-Filesystem and HTTP run safely off the UI thread; results arrive via callbacks. `runAsync` runs a command to completion
-and calls its callback once with the output; `runStream` runs a long-lived command and calls `onLine(line)` for each
-output line as it arrives — the process is terminated automatically when the script reloads or the widget is removed.
+`setWallpaper(path)` behaves like the built-in wallpaper panel. Prefer it and `togglePanel(id)` over shelling out to the
+`noctalia` CLI from a plugin; the API path runs in-process and avoids an IPC round trip.
+
+## Time, notifications, and clipboard
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `noctalia.formatTime(pattern)` | string | Formats the current local time with the same tokens as Noctalia clock and filename settings. |
+| `noctalia.formatTime(pattern, unixSeconds)` | string | Formats a specific Unix timestamp in local time. |
+| `noctalia.notify(title, body)` | nothing | Shows an informational notification. `body` is optional. |
+| `noctalia.notifyError(title, body)` | nothing | Shows an error notification. `body` is optional. |
+| `noctalia.copyToClipboard(text, mime)` | bool | Copies text to the clipboard with an explicit MIME type, for example `"text/plain"` or `"text/uri-list"`. |
+
+`%s` in `formatTime()` expands to Unix epoch seconds.
+
+## Subprocesses and environment
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `noctalia.runAsync(cmd)` | bool | Starts a detached shell command and returns whether it launched. No output is captured. |
+| `noctalia.runAsync(cmd, cb)` | bool | Runs a shell command with output capture, then calls `cb(result)`. |
+| `noctalia.runStream(cmd, onLine)` | bool | Runs a long-lived shell command and calls `onLine(line)` for each stdout line. |
+| `noctalia.runInTerminal(cmd)` | bool | Starts a shell command in the configured terminal. |
+| `noctalia.commandExists(name)` | bool | Checks whether an executable is available on `PATH`. |
+| `noctalia.processMatches(cb, ...needles)` | bool | Asynchronously checks running processes; `cb(matched)` receives a boolean. |
+| `noctalia.flatpakAppInstalled(id)` | bool | Checks whether a Flatpak app id is installed. |
+| `noctalia.portalAvailable()` | bool | Checks whether the desktop portal is available. |
+| `noctalia.getenv(name)` | string or `nil` | Reads an environment variable. |
+| `noctalia.expandPath(path)` | string | Expands a path such as `~/Pictures` to an absolute user path. |
+
+`runAsync(cmd, cb)` calls `cb(result)` once with:
+
+```lua
+{
+  exitCode = 0,
+  stdout = "...",
+  stderr = "...",
+  timedOut = false,
+  stdoutTruncated = false,
+  stderrTruncated = false,
+}
+```
+
+`runStream()` is meant for long-running processes. The runtime terminates active streams when the script reloads, the
+entry is removed, or Noctalia stops the plugin.
+
+## Filesystem
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `noctalia.readFile(path)` | string, or `nil, err` | Reads a file as bytes. |
+| `noctalia.writeFile(path, content)` | bool, optional error | Writes a file, replacing existing contents. |
+| `noctalia.fileExists(path)` | bool | Checks whether a path exists. |
+| `noctalia.listDir(path)` | array, or `nil, err` | Lists filenames in a directory. |
+| `noctalia.pluginDir()` | string or `nil` | Returns this plugin's runtime directory. |
+
+Filesystem paths resolve as follows: `~` expands to `$HOME`, absolute paths are used as-is, and relative paths resolve
+against the plugin's own directory. Plugins are trusted code, so these helpers are not sandboxed.
+
+## HTTP and downloads
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `noctalia.http(request, cb)` | bool | Starts an async HTTP request and calls `cb(response)`. |
+| `noctalia.download(url, dest, cb)` | bool | Downloads a URL to a file and calls `cb(ok)` with a boolean. |
+
+`request` is a table:
+
+```lua
+{
+  url = "https://example.com",
+  method = "GET",
+  body = "",
+  headers = { "Accept: application/json" },
+  basic_username = "user",
+  basic_password = "pass",
+  follow_redirects = false,
+}
+```
+
+Only `url` is required. `http()` calls `cb(response)` once with:
+
+```lua
+{
+  ok = true,
+  status = 200,
+  body = "...",
+}
+```
+
+`download()` resolves `dest` like other filesystem paths, so a relative destination writes inside the plugin directory.
+
+## Translations and data helpers
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `noctalia.tr(key)` | string | Looks up a translated string from `translations/<lang>.json`, falling back to the key. |
+| `noctalia.tr(key, subst)` | string | Looks up a string and replaces `{name}` placeholders from a table. |
+| `noctalia.trp(key, count)` | string | Plural translation helper; prefers `<key>.one` or `<key>.other`, then the bare key. |
+| `noctalia.trp(key, count, subst)` | string | Plural translation helper with substitutions. `count` is also available as `{count}`. |
+| `noctalia.json.decode(str)` | value, or `nil, err` | Parses JSON into Luau values. |
+| `noctalia.json.encode(value)` | string, or `nil, err` | Encodes a Luau value as compact JSON. |
+| `noctalia.json.encode(value, true)` | string, or `nil, err` | Encodes a Luau value as pretty JSON. |
+| `noctalia.string.trim(str)` | string | Trims leading and trailing whitespace. |
+| `noctalia.string.urlEncode(str)` | string | Percent-encodes a string for use in URLs. |
+| `noctalia.string.urlDecode(str)` | string | Decodes percent-encoded URL text. |
+| `noctalia.fuzzyScore(pattern, text)` | number or `nil` | Scores a fuzzy match with Noctalia's native matcher. `nil` means no match. |
+
+`json.*` and `string.*` are synchronous pure transforms. Prefer `string.urlEncode()` when building query strings for
+`http()` or `download()`.
 
 ## Sharing state across entries
 
 Entries are isolated VMs — they don't share Lua memory. Instead they exchange **plain values** through a per-plugin
-state channel: `noctalia.state.set(key, value)`, `noctalia.state.get(key)`, and `noctalia.state.watch(key, fn)` (fires
-when the value changes). Values are **copied** across entries, so they must be plain data — strings, numbers, booleans,
-and tables of those (not functions). A typical pattern is a `[[service]]` publishing data that the widget and shortcut
-watch.
+state channel:
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `noctalia.state.set(key, value)` | nothing | Publishes a plain value for other entries in the same plugin. |
+| `noctalia.state.get(key)` | value or `nil` | Reads the latest value for a key. |
+| `noctalia.state.watch(key, fn)` | nothing | Calls `fn(value)` whenever the key changes. |
+
+Values are **copied** across entries, so they must be plain data — strings, numbers, booleans, and tables of those (not
+functions). A typical pattern is a `[[service]]` publishing data that the widget and shortcut watch.
 
 ```lua
 -- ticker.luau (service)
