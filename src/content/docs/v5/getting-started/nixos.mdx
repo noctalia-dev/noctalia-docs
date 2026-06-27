@@ -8,10 +8,6 @@ sidebar:
 import SettingsReference from '../../../../components/SettingsReference.astro';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-:::note
-Currently noctalia v5 is only available using nix flakes.
-:::
-
 :::caution
 To make Noctalia's wifi, bluetooth, power-profile, and battery feature available, please ensure the following NixOS options are enabled:
 - `networking.networkmanager.enable`
@@ -20,92 +16,244 @@ To make Noctalia's wifi, bluetooth, power-profile, and battery feature available
 - `services.upower.enable`
 :::
 
-## Nix Flakes
-To install Noctalia using flakes, first [add the flake input](#add-flake-input). Then you can [install the package](#install-package) directly or use either the [Home Manager](#home-manager) or [Hjem](#hjem) modules.
+## Installation
+Noctalia v5 can be installed both with and without flakes. As of writing, noctalia v5 does not yet exist in nixpkgs, meaning you will have to compile from source or use the [binary cache](#binary-cache).
 
-### Adding the Flake input {#add-flake-input}
+To install Noctalia v5, first [add the input](#add-input) using your preferred input-pinning method. Then you can [install the package](#install-package) directly or use either the [Home Manager](#home-manager) or [Hjem](#hjem) modules.
 
-Add Noctalia to your flake inputs:
+### Adding the input {#add-input}
 
-```nix
-# flake.nix
-{
-  inputs = {
-    noctalia = {
-      url = "github:noctalia-dev/noctalia";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-  };
-}
-```
+<Tabs>
+  <TabItem label="flakes">
+    Add Noctalia to your flake inputs:
+
+    ```nix
+    # flake.nix
+    {
+      inputs = {
+        noctalia = {
+          url = "github:noctalia-dev/noctalia";
+          inputs.nixpkgs.follows = "nixpkgs"; # this line is optional, prevents downloading two versions of nixpkgs but disables cache
+        };
+      };
+    }
+    ```
+
+    :::note
+    For flakes/tack instructions, we assume you are passing in `inputs` through `specialArgs` or equivalent. 
+    :::
+  </TabItem>
+  <TabItem label="tack">
+    Add Noctalia to your tack inputs:
+    ```
+    tack add noctalia github:noctalia-dev/noctalia
+    ```
+
+    If you want to use the cache, make sure to disable any sort of following for Noctalia's nixpkgs input.
+
+    :::note
+    For flakes/tack instructions, we assume you are passing in `inputs` through `specialArgs` or equivalent. 
+    :::
+  </TabItem>
+  <TabItem label="npins">
+    Add Noctalia to your npins sources:
+    ```
+    npins add github noctalia-dev noctalia --branch main
+    ```
+
+    ```nix
+    # configuration.nix
+    { pkgs, ... }:
+    let
+      noctalia = import (import ./npins).noctalia {
+        inherit pkgs; # this line is optional, prevents downloading two versions of nixpkgs but disables cache
+      };
+    in
+      # see installation below
+    ```
+  </TabItem>
+  <TabItem label="tarball">
+    Add Noctalia directly using `builtins.fetchTarball`.
+    With pinning:
+    ```nix
+    # configuration.nix
+    { pkgs, ... }:
+    let
+      noctalia-src = let
+        commit = ""; # replace this with an actual commit id or tag
+      in
+        fetchTarball {
+          url = "https://github.com/noctalia-dev/noctalia/archive/${commit}.tar.gz";
+          sha256 = ""; # replace this with hash from nix build output, or by using `nix-prefetch-url --unpack`
+        };
+      
+      noctalia = import noctalia-src {
+        inherit pkgs; # this line is optional, prevents downloading two versions of nixpkgs but disables cache
+      };
+    in
+      # see installation below
+    ```
+
+    Without pinning (not recommended):
+    ```nix
+    # configuration.nix
+    { pkgs, ... }:
+    let
+      noctalia-src = fetchTarball "https://github.com/noctalia-dev/noctalia/archive/main.tar.gz";
+
+      noctalia = import noctalia-src {
+        inherit pkgs; # this line is optional, prevents downloading two versions of nixpkgs but disables cache
+      };
+    in
+      # see installation below
+    ```
+  </TabItem>
+</Tabs>
 
 ### Installing the Package {#install-package}
 
-Add the package to your system packages or equivalent:
-```nix
-# configuration.nix
-{ inputs, pkgs, ... }:
-{
-  environment.systemPackages = [
-    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
-  ];
-}
-```
+Note that both the Home Manager and Hjem modules install the package for you, so you can omit this step.
+
+<Tabs>
+  Add the package to your system packages or equivalent:
+  <TabItem label="flakes/tack">
+    ```nix
+    # configuration.nix
+    { inputs, pkgs, ... }:
+    {
+      environment.systemPackages = [
+        inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+      ];
+    }
+    ```
+  </TabItem>
+  <TabItem label="npins/tarball">
+    ```nix
+    # configuration.nix
+    let
+      # see adding the input above
+    in {
+      environment.systemPackages = [
+        noctalia.package
+      ];
+    }
+    ```
+  </TabItem>
+</Tabs>
 
 ### Home Manager Module {#home-manager}
 
-The flake also exposes a Home Manager module, which allows you to configure Noctalia's settings [(that you would otherwise put in `~/.config/noctalia/`)](/v5/configuration).
+The Home Manager module allows you to configure Noctalia's settings [(that you would otherwise put in `~/.config/noctalia/`)](/v5/configuration) using nix instead of toml, or allows you to link an existing toml file. It is optional.
 
-```nix
-{ inputs, ... }:
-{
-  home-manager.users.drfoobar = {
-    imports = [
-      inputs.noctalia.homeModules.default
-    ];
+<Tabs>
+  <TabItem label="flakes/tack">
+    ```nix
+    { inputs, ... }:
+    {
+      home-manager.users.drfoobar = {
+        imports = [
+          inputs.noctalia.homeModules.default
+        ];
 
-    programs.noctalia = {
-      enable = true;
+        programs.noctalia = {
+          enable = true;
 
-      settings = { # This may also be a string or path to a .toml file.
-        theme = {
-          mode = "dark";
-          source = "builtin";
-          builtin = "Catppuccin";
-        };
+          settings = { # This may also be a string or path to a .toml file.
+            theme = {
+              mode = "dark";
+              source = "builtin";
+              builtin = "Catppuccin";
+            };
 
-        wallpaper = {
-          enabled = true;
-          default.path = "/path/to/wallpapers/wallpaper.png";
+            wallpaper = {
+              enabled = true;
+              default.path = "/path/to/wallpapers/wallpaper.png";
+            };
+          };
         };
       };
-    };
-  };
-}
-```
+    }
+    ```
+  </TabItem>
+  <TabItem label="npins/tarball">
+    ```nix
+    let
+      # see adding the input above
+    in {
+      home-manager.users.drfoobar = {
+        imports = [
+          noctalia.homeModule
+        ];
+
+        programs.noctalia = {
+          enable = true;
+
+          settings = { # This may also be a string or path to a .toml file.
+            theme = {
+              mode = "dark";
+              source = "builtin";
+              builtin = "Catppuccin";
+            };
+
+            wallpaper = {
+              enabled = true;
+              default.path = "/path/to/wallpapers/wallpaper.png";
+            };
+          };
+        };
+      };
+    }
+    ```
+  </TabItem>
+</Tabs>
 
 ### Hjem Module {#hjem}
 
 For those using Hjem instead of Home Manager, a Hjem module is also available.
 
-```nix
-{ inputs, ... }:
-{
-  hjem = {
-    extraModules = [
-      inputs.noctalia.hjemModules.default
-    ];
+<Tabs>
+  <TabItem label="flakes/tack">
+    ```nix
+    { inputs, ... }:
+    {
+      hjem = {
+        extraModules = [
+          inputs.noctalia.hjemModules.default
+        ];
 
-    users.drfoobar = {
-      programs.noctalia = {
-        enable = true;
-        
-        settings = { ... };
+        users.drfoobar = {
+          programs.noctalia = {
+            enable = true;
+            
+            settings = { ... };
+          };
+        };
       };
-    };
-  };
-}
-```
+    }
+    ```
+  </TabItem>
+  <TabItem label="npins/tarball">
+    ```nix
+    let
+      # see adding the input above
+    in {
+      hjem = {
+        extraModules = [
+          noctalia.hjemModule
+        ];
+
+        users.drfoobar = {
+          programs.noctalia = {
+            enable = true;
+            
+            settings = { ... };
+          };
+        };
+      };
+    }
+    ```
+  </TabItem>
+</Tabs>
 
 ### Systemd Service {#systemd}
 
@@ -120,6 +268,12 @@ When using the service, it is recommended to enable `launch_apps_as_systemd_serv
 Pre-built binaries are available on [Cachix](https://app.cachix.org/cache/noctalia), so you can skip compiling locally.
 
 You can configure the substituter either in your NixOS config, flake, or `/etc/nix/nix.conf`:
+
+:::caution
+To use the binary cache, you have to omit `inputs.nixpkgs.follows` from the Noctalia input with flakes/tack or avoid `inherit pkgs;` with npins/tarball.
+:::
+
+You can add the cache either to your flake, nixos configuration, or `/etc/nix/nix.conf`.
 
 <Tabs>
   <TabItem label="configuration.nix">
@@ -169,11 +323,6 @@ To avoid this, the [`cachix`](https://github.com/noctalia-dev/noctalia/tree/cach
     ```
   </TabItem>
   <TabItem label="tarball">
-    ```nix
-    noctalia-src = fetchTarball {
-      url = "https://github.com/noctalia-dev/noctalia/archive/cachix.tar.gz";
-      sha256 = ""; # replace with hash from nix build output
-    };
-    ```
+    Make sure not to update your tarball to a commit eariler than the latest commit on the cachix branch.
   </TabItem>
 </Tabs>
