@@ -1,0 +1,141 @@
+---
+title: Manifest & Settings
+description: Define plugin identity, entries, and settings in plugin.toml.
+sidebar:
+  label: Manifest & Settings
+  order: 2
+---
+
+:::caution[Experimental — under heavy development]
+The plugin system is under **heavy development** and the manifest format, APIs, and behavior are subject to breaking
+changes at any time.
+:::
+
+## The manifest
+
+```toml
+id           = "me/hello"     # "<author>/<plugin>" — globally unique
+name         = "Hello"
+version      = "1.0.0"
+min_noctalia = "5.0.0"        # mandatory: minimum Noctalia version
+author       = "me"
+license      = "MIT"          # optional; defaults to MIT
+deprecated   = false          # optional; defaults to false
+icon         = "puzzle"       # optional
+description  = "A friendly greeter."
+tags         = ["demo"]       # optional, for catalog search
+dependencies = ["slurp"]      # optional, external tools/packages users must install
+```
+
+`name` and `min_noctalia` are required — a manifest without either is rejected. `min_noctalia` gates enable, the
+catalog badge, and the post-update safety rollback.
+
+`license` defaults to `MIT` when omitted. `deprecated = true` marks the plugin as deprecated in plugin listings; it is a
+soft status marker, not a compatibility gate.
+
+`dependencies` is optional metadata for external packages or tools the plugin expects the user to have installed. It is
+shown in plugin listings but does not block enabling the plugin.
+
+## Entries
+
+A plugin ships one or more entries. Each declares an `id` (unique within the plugin), the `entry` `.luau` file, and an
+optional settings schema. The supported entry kinds:
+
+| Table | Kind | Runs |
+|-------|------|------|
+| `[[widget]]` | Bar widget | Placed on a bar; ticks + handles clicks/IPC |
+| `[[shortcut]]` | Control-center tile | A toggle tile in the control center |
+| `[[launcher_provider]]` | Launcher provider | Answers launcher queries with results, behind a prefix |
+| `[[desktop_widget]]` | Desktop widget | A tile on the desktop; declares its UI as a `ui.*` tree |
+| `[[panel]]` | Panel | A pop-up surface; declares its UI as a `ui.*` tree, opened by id |
+| `[[service]]` | Headless service | Background loop, no UI — feeds the plugin's other entries |
+
+An entry is addressed `<author>/<plugin>:<entry-id>` — e.g. a bar widget is configured with
+`type = "me/hello:hello"`.
+
+```toml
+[[widget]]
+id    = "hello"
+entry = "widget.luau"
+
+  [[widget.setting]]
+  key     = "label"
+  type    = "string"
+  label   = "Label"
+  default = "Hello"
+
+[[service]]
+id    = "ticker"
+entry = "ticker.luau"
+```
+
+## Settings schema
+
+A setting becomes a typed control in the settings GUI and is read back via `noctalia.getConfig(key)` (or
+`barWidget.getConfig(key)` in a widget — same value). Only declared keys resolve — reading an undeclared key logs a loud
+warning and returns `nil` (no silent fallbacks).
+
+Settings come in two scopes:
+
+- **Plugin-level** — a `[[setting]]` block at the **manifest root**. One shared set for the whole plugin, edited under
+  **Settings → Plugins** (the gear on the plugin's row), and seeded into **every** entry — widget, shortcut, panel, and
+  service. Use this for configuration the service or panel needs.
+- **Widget entry settings** — a `[[<entry>.setting]]` block under a `[[widget]]`. These are edited with the bar widget's
+  own settings. Use this for widget presentation tweaks; they are not a second enabled plugin instance.
+- **Panel entry settings** — a `[[panel.setting]]` block under a `[[panel]]`. These also appear in **Settings → Plugins**
+  (the gear on the plugin row) and are read with `panel.getConfig(key)` in the panel script.
+
+When both declare the same key, the widget entry value wins for that widget. Both scopes use the same field schema:
+
+```toml
+# Plugin-level: shared by widget + shortcut + service, edited in Settings → Plugins.
+[[setting]]
+key     = "interval"
+type    = "int"
+label_key = "settings.interval.label"
+description_key = "settings.interval.description"
+default = 5
+
+[[widget]]
+id    = "hello"
+entry = "widget.luau"
+
+  # Widget entry setting: this bar widget only.
+  [[widget.setting]]
+  key     = "label"
+  type    = "string"
+  default = "Hello"
+```
+
+You can define multiple named bar widgets with the same plugin entry and different widget settings:
+
+```toml
+[widget.hello-main]
+type  = "me/hello:hello"
+label = "Main"
+
+[widget.hello-short]
+type  = "me/hello:hello"
+label = "Short"
+```
+
+| Field | Notes |
+|-------|-------|
+| `key` | required; the config key |
+| `type` | `string`, `string_list`, `bool`, `int`, `double`, `select`, `file`, `folder`, `glyph`, `color` |
+| `label` / `description` | literal text shown in the settings GUI |
+| `label_key` / `description_key` | translation keys resolved from `translations/en.json` and the active language file; do not combine with the literal field |
+| `default` | seeded value (must match the type) |
+| `min` / `max` | for `int` / `double` |
+| `options` | for `select`: array of `{ value, label }` or `{ value, label_key }` |
+| `visible_when` | `{ key = "other_key", values = ["true"] }` — conditional visibility |
+| `advanced` | hide behind the "show advanced" toggle |
+
+Translated setting labels live in the same optional `translations/<lang>.json` files as script strings:
+
+```json
+{
+  "settings.interval.label": "Refresh seconds",
+  "settings.interval.description": "How often the service refreshes data."
+}
+```

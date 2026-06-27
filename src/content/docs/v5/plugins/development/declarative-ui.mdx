@@ -1,0 +1,170 @@
+---
+title: Declarative UI
+description: Render desktop widgets and panels with shared ui.* trees.
+sidebar:
+  label: Declarative UI
+  order: 4
+---
+
+:::caution[Experimental — under heavy development]
+The plugin system is under **heavy development** and the manifest format, APIs, and behavior are subject to breaking
+changes at any time.
+:::
+
+Desktop widgets and panels do not patch a fixed control. They describe their UI as a retained `ui.*` tree; Noctalia
+diffs each render against the previous tree and updates native controls in place.
+
+## `desktopWidget.*` — declarative desktop widget UI {#desktopwidget--declarative-desktop-widget-ui}
+
+A desktop widget hands its tree to `desktopWidget.render(tree)`. Build trees with the `ui.*` constructors (available in
+every desktop-widget script); each takes a props table and an optional children array:
+
+`render(tree)` · `setWantsSecondTicks(bool)` · `setNeedsFrameTick(bool)` · `getConfig(key)`
+
+```lua
+local color = desktopWidget.getConfig("color")
+
+function update()
+  desktopWidget.setWantsSecondTicks(true) -- tick update() on second boundaries
+  desktopWidget.render(ui.column({ gap = 10, align = "center" }, {
+    ui.label({ text = os.date("%H:%M:%S"), fontSize = 32, fontWeight = "bold", color = color }),
+    ui.row({ gap = 8 }, {
+      ui.button({ text = "Ping", variant = "primary", onClick = "ping" }),
+    }),
+  }))
+end
+
+function ping()
+  noctalia.notify("Desktop widget", "button clicked")
+end
+```
+
+## Shared `ui.*` controls
+
+The available controls and their props (sizes are logical px, scaled with the surface). **Desktop widgets and panels
+share this vocabulary** — panels additionally use the interactive controls below (`ui.input`, `ui.select`, etc.).
+
+| Constructor | Props |
+|-------------|-------|
+| `ui.column` / `ui.row` | `gap`, `padding`, `paddingH`, `paddingV`, `align` (`start`/`center`/`end`/`stretch`), `justify` (`start`/`center`/`end`/`space_between`), `fill`, `radius`, `border`, `borderWidth`, `minWidth`, `minHeight` |
+| `ui.scroll` | a vertically scrolling container; same layout props as a column plus `fill`, `radius`, `border`, `borderWidth` |
+| `ui.label` | `text`, `fontSize`, `color`, `fontWeight` (`thin`…`heavy`), `maxWidth`, `maxLines`, `textAlign` |
+| `ui.glyph` | `name` (Tabler/Nerd-Font glyph), `size`, `color` |
+| `ui.image` | `path` (plugin-relative, `~`, or absolute), `width`, `height`, `radius`, `fit` (`contain`/`cover`/`stretch`), `border`, `borderWidth`, `onClick` |
+| `ui.box` | `fill`, `radius`, `border`, `borderWidth`, `softness`, `width`, `height`, `onClick` |
+| `ui.separator` | `thickness`, `color`, `spacing`, `orientation` (`auto`/`horizontal`/`vertical`) |
+| `ui.spacer` | flexible filler (use `flexGrow`) |
+| `ui.progress` | `progress` (0–1), `fill`, `track`, `radius`, `width`, `height` |
+| `ui.button` | `text`, `glyph`, `fontSize`, `glyphSize`, `variant` (`default`/`primary`/`secondary`/`destructive`/`outline`/`ghost`), `enabled`, `selected`, `onClick`, `onRightClick` |
+| `ui.graph` | `values` / `values2` (arrays of 0–1 numbers), `color` / `color2`, `lineWidth`, `fillOpacity`, `width`, `height` |
+| `ui.toggle` | `checked` (bool), `enabled`, `onChange` |
+| `ui.slider` | `min`, `max`, `step`, `value`, `enabled`, `onChange`, `onDragEnd` |
+| `ui.select` | `options` (array of strings), `selectedIndex`, `placeholder`, `enabled`, `width`, `height`, `onChange` |
+| `ui.input` | `value` (initial text only — see below), `placeholder`, `fontSize`, `password` (bool), `enabled`, `onChange`, `onSubmit` |
+
+Every control also accepts `width`, `height`, `flexGrow`, `opacity`, and `visible`. Colors are a palette role token
+(`primary`, `on_surface`, …) or a hex value (`#rrggbb`). An unknown control type or prop is logged and skipped — typos
+surface in the log instead of failing silently.
+
+- **Layout default**: `ui.column` / `ui.row` / `ui.scroll` **stretch** their children across the cross axis (a column
+  fills its width, a row fills its height), like CSS flexbox. Override per node with `align` — e.g. a row of
+  vertically-centered items uses `align = "center"`.
+- **Callbacks**: a callback prop names a **global function in your script** (not a closure). `onClick = "name"` fires on
+  a button click; `onChange = "name"` fires when a toggle/slider/select/input value changes (the value is passed to the
+  global as a string — `"true"`/`"false"` for a toggle, a number for a slider, the text for an input, the index for a
+  select); `onSubmit` fires when the user presses Enter in an input.
+- **Controlled vs. uncontrolled**: `toggle`/`slider`/`select` are **value-driven** — pass the current value on every
+  render and update it from the callback. `ui.input` is **uncontrolled**: `value` seeds the field once, then the host
+  owns the text as the user types — re-rendering never overwrites it. Read edits through `onChange`/`onSubmit`, and give
+  the input a stable `key` so it keeps its text across renders.
+- **Identity**: give list children a `key` prop so reordering reuses the same native controls.
+- **Images**: `ui.image` loads **local files only** — download remote previews with `noctalia.download(url, dest, cb)`
+  first, then pass the saved path. `onClick` on `ui.image` and `ui.box` wraps the visual in a click target (thumbnail
+  grids, placeholder tiles).
+- **Glyph-only buttons**: when only `glyph` is set, any previous `text` is cleared so retained buttons do not keep
+  stale labels across re-renders.
+- **Ticks**: `setWantsSecondTicks(true)` runs `update()` on second boundaries (clocks/timers).
+  `setNeedsFrameTick(true)` additionally delivers `onFrameTick(deltaMs)` every frame for continuous animation — frames
+  are coalesced, a slow script only ever sees the latest one.
+- **Position is host-owned**: the user places, sizes, and rotates the tile in the desktop-widgets editor; the script
+  only renders content and reads its declared settings.
+
+The reference implementation is the official `noctalia/timer` plugin — a countdown timer with start/pause/reset
+buttons and a progress bar.
+
+## `panel.*` — declarative panel UI {#panel--declarative-panel-ui}
+
+A panel is a pop-up surface that describes its UI as a `ui.*` tree, exactly like a desktop widget — but it is
+**opened by id** rather than placed, and it can hold the **interactive** controls (`ui.input`, `ui.select`,
+`ui.slider`, `ui.toggle`, `ui.scroll`) because it takes keyboard focus while open. Render in `onOpen` (and again from
+any callback that changes state):
+
+`render(tree)` · `close()` · `setWantsSecondTicks(bool)` · `getConfig(key)`
+
+Panel **size is host-owned**: declare `width` and `height` (logical px) on the `[[panel]]` entry, so the surface is the
+same size on every open. There is no `setSize` at runtime.
+
+**Placement** matches built-in shell panels (`attached` merges with the bar, `floating` opens detached). The host
+injects three standard settings for every `[[panel]]` entry — you do **not** declare them as `[[panel.setting]]` unless
+you need a custom key. They appear in **Settings → Plugins** (gear on the plugin row) with the same controls as built-in
+panels: a segmented **Attached / Floating** toggle, a **Position** dropdown (only when floating), and **Open Near
+Click**.
+
+| `[[panel]]` manifest key | `plugin_settings` key | Notes |
+|--------------------------|-------------------------|-------|
+| `placement` | `<entry>_placement` | `attached` or `floating` (default `floating`) |
+| `position` | `<entry>_position` | `auto`, `center`, or a screen anchor; only applies when floating |
+| `open_near_click` | `<entry>_open_near_click` | Open near the bar widget that toggled the panel (default `false`) |
+
+Declare defaults on the `[[panel]]` table; users override through the plugin settings GUI or
+`[plugin_settings."author/plugin"]`. Position and open-near-click follow the same rules as built-in panels (pinned
+screen positions disable open-near-click).
+
+Official defaults: `noctalia/example:panel` ships `floating` + `center`; `noctalia/wallhaven:browser` ships `attached` +
+`auto`.
+
+```toml
+[[panel]]
+id = "settings"
+entry = "panel.luau"
+width = 420
+height = 410
+placement = "floating"
+position = "center"
+open_near_click = false
+```
+
+```toml
+[plugin_settings."noctalia/wallhaven"]
+browser_placement = "floating"
+browser_position = "bottom_left"
+```
+
+```lua
+local enabled = true
+
+local function render()
+  panel.render(ui.column({ gap = 16 }, {
+    ui.row({ align = "center", justify = "space_between" }, {
+      ui.label({ text = "My Panel", fontSize = 16, fontWeight = "bold", color = "primary", flexGrow = 1 }),
+      ui.button({ glyph = "close", onClick = "onCloseClicked" }),
+    }),
+    ui.toggle({ checked = enabled, onChange = "onToggle" }),
+  }))
+end
+
+function onOpen(context) render() end   -- context is the optional string from `panel-open <id> [context]`
+function onToggle(value) enabled = value == "true"; render() end
+function onCloseClicked() panel.close() end
+```
+
+From a widget or shortcut script, toggle a panel by its full entry id with `noctalia.togglePanel("author/plugin:panel")`.
+The same panel can also be opened, closed, or toggled externally over IPC:
+
+```sh
+noctalia msg panel-toggle noctalia/example:panel
+```
+
+The reference implementation is the `panel` entry of the official `noctalia/example` plugin — a settings-style panel
+exercising every interactive control. `noctalia/wallhaven:browser` is a network-backed panel (thumbnail grid, filters,
+download + apply via `noctalia.wallpaperDirectory()` and `noctalia.setWallpaper()`).

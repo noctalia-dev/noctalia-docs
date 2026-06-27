@@ -175,7 +175,11 @@ export default defineConfig({
             },
             {
               label: "Plugins",
-              autogenerate: { directory: "v5/plugins" },
+              items: [
+                { label: "Using Plugins", link: "v5/plugins/" },
+                { label: "Official Plugins", link: "v5/plugins/official-plugins/" },
+                { label: "Plugin Development", autogenerate: { directory: "v5/plugins/development" } },
+              ],
             },
             {
               label: "Greeter",
