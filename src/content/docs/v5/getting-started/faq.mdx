@@ -19,11 +19,13 @@ See the [Installation guide](/v5/getting-started/installation/) for distro-speci
 
 </FaqItem>
 
-<FaqItem question="Will Noctalia v4 automatically upgrade to v5?">
+<FaqItem question="Will Noctalia v4 automatically upgrade to v5, and can I keep both installed?">
 
-No. Noctalia v5 is a fresh install, not an automatic upgrade from the Quickshell-based v4 line. It ships as a separate package, your package manager will not replace v4 with v5, and v4 settings are not migrated.
+No. Noctalia v5 is a fresh install, not an automatic upgrade from the Quickshell-based v4 line. It ships as a separate package, your package manager will not replace v4 with v5, and v4 settings are not migrated into v5.
 
-If you are moving from v4, expect to recreate your compositor keybinds for opening the launcher, panels, and other Noctalia commands. The good part is that v5 ships with sane defaults, so you can get started quickly and customize from there.
+On most distributions, you can keep v4 installed while you try v5. The packages do not conflict, so you can install both and run whichever version you want. Their configuration files do not conflict either: v4 config is JSON-only, v5 config is TOML, and their config file names are different. v5 may write separate state files, but its configuration is TOML.
+
+The main thing you need to adjust is your **compositor** keybinds. Keybinds live in your compositor config, not in Noctalia's package, so update the bindings that launch the Noctalia launcher, panels, settings UI, or other commands when switching between v4 and v5.
 
 See the [Installation guide](/v5/getting-started/installation/) and [Running Noctalia](/v5/getting-started/running-the-shell/) for setup steps.
 

@@ -11,6 +11,14 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 The development version may be less stable than the official release. Use this version if you want to test the latest features or contribute to development.
 :::
 
+:::caution[Moving from v4?]
+Noctalia v5 is a fresh install, not an automatic upgrade from the Quickshell-based v4 line. There is no in-place migration path for v4 settings, but you do not have to retire v4 to try v5.
+
+On most distributions, v4 and v5 can be installed at the same time, and you can run whichever version you want. The packages do not conflict with each other, and Noctalia's configuration files do not conflict either: v4 config is JSON-only, v5 config is TOML, and their config file names are different.
+
+Only your **compositor** keybinds need attention. Keybinds live in your compositor config, so update the bindings that launch the Noctalia launcher, panels, settings UI, or other commands when switching between v4 and v5.
+:::
+
 Noctalia v5 is available on the following distributions:
 
 - [Arch Linux](#arch)
@@ -116,6 +124,10 @@ v5 will only be available for **Tumbleweed** and **Slowroll**. **Leap 16.0** is 
 ## Gentoo {#gentoo}
 
 Noctalia is available in the [GURU](https://wiki.gentoo.org/wiki/Project:GURU) overlay.
+
+:::caution[Gentoo exception]
+Gentoo cannot currently keep Noctalia v4 and v5 installed at the same time. You still need to mask Noctalia v4 before emerging v5.
+:::
 
 **Step 1**: Enable and sync the overlay as read in [Project:GURU/Information_for_End_Users](https://wiki.gentoo.org/wiki/Project:GURU/Information_for_End_Users).
 
