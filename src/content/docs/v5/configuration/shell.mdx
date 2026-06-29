@@ -377,13 +377,19 @@ variant = "destructive"
 countdown_seconds = 5
 ```
 
-### Greeter sync privilege command
+### Greeter sync
 
-**Settings → Security → Greeter Sync Privilege Command**, or in TOML:
+**Settings → Security → Auto-Sync Greeter** and **Settings → Security → Greeter Sync Privilege Command**, or in TOML:
 
 ```toml
 [shell.greeter_sync]
+auto_sync = true
 privilege_command = "ghostty -e pkexec"
 ```
 
-Replaces the default `pkexec` or `run0` prefix for **Sync Now**. Noctalia appends the `noctalia-greeter-apply-appearance` path and staging directory. Leave empty for the default escalator. See [Noctalia Greeter](/v5/greeter/) for seatd and polkit notes.
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `auto_sync` | `bool` | `false` | Automatically sync the greeter whenever wallpaper, colors, or theme mode change. |
+| `privilege_command` | `string` | `""` | Replaces the default `pkexec` or `run0` prefix for **Sync Now**. Noctalia appends the `noctalia-greeter-apply-appearance` path and staging directory. Leave empty for the default escalator. |
+
+See [Noctalia Greeter](/v5/greeter/) for seatd and polkit notes.
