@@ -292,6 +292,8 @@ Shows PipeWire output (speaker) or input (microphone) volume and mute state.
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `device` | string | `"output"` | Audio target: `"output"` (default sink) or `"input"` (default source / microphone) |
+| `glyph` | string | `""` | Custom icon glyph for the active state. Leave empty to use the built-in dynamic icons |
+| `mute_glyph` | string | `""` | Icon glyph used when muted or at 0% volume. Leave empty to use the built-in mute icon |
 | `scroll_step` | int | `5` | Percentage change applied on each mouse wheel step (1–25) |
 | `show_label` | bool | `true` | Show the volume percentage next to the glyph (horizontal and vertical bars) |
 | `mute_color` | string | `"error"` | Color role or hex color for the icon and label when muted |
@@ -299,6 +301,8 @@ Shows PipeWire output (speaker) or input (microphone) volume and mute state.
 ```toml
 [widget.volume]
 device = "output"   # output | input
+glyph = ""          # custom active glyph; empty = built-in dynamic icons
+mute_glyph = ""     # custom mute/0% glyph; empty = built-in mute icon
 scroll_step = 10
 show_label = false
 mute_color = "error"
