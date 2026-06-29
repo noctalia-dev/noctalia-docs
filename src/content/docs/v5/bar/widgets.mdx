@@ -228,6 +228,8 @@ System resource monitor. Shows an icon and value for one configurable stat. Mult
 | `glyph` | string | `""` | Custom bar glyph name (Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint). Leave empty to use the icon for the selected stat |
 | `path` | string | `"/"` | Mount path for `disk_pct` (ignored otherwise) |
 | `interface` | string | `""` | Network interface to monitor for `net_rx`/`net_tx`; empty uses the total across all non-loopback interfaces |
+| `network_speed_unit` | string | `"auto"` | Unit for `net_rx`/`net_tx`: `"auto"` (scales between B/s, kB/s, MB/s, GB/s), `"kb"` (always kB/s), or `"mb"` (always MB/s) |
+| `network_speed_compact` | bool | `false` | Use short unit suffixes such as `1.2M` instead of `1.2 MB/s` for `net_rx`/`net_tx` |
 | `display` | string | `"gauge"` | `"gauge"` = icon + vertical fill bar; `"graph"` = icon + sparkline; `"text"` = icon + value |
 | `highlight_color` | string | `"error"` | Color role (or fixed hex) the value tints toward as the stat rises past its activity/critical thresholds. See [System Monitor](/v5/services/system-monitor/). |
 | `show_label` | bool | `true` | Show the text value next to the graph or gauge (always shown in `"text"` mode) |
@@ -281,6 +283,12 @@ path = "/"
 type      = "sysmon"
 stat      = "net_rx"
 interface = "wlan0"
+
+[widget.wifi-upload]
+type                  = "sysmon"
+stat                  = "net_tx"
+network_speed_unit    = "mb"      # auto | kb | mb
+network_speed_compact = true      # show "1.2M" instead of "1.2 MB/s"
 ```
 
 ---
