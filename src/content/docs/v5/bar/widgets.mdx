@@ -96,6 +96,7 @@ Pill styling and `capsule_radius` are ignored when `minimal = true`.
 | `focused_color` | string | `"primary"` | Color role or hex color for the focused workspace pill |
 | `occupied_color` | string | `"secondary"` | Color role or hex color for occupied (non-focused) workspace pills |
 | `empty_color` | string | `"secondary"` | Color role or hex color for empty workspace pills |
+| `focused_output_only` | bool | `false` | Only highlight the active workspace on the monitor that has keyboard or pointer focus; other monitors show their active workspace in the occupied color. |
 | `labels_only_when_occupied` | bool | `false` | Show id/name labels on workspaces with open windows and on the active workspace even when empty; other empty tags stay unlabeled. Requires `display = "id"` or `"name"`. |
 | `hide_when_empty` | bool | `false` | Hide workspace pills with no open windows. |
 
@@ -112,6 +113,7 @@ inactive_pill_size = 1.0
 focused_color = "primary"
 occupied_color = "secondary"
 empty_color = "surface_variant"
+focused_output_only = false  # true = only the focused monitor highlights its active workspace
 ```
 
 ---
@@ -150,6 +152,7 @@ Set `workspace_group_capsule = false` to drop the group background/border while 
 | `focused_color` | string | `"primary"` | Workspace disc fill when active (same roles as the workspaces widget) |
 | `occupied_color` | string | `"secondary"` | Workspace disc fill when occupied |
 | `empty_color` | string | `"secondary"` | Workspace disc fill when empty (shown at reduced opacity) |
+| `focused_output_only` | bool | `false` | Only use the focused color for the active workspace disc on the monitor that has keyboard or pointer focus; other monitors use the occupied color. Applies to the workspace label, so it is only meaningful with `show_workspace_label = true`. |
 
 ```toml
 [widget.taskbar]
@@ -167,6 +170,7 @@ inactive_opacity = 1.0
 focused_color = "primary"
 occupied_color = "secondary"
 empty_color = "secondary"
+focused_output_only = false  # true = only the focused monitor highlights its active workspace
 ```
 
 ---
