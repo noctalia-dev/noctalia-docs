@@ -96,6 +96,7 @@ The CLI forwards everything after the command as one string (`noctalia msg wallp
 | Disable Do Not Disturb | <IpcCommand command="notification-dnd-set off" /> | Show notification toasts again. |
 | Toggle Do Not Disturb | <IpcCommand command="notification-dnd-toggle" /> | Toggle notification toast visibility. Notification history still fills. |
 | Show Do Not Disturb status | <IpcCommand command="notification-dnd-status" /> | Print the current Do Not Disturb state. |
+| Invoke latest notification | <IpcCommand command="notification-invoke-latest" /> | Invoke the default action of the most recent active notification (raises/focuses the source app), mirroring a toast left-click. |
 | Clear active notifications | <IpcCommand command="notification-clear-active" /> | Dismiss all currently visible active notifications. |
 | Clear notification history | <IpcCommand command="notification-clear-history" /> | Remove all entries from notification history. |
 
