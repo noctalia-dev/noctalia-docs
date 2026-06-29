@@ -69,6 +69,15 @@ The service is a singleton, so address it with **`all`**:
 | <IpcCommand command="plugin noctalia/screen_recorder:service all replay-toggle" /> | start/stop the replay buffer |
 | <IpcCommand command="plugin noctalia/screen_recorder:service all replay-save" /> | save the last buffered seconds |
 
+`start` and `replay-start` take an optional payload — `focused`, `portal`, or `region` — that overrides the
+`video_source` setting for that capture (any other value falls back to the configured source). The target (`all`) and
+the capture source are separate fields:
+
+| Command | Effect |
+|---------|--------|
+| <IpcCommand command="plugin noctalia/screen_recorder:service all start focused" /> | record the focused output |
+| <IpcCommand command="plugin noctalia/screen_recorder:service all replay-start region" /> | start the replay buffer in region mode |
+
 ---
 
 ## Translator {#translator}
