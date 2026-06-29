@@ -110,9 +110,12 @@ DND enable/disable IPC commands show a short OSD for the new state.
 | Action | Command | Description |
 |--------|---------|-------------|
 | Previous track | <IpcCommand command="media previous" /> | Ask the active MPRIS player to go to the previous item. |
-| Play/pause toggle | <IpcCommand command="media toggle" /> | Toggle play/pause on the active MPRIS player. |
-| Stop playback | <IpcCommand command="media stop" /> | Stop the active MPRIS player and clear it from Noctalia's active-player selection (so bar media widgets can hide when configured to hide without an active player). |
 | Next track | <IpcCommand command="media next" /> | Ask the active MPRIS player to go to the next item. |
+| Play/pause toggle | <IpcCommand command="media toggle" /> | Toggle play/pause on the active MPRIS player. |
+| Play | <IpcCommand command="media play" /> | Resume playback on the active MPRIS player. |
+| Stop playback | <IpcCommand command="media stop" /> | Pause the active MPRIS player (falls back to the MPRIS `Stop` method for players that do not support pause). No-op when nothing is playing. |
+| Previous player | <IpcCommand command="media previous-player" /> | Switch the active player to the previous available MPRIS player and pin it. |
+| Next player | <IpcCommand command="media next-player" /> | Switch the active player to the next available MPRIS player and pin it. |
 
 ## Theme
 
