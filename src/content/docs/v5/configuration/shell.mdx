@@ -35,6 +35,7 @@ settings_show_advanced = false          # show advanced settings by default in S
 middle_click_opens_widget_settings = true # middle-click bar widgets to open their Settings entry
 show_location         = true            # show weather location text in shell UI
 launch_apps_as_systemd_services = false # launch apps as transient systemd scopes
+launch_apps_custom_command = ""         # wrap launched apps; $CMD is replaced with the app command
 screen_time_enabled   = false           # track per-app usage time for the Control Center screen-time view
 app_icon_colorize     = false           # recolor application icons across the shell
 app_icon_color        = "on_surface"    # ColorSpec when colorize is enabled; see App icon colorization below
@@ -145,6 +146,7 @@ Notes:
 - `clipboard_image_action_command`: when non-empty, image clipboard previews show an action button. Use `{path}` to receive an exported image file path. Use `{stdin}` (expanded to `-`) or omit `{path}` to receive the image bytes on stdin, matching the v4 annotation tool behavior (`satty -f -`, `gradia`, etc.).
 - `corner_radius_scale` scales rounded corners across shell surfaces: `0` = square, `1` = default, `2` = extra rounded.
 - `launch_apps_as_systemd_services`: when `true`, apps launched from the launcher, dock, and taskbar run as transient systemd scopes (`systemd-run --user --scope`) so they survive a shell restart and get their own cgroup.
+- `launch_apps_custom_command`: when non-empty, wraps every app launched from the launcher, dock, and taskbar. The literal `$CMD` is replaced with the app's own command — e.g. `uwsm-app -- $CMD` or `gamemoderun $CMD`. Mutually exclusive with `launch_apps_as_systemd_services`; when both are set, the systemd scope wins and the custom command is ignored.
 - `screen_time_enabled`: when `true`, Noctalia tracks per-app usage time for the Control Center screen-time view and its shortcut. Disabled by default; no usage is recorded while off.
 - `shared_gl_context`: when `true` (default), all rendering surfaces share a single EGL context group so wallpaper and icon textures are uploaded once in VRAM and reused across monitors. Set to `false` if you see corrupted textures (e.g. vertical stripe artifacts) on older GPUs with buggy cross-context texture sharing. Each surface then creates its own standalone context, which uses more VRAM on multi-monitor setups. Restart required.
 - `disable_mipmaps`: when `true`, Noctalia skips mipmap generation for textures. Startup-only — try it if downscaled application icons or wallpapers look blurry or show GPU mipmap artifacts.
