@@ -11,7 +11,7 @@ sidebar:
 
 Widget definitions are optional. When a name in a widget list matches a `[widget.<name>]` entry, that entry's `type` and settings are used. When there is no match, the name itself is treated as the widget type with default settings.
 
-Middle-click a bar widget to open Settings directly to that widget's configuration. Disable `[shell].middle_click_opens_widget_settings` if you want middle-click to remain available to scripted widgets.
+Middle-click a bar widget to open Settings directly to that widget's configuration. Disable `[shell].middle_click_opens_widget_settings` if you want middle-click to remain available to plugin widgets.
 
 ```toml
 [widget.<name>]
@@ -659,7 +659,7 @@ noctalia msg screenshot-fullscreen all
 noctalia msg screenshot-region my-capture
 ```
 
-Both commands use the global `[shell.screenshot]` output policy.
+Both commands use the global `[shell.screenshot]` output policy. The canonical command list is also under [Keybinds & IPC → Shell & UI → Screenshots](/v5/ipc/shell-and-ui/#screenshots).
 
 | `screenshot-fullscreen` argument | Behavior |
 |----------------------------------|----------|

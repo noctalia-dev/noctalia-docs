@@ -1,11 +1,11 @@
 ---
 title: Shell & UI
-description: IPC commands for status, config reload, bar, panels, dock, desktop widgets, notifications, media controls, wallpaper, theme mode and palette scheme, and lock.
+description: IPC commands for status, config reload, bar, panels, dock, desktop widgets, notifications, media controls, wallpaper, screenshots, theme mode and palette scheme, and lock.
 ---
 
 import IpcCommand from '../../../../components/IpcCommand.astro';
 
-These commands open, close, or toggle Noctalia UI surfaces.
+These commands open, close, or toggle Noctalia UI surfaces, including screenshot capture.
 
 ## General
 
@@ -27,7 +27,7 @@ These commands open, close, or toggle Noctalia UI surfaces.
 | Set bar auto-hide | <IpcCommand command="bar-auto-hide-set" /> &lt;on\|off&gt; [bar-name] [monitor-selector] | Temporarily enable or disable auto-hide for matching bar instance(s). Omit `bar-name` to update every bar. |
 | Set bar layer | <IpcCommand command="bar-layer-set" /> &lt;top\|overlay&gt; [bar-name] [monitor-selector] | Temporarily move matching bar instance(s) to the `top` or `overlay` layer-shell layer. `overlay` shows the bar above fullscreen apps; attached panels follow the bar's layer. Omit `bar-name` to update every bar. |
 
-## Scripted widgets
+## Plugins
 
 | Action | Command | Description |
 |--------|---------|-------------|
