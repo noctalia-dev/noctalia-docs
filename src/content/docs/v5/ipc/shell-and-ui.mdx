@@ -13,7 +13,9 @@ These commands open, close, or toggle Noctalia UI surfaces.
 |--------|---------|-------------|
 | Print status | <IpcCommand command="status" /> | Print basic shell state as JSON. |
 | Reload config | <IpcCommand command="config-reload" /> | Reload the merged Noctalia config stack immediately. |
-| Toggle settings | <IpcCommand command="settings-toggle" /> | Open or close the graphical settings window. |
+| Open settings | <IpcCommand command="settings-open [context]" /> | Open or focus the graphical settings window, optionally at a specific section (e.g. `bar`). |
+| Close settings | <IpcCommand command="settings-close" /> | Close the graphical settings window. |
+| Toggle settings | <IpcCommand command="settings-toggle [context]" /> | Open or close the graphical settings window, optionally at a specific section. |
 
 ## Bar
 
