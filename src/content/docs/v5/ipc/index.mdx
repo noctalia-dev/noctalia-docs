@@ -3,6 +3,7 @@ title: IPC & Keybinds
 description: Commands you can run with noctalia msg for keybinds, scripts, and automation.
 sidebar:
   label: Overview
+  order: 0
 ---
 
 import { LinkCard, CardGrid, Aside } from '@astrojs/starlight/components';
@@ -31,7 +32,10 @@ These pages list the command exactly as you run it. If you use the same command 
 ## Command lists
 
 <CardGrid>
-  <LinkCard title="Shell & UI" description="Status, config reload, bar, panels, dock, desktop widgets, notifications, media controls, wallpaper, screenshots, theme, and lock." href="/v5/ipc/shell-and-ui/" />
+  <LinkCard title="Shell" description="Status, config reload, settings, window switcher, and session actions." href="/v5/ipc/shell/" />
+  <LinkCard title="Surfaces" description="Bar, panels, dock, desktop widgets, and lockscreen widgets." href="/v5/ipc/surfaces/" />
+  <LinkCard title="Media & UI" description="Notifications, clipboard, media controls, wallpaper, theme, and screenshots." href="/v5/ipc/media-and-ui/" />
+  <LinkCard title="Plugins" description="Plugin event dispatch and plugin/source management." href="/v5/ipc/plugins/" />
   <LinkCard title="System Controls" description="Volume, microphone, brightness, night light, Wi-Fi, Bluetooth, caffeine, power profile, and display power." href="/v5/ipc/system-controls/" />
 </CardGrid>
 
