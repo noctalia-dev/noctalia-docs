@@ -367,20 +367,41 @@ Top-level sections:
 
 ### Custom Colors
 
-`[config.custom_colors]` supports both forms:
+`[config.custom_colors]` defines named colors that are expanded into Material 3-style roles before templates render. It supports both forms:
 
 ```toml
 [config.custom_colors]
-brand = "#ff0000"
+warning = "#f97316"
 ```
 
 ```toml
-[config.custom_colors.brand]
-color = "#ff0000"
+[config.custom_colors.warning]
+color = "#f97316"
 blend = true
 ```
 
-In Noctalia's main config, use `[theme.templates.custom_colors]` with the same value forms.
+Use the generated roles through `colors.<role>.<mode>.<format>` just like built-in palette colors:
+
+```css
+.warning-banner {
+  color: {{ colors.on_warning.default.hex }};
+  background: {{ colors.warning_container.default.hex }};
+  border-color: {{ colors.warning.default.hex }};
+}
+```
+
+In Noctalia's main config, put the same custom color definitions under `[theme.templates.custom_colors]` and reference them from any enabled user template:
+
+```toml
+[theme.templates.custom_colors]
+warning = "#f97316"
+
+[theme.templates.user.my_app]
+input_path  = "$XDG_CONFIG_HOME/noctalia/templates/my-app.css"
+output_path = "$XDG_CONFIG_HOME/my-app/theme.css"
+```
+
+`blend` defaults to `true`, which harmonizes the custom color with the active palette. Set `blend = false` in the table form when the generated roles should keep the source hue as closely as possible.
 
 Generated tokens per mode:
 
