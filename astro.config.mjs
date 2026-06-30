@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from "astro/config";
+import { unified } from "@astrojs/markdown-remark";
 import starlight from "@astrojs/starlight";
 import { remarkHeadingId } from "remark-custom-heading-id";
 
@@ -80,21 +81,21 @@ export default defineConfig({
                 { label: "Installation", link: "v4/getting-started/installation/" },
                 { label: "NixOS", link: "v4/getting-started/nixos/" },
                 { label: "Running the Shell", link: "v4/getting-started/running-the-shell/" },
-                { label: "Compositor Settings", autogenerate: { directory: "v4/getting-started/compositor-settings" } },
-                { label: "Keybinds", autogenerate: { directory: "v4/getting-started/keybinds" } },
+                { label: "Compositor Settings", items: [{ autogenerate: { directory: "v4/getting-started/compositor-settings" } }] },
+                { label: "Keybinds", items: [{ autogenerate: { directory: "v4/getting-started/keybinds" } }] },
                 { label: "FAQ", link: "v4/getting-started/faq/" },
                 { label: "Uninstall", link: "v4/getting-started/uninstall/" },
               ],
             },
             {
               label: "Configuration",
-              autogenerate: { directory: "v4/configuration" },
+              items: [{ autogenerate: { directory: "v4/configuration" } }],
             },
             {
               label: "Theming",
               items: [
                 { label: "Basic App Theming", link: "v4/theming/basic-app-theming/" },
-                { label: "Program Specific", autogenerate: { directory: "v4/theming/program-specific" } },
+                { label: "Program Specific", items: [{ autogenerate: { directory: "v4/theming/program-specific" } }] },
                 { label: "User Templates", link: "v4/theming/user-templates/" },
                 { label: "User Color Schemes", link: "v4/theming/color-schemes/" },
               ],
@@ -106,12 +107,12 @@ export default defineConfig({
                 { label: "IPC", link: "v4/development/ipc/" },
                 { label: "Widgets", link: "v4/development/widgets/" },
                 { label: "Templates", link: "v4/development/templates/" },
-                { label: "Plugins", autogenerate: { directory: "v4/development/plugins" } },
+                { label: "Plugins", items: [{ autogenerate: { directory: "v4/development/plugins" } }] },
               ],
             },
             {
               label: "Deprecated",
-              autogenerate: { directory: "v4/deprecated" },
+              items: [{ autogenerate: { directory: "v4/deprecated" } }],
             },
           ],
         },
@@ -127,8 +128,8 @@ export default defineConfig({
                 { label: "Running Noctalia", link: "v5/getting-started/running-the-shell/" },
                 { label: "FAQ", link: "v5/getting-started/faq/" },
                 { label: "Uninstall", link: "v5/getting-started/uninstall/" },
-                { label: "Compositor Settings", autogenerate: { directory: "v5/compositor-settings" } },
-                { label: "Keybinds & IPC", autogenerate: { directory: "v5/ipc" } },
+                { label: "Compositor Settings", items: [{ autogenerate: { directory: "v5/compositor-settings" } }] },
+                { label: "Keybinds & IPC", items: [{ autogenerate: { directory: "v5/ipc" } }] },
               ],
             },
             {
@@ -141,53 +142,53 @@ export default defineConfig({
             },
             {
               label: "Bar",
-              autogenerate: { directory: "v5/bar" },
+              items: [{ autogenerate: { directory: "v5/bar" } }],
             },
             {
               label: "Dock",
-              autogenerate: { directory: "v5/dock" },
+              items: [{ autogenerate: { directory: "v5/dock" } }],
             },
             {
               label: "Launcher",
-              autogenerate: { directory: "v5/launcher" },
+              items: [{ autogenerate: { directory: "v5/launcher" } }],
             },
             {
               label: "Control Center",
-              autogenerate: { directory: "v5/control-center" },
+              items: [{ autogenerate: { directory: "v5/control-center" } }],
             },
             {
               label: "Desktop",
-              autogenerate: { directory: "v5/desktop" },
+              items: [{ autogenerate: { directory: "v5/desktop" } }],
             },
             {
               label: "Theming",
-              autogenerate: { directory: "v5/theming" },
+              items: [{ autogenerate: { directory: "v5/theming" } }],
             },
             {
               label: "Services",
-              autogenerate: { directory: "v5/services" },
+              items: [{ autogenerate: { directory: "v5/services" } }],
             },
             {
               label: "Automation",
-              autogenerate: { directory: "v5/automation" },
+              items: [{ autogenerate: { directory: "v5/automation" } }],
             },
             {
               label: "Plugins",
               items: [
                 { label: "Using Plugins", link: "v5/plugins/" },
                 { label: "Official Plugins", link: "v5/plugins/official-plugins/" },
-                { label: "Plugin Development", autogenerate: { directory: "v5/plugins/development" } },
+                { label: "Plugin Development", items: [{ autogenerate: { directory: "v5/plugins/development" } }] },
               ],
             },
             {
               label: "Greeter",
-              autogenerate: { directory: "v5/greeter" },
+              items: [{ autogenerate: { directory: "v5/greeter" } }],
             },
             {
               label: "Templates",
               items: [
-                { label: "Official Templates", autogenerate: { directory: "v5/templates/official" } },
-                { label: "Community Templates", autogenerate: { directory: "v5/templates/community" } },
+                { label: "Official Templates", items: [{ autogenerate: { directory: "v5/templates/official" } }] },
+                { label: "Community Templates", items: [{ autogenerate: { directory: "v5/templates/community" } }] },
               ],
             },
           ],
@@ -196,7 +197,9 @@ export default defineConfig({
     }),
   ],
   markdown: {
-    gfm: true,
-    remarkPlugins: [remarkHeadingId],
+    processor: unified({
+      gfm: true,
+      remarkPlugins: [remarkHeadingId],
+    }),
   },
 });
