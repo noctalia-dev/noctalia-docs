@@ -355,8 +355,10 @@ If you prefer to install Noctalia locally or want more control over the installa
   </TabItem>
 </Tabs>
 
-Vendored dependencies, with no system package needed: `Wuffs`, `nanosvg`, `tomlplusplus`,
+Vendored dependencies, with no system package needed: `Wuffs`, `nanosvg`,
 `nlohmann/json`, `Luau`, `dr_wav`, `fzy`, `stb_image_resize2`, and Material Color Utilities.
+
+Dependencies that are vendored by default, with a meson option to instead use the system package: `tomlplusplus`
 
 System packages required beyond the Wayland/GL stack: `libwebp` handles WebP decoding and thumbnail encoding. Wuffs
 handles the other supported raster image formats.
