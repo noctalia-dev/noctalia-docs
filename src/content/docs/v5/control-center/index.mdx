@@ -32,6 +32,7 @@ Keyboard navigation uses the global [`[keybinds]`](/v5/configuration/shell/#keyb
 sidebar = "compact"
 # sidebar_section = "compact"  # optional; defaults to the same as sidebar
 # width = 680  # full-sidebar width in pixels (600–1200)
+# hidden_tabs = ["monitor", "weather"]  # hide tabs you never use
 ```
 
 | Option | Type | Default | Description |
@@ -39,6 +40,7 @@ sidebar = "compact"
 | `sidebar` | string | `"compact"` | Sidebar on Home / general open: `"full"`, `"compact"`, or `"none"` |
 | `sidebar_section` | string | `"compact"` | Sidebar when opening straight to a tab: `"full"`, `"compact"`, or `"none"` |
 | `width` | int | `680` | Control Center width in pixels (`600`–`1200`). This is the full-sidebar width; the compact and no-sidebar modes scale down from it. |
+| `hidden_tabs` | array | `[]` | Tab [context IDs](#sidebar-tabs) to hide from the Control Center. Empty shows every available tab. Editable from **Settings → Control Center**. The Home tab cannot be hidden. |
 
 ### Sidebar Tabs
 
@@ -61,6 +63,8 @@ Use these context IDs with `noctalia msg panel-toggle control-center <context>` 
 | `power` | Power | Battery charge and status, power profiles, battery health, and connected-device battery levels |
 
 `weather`, `system`, and `screen-time` open only when their corresponding services are enabled; `power` opens only when UPower or `power-profiles-daemon` is available. Otherwise Noctalia falls back to the first visible tab.
+
+Any tab except Home can also be hidden manually with [`hidden_tabs`](#sidebar) (use the context ID — e.g. `"monitor"` for the brightness tab). Hidden tabs drop from both the sidebar and keyboard navigation.
 
 ## Home
 
