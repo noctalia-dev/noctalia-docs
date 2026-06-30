@@ -43,10 +43,10 @@ const fullCommand = `${prefix} ${command}`;
     gap: 0.5rem;
     vertical-align: middle;
     max-width: 100%;
+    min-width: 0;
   }
 
   .ipc-command {
-    flex: 1 1 auto;
     padding: 0.2rem 0.4rem;
     background-color: var(--sl-color-bg-soft);
     border: 1px solid var(--sl-color-hairline);
@@ -54,10 +54,10 @@ const fullCommand = `${prefix} ${command}`;
     font-family: var(--sl-font-mono);
     font-size: 0.9em;
     cursor: help;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    min-width: 0;
-    line-height: 1.35;
+    white-space: nowrap;
+    overflow-x: auto;
+    max-width: min(100%, 36rem);
+    line-height: 1;
   }
 
   .copy-btn {

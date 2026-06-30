@@ -342,6 +342,21 @@ snake-toc a[data-visible="true"] {
 	padding-top: calc(var(--sl-nav-height) + var(--sl-banner-height)) !important;
 }
 
+@media (min-width: 72rem) {
+	[data-has-sidebar][data-has-toc] .main-pane {
+		--sl-content-margin-inline: 0 auto;
+		width: calc(100% - var(--sl-sidebar-width));
+	}
+
+	[data-has-sidebar][data-has-toc] .content-panel {
+		padding-inline-start: clamp(2rem, 4vw, 4rem);
+	}
+
+	[data-has-sidebar][data-has-toc] .right-sidebar-container {
+		width: var(--sl-sidebar-width);
+	}
+}
+
 html {
 	scroll-padding-top: calc(1.5rem + var(--sl-nav-height) + var(--sl-mobile-toc-height) + var(--sl-banner-height)) !important;
 }
