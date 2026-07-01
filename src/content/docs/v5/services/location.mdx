@@ -13,8 +13,8 @@ auto_locate = false            # resolve coordinates from your IP address when t
 address     = "Toronto, ON"    # geocoded when auto_locate = false and non-empty
 
 # Manual schedule fallback (used only when neither auto_locate nor address is set):
-sunset    = "20:30"            # HH:MM — night starts
-sunrise   = "07:30"            # HH:MM — day starts
+sunset    = "20:30"            # HH:MM - night starts
+sunrise   = "07:30"            # HH:MM - day starts
 # latitude  = 52.5200          # used instead of sunset/sunrise when set
 # longitude = 13.4050
 ```
@@ -23,4 +23,4 @@ Resolution priority: **`auto_locate` (IP) → `address` (geocoded) → manual `l
 
 When `auto_locate = true`, location lookup goes through `noctalia.dev` to resolve approximate coordinates from your IP address. See the [Noctalia privacy policy](https://noctalia.dev/privacy) for how this service is handled.
 
-Location resolution runs independently of Weather — `auto_locate` and `address` work even when Weather is disabled, so Night Light and Theme `auto` get real coordinates on their own.
+Location resolution runs independently of Weather - `auto_locate` and `address` work even when Weather is disabled, so Night Light and Theme `auto` get real coordinates on their own.

@@ -64,7 +64,7 @@ Use these context IDs with `noctalia msg panel-toggle control-center <context>` 
 
 `weather`, `system`, and `screen-time` open only when their corresponding services are enabled; `power` opens only when UPower or `power-profiles-daemon` is available. Otherwise Noctalia falls back to the first visible tab.
 
-Any tab except Home can also be hidden manually with [`hidden_tabs`](#sidebar) (use the context ID — e.g. `"monitor"` for the brightness tab). Hidden tabs drop from both the sidebar and keyboard navigation.
+Any tab except Home can also be hidden manually with [`hidden_tabs`](#sidebar) (use the context ID - e.g. `"monitor"` for the brightness tab). Hidden tabs drop from both the sidebar and keyboard navigation.
 
 ## Home
 
@@ -131,10 +131,10 @@ Reset stored history from **Settings → System → Screen Time → Reset Screen
 
 The Power tab consolidates battery and power-management status, backed by UPower and `power-profiles-daemon`:
 
-- **Battery** — charge percentage, charging/discharging state, time remaining (or time until full), and current draw in watts
-- **Power Profile** — a selector for the profiles your machine exposes (power-saver, balanced, performance); switching here is equivalent to the Home shortcut and bar widget
-- **Battery Health** — current full-charge capacity as a percentage of the original design capacity
-- **Connected Devices** — battery levels for peripherals such as Bluetooth mice, keyboards, and headsets
+- **Battery** - charge percentage, charging/discharging state, time remaining (or time until full), and current draw in watts
+- **Power Profile** - a selector for the profiles your machine exposes (power-saver, balanced, performance); switching here is equivalent to the Home shortcut and bar widget
+- **Battery Health** - current full-charge capacity as a percentage of the original design capacity
+- **Connected Devices** - battery levels for peripherals such as Bluetooth mice, keyboards, and headsets
 
 Sections appear only when their data is available: the battery and health sections require a system battery, the profile selector requires `power-profiles-daemon`, and the connected-devices section appears when peripherals report a battery. The tab itself is hidden on systems where neither UPower nor `power-profiles-daemon` is running.
 

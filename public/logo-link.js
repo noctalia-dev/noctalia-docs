@@ -1,9 +1,7 @@
 (function() {
 	function updateLogoLink() {
-		// Try multiple selectors to find the logo link
 		const selectors = [
-			'header a[href="/"]',
-			'header a[href^="/"]',
+			'.sl-logo a[href="/"]',
 			'.sl-logo a',
 			'a[href="/"] img[alt*="Noctalia"]',
 			'a img[alt="Noctalia"]'

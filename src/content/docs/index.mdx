@@ -1,0 +1,44 @@
+---
+title: Overview
+description: Noctalia - documentation in progress.
+sidebar:
+  order: 0
+---
+
+Noctalia v5 is a new generation of the shell, with a native runtime, refreshed UI, and a configuration model built for the current desktop experience.
+
+:::caution[Moving from v4?]
+Noctalia v5 is a fresh install, not an automatic upgrade from the Quickshell-based v4 line. It ships as a separate package, your package manager will not replace v4 with v5, and v4 settings are not migrated.
+
+On most distributions, you can keep v4 installed while you try v5. The packages do not conflict, and Noctalia's configuration files do not conflict either: v4 config is JSON-only, v5 config is TOML, and their config file names are different.
+
+Only your **compositor** keybinds need attention for opening the launcher, panels, and other Noctalia commands. The good part is that v5 ships with sane defaults, so you can get started quickly and customize from there.
+:::
+
+The v5 docs are still being built out. If you are setting up Noctalia for the first time, start with [Installation](/v5/getting-started/installation/), then [Running Noctalia](/v5/getting-started/running-the-shell/) for compositor startup and keybind setup. Once the shell is installed, [How configuration works](/v5/configuration/) explains where settings live and which file wins when the GUI and your config both set the same option.
+
+## Topics
+
+- **[Installation](/v5/getting-started/installation/)** - Package options, distro-specific commands, and manual install steps.
+- **[Running Noctalia](/v5/getting-started/running-the-shell/)** - Start the shell, run it from your compositor, and wire up keybinds.
+- **[How configuration works](/v5/configuration/)** - Config files, GUI-managed overrides, load order, and hot reload.
+- **[Greeter installation](/v5/greeter/)** - Install noctalia-greeter, configure greetd, and sync your login screen with Noctalia.
+- **[Shell](/v5/shell/)** - Global UI scale, fonts, animations, shadows, OSD, lock screen, and keybinds.
+- **[Hooks](/v5/automation/hooks/)** - Advanced event-driven automation.
+- **[Launcher](/v5/launcher/)** - Application search, calculator, emoji picker, and wallpaper browser.
+- **[Control Center](/v5/control-center/)** - Home tab, sidebar, shortcuts, and screen time.
+- **[Bars](/v5/bar/)** - Top, bottom, left, and right bars, including per-monitor changes.
+- **[Widgets](/v5/bar/widgets/)** - The clock, tray, volume, workspaces, media, and other things you place inside a bar.
+- **[Dock](/v5/dock/)** - Optional app dock, pinned apps, running apps, and auto-hide.
+- **[Desktop widgets](/v5/desktop/widgets/)** - On-desktop widgets, edit mode, and state file layout.
+- **[Wallpaper & backdrop](/v5/desktop/wallpaper/)** - Wallpaper folders, automation, per-monitor choices, and overview backdrop.
+- **[Theme](/v5/theming/)** - Built-in themes, wallpaper colors, and dark/light mode.
+- **[Palette](/v5/theming/palette/)** - Color roles, custom palette files, and terminal colors.
+- **[App Theming](/v5/theming/app-theming/)** - Generated themes for terminals, editors, browsers, and other apps.
+- **Services** - [Audio](/v5/services/audio/), [Brightness](/v5/services/brightness/), [Calendar](/v5/services/calendar/), [Idle](/v5/services/idle/), [Night Light](/v5/services/night-light/), [Notifications](/v5/services/notifications/), and [Weather](/v5/services/weather/).
+- **[IPC](/v5/ipc/)** - Commands for keybinds, scripts, automation, and hooks.
+- **[Plugins](/v5/plugins/)** - Install and configure plugins: custom bar widgets, shortcuts, and services in Luau.
+
+---
+
+**On the Quickshell-based v4 line?** See the [overview](/v4/) and [installation](/v4/getting-started/installation/).

@@ -5,7 +5,7 @@ import { isV5Path } from '../lib/versioning';
 const pathname = Astro.url.pathname;
 const isV5 = isV5Path(pathname);
 
-const faqHref = /^\/v5(?:\/|$)/.test(pathname)
+const faqHref = isV5
   ? '/v5/getting-started/faq/'
   : '/v4/getting-started/faq/';
 ---
@@ -23,7 +23,7 @@ const faqHref = /^\/v5(?:\/|$)/.test(pathname)
   </a>
 </div>
 
-<div class:list={['version-alert-banner', isV5 ? 'is-alpha' : 'is-stable']} role="alert">
+<div class:list={['version-alert-banner', isV5 ? 'is-beta' : 'is-stable']} role="alert">
   {isV5 ? (
     <>
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -32,23 +32,26 @@ const faqHref = /^\/v5(?:\/|$)/.test(pathname)
         <line x1="12" y1="17" x2="12.01" y2="17"></line>
       </svg>
       <span>
-        You are viewing the <strong>v5 (alpha)</strong> documentation — this version is a work in progress.
-        <a href="/v4/">Switch to v4 (stable) →</a>
+        You are viewing the <strong>v5 (beta)</strong> docs. <a href="/v4/">Looking for v4 (Quickshell)? →</a>
       </span>
     </>
   ) : (
     <span>
-      You are viewing the <strong>v4 (stable)</strong> documentation.
-      <a href="/v5/">Switch to v5 (alpha) →</a>
+      You are viewing the <strong>v4 (Quickshell)</strong> docs. <a href="/">Check out v5 (beta) →</a>
     </span>
   )}
 </div>
 
 <script>
+  function currentIsV5() {
+    const p = window.location.pathname;
+    return p === '/' || p === '/v5' || p.startsWith('/v5/');
+  }
+
   function updateFaqHref() {
     const faqButton = document.querySelector<HTMLAnchorElement>('.faq-button');
     if (!faqButton) return;
-    faqButton.href = /^\/v5(?:\/|$)/.test(window.location.pathname)
+    faqButton.href = currentIsV5()
       ? '/v5/getting-started/faq/'
       : '/v4/getting-started/faq/';
   }
@@ -73,8 +76,8 @@ const faqHref = /^\/v5(?:\/|$)/.test(pathname)
   function updateBannerVersion() {
     const banner = document.querySelector('.version-alert-banner');
     if (!banner) return;
-    const isV5 = /^\/v5(?:\/|$)/.test(window.location.pathname);
-    banner.classList.toggle('is-alpha', isV5);
+    const isV5 = currentIsV5();
+    banner.classList.toggle('is-beta', isV5);
     banner.classList.toggle('is-stable', !isV5);
 
     if (isV5) {
@@ -85,14 +88,12 @@ const faqHref = /^\/v5(?:\/|$)/.test(pathname)
           <line x1="12" y1="17" x2="12.01" y2="17"></line>
         </svg>
         <span>
-          You are viewing the <strong>v5 (alpha)</strong> documentation — this version is a work in progress.
-          <a href="/v4/">Switch to v4 (stable) →</a>
+          You are viewing the <strong>v5 (beta)</strong> docs. <a href="/v4/">Looking for v4 (Quickshell)? →</a>
         </span>`;
     } else {
       banner.innerHTML = `
         <span>
-          You are viewing the <strong>v4 (stable)</strong> documentation.
-          <a href="/v5/">Switch to v5 (alpha) →</a>
+      You are viewing the <strong>v4 (Quickshell)</strong> docs. <a href="/">Check out v5 (beta) →</a>
         </span>`;
     }
   }
@@ -167,30 +168,30 @@ const faqHref = /^\/v5(?:\/|$)/.test(pathname)
     z-index: var(--sl-z-index-navbar);
   }
 
-  .version-alert-banner.is-alpha {
+  .version-alert-banner.is-beta {
     color: color-mix(in srgb, var(--sl-color-orange) 90%, black);
     background-color: color-mix(in srgb, var(--sl-color-orange) 12%, var(--sl-color-bg));
     border-bottom-color: color-mix(in srgb, var(--sl-color-orange) 40%, transparent);
   }
 
-  [data-theme='dark'] .version-alert-banner.is-alpha {
+  [data-theme='dark'] .version-alert-banner.is-beta {
     color: color-mix(in srgb, var(--sl-color-orange) 90%, white);
   }
 
-  .version-alert-banner.is-alpha svg {
+  .version-alert-banner.is-beta svg {
     flex-shrink: 0;
     color: var(--sl-color-orange);
   }
 
-  .version-alert-banner.is-alpha strong {
+  .version-alert-banner.is-beta strong {
     color: var(--sl-color-orange);
   }
 
-  .version-alert-banner.is-alpha a {
+  .version-alert-banner.is-beta a {
     color: var(--sl-color-orange);
   }
 
-  .version-alert-banner.is-alpha a:hover {
+  .version-alert-banner.is-beta a:hover {
     text-decoration-thickness: 2px;
   }
 

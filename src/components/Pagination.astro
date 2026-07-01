@@ -10,7 +10,7 @@ function sameDocVersion(href: string): boolean {
   try {
     const u = new URL(href, Astro.url);
     const p = u.pathname;
-    if (onV5) return p === '/v5' || p.startsWith('/v5/');
+    if (onV5) return p === '/' || p === '/v5' || p.startsWith('/v5/');
     return p === '/v4' || p.startsWith('/v4/');
   } catch {
     return true;

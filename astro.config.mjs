@@ -11,8 +11,6 @@ export default defineConfig({
     logLevel: "error",
   },
   redirects: {
-    /** Default landing (v4 = current production shell docs) */
-    "/": "/v4/",
     /** Shell docs live under configuration/, but are linked as the short /v5/shell/ */
     "/v5/shell/": "/v5/configuration/shell/",
     /** wpa_supplicant troubleshooting moved into the v5 FAQ */

@@ -19,7 +19,7 @@ pre_action_fade_seconds = 2.0
 
 While a fade is in progress, the overlay is click-through so pointer/keyboard activity still reaches the compositor; if the session becomes active again during that window, the pending command is cancelled. The dim is a layer-shell **overlay** that covers the full monitor (including the bar).
 
-Each behavior picks an **`action`**. The built-in actions are native — they need no `command`. Use `action = "command"` only when you want to run something Noctalia doesn't have a native action for (a shell command, or an internal `noctalia:` command).
+Each behavior picks an **`action`**. The built-in actions are native - they need no `command`. Use `action = "command"` only when you want to run something Noctalia doesn't have a native action for (a shell command, or an internal `noctalia:` command).
 
 ```toml
 [idle.behavior.lock]
@@ -52,11 +52,11 @@ resume_command = "notify-send 'Idle' 'Back from idle'"
 | `resume_command` | string | `""` | Only for `action = "command"`: a shell command or `noctalia:` IPC subcommand to run when activity resumes |
 | `lock_before_suspend` | bool | `true` | For `action = "suspend"`, lock the session first (equivalent to `action = "lock_and_suspend"`). Set `false` to suspend without locking. |
 
-`action = "screen_off"` turns the monitors off on idle and **back on automatically** when you return — no `command`/`resume_command` needed. (This automatic monitor-on resume applies only to the native `screen_off` action; a custom `action = "command"` that powers monitors off must set its own `resume_command` to turn them back on.)
+`action = "screen_off"` turns the monitors off on idle and **back on automatically** when you return - no `command`/`resume_command` needed. (This automatic monitor-on resume applies only to the native `screen_off` action; a custom `action = "command"` that powers monitors off must set its own `resume_command` to turn them back on.)
 
 ## `noctalia:` commands (`action = "command"`)
 
-For `action = "command"`, the `noctalia:` prefix runs the rest of the string through the IPC command registry — the same as `noctalia msg <subcommand>` — so a behavior can trigger any internal action. Examples:
+For `action = "command"`, the `noctalia:` prefix runs the rest of the string through the IPC command registry - the same as `noctalia msg <subcommand>` - so a behavior can trigger any internal action. Examples:
 
 ```
 noctalia:session lock

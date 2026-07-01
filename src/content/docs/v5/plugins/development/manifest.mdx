@@ -6,7 +6,7 @@ sidebar:
   order: 2
 ---
 
-:::caution[Experimental — under heavy development]
+:::caution[Experimental - under heavy development]
 The plugin system is under **heavy development** and the manifest format, APIs, and behavior are subject to breaking
 changes at any time.
 :::
@@ -14,7 +14,7 @@ changes at any time.
 ## The manifest
 
 ```toml
-id           = "me/hello"     # "<author>/<plugin>" — globally unique
+id           = "me/hello"     # "<author>/<plugin>" - globally unique
 name         = "Hello"
 version      = "1.0.0"
 min_noctalia = "5.0.0"        # mandatory: minimum Noctalia version
@@ -27,7 +27,7 @@ tags         = ["demo"]       # optional, for catalog search
 dependencies = ["slurp"]      # optional, external tools/packages users must install
 ```
 
-`name` and `min_noctalia` are required — a manifest without either is rejected. `min_noctalia` gates enable, the
+`name` and `min_noctalia` are required - a manifest without either is rejected. `min_noctalia` gates enable, the
 catalog badge, and the post-update safety rollback.
 
 `license` defaults to `MIT` when omitted. `deprecated = true` marks the plugin as deprecated in plugin listings; it is a
@@ -48,9 +48,9 @@ optional settings schema. The supported entry kinds:
 | `[[launcher_provider]]` | Launcher provider | Answers launcher queries with results, behind a prefix |
 | `[[desktop_widget]]` | Desktop widget | A tile on the desktop; declares its UI as a `ui.*` tree |
 | `[[panel]]` | Panel | A pop-up surface; declares its UI as a `ui.*` tree, opened by id |
-| `[[service]]` | Headless service | Background loop, no UI — feeds the plugin's other entries |
+| `[[service]]` | Headless service | Background loop, no UI - feeds the plugin's other entries |
 
-An entry is addressed `<author>/<plugin>:<entry-id>` — e.g. a bar widget is configured with
+An entry is addressed `<author>/<plugin>:<entry-id>` - e.g. a bar widget is configured with
 `type = "me/hello:hello"`.
 
 ```toml
@@ -72,17 +72,17 @@ entry = "ticker.luau"
 ## Settings schema
 
 A setting becomes a typed control in the settings GUI and is read back via `noctalia.getConfig(key)` (or
-`barWidget.getConfig(key)` in a widget — same value). Only declared keys resolve — reading an undeclared key logs a loud
+`barWidget.getConfig(key)` in a widget - same value). Only declared keys resolve - reading an undeclared key logs a loud
 warning and returns `nil` (no silent fallbacks).
 
 Settings come in two scopes:
 
-- **Plugin-level** — a `[[setting]]` block at the **manifest root**. One shared set for the whole plugin, edited under
-  **Settings → Plugins** (the gear on the plugin's row), and seeded into **every** entry — widget, shortcut, panel, and
+- **Plugin-level** - a `[[setting]]` block at the **manifest root**. One shared set for the whole plugin, edited under
+  **Settings → Plugins** (the gear on the plugin's row), and seeded into **every** entry - widget, shortcut, panel, and
   service. Use this for configuration the service or panel needs.
-- **Widget entry settings** — a `[[<entry>.setting]]` block under a `[[widget]]`. These are edited with the bar widget's
+- **Widget entry settings** - a `[[<entry>.setting]]` block under a `[[widget]]`. These are edited with the bar widget's
   own settings. Use this for widget presentation tweaks; they are not a second enabled plugin instance.
-- **Panel entry settings** — a `[[panel.setting]]` block under a `[[panel]]`. These also appear in **Settings → Plugins**
+- **Panel entry settings** - a `[[panel.setting]]` block under a `[[panel]]`. These also appear in **Settings → Plugins**
   (the gear on the plugin row) and are read with `panel.getConfig(key)` in the panel script.
 
 When both declare the same key, the widget entry value wins for that widget. Both scopes use the same field schema:
@@ -128,7 +128,7 @@ label = "Short"
 | `default` | seeded value (must match the type) |
 | `min` / `max` | for `int` / `double` |
 | `options` | for `select`: array of `{ value, label }` or `{ value, label_key }` |
-| `visible_when` | `{ key = "other_key", values = ["true"] }` — conditional visibility |
+| `visible_when` | `{ key = "other_key", values = ["true"] }` - conditional visibility |
 | `advanced` | hide behind the "show advanced" toggle |
 
 Translated setting labels live in the same optional `translations/<lang>.json` files as script strings:

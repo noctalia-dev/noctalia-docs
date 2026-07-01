@@ -71,6 +71,7 @@ function ogImagePathForRoute(pathname) {
 }
 
 function versionFromRoute(route) {
+	if (route === '/') return 'v5';
 	const match = route.match(/^\/(v[0-9]+)(?:\/|$)/);
 	return match ? match[1] : 'docs';
 }
