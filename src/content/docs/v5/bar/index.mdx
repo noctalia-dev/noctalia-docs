@@ -37,7 +37,7 @@ margin_opposite_edge = 0         # extra reserved space on the inward side of th
 padding            = 14          # main-axis padding from bar edges to start/end widget sections
 widget_spacing     = 6           # gap between widgets within a section
 scale              = 1.0         # content scale multiplier for icons and text
-font_weight        = "regular"   # "regular" | "bold" — primary label weight for bar widgets
+font_weight        = "regular"   # "regular" | "bold" - primary label weight for bar widgets
 font_family        = ""          # typeface for this bar's widgets; empty inherits the global font
 
 # Default capsule style for all widgets on this bar (see Widget Capsule section)
@@ -62,8 +62,8 @@ round-off: the corner bulges *outward* into a rounded spike that hugs the screen
 so the bar appears to melt into the screen. The spike's size is the absolute value
 (e.g. `radius_bottom_left = -16` gives a 16 px spike).
 
-Concave spikes only render on the bar's two **inner** corners — the corners facing away
-from the screen edge — because the bar can't grow along the edge it's anchored to:
+Concave spikes only render on the bar's two **inner** corners, the corners facing away
+from the screen edge, because the bar can't grow along the edge it's anchored to:
 
 | Bar position | Inner corners (set these negative) |
 | --- | --- |
@@ -76,7 +76,7 @@ The spike depth is capped at half the bar `thickness`. A negative value on an ou
 (screen-edge) corner has no room to grow and is clipped, so leave those at `0` or a
 positive radius.
 
-Multiple `[bar.*]` entries are supported — each is independently configured and rendered on all monitors.
+Multiple `[bar.*]` entries are supported - each is independently configured and rendered on all monitors.
 
 `[bar].order` controls the order Noctalia creates bar layer-shell surfaces. This matters only for bars with
 `reserve_space = true`, and the compositor still owns the final exclusive-zone arrangement. Names omitted from `order`
@@ -84,7 +84,7 @@ are appended after the listed names.
 
 ### Dead zone actions
 
-The **dead zone** is the bar margin outside the start/center/end widget sections — typically the inset created by `margin_ends`. Configure shell commands under `[bar.<name>.dead_zone]`:
+The **dead zone** is the bar margin outside the start/center/end widget sections - typically the inset created by `margin_ends`. Configure shell commands under `[bar.<name>.dead_zone]`:
 
 ```toml
 [bar.main.dead_zone]
@@ -125,7 +125,7 @@ center             = ["workspaces"]
 end                = ["volume", "clock"]
 ```
 
-**`match` resolution** — compared against:
+**`match` resolution** - compared against:
 1. Exact connector name (`eDP-1`, `DP-1`, `HDMI-A-1`, …)
 2. Any substring of the monitor description string (`"LG"`, `"4K"`, `"DELL"`, …)
 
@@ -158,7 +158,7 @@ When `auto_hide = true`, the bar:
 
 `reserve_space` controls whether the bar keeps a compositor exclusive zone. With `auto_hide = false`, `reserve_space = true` keeps windows pushed away; `reserve_space = false` overlays the bar on top of full-screen clients. With `auto_hide = true`, `reserve_space = false` retracts the bar as an overlay (no gap); `reserve_space = true` keeps the gap while the bar slides out of view.
 
-`margin_opposite_edge` adds extra reserved space on the inward side of the bar (below a top bar, above a bottom bar, and so on for vertical bars). The bar itself does not move; the compositor exclusive zone grows so tiled and maximized windows stop further away. Use it when a compositor ignores or under-reserves struts — for example Labwc with a maximized window that still touches the bar. Requires `reserve_space = true`. The default is `0`.
+`margin_opposite_edge` adds extra reserved space on the inward side of the bar (below a top bar, above a bottom bar, and so on for vertical bars). The bar itself does not move; the compositor exclusive zone grows so tiled and maximized windows stop further away. Use it when a compositor ignores or under-reserves struts - for example Labwc with a maximized window that still touches the bar. Requires `reserve_space = true`. The default is `0`.
 
 `layer = "overlay"` shows the bar above fullscreen apps. Attached panels (for example Control Center when it attaches to the bar) follow the bar's layer. Centered or floating panel placements keep each panel's own layer (typically overlay).
 
@@ -245,14 +245,14 @@ capsule = false
 ## Capsule groups
 
 A **capsule group** is a container that holds several widgets and renders them inside one shared capsule with a
-single common style. A group is a real item in the lane — its members live *inside* it, so inserting another
+single common style. A group is a real item in the lane - its members live *inside* it, so inserting another
 widget elsewhere can never split it. Grouping is managed entirely from the Settings GUI:
 
 1. Open **Settings → Bar → Bar Widgets**.
 2. **Drag one widget onto the middle of another** (using its drag handle) to instantly create a group from the two.
    Or tick the checkbox on two or more **adjacent** widgets and click **Group**. Either way they move into one
    group container and a style editor opens.
-3. Edit the group's background, border, foreground, padding, radius, and opacity — every member updates together.
+3. Edit the group's background, border, foreground, padding, radius, and opacity - every member updates together.
 4. **Drag a widget onto the group** to add it; **drag a member out**, or use its eject button, to remove it.
    Reorder members by dragging them within the group. Drag the group's own handle to move the whole group along
    the lane or into another lane.
@@ -280,4 +280,4 @@ opacity = 0.9
 
 A group's style can be overridden per monitor by declaring `[[bar.<name>.monitor.<match>.capsule_group]]` tables
 with matching `id` values. A reused widget name (e.g. several `spacer` instances) can appear in different groups
-independently — membership is positional, not a per-widget flag.
+independently - membership is positional, not a per-widget flag.

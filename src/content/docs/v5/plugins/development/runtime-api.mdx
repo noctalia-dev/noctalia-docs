@@ -6,7 +6,7 @@ sidebar:
   order: 5
 ---
 
-:::caution[Experimental — under heavy development]
+:::caution[Experimental - under heavy development]
 The plugin system is under **heavy development** and the manifest format, APIs, and behavior are subject to breaking
 changes at any time.
 :::
@@ -152,7 +152,7 @@ Only `url` is required. `http()` calls `cb(response)` once with:
 
 ## Sharing state across entries
 
-Entries are isolated VMs — they don't share Lua memory. Instead they exchange **plain values** through a per-plugin
+Entries are isolated VMs - they don't share Lua memory. Instead they exchange **plain values** through a per-plugin
 state channel:
 
 | Method | Returns | Description |
@@ -161,7 +161,7 @@ state channel:
 | `noctalia.state.get(key)` | value or `nil` | Reads the latest value for a key. |
 | `noctalia.state.watch(key, fn)` | nothing | Calls `fn(value)` whenever the key changes. |
 
-Values are **copied** across entries, so they must be plain data — strings, numbers, booleans, and tables of those (not
+Values are **copied** across entries, so they must be plain data - strings, numbers, booleans, and tables of those (not
 functions). A typical pattern is a `[[service]]` publishing data that the widget and shortcut watch.
 
 ```lua

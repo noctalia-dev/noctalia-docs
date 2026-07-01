@@ -23,25 +23,25 @@ GTK applications include most GNOME apps and many Linux applications. Noctalia c
    ```
 
 2. **Apply the GTK theme:**
-    - **Using nwg-look (recommended):**
+   - **Using nwg-look (recommended):**
       :::tip[GTK4 Theming]
       In nwg-look, make sure to **uncheck the GTK4 option**. Leaving GTK4 checked can prevent GTK4 applications from using Noctalia's color scheme.
 
       If you previously applied a custom GTK4 theme, you may need to hit **"Clear"** (found in the **Preference** tab) in nwg-look before reapplying and regenerating the color scheme. This ensures the new colors are accepted by GTK4 apps.
       :::
-       - Open `nwg-look`
-       - Select `adw-gtk3` from the theme list
-       - Click "Apply"
-       - ![nwg-look](../../../../../assets/app-theming/nwg-look.png)
+      - Open `nwg-look`
+      - Select `adw-gtk3` from the theme list
+      - Click "Apply"
+      - ![nwg-look](../../../../../assets/app-theming/nwg-look.png)
    
-   - **Using command line:**
+  - **Using command line:**
      ```bash
      gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
      ```
 
 3. **Enable GTK theming in Noctalia:**
-   - Open **Settings → Color Scheme → Templates**
-   - Toggle on **GTK**
+  - Open **Settings → Color Scheme → Templates**
+  - Toggle on **GTK**
 
 ### Troubleshooting
 
@@ -76,8 +76,8 @@ Qt applications include KDE apps and many cross-platform applications. Noctalia 
 
    :::tip[Better Integration with -kde variants]
    For better integration with KDE-specific applications, you can use the `-kde` variants of qtct:
-   - **qt6ct-kde**: Patched version of `qt6ct` for better integration with KDE Qt6 applications.
-   - **qt5ct-kde**: Patched version of `qt5ct` for better integration with KDE Qt5 applications. This may also help with theming Chromium-based browsers like **Brave** when they are set to use the Qt theme.
+  - **qt6ct-kde**: Patched version of `qt6ct` for better integration with KDE Qt6 applications.
+  - **qt5ct-kde**: Patched version of `qt5ct` for better integration with KDE Qt5 applications. This may also help with theming Chromium-based browsers like **Brave** when they are set to use the Qt theme.
    :::
 
 2. **Set environment variable:**
@@ -106,14 +106,14 @@ Qt applications include KDE apps and many cross-platform applications. Noctalia 
    ```
 
 3. **Enable Qt theming in Noctalia:**
-   - Open **Settings → Color Scheme → Templates**
-   - Toggle on **Qt**
+  - Open **Settings → Color Scheme → Templates**
+  - Toggle on **Qt**
 
 4. **Configure qt6ct:**
-   - Run `qt6ct` from terminal
-   - Go to **Color Scheme** tab
-   - Select `noctalia` from the dropdown
-   - Click **Apply** and **OK**
+  - Run `qt6ct` from terminal
+  - Go to **Color Scheme** tab
+  - Select `noctalia` from the dropdown
+  - Click **Apply** and **OK**
    
    :::tip[KDE File Picker]
    If you use the KDE file picker, go to the **Settings** tab in `qt6ct` and set **Standard dialogs** to **KDE** (note that this needs plasma-workspace to be installed to appear as a dropdown option)..
@@ -134,13 +134,13 @@ If you're using KDE Plasma, Noctalia can apply colors through the native KColorS
 ### Setup
 
 1. **Enable KColorScheme in Noctalia:**
-   - Open **Settings → Color Scheme → Templates**
-   - Toggle on **KColorScheme**
+  - Open **Settings → Color Scheme → Templates**
+  - Toggle on **KColorScheme**
 
 2. **Apply in KDE System Settings:**
-   - Open **System Settings → Appearance → Colors**
-   - Select the `noctalia` color scheme
-   - The scheme will update automatically when you change colors in Noctalia
+  - Open **System Settings → Appearance → Colors**
+  - Select the `noctalia` color scheme
+  - The scheme will update automatically when you change colors in Noctalia
 
 ### Troubleshooting
 

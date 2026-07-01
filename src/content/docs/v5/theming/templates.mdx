@@ -181,29 +181,29 @@ Numeric filter arguments are locale-invariant and use `.` as the decimal separat
 
 These operate on colors:
 
-- `grayscale` — no argument; converts to gray using luminance weighting
-- `invert` — no argument; inverts each RGB channel
-- `set_alpha` — alpha `0`–`1`, e.g. `set_alpha 0.5`
-- `set_lightness` — sets HSL lightness, `0`–`100`
-- `set_hue` — sets absolute hue in degrees, `0`–`360`
-- `rotate_hue` — rotates hue by a relative amount in degrees, e.g. `rotate_hue 30`
-- `set_saturation` — sets HSL saturation, `0`–`100`
-- `set_red` — sets the red channel, `0`–`255`
-- `set_green` — sets the green channel, `0`–`255`
-- `set_blue` — sets the blue channel, `0`–`255`
-- `lighten` — adds to lightness in percentage points, e.g. `lighten 10`
-- `darken` — subtracts from lightness in percentage points, e.g. `darken 10`
-- `saturate` — adds to saturation in percentage points, e.g. `saturate 10`
-- `desaturate` — subtracts from saturation in percentage points, e.g. `desaturate 10`
-- `auto_lightness` — shifts lightness by the given percentage points away from mid (lightens dark colors, darkens light ones)
+- `grayscale` - no argument; converts to gray using luminance weighting
+- `invert` - no argument; inverts each RGB channel
+- `set_alpha` - alpha `0`–`1`, e.g. `set_alpha 0.5`
+- `set_lightness` - sets HSL lightness, `0`–`100`
+- `set_hue` - sets absolute hue in degrees, `0`–`360`
+- `rotate_hue` - rotates hue by a relative amount in degrees, e.g. `rotate_hue 30`
+- `set_saturation` - sets HSL saturation, `0`–`100`
+- `set_red` - sets the red channel, `0`–`255`
+- `set_green` - sets the green channel, `0`–`255`
+- `set_blue` - sets the blue channel, `0`–`255`
+- `lighten` - adds to lightness in percentage points, e.g. `lighten 10`
+- `darken` - subtracts from lightness in percentage points, e.g. `darken 10`
+- `saturate` - adds to saturation in percentage points, e.g. `saturate 10`
+- `desaturate` - subtracts from saturation in percentage points, e.g. `desaturate 10`
+- `auto_lightness` - shifts lightness by the given percentage points away from mid (lightens dark colors, darkens light ones)
 
 ### Color-Argument Filters
 
 These accept another color:
 
-- `blend` — interpolates hue toward the given color by an amount `0`–`1` (default `1`), e.g. `blend: "#ff0000", 0.5`
-- `harmonize` — nudges hue toward the given color, capped at 15°
-- `to_color` — reinterprets a string value as a color so color filters can follow
+- `blend` - interpolates hue toward the given color by an amount `0`–`1` (default `1`), e.g. `blend: "#ff0000", 0.5`
+- `harmonize` - nudges hue toward the given color, capped at 15°
+- `to_color` - reinterprets a string value as a color so color filters can follow
 
 Examples:
 

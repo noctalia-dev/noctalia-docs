@@ -49,10 +49,10 @@ Every Noctalia plugin must include a `manifest.json` file that describes the plu
 - **Required**: Yes
 - **Description**: Unique identifier for your plugin
 - **Rules**:
-  - Must match the plugin directory name
-  - Use lowercase with hyphens (kebab-case)
-  - Should be globally unique
-  - Cannot be changed after publication
+ - Must match the plugin directory name
+ - Use lowercase with hyphens (kebab-case)
+ - Should be globally unique
+ - Cannot be changed after publication
 
 **Example**: `"my-plugin"`, `"privacy-indicator"`, `"launcher-button"`
 
@@ -69,9 +69,9 @@ Every Noctalia plugin must include a `manifest.json` file that describes the plu
 - **Format**: Semantic versioning (x.y.z)
 - **Description**: Plugin version number
 - **Rules**:
-  - Must follow semantic versioning
-  - Format: `MAJOR.MINOR.PATCH`
-  - Used for update detection
+ - Must follow semantic versioning
+ - Format: `MAJOR.MINOR.PATCH`
+ - Used for update detection
 
 **Example**: `"1.0.0"`, `"2.3.1"`
 
@@ -141,10 +141,10 @@ The `entryPoints` object specifies which components your plugin provides. All en
 - **File**: Main.qml
 - **Purpose**: Background logic and IPC handlers
 - **Use cases**:
-  - Process IPC commands
-  - Run background tasks
-  - Monitor system events
-  - Provide services to other components
+ - Process IPC commands
+ - Run background tasks
+ - Monitor system events
+ - Provide services to other components
 
 **Example**:
 ```json
@@ -161,10 +161,10 @@ See [IPC Guide](/v4/development/plugins/ipc/) for details.
 - **File**: BarWidget.qml
 - **Purpose**: Widget displayed in the top/bottom bar
 - **Use cases**:
-  - Display system information
-  - Show indicators
-  - Provide quick actions
-  - Open panels on click
+ - Display system information
+ - Show indicators
+ - Provide quick actions
+ - Open panels on click
 
 **Example**:
 ```json
@@ -181,10 +181,10 @@ See [Bar Widget Guide](/v4/development/plugins/bar-widget/) for details.
 - **File**: DesktopWidget.qml
 - **Purpose**: Draggable widget on the desktop background
 - **Use cases**:
-  - Display at-a-glance information
-  - Clock, weather, or media displays
-  - Audio visualizers
-  - Decorative elements
+ - Display at-a-glance information
+ - Clock, weather, or media displays
+ - Audio visualizers
+ - Decorative elements
 
 **Example**:
 ```json
@@ -201,8 +201,8 @@ See [Desktop Widget Guide](/v4/development/plugins/desktop-widget/) for details.
 - **File**: DesktopWidgetSettings.qml
 - **Purpose**: Per-instance settings UI for desktop widgets
 - **Use cases**:
-  - Configure individual widgets
-  - Per-instance options that differ from plugin-wide settings
+ - Configure individual widgets
+ - Per-instance options that differ from plugin-wide settings
 
 **Example**:
 ```json
@@ -223,9 +223,9 @@ See [Desktop Widget Guide](/v4/development/plugins/desktop-widget-settings/) for
 - **File**: ControlCenterWidget.qml
 - **Purpose**: Button widget in the Control Center panel
 - **Use cases**:
-  - Quick toggle actions
-  - Open plugin panels
-  - System shortcuts
+ - Quick toggle actions
+ - Open plugin panels
+ - System shortcuts
 
 **Example**:
 ```json
@@ -242,9 +242,9 @@ See [Control Center Widget Guide](/v4/development/plugins/control-center-widget/
 - **File**: LauncherProvider.qml
 - **Purpose**: Search/browse provider for the launcher
 - **Use cases**:
-  - Custom search sources
-  - Command handlers (e.g., `>kaomoji`)
-  - Category-based browsing
+ - Custom search sources
+ - Command handlers (e.g., `>kaomoji`)
+ - Category-based browsing
 
 **Example**:
 ```json
@@ -268,10 +268,10 @@ See [Launcher Provider Guide](/v4/development/plugins/launcher-provider/) for de
 - **File**: Panel.qml
 - **Purpose**: Full-screen overlay panel
 - **Use cases**:
-  - Detailed information display
-  - Complex UI interactions
-  - Configuration interfaces
-  - Content browsers
+ - Detailed information display
+ - Complex UI interactions
+ - Configuration interfaces
+ - Content browsers
 
 **Example**:
 ```json
@@ -288,10 +288,10 @@ See [Panel Guide](/v4/development/plugins/panel/) for details.
 - **File**: Settings.qml
 - **Purpose**: Settings UI integrated into Noctalia Settings
 - **Use cases**:
-  - User configuration
-  - Plugin customization
-  - Feature toggles
-  - Preferences
+ - User configuration
+ - Plugin customization
+ - Feature toggles
+ - Preferences
 
 **Example**:
 ```json
@@ -359,9 +359,9 @@ The `metadata` object contains additional plugin information.
 - **Default**: Plugin ID
 - **Description**: The command prefix used to activate this plugin's launcher provider
 - **Purpose**:
-  - Defines the `>prefix` command that activates your launcher provider
-  - Used by `pluginApi.toggleLauncher()` to pre-fill the search text
-  - Falls back to the plugin ID if not specified
+ - Defines the `>prefix` command that activates your launcher provider
+ - Used by `pluginApi.toggleLauncher()` to pre-fill the search text
+ - Falls back to the plugin ID if not specified
 
 **Usage**:
 ```json
@@ -383,9 +383,9 @@ Set `commandPrefix` when your desired command is shorter or different from your 
 - **Default**: `{}`
 - **Description**: Default values for plugin settings
 - **Purpose**:
-  - Provide initial values when plugin is first enabled
-  - Serve as fallback when settings file doesn't exist
-  - Document available settings
+ - Provide initial values when plugin is first enabled
+ - Serve as fallback when settings file doesn't exist
+ - Document available settings
 
 **Usage in plugin**:
 ```qml

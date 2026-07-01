@@ -42,12 +42,12 @@ play_sound      = true
 
 External notifications (from `org.freedesktop.Notifications` clients) can be filtered before toasts, sounds, and control-center history:
 
-- `[notification.filter.<name>]` — per-sender rules evaluated in `filter_order` (first matching enabled filter wins). Each filter has:
-  - `match` — one case-insensitive token matched against the app name (exact or substring), `desktop-entry`, or `category`.
-  - `allowed_urgencies` — when non-empty, only listed urgency levels pass this filter. Values: `low`, `normal`, `critical`. Omit or list all three to allow every level.
-  - `show_toast` — show a toast popup (default `true`).
-  - `save_history` — keep the notification in control-center history (default `true`).
-  - `play_sound` — play the notification sound when a toast is shown (default `true`).
+- `[notification.filter.<name>]` - per-sender rules evaluated in `filter_order` (first matching enabled filter wins). Each filter has:
+ - `match` - one case-insensitive token matched against the app name (exact or substring), `desktop-entry`, or `category`.
+ - `allowed_urgencies` - when non-empty, only listed urgency levels pass this filter. Values: `low`, `normal`, `critical`. Omit or list all three to allow every level.
+ - `show_toast` - show a toast popup (default `true`).
+ - `save_history` - keep the notification in control-center history (default `true`).
+ - `play_sound` - play the notification sound when a toast is shown (default `true`).
 
 When no filter matches, all flags default to allow. A fully suppressed notification (no toast and no history) still returns a valid D-Bus id; `CloseNotification` on that id succeeds without showing a toast.
 

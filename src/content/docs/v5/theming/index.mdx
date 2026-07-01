@@ -61,15 +61,15 @@ Names a palette served by `https://api.noctalia.dev/palette/<name>`. The shell d
 
 The Settings GUI lists palette names from the cached `https://api.noctalia.dev/palettes` catalog when that catalog is available.
 
-The catalog is refreshed on every launch and config reload. Each catalog entry carries an `md5` of its palette JSON; when the cached palette's checksum no longer matches the catalog, the shell re-downloads it and cross-fades to the updated colors. This means edits you publish to the online catalog reach clients automatically — no manual cache clearing. A cached palette whose catalog entry omits an `md5` is treated as up to date and kept. If the catalog cannot be fetched, the cached palette is used as-is, so community palettes still work offline.
+The catalog is refreshed on every launch and config reload. Each catalog entry carries an `md5` of its palette JSON; when the cached palette's checksum no longer matches the catalog, the shell re-downloads it and cross-fades to the updated colors. This means edits you publish to the online catalog reach clients automatically - no manual cache clearing. A cached palette whose catalog entry omits an `md5` is treated as up to date and kept. If the catalog cannot be fetched, the cached palette is used as-is, so community palettes still work offline.
 
-While the initial download is in flight — or if it fails — the shell falls back to `Noctalia` built-in and cross-fades once the download arrives.
+While the initial download is in flight - or if it fails - the shell falls back to `Noctalia` built-in and cross-fades once the download arrives.
 
 ---
 
 ## `custom_palette`
 
-Names a palette file in the Noctalia config directory's `palettes/` folder (honoring `NOCTALIA_CONFIG_HOME`, then `XDG_CONFIG_HOME`). The value is the file name without the `.json` extension — for example, `custom_palette = "MyPalette"` loads `~/.config/noctalia/palettes/MyPalette.json` with the default config location.
+Names a palette file in the Noctalia config directory's `palettes/` folder (honoring `NOCTALIA_CONFIG_HOME`, then `XDG_CONFIG_HOME`). The value is the file name without the `.json` extension - for example, `custom_palette = "MyPalette"` loads `~/.config/noctalia/palettes/MyPalette.json` with the default config location.
 
 The Settings GUI lists palette files found in the directory when `source = "custom"` is selected. If the file is missing or invalid, the shell falls back to the `Noctalia` built-in palette.
 
@@ -83,16 +83,16 @@ Picks the generator when `source = "wallpaper"`:
 
 | Value | Description |
 |-------|-------------|
-| `m3-tonal-spot` | M3 default — balanced tones anchored on the seed color |
-| `m3-content` | M3 for content-forward UIs — higher chroma |
+| `m3-tonal-spot` | M3 default - balanced tones anchored on the seed color |
+| `m3-content` | M3 for content-forward UIs - higher chroma |
 | `m3-fruit-salad` | M3 with playful cross-hue accents |
 | `m3-rainbow` | M3 spanning the full wheel for multi-accent layouts |
 | `m3-monochrome` | M3 collapsed to a single hue |
-| `vibrant` | Custom — saturated and high-contrast |
-| `faithful` | Custom — stays close to the source image |
-| `soft` | Custom — source-faithful with gentler saturation |
-| `dysfunctional` | Custom — deliberately off-kilter |
-| `muted` | Custom — low-saturation |
+| `vibrant` | Custom - saturated and high-contrast |
+| `faithful` | Custom - stays close to the source image |
+| `soft` | Custom - source-faithful with gentler saturation |
+| `dysfunctional` | Custom - deliberately off-kilter |
+| `muted` | Custom - low-saturation |
 
 ## Where next?
 
