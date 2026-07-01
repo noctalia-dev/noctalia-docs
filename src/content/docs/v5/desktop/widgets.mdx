@@ -106,8 +106,8 @@ format = "{:%H:%M}"
 |-------|------|---------|-------------|
 | Table key | string | (required) | Unique widget identifier (`clock_main` in `[desktop_widgets.widget.clock_main]`) |
 | `type` | string | (required) | Widget type (`clock`, `weather`, `media_player`, etc.) |
-| `output` | string | - | Monitor name (e.g. `"DP-1"`) |
-| `cx`, `cy` | float | - | Center position in logical pixels |
+| `output` | string | — | Monitor name (e.g. `"DP-1"`) |
+| `cx`, `cy` | float | — | Center position in logical pixels |
 | `box_width` | float | `0.0` | Widget box width in logical pixels; `0.0` auto-fits the content |
 | `box_height` | float | `0.0` | Widget box height in logical pixels; `0.0` auto-fits the content |
 | `rotation` | float | `0.0` | Rotation in radians |
@@ -185,7 +185,7 @@ circle = true
 
 ### audio_visualizer
 
-Desktop audio visualizers fill their widget box: the spectrum spans the full box width and the bars use the full box height. `box_width` and `box_height` set the box size - resize the box to change the visualizer's shape; leave both `0.0` to start from the default footprint. They also accept optional `mirrored`, `centered`, `show_when_idle`, `color_1`, and `color_2` settings; both colors default to `primary`.
+Desktop audio visualizers fill their widget box: the spectrum spans the full box width and the bars use the full box height. `box_width` and `box_height` set the box size — resize the box to change the visualizer's shape; leave both `0.0` to start from the default footprint. They also accept optional `mirrored`, `centered`, `show_when_idle`, `color_1`, and `color_2` settings; both colors default to `primary`.
 
 ```toml
 [desktop_widgets.widget.audio_main]
@@ -262,7 +262,7 @@ secondary_color    = "secondary"
 
 ### weather
 
-Draws the current weather glyph alongside the temperature and short condition, driven by the shared `WeatherService`. Requires `[weather] enabled = true` in `config.toml` (see [Services - Weather](/v5/services/#weather)) - the widget will render a placeholder otherwise.
+Draws the current weather glyph alongside the temperature and short condition, driven by the shared `WeatherService`. Requires `[weather] enabled = true` in `config.toml` (see [Services — Weather](/v5/services/#weather)) — the widget will render a placeholder otherwise.
 
 ```toml
 [desktop_widgets.widget.weather_main]
@@ -372,7 +372,7 @@ opacity    = 1.0
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `image_path` | string | - | Absolute path to the image file (PNG, JPEG, WebP, SVG, or GIF) |
+| `image_path` | string | — | Absolute path to the image file (PNG, JPEG, WebP, SVG, or GIF) |
 | `opacity` | float | `1.0` | Sticker image opacity from `0.0` to `1.0` |
 
 ---
@@ -446,7 +446,7 @@ background     = true
 |---------|------|---------|-------------|
 | `display` | string | `"graph"` | `"graph"` shows a scrolling history chart; `"gauge"` shows a compact pill gauge like the bar sysmon widget |
 | `stat` | string | `"cpu_usage"` | Primary stat: `"cpu_usage"`, `"cpu_temp"`, `"gpu_temp"`, `"gpu_vram"`, `"ram_pct"`, `"swap_pct"`, `"net_rx"`, `"net_tx"` |
-| `stat2` | string | - | Graph mode only. Optional secondary stat (same values as `stat`). Omit for single curve. |
+| `stat2` | string | — | Graph mode only. Optional secondary stat (same values as `stat`). Omit for single curve. |
 | `gauge_layout` | string | `"horizontal"` | Gauge mode only. `"horizontal"` lays out icon, vertical pill gauge, and value in a row; `"vertical"` stacks icon, horizontal pill gauge, and value |
 | `interface` | string | `""` | Network interface to monitor for `net_rx`/`net_tx`; empty uses the total across all non-loopback interfaces |
 | `network_speed_unit` | string | `"auto"` | Unit for `net_rx`/`net_tx`: `"auto"` (scales between B/s, kB/s, MB/s, GB/s), `"kb"` (always kB/s), or `"mb"` (always MB/s) |

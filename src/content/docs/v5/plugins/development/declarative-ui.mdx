@@ -6,7 +6,7 @@ sidebar:
   order: 4
 ---
 
-:::caution[Experimental - under heavy development]
+:::caution[Experimental — under heavy development]
 The plugin system is under **heavy development** and the manifest format, APIs, and behavior are subject to breaking
 changes at any time.
 :::
@@ -14,7 +14,7 @@ changes at any time.
 Desktop widgets and panels do not patch a fixed control. They describe their UI as a retained `ui.*` tree; Noctalia
 diffs each render against the previous tree and updates native controls in place.
 
-## `desktopWidget.*` - declarative desktop widget UI {#desktopwidget--declarative-desktop-widget-ui}
+## `desktopWidget.*` — declarative desktop widget UI {#desktopwidget--declarative-desktop-widget-ui}
 
 A desktop widget hands its tree to `desktopWidget.render(tree)`. Build trees with the `ui.*` constructors (available in
 every desktop-widget script); each takes a props table and an optional children array:
@@ -42,7 +42,7 @@ end
 ## Shared `ui.*` controls
 
 The available controls and their props (sizes are logical px, scaled with the surface). **Desktop widgets and panels
-share this vocabulary** - panels additionally use the interactive controls below (`ui.input`, `ui.select`, etc.).
+share this vocabulary** — panels additionally use the interactive controls below (`ui.input`, `ui.select`, etc.).
 
 | Constructor | Props |
 |-------------|-------|
@@ -60,41 +60,41 @@ share this vocabulary** - panels additionally use the interactive controls below
 | `ui.toggle` | `checked` (bool), `enabled`, `onChange` |
 | `ui.slider` | `min`, `max`, `step`, `value`, `enabled`, `onChange`, `onDragEnd` |
 | `ui.select` | `options` (array of strings), `selectedIndex`, `placeholder`, `enabled`, `width`, `height`, `onChange` |
-| `ui.input` | `value` (initial text only - see below), `placeholder`, `fontSize`, `password` (bool), `enabled`, `onChange`, `onSubmit` |
+| `ui.input` | `value` (initial text only — see below), `placeholder`, `fontSize`, `password` (bool), `enabled`, `onChange`, `onSubmit` |
 
 Every control also accepts `width`, `height`, `flexGrow`, `opacity`, and `visible`. Colors are a palette role token
-(`primary`, `on_surface`, …) or a hex value (`#rrggbb`). An unknown control type or prop is logged and skipped - typos
+(`primary`, `on_surface`, …) or a hex value (`#rrggbb`). An unknown control type or prop is logged and skipped — typos
 surface in the log instead of failing silently.
 
 - **Layout default**: `ui.column` / `ui.row` / `ui.scroll` **stretch** their children across the cross axis (a column
-  fills its width, a row fills its height), like CSS flexbox. Override per node with `align` - e.g. a row of
+  fills its width, a row fills its height), like CSS flexbox. Override per node with `align` — e.g. a row of
   vertically-centered items uses `align = "center"`.
 - **Callbacks**: a callback prop names a **global function in your script** (not a closure). `onClick = "name"` fires on
   a button click; `onChange = "name"` fires when a toggle/slider/select/input value changes (the value is passed to the
-  global as a string - `"true"`/`"false"` for a toggle, a number for a slider, the text for an input, the index for a
+  global as a string — `"true"`/`"false"` for a toggle, a number for a slider, the text for an input, the index for a
   select); `onSubmit` fires when the user presses Enter in an input.
-- **Controlled vs. uncontrolled**: `toggle`/`slider`/`select` are **value-driven** - pass the current value on every
+- **Controlled vs. uncontrolled**: `toggle`/`slider`/`select` are **value-driven** — pass the current value on every
   render and update it from the callback. `ui.input` is **uncontrolled**: `value` seeds the field once, then the host
-  owns the text as the user types - re-rendering never overwrites it. Read edits through `onChange`/`onSubmit`, and give
+  owns the text as the user types — re-rendering never overwrites it. Read edits through `onChange`/`onSubmit`, and give
   the input a stable `key` so it keeps its text across renders.
 - **Identity**: give list children a `key` prop so reordering reuses the same native controls.
-- **Images**: `ui.image` loads **local files only** - download remote previews with `noctalia.download(url, dest, cb)`
+- **Images**: `ui.image` loads **local files only** — download remote previews with `noctalia.download(url, dest, cb)`
   first, then pass the saved path. `onClick` on `ui.image` and `ui.box` wraps the visual in a click target (thumbnail
   grids, placeholder tiles).
 - **Glyph-only buttons**: when only `glyph` is set, any previous `text` is cleared so retained buttons do not keep
   stale labels across re-renders.
 - **Ticks**: `setWantsSecondTicks(true)` runs `update()` on second boundaries (clocks/timers).
-  `setNeedsFrameTick(true)` additionally delivers `onFrameTick(deltaMs)` every frame for continuous animation - frames
+  `setNeedsFrameTick(true)` additionally delivers `onFrameTick(deltaMs)` every frame for continuous animation — frames
   are coalesced, a slow script only ever sees the latest one.
 - **Position is host-owned**: the user places, sizes, and rotates the tile in the desktop-widgets editor; the script
   only renders content and reads its declared settings.
 
-The reference implementation is the official `noctalia/timer` plugin - a countdown timer with start/pause/reset
+The reference implementation is the official `noctalia/timer` plugin — a countdown timer with start/pause/reset
 buttons and a progress bar.
 
-## `panel.*` - declarative panel UI {#panel--declarative-panel-ui}
+## `panel.*` — declarative panel UI {#panel--declarative-panel-ui}
 
-A panel is a pop-up surface that describes its UI as a `ui.*` tree, exactly like a desktop widget - but it is
+A panel is a pop-up surface that describes its UI as a `ui.*` tree, exactly like a desktop widget — but it is
 **opened by id** rather than placed, and it can hold the **interactive** controls (`ui.input`, `ui.select`,
 `ui.slider`, `ui.toggle`, `ui.scroll`) because it takes keyboard focus while open. Render in `onOpen` (and again from
 any callback that changes state):
@@ -105,7 +105,7 @@ Panel **size is host-owned**: declare `width` and `height` (logical px) on the `
 same size on every open. There is no `setSize` at runtime.
 
 **Placement** matches built-in shell panels (`attached` merges with the bar, `floating` opens detached). The host
-injects three standard settings for every `[[panel]]` entry - you do **not** declare them as `[[panel.setting]]` unless
+injects three standard settings for every `[[panel]]` entry — you do **not** declare them as `[[panel.setting]]` unless
 you need a custom key. They appear in **Settings → Plugins** (gear on the plugin row) with the same controls as built-in
 panels: a segmented **Attached / Floating** toggle, a **Position** dropdown (only when floating), and **Open Near
 Click**.
@@ -165,6 +165,6 @@ The same panel can also be opened, closed, or toggled externally over IPC:
 noctalia msg panel-toggle noctalia/example:panel
 ```
 
-The reference implementation is the `panel` entry of the official `noctalia/example` plugin - a settings-style panel
+The reference implementation is the `panel` entry of the official `noctalia/example` plugin — a settings-style panel
 exercising every interactive control. `noctalia/wallhaven:browser` is a network-backed panel (thumbnail grid, filters,
 download + apply via `noctalia.wallpaperDirectory()` and `noctalia.setWallpaper()`).

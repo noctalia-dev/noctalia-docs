@@ -15,7 +15,7 @@ const dataAttributes: DOMStringMap = { 'data-translations': JSON.stringify(pagef
 if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash'] = '';
 
 const pathname = Astro.url.pathname;
-dataAttributes['data-doc-version'] = pathname.startsWith('/v4/') || pathname === '/v4' ? 'v4' : 'v5';
+dataAttributes['data-doc-version'] = pathname.startsWith('/v5/') || pathname === '/v5' ? 'v5' : 'v4';
 ---
 
 <site-search class={Astro.props.class} {...dataAttributes}>

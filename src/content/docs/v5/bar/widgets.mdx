@@ -105,7 +105,7 @@ Pill styling and `capsule_radius` are ignored when `minimal = true`.
 display = "id"          # none | id | name
 minimal = false         # true = text-only labels, no animated pills
 max_label_chars = 2     # truncate long workspace names (e.g. "VESKTOP" → "VE")
-labels_only_when_occupied = true  # (1) (2*) ( ) (4) - occupied tags and the active tag show labels (*active but empty)
+labels_only_when_occupied = true  # (1) (2*) ( ) (4) — occupied tags and the active tag show labels (*active but empty)
 hide_when_empty = true
 pill_scale = 1.0
 active_pill_size = 2.2
@@ -636,7 +636,7 @@ The capture **output policy** (save to file, output directory, filename pattern,
 - **Left-click**: runs `primary_click` (region or fullscreen) using the global output policy.
 - **Right-click**: opens a menu with fullscreen and region capture.
 
-**Fullscreen** on a **single monitor** captures that output immediately (focused monitor when using IPC with no argument). On **multiple monitors**, fullscreen opens a **display picker**: a top bar labeled “Choose display” with one button per connector (`DP-1`, `HDMI-A-1`, …). Click a button from **any** screen to capture that output - you do not need to move the pointer onto that monitor first. Clicking the dimmed desktop captures the monitor under the cursor (same as before). Press a **`[keybinds].cancel`** chord (default **Escape**) to dismiss the picker.
+**Fullscreen** on a **single monitor** captures that output immediately (focused monitor when using IPC with no argument). On **multiple monitors**, fullscreen opens a **display picker**: a top bar labeled “Choose display” with one button per connector (`DP-1`, `HDMI-A-1`, …). Click a button from **any** screen to capture that output—you do not need to move the pointer onto that monitor first. Clicking the dimmed desktop captures the monitor under the cursor (same as before). Press a **`[keybinds].cancel`** chord (default **Escape**) to dismiss the picker.
 
 **Region** mode shows a dimmed overlay; drag to select, release to capture. Press **`[keybinds].cancel`** to cancel. With `freeze_screen = true`, the shell captures each output first, then shows the frozen frame under the dim overlay while you select; the final PNG is cropped from that snapshot.
 
@@ -665,7 +665,7 @@ Both commands use the global `[shell.screenshot]` output policy. The canonical c
 |----------------------------------|----------|
 | *(none)* | Focused monitor |
 | `pick` | Display picker (multi-monitor); immediate capture on one monitor |
-| `DP-2`, `HDMI-A-1`, … | Named output only - no picker; exact connector name or word-boundary match in the output description |
+| `DP-2`, `HDMI-A-1`, … | Named output only—no picker; exact connector name or word-boundary match in the output description |
 | `all` or `*` | One combined desktop PNG |
 
 The bar widget’s fullscreen action matches `pick` on multi-monitor setups. To capture a specific display from a script without UI, pass the connector name (for example `noctalia msg screenshot-fullscreen DP-1`).

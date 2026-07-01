@@ -74,14 +74,14 @@ Each entry is either a directory (which loads every `*.toml` directly inside it,
 files = ["bars/base.toml"]   # base.toml sets bar.top.thickness = 30
 
 [bar.top]
-thickness = 40               # this wins - the bar ends up 40
+thickness = 40               # this wins — the bar ends up 40
 ```
 
-Includes can nest (an included file can include more files), and each file is loaded at most once - if two files include the same file, it is merged once and a cycle is detected and skipped rather than looping forever.
+Includes can nest (an included file can include more files), and each file is loaded at most once — if two files include the same file, it is merged once and a cycle is detected and skipped rather than looping forever.
 
 ### Switching profiles
 
-By default, every `*.toml` in the config folder still loads automatically alongside your includes. If you keep alternative setups in the root that should not all load at once - say `profile_a.toml` and `profile_b.toml` - set `autoload = false` in your entry file. Then **only** the file(s) that set it (plus whatever they include) load, and the other root files are ignored:
+By default, every `*.toml` in the config folder still loads automatically alongside your includes. If you keep alternative setups in the root that should not all load at once — say `profile_a.toml` and `profile_b.toml` — set `autoload = false` in your entry file. Then **only** the file(s) that set it (plus whatever they include) load, and the other root files are ignored:
 
 ```toml
 # ~/.config/noctalia/config.toml
@@ -90,14 +90,14 @@ autoload = false
 files = ["profiles/work.toml"]
 ```
 
-`autoload` only has an effect in a file loaded directly from the config folder; it is ignored in included files. `[include]` is honored in your config files only - it has no effect in the app-managed `settings.toml`.
+`autoload` only has an effect in a file loaded directly from the config folder; it is ignored in included files. `[include]` is honored in your config files only — it has no effect in the app-managed `settings.toml`.
 
 ## Which value wins?
 
 Noctalia loads configuration in this order:
 
 1. Built-in defaults
-2. Your `*.toml` files in the resolved config directory - for each file, anything it pulls in via `[include]` first, then the file's own settings on top
+2. Your `*.toml` files in the resolved config directory — for each file, anything it pulls in via `[include]` first, then the file's own settings on top
 3. GUI-managed overrides in the resolved state directory's `settings.toml`
 
 Because `settings.toml` loads last, it wins when it contains the same setting as your hand-written config layer.
@@ -122,7 +122,7 @@ Where Noctalia keeps everything, by purpose:
 
 | What | Where | Purpose |
 |------|-------|---------|
-| Your config | `~/.config/noctalia/config.toml` | hand-written / declarative - the base layer |
+| Your config | `~/.config/noctalia/config.toml` | hand-written / declarative — the base layer |
 | GUI overrides | `~/.local/state/noctalia/settings.toml` | written by Settings; wins over your config |
 | Internal UI state | `~/.local/state/noctalia/state.toml` | app-managed (calendar account tokens, last-used values) |
 | Custom palettes | `~/.config/noctalia/palettes/` | your own color palette files |
@@ -133,9 +133,9 @@ Where Noctalia keeps everything, by purpose:
 
 It comes down to **two buckets**:
 
-- **Yours** - `~/.config/noctalia/` (settings you write) and `~/.local/share/noctalia/` (plugins you install).
-- **Noctalia's** - `~/.local/state/noctalia/` (everything the app writes or fetches: GUI overrides, UI state, plugin
-  repo caches, exported plugin files, downloaded catalogs) - app-managed and regenerable, so it's always safe to delete.
+- **Yours** — `~/.config/noctalia/` (settings you write) and `~/.local/share/noctalia/` (plugins you install).
+- **Noctalia's** — `~/.local/state/noctalia/` (everything the app writes or fetches: GUI overrides, UI state, plugin
+  repo caches, exported plugin files, downloaded catalogs) — app-managed and regenerable, so it's always safe to delete.
 
 Every path honors the standard `XDG_CONFIG_HOME` / `XDG_STATE_HOME` / `XDG_DATA_HOME` variables (and the
 `NOCTALIA_CONFIG_HOME` / `NOCTALIA_STATE_HOME` / `NOCTALIA_DATA_HOME` overrides).
@@ -198,10 +198,10 @@ noctalia config validate ./config.toml
 
 It reports two severities:
 
-- **Errors** - problems that stop the configuration from loading correctly: TOML syntax errors (with file, line, and column), values that fail to parse such as an invalid color, an `[include]` whose `files` entry points at a path that does not exist, or a malformed `[include]` table (`autoload` that is not a boolean, `files` that is not a list of strings). These exit with status `1`.
-- **Warnings** - things the shell loads fine but quietly ignores or adjusts: unknown/obsolete sections and settings (misspelled or left over from an older version), values outside the allowed range (clamped), and invalid enum choices. Warnings are advisory and do **not** fail the check. Unknown widget and desktop-widget settings are checked against each widget type's known options.
+- **Errors** — problems that stop the configuration from loading correctly: TOML syntax errors (with file, line, and column), values that fail to parse such as an invalid color, an `[include]` whose `files` entry points at a path that does not exist, or a malformed `[include]` table (`autoload` that is not a boolean, `files` that is not a list of strings). These exit with status `1`.
+- **Warnings** — things the shell loads fine but quietly ignores or adjusts: unknown/obsolete sections and settings (misspelled or left over from an older version), values outside the allowed range (clamped), and invalid enum choices. Warnings are advisory and do **not** fail the check. Unknown widget and desktop-widget settings are checked against each widget type's known options.
 
-A config with only warnings still prints `✓ Config is valid` and exits `0` (with the warnings listed), so unknown keys won't break a pre-commit hook or CI step - they're surfaced as cleanup hints. Only genuine errors exit `1`.
+A config with only warnings still prints `✓ Config is valid` and exits `0` (with the warnings listed), so unknown keys won't break a pre-commit hook or CI step — they're surfaced as cleanup hints. Only genuine errors exit `1`.
 
 ## Where next?
 

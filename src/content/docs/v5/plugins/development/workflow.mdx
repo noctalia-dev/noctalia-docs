@@ -6,7 +6,7 @@ sidebar:
   order: 6
 ---
 
-:::caution[Experimental - under heavy development]
+:::caution[Experimental — under heavy development]
 The plugin system is under **heavy development** and the manifest format, APIs, and behavior are subject to breaking
 changes at any time. Community plugin submissions are **not accepted yet**.
 :::
@@ -18,21 +18,21 @@ directory), then enable it once. Edits to `.luau` files hot-reload automatically
 next config reload. Drive an entry's `onIpc` handler from the shell to test:
 
 :::tip[Source precedence]
-A plugin id is canonical - only one copy of a given `author/plugin` ever loads. When the same id ships from more than
+A plugin id is canonical — only one copy of a given `author/plugin` ever loads. When the same id ships from more than
 one source, the **highest-precedence** copy wins: the local data dir overrides everything, a later-added source
 overrides an earlier one, and user sources override the built-in `official`/`community` sources. So you can clone the
-official or community repo, add it as a source, and edit plugins in place to override the built-in copies - no need to
+official or community repo, add it as a source, and edit plugins in place to override the built-in copies — no need to
 rename ids. (Working on a single plugin? The data-dir drop-in above is simplest and outranks all sources.)
 :::
 
 ```sh
-# A bar widget - target a specific output (focused / connector / a-bar-name) or all:
+# A bar widget — target a specific output (focused / connector / a-bar-name) or all:
 noctalia msg plugin me/hello:hello focused greet "hi there"
 
-# A service - it is a singleton with no output, so address it with the `all` target:
+# A service — it is a singleton with no output, so address it with the `all` target:
 noctalia msg plugin me/hello:ticker all refresh
 
-# A panel - toggle by full entry id:
+# A panel — toggle by full entry id:
 noctalia msg panel-toggle me/hello:panel
 ```
 
@@ -41,7 +41,7 @@ The target picks which live instances receive the event: `focused` (the focused 
 
 ## Publishing
 
-Plugins are distributed from **source repos** - one repo holds many plugins, each in its own subdirectory matching the
+Plugins are distributed from **source repos** — one repo holds many plugins, each in its own subdirectory matching the
 part of the id after the `/` (so `me/hello` lives at `hello/`). Add a `catalog.toml` at the repo root indexing every
 plugin so it can be listed and compat-checked without a full clone:
 

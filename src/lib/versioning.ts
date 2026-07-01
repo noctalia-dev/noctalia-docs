@@ -5,7 +5,7 @@ export const SIDEBAR_GROUP_V4 = 'Noctalia v4';
 export const SIDEBAR_GROUP_V5 = 'Noctalia v5';
 
 export function isV5Path(pathname: string): boolean {
-  return pathname === '/' || pathname === '/v5' || pathname.startsWith('/v5/');
+  return pathname === '/v5' || pathname.startsWith('/v5/');
 }
 
 /**

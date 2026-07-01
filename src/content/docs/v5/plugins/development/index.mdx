@@ -6,13 +6,13 @@ sidebar:
   order: 1
 ---
 
-:::caution[Experimental - under heavy development]
+:::caution[Experimental — under heavy development]
 The plugin system is under **heavy development** and the manifest format, APIs, and behavior are subject to breaking
 changes at any time. Build plugins for experimentation only. Community plugin submissions are **not accepted yet**.
 :::
 
 A plugin is a directory with a static `plugin.toml` manifest and one or more [Luau](https://luau.org) entry scripts.
-Each entry runs in its own isolated Luau VM, off the UI thread, with per-call time budgets - a slow or crashing script
+Each entry runs in its own isolated Luau VM, off the UI thread, with per-call time budgets — a slow or crashing script
 never stalls the shell. Plugins are trusted code: installing one is equivalent to running a user-owned script.
 
 ```

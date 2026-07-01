@@ -125,7 +125,7 @@ Common iCloud failures:
 
 ## Google setup
 
-In Settings, choose **Google**, then press **Save and Connect**. For manual TOML, add a named account table with `type = "google"`, enable the calendar service, then open **Settings → Services → Calendar**, edit the account, and press **Save and Connect**. A browser tab opens for Google's consent screen; approve it and the tab confirms completion. Tokens are obtained through the noctalia OAuth broker (`api.noctalia.dev`) - no Google Cloud project or client secret is required on your side. Access is `calendar.readonly`.
+In Settings, choose **Google**, then press **Save and Connect**. For manual TOML, add a named account table with `type = "google"`, enable the calendar service, then open **Settings → Services → Calendar**, edit the account, and press **Save and Connect**. A browser tab opens for Google's consent screen; approve it and the tab confirms completion. Tokens are obtained through the noctalia OAuth broker (`api.noctalia.dev`) — no Google Cloud project or client secret is required on your side. Access is `calendar.readonly`.
 
 :::note
 The account id is the last segment of the named table. For `[calendar.account.work_google]`, the id is `work_google`. It must **not** be your Google email address. The signed-in Google account is chosen during browser authorization, not from the table name.

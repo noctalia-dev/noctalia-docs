@@ -1,7 +1,7 @@
 ---
 const { head } = Astro.locals.starlightRoute;
 const pathname = Astro.url.pathname;
-const version = pathname.startsWith('/v4/') || pathname === '/v4' ? 'v4' : 'v5';
+const version = pathname.startsWith('/v5/') || pathname === '/v5' ? 'v5' : 'v4';
 
 function textFromHeadMeta(name: 'description' | 'twitter:card' | 'twitter:image') {
   const entry = head.find(({ tag, attrs }) => tag === 'meta' && attrs?.name === name);

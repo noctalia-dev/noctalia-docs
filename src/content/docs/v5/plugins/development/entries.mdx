@@ -6,7 +6,7 @@ sidebar:
   order: 3
 ---
 
-:::caution[Experimental - under heavy development]
+:::caution[Experimental — under heavy development]
 The plugin system is under **heavy development** and the manifest format, APIs, and behavior are subject to breaking
 changes at any time.
 :::
@@ -25,12 +25,12 @@ apply depends on the entry kind:
 | `onFrameTick(deltaMs)` | | | | ✓ | | | every frame, after `desktopWidget.setNeedsFrameTick(true)` |
 | `onIpc(event, payload)` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | `noctalia msg plugin …` |
 
-The top level of the script runs once at load - set up state and register `noctalia.state.watch` handlers there.
+The top level of the script runs once at load — set up state and register `noctalia.state.watch` handlers there.
 
 Desktop widgets and panels use declarative `ui.*` trees. See [Declarative UI](/v5/plugins/development/declarative-ui/)
 for their rendering APIs and controls.
 
-## `barWidget.*` - widget presentation + settings
+## `barWidget.*` — widget presentation + settings
 
 `setText` · `setGlyph` · `setImage` · `setTooltip` · `clearTooltip` · `setFont` · `setColor` · `setGlyphColor` ·
 `setVisible` · `isVertical` · `getConfig(key)`
@@ -49,7 +49,7 @@ function onClick()
 end
 ```
 
-## `shortcut.*` - control-center tile
+## `shortcut.*` — control-center tile
 
 `setLabel(text)` · `setIcon(on [, off])` · `setActive(bool)` · `setEnabled(bool)`
 
@@ -70,29 +70,29 @@ function onClick()
 end
 ```
 
-## `launcher.*` - launcher provider
+## `launcher.*` — launcher provider
 
 A launcher provider answers queries behind a **prefix** declared in the manifest. The user types the prefix, and
 everything after it is passed to `onQuery(text)`; the provider replies with `launcher.setResults(query, results)`.
 `onActivate(id)` runs when a result is selected (the `id` is whatever you set on that result).
 
-Manifest fields on a `[[launcher_provider]]` entry: `prefix` (the trigger - use a leading `/` to match the built-in
+Manifest fields on a `[[launcher_provider]]` entry: `prefix` (the trigger — use a leading `/` to match the built-in
 providers and appear in the launcher's `/` overview), `glyph` (default result icon), `include_in_global_search`
 (also answer the un-prefixed search; default `false`), and `debounce_ms` (wait this long after the last keystroke
-before running `onQuery` - set it for network-backed providers so you aren't called on every character; default `0`).
+before running `onQuery` — set it for network-backed providers so you aren't called on every character; default `0`).
 
 `setResults(query, results)` · `setQuery(query)` · `getConfig(key)`
 
-- `query` **must echo** the `text` from `onQuery`, so late results map back to the query they answer - the latest one
+- `query` **must echo** the `text` from `onQuery`, so late results map back to the query they answer — the latest one
   wins. Calling it with an empty list clears the provider's results.
 - Each result is a table: `{ id, title, subtitle?, glyph?, icon?, badge?, query?, score? }`. `id` is passed back to
   `onActivate` unless `query` is set. Results are ordered by `score` (descending), then insertion order.
 - `glyph` (a Tabler/Nerd-Font name) or `icon` (a themed icon name) is the row's leading visual. `badge` is a short
-  string (e.g. an emoji or `=`) drawn *in place of* the icon - setting it hides `glyph`/`icon`. Use the `subtitle` for
+  string (e.g. an emoji or `=`) drawn *in place of* the icon — setting it hides `glyph`/`icon`. Use the `subtitle` for
   secondary text.
 - `setQuery(query)` replaces the open launcher's raw input text. Call it from `onActivate` to treat a result as a
   drill-in step: the launcher rewrites the input and **stays open** instead of closing, then re-runs `onQuery` with the
-  new text. A result-level `query` field does the same declaratively - when that result is selected the launcher
+  new text. A result-level `query` field does the same declaratively — when that result is selected the launcher
   replaces the input with it and stays open, no `onActivate` needed. Either way, include your prefix to stay routed to
   the same provider, e.g. `"/tr french "`. (An `onActivate` that does *not* call `setQuery` closes the launcher as
   usual.)
@@ -100,7 +100,7 @@ before running `onQuery` - set it for network-backed providers so you aren't cal
 Use `noctalia.fuzzyScore(pattern, text)` to rank local lists with Noctalia's native fuzzy matcher. It returns a numeric
 score, or `nil` when `pattern` does not match `text`.
 
-Queries run off the UI thread, so a result can arrive after `onQuery` returns - publish a placeholder synchronously,
+Queries run off the UI thread, so a result can arrive after `onQuery` returns — publish a placeholder synchronously,
 then call `setResults` again from an async callback (HTTP, subprocess) when the real answer lands.
 
 ```toml
