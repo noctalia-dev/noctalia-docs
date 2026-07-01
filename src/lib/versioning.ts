@@ -5,7 +5,7 @@ export const SIDEBAR_GROUP_V4 = 'Noctalia v4';
 export const SIDEBAR_GROUP_V5 = 'Noctalia v5';
 
 export function isV5Path(pathname: string): boolean {
-  return pathname === '/v5' || pathname.startsWith('/v5/');
+  return pathname === '/' || pathname === '/v5' || pathname.startsWith('/v5/');
 }
 
 /**
@@ -30,9 +30,9 @@ export function pickVersionSidebarEntries(
   );
   if (byPrefix) return byPrefix.entries;
 
-  // Order in astro.config: [0] = v4 line, [1] = v5 line
+  // Order in astro.config: [0] = v5 line, [1] = v4 line
   if (groups.length >= 2) {
-    return wantV5 ? groups[1].entries : groups[0].entries;
+    return wantV5 ? groups[0].entries : groups[1].entries;
   }
   if (groups.length === 1) {
     return groups[0].entries;
