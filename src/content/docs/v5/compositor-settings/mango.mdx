@@ -17,7 +17,7 @@ exec-once=noctalia
 
 ## Blur and shadows
 
-Mango's SceneFX layer blur does not filter by surface opacity. If layer blur is enabled, transparent Noctalia surfaces can still receive compositor blur. For the cleanest result, let Mango own both layer blur and layer shadows, and turn off Noctalia's own drop shadows so the effects do not stack.
+Mango's SceneFX layer blur does not filter by surface opacity. If layer blur is enabled, transparent Noctalia surfaces can still receive compositor blur. For the cleanest result, disable Mango's blur and layer shadows, and turn on Noctalia's own drop shadows.
 
 Add this to `~/.config/mango/config.conf`:
 
