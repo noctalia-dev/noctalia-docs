@@ -95,6 +95,23 @@ Examples:
 {{ colors.terminal_foreground.default.hex_stripped }}
 ```
 
+### Available Color Tokens
+
+The built-in Material color tokens are:
+
+| Group | Tokens |
+|-------|--------|
+| Primary | `primary`, `on_primary`, `primary_container`, `on_primary_container`, `primary_fixed`, `primary_fixed_dim`, `on_primary_fixed`, `on_primary_fixed_variant` |
+| Secondary | `secondary`, `on_secondary`, `secondary_container`, `on_secondary_container`, `secondary_fixed`, `secondary_fixed_dim`, `on_secondary_fixed`, `on_secondary_fixed_variant` |
+| Tertiary | `tertiary`, `on_tertiary`, `tertiary_container`, `on_tertiary_container`, `tertiary_fixed`, `tertiary_fixed_dim`, `on_tertiary_fixed`, `on_tertiary_fixed_variant` |
+| Error | `error`, `on_error`, `error_container`, `on_error_container` |
+| Surface | `surface`, `on_surface`, `surface_variant`, `on_surface_variant`, `surface_dim`, `surface_bright`, `surface_container_lowest`, `surface_container_low`, `surface_container`, `surface_container_high`, `surface_container_highest` |
+| Outline and utility | `outline`, `outline_variant`, `shadow`, `scrim` |
+| Inverse | `inverse_surface`, `inverse_on_surface`, `inverse_primary` |
+| Background | `background`, `on_background` |
+
+This list covers the 48 Material color tokens exposed through `colors`. Terminal tokens are listed in [Terminal Tokens](#terminal-tokens). Custom colors add their generated token names at render time; see [Custom Colors](#custom-colors).
+
 ### Modes
 
 Supported modes:
