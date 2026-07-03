@@ -49,6 +49,7 @@ Set these yourself. The greeter UI does not change them.
 | `[keyboard].layout` | XKB layout code(s), e.g. `cz`, `us`, `de,cz` (comma-separated for multiple layouts; see [Keyboard layout](#keyboard-layout)) |
 | `[keyboard].variant` | XKB variant(s), e.g. `qwertz` (optional; comma-separated when multiple layouts) |
 | `[keyboard].options` | XKB options string, e.g. `grp:alt_shift_toggle` (optional) |
+| `[keyboard].numlock` | Start with Num Lock locked: `true` (default) or `false` (see [Keyboard layout](#keyboard-layout)) |
 | `[appearance].password_style` | Password mask on the login field: `default` (filled circles) or `random` (cycles through multiple glyph shapes, same as Noctalia shell `password_style`) |
 
 Example:
@@ -79,6 +80,7 @@ path = "/usr/share/icons"
 layout = "us,cz"
 variant = "qwertz"
 options = "grp:alt_shift_toggle"
+numlock = true
 ```
 
 ---
@@ -218,6 +220,17 @@ options = "grp:alt_shift_toggle"
 ```
 
 Use standard [XKB layout codes](https://www.freedesktop.org/wiki/Software/XKeyboard-config/Rules/) (`de`, `fr`, `ru`, …). List layouts on your system with `localectl list-x11-keymap-layouts` or check `/usr/share/X11/xkb/rules/base.lst`.
+
+### Num Lock
+
+The compositor locks Num Lock on startup so numeric keypads work without extra setup. If your keyboard misbehaves with Num Lock enabled (for example, the `0` digit key producing incorrect characters), disable it:
+
+```toml
+[keyboard]
+numlock = false
+```
+
+The default is `true` (Num Lock locked). This setting has no effect when Num Lock is not available on the keymap.
 
 greetd starts greeters with an empty environment, so set layout in `greeter.toml` or prefix the greetd session command:
 
