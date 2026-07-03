@@ -80,7 +80,7 @@ Requires compositor support for `wlr-screencopy-unstable-v1`. Uses the global `[
 
 | Action | Command | Description |
 |--------|---------|-------------|
-| Region screenshot | <IpcCommand command="screenshot-region [widget-name]" /> | Start interactive region capture (drag to select; press **`[keybinds].cancel`** to dismiss). |
+| Region screenshot | <IpcCommand command="screenshot-region" /> | Start interactive region capture (drag to select; press **`[keybinds].cancel`** to dismiss). |
 | Fullscreen screenshot | <IpcCommand command="screenshot-fullscreen" /> | Capture the focused monitor (compositor-selected output, active toplevel, keyboard focus, or recent pointer). |
 | Fullscreen (pick monitor) | <IpcCommand command="screenshot-fullscreen pick" /> | Open the display picker on multi-monitor setups. On a single monitor, captures immediately. |
 | Fullscreen (specific output) | <IpcCommand command="screenshot-fullscreen DP-2" /> | Capture one output without the picker. Pass the Wayland connector name (e.g. `DP-1`, `HDMI-A-1`) or a word-boundary match in the output description. |
