@@ -59,7 +59,7 @@ share this vocabulary** - panels additionally use the interactive controls below
 | `ui.toggle` | `checked` (bool), `enabled`, `onChange` |
 | `ui.slider` | `min`, `max`, `step`, `value`, `enabled`, `onChange`, `onDragEnd` |
 | `ui.select` | `options` (array of strings), `selectedIndex`, `placeholder`, `enabled`, `width`, `height`, `onChange` |
-| `ui.input` | `value` (initial text only - see below), `placeholder`, `fontSize`, `password` (bool), `multiline` (bool), `enabled`, `onChange`, `onSubmit` |
+| `ui.input` | `value` (initial text only - see below), `placeholder`, `fontSize`, `password` (bool), `multiline` (bool), `focus` (bool), `enabled`, `onChange`, `onSubmit` |
 
 Every control also accepts `width`, `height`, `flexGrow`, `opacity`, and `visible`. Colors are a palette role token
 (`primary`, `on_surface`, …) or a hex value (`#rrggbb`). An unknown control type or prop is logged and skipped - typos
@@ -75,6 +75,9 @@ surface in the log instead of failing silently.
 - **Multiline input**: `ui.input` with `multiline = true` becomes a wrapping text area with vertical scrolling —
   Enter inserts a newline and `onSubmit` fires on **Ctrl+Enter** instead. Give it a `height` or `flexGrow` for the
   editing area; `multiline` and `password` are mutually exclusive.
+- **Focus**: `ui.input` with `focus = true` grabs keyboard focus once, when the control is **created** — never on
+  later re-renders, so it won't steal focus while the user interacts elsewhere. To focus again (e.g. a new document
+  in the same editor slot), give the input a fresh `key`. The seeded `value` places the caret at the end.
 - **Controlled vs. uncontrolled**: `toggle`/`slider`/`select` are **value-driven** - pass the current value on every
   render and update it from the callback. `ui.input` is **uncontrolled**: `value` seeds the field once, then the host
   owns the text as the user types - re-rendering never overwrites it. Read edits through `onChange`/`onSubmit`, and give
