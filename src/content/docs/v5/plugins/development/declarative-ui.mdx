@@ -54,12 +54,12 @@ share this vocabulary** - panels additionally use the interactive controls below
 | `ui.separator` | `thickness`, `color`, `spacing`, `orientation` (`auto`/`horizontal`/`vertical`) |
 | `ui.spacer` | flexible filler (use `flexGrow`) |
 | `ui.progress` | `progress` (0–1), `fill`, `track`, `radius`, `width`, `height` |
-| `ui.button` | `text`, `glyph`, `fontSize`, `glyphSize`, `variant` (`default`/`primary`/`secondary`/`destructive`/`outline`/`ghost`), `enabled`, `selected`, `onClick`, `onRightClick` |
+| `ui.button` | `text`, `glyph`, `fontSize`, `glyphSize`, `variant` (`default`/`primary`/`secondary`/`destructive`/`outline`/`ghost`), `contentAlign` (`start`/`center`/`end`), `enabled`, `selected`, `onClick`, `onRightClick` |
 | `ui.graph` | `values` / `values2` (arrays of 0–1 numbers), `color` / `color2`, `lineWidth`, `fillOpacity`, `width`, `height` |
 | `ui.toggle` | `checked` (bool), `enabled`, `onChange` |
 | `ui.slider` | `min`, `max`, `step`, `value`, `enabled`, `onChange`, `onDragEnd` |
 | `ui.select` | `options` (array of strings), `selectedIndex`, `placeholder`, `enabled`, `width`, `height`, `onChange` |
-| `ui.input` | `value` (initial text only - see below), `placeholder`, `fontSize`, `password` (bool), `enabled`, `onChange`, `onSubmit` |
+| `ui.input` | `value` (initial text only - see below), `placeholder`, `fontSize`, `password` (bool), `multiline` (bool), `enabled`, `onChange`, `onSubmit` |
 
 Every control also accepts `width`, `height`, `flexGrow`, `opacity`, and `visible`. Colors are a palette role token
 (`primary`, `on_surface`, …) or a hex value (`#rrggbb`). An unknown control type or prop is logged and skipped - typos
@@ -72,6 +72,9 @@ surface in the log instead of failing silently.
   a button click; `onChange = "name"` fires when a toggle/slider/select/input value changes (the value is passed to the
   global as a string - `"true"`/`"false"` for a toggle, a number for a slider, the text for an input, the index for a
   select); `onSubmit` fires when the user presses Enter in an input.
+- **Multiline input**: `ui.input` with `multiline = true` becomes a wrapping text area with vertical scrolling —
+  Enter inserts a newline and `onSubmit` fires on **Ctrl+Enter** instead. Give it a `height` or `flexGrow` for the
+  editing area; `multiline` and `password` are mutually exclusive.
 - **Controlled vs. uncontrolled**: `toggle`/`slider`/`select` are **value-driven** - pass the current value on every
   render and update it from the callback. `ui.input` is **uncontrolled**: `value` seeds the field once, then the host
   owns the text as the user types - re-rendering never overwrites it. Read edits through `onChange`/`onSubmit`, and give
@@ -100,8 +103,12 @@ any callback that changes state):
 
 `render(tree)` · `close()` · `setWantsSecondTicks(bool)` · `getConfig(key)`
 
-Panel **size is host-owned**: declare `width` and `height` (logical px) on the `[[panel]]` entry, so the surface is the
-same size on every open. There is no `setSize` at runtime.
+Panel **size is host-owned**: declare `width` and `height` on the `[[panel]]` entry, so the surface is the
+same size on every open. There is no `setSize` at runtime. Each axis takes a positive number (logical px) or the
+string `"fill"`, which spans the output's available extent on that axis — the compositor subtracts every exclusive
+zone (bars, docks, third-party clients), so a `height = "fill"` panel sits exactly between them. `"fill"` requires
+`placement = "floating"`. Fixed pixel sizes are clamped to the output, so an oversized value degrades to
+full-available rather than a broken surface.
 
 **Placement** matches built-in shell panels (`attached` merges with the bar, `floating` opens detached). The host
 injects three standard settings for every `[[panel]]` entry - you do **not** declare them as `[[panel.setting]]` unless

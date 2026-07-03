@@ -50,6 +50,7 @@ geometry changes.
 | `noctalia.notify(title, body)` | nothing | Shows an informational notification. `body` is optional. |
 | `noctalia.notifyError(title, body)` | nothing | Shows an error notification. `body` is optional. |
 | `noctalia.copyToClipboard(text, mime)` | bool | Copies text to the clipboard with an explicit MIME type, for example `"text/plain"` or `"text/uri-list"`. |
+| `noctalia.clipboardText()` | string or `nil` | Latest text clipboard content (`nil` when empty or non-text). |
 
 `%s` in `formatTime()` expands to Unix epoch seconds.
 
@@ -90,7 +91,11 @@ entry is removed, or Noctalia stops the plugin.
 |--------|---------|-------------|
 | `noctalia.readFile(path)` | string, or `nil, err` | Reads a file as bytes. |
 | `noctalia.writeFile(path, content)` | bool, optional error | Writes a file, replacing existing contents. |
+| `noctalia.mkdirAll(path)` | bool, optional error | Creates a directory and any missing parents (an existing directory is success). |
+| `noctalia.removeFile(path)` | bool, optional error | Deletes a file. Refuses directories. |
+| `noctalia.renameFile(from, to)` | bool, optional error | Renames or moves a file. |
 | `noctalia.fileExists(path)` | bool | Checks whether a path exists. |
+| `noctalia.fileInfo(path)` | table, or `nil, err` | `{ size, mtime, isDir }` — size in bytes, mtime in unix seconds. |
 | `noctalia.listDir(path)` | array, or `nil, err` | Lists filenames in a directory. |
 | `noctalia.pluginDir()` | string or `nil` | Returns this plugin's runtime directory. |
 
