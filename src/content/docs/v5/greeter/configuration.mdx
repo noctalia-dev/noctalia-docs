@@ -51,6 +51,7 @@ Set these yourself. The greeter UI does not change them.
 | `[keyboard].options` | XKB options string, e.g. `grp:alt_shift_toggle` (optional) |
 | `[keyboard].numlock` | Start with Num Lock locked: `true` (default) or `false` (see [Keyboard layout](#keyboard-layout)) |
 | `[appearance].password_style` | Password mask on the login field: `default` (filled circles) or `random` (cycles through multiple glyph shapes, same as Noctalia shell `password_style`) |
+| `[appearance].hide_logo` | Hide the Noctalia brand logo on the greeter screen: `true` or `false` (default: `false`, logo shown) |
 
 Example:
 
@@ -65,6 +66,7 @@ default = "lysec"
 [appearance]
 scheme = "Synced"
 password_style = "random"
+hide_logo = false
 
 [output]
 name = "DP-2"
