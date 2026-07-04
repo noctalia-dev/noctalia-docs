@@ -209,6 +209,7 @@ Set under `[widget.<name>]`:
 | `capsule_border` | string | *(from bar)* | Color role for the capsule border; fixed hex colors are also supported. Omit to inherit bar policy. Present but empty/whitespace-only = no border. |
 | `color` | string | *(unset)* | Icon + label color role with or without capsule; fixed hex colors are also supported. Resolution order: `color` → `capsule_foreground` → built-in defaults. |
 | `icon_color` | string | *(unset)* | Overrides `color` for icons only. Resolution order for icons: `icon_color` → `color` → `capsule_foreground` → built-in defaults. Labels always use `color`. |
+| `enabled` | bool | `true` | Show or hide this widget on the bar. Disabled widgets are not created and consume no resources. |
 
 Prefer color role names so widget styling follows the active palette. Role names use **snake_case** (e.g. `on_surface`, `surface_variant`, `secondary`). Use fixed hex colors only when you deliberately want a non-palette color; hex may use `#RGB`, `#RGBA`, `#RRGGBB`, or `#RRGGBBAA`. Invalid role names or malformed hex colors are treated as config errors.
 
@@ -275,8 +276,21 @@ members = ["network", "bluetooth", "volume"]
 fill    = "surface_variant"
 padding = 6.0
 opacity = 0.9
-# border, foreground, radius are optional; omit border for no outline
+enabled = true
+# border, foreground, radius, enabled are optional
 ```
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `id` | string | *(required)* | Group identifier. Lane entries reference the group with `group:<id>`. |
+| `members` | list | *(required)* | Ordered list of widget names belonging to this group. |
+| `enabled` | bool | `true` | Show or hide the entire group on the bar. Disabled groups are not populated and their widgets consume no resources. |
+| `fill` | string | `surface_variant` | Background color role for the shared capsule; fixed hex colors are also supported. |
+| `border` | string | *(omitted)* | Color role for the capsule border; fixed hex colors are also supported. Omit for no outline; present but empty (`""`) also means no outline. |
+| `foreground` | string | *(unset)* | Icon + label color role for all widgets inside this group; fixed hex colors are also supported. |
+| `padding` | number | `6` | Inner padding between the capsule edge and its widgets, in logical pixels (clamped 0–48). |
+| `radius` | number | *(auto pill)* | Capsule corner radius in logical pixels (0–80). Omit for automatic pill radius. |
+| `opacity` | number | `1.0` | Capsule background opacity (0.0–1.0). |
 
 A group's style can be overridden per monitor by declaring `[[bar.<name>.monitor.<match>.capsule_group]]` tables
 with matching `id` values. A reused widget name (e.g. several `spacer` instances) can appear in different groups
