@@ -52,6 +52,7 @@ Set these yourself. The greeter UI does not change them.
 | `[keyboard].numlock` | Start with Num Lock locked: `true` (default) or `false` (see [Keyboard layout](#keyboard-layout)) |
 | `[appearance].password_style` | Password mask on the login field: `default` (filled circles) or `random` (cycles through multiple glyph shapes, same as Noctalia shell `password_style`) |
 | `[appearance].hide_logo` | Hide the Noctalia brand logo on the greeter screen: `true` or `false` (default: `false`, logo shown) |
+| `[auth].allow_empty_password` | Allow submitting with an empty password field. Needed for PAM modules like fprintd or smartcard that handle authentication without a password (PAM expects an empty response to the password prompt). `true` or `false` (default: `false`) |
 
 Example:
 
@@ -83,6 +84,9 @@ layout = "us,cz"
 variant = "qwertz"
 options = "grp:alt_shift_toggle"
 numlock = true
+
+[auth]
+allow_empty_password = false
 ```
 
 ---
