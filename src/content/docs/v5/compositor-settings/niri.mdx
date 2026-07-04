@@ -194,3 +194,29 @@ When Noctalia detects `ext-background-effects`, it automatically publishes blur 
 
 If you want fully transparent Noctalia surfaces or simply do not want blur behind them, keep the Noctalia `layer-rule` and uncomment `blur false` inside its `background-effect` block. Omit the `window-rule` and global `blur` block only if you do not want to configure Niri blur for regular windows.
 :::
+
+## Per-widget desktop layer rules
+
+Each desktop widget lives on its own layer-shell surface with a unique namespace, so you can target an individual widget with a `layer-rule`. The namespace is:
+
+```
+noctalia-desktop-widget-<type>-<id>
+```
+
+where `<type>` is the widget kind (`clock`, `weather`, `sysmon`, …) and `<id>` is the widget's stable id. Run `niri msg layers` to list all layer surfaces and see the exact namespaces on your setup:
+
+```text
+Bottom layer:
+  Surface:
+    Namespace: "noctalia-desktop-widget-clock-000000000000000a"
+  Surface:
+    Namespace: "noctalia-desktop-widget-weather-000000000000000b"
+```
+
+Match on `^noctalia-desktop-widget-` to target every desktop widget at once, or narrow the pattern by type or full id for a single widget. For example, to match just the weather widget:
+
+```kdl
+layer-rule {
+  match namespace="^noctalia-desktop-widget-weather-"
+}
+```
