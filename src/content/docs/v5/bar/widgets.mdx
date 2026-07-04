@@ -226,6 +226,8 @@ System resource monitor. Shows an icon and value for one configurable stat. Mult
 |---------|------|---------|-------------|
 | `stat` | string | `"cpu_usage"` | Which stat to display (see table below) |
 | `glyph` | string | `""` | Custom bar glyph name (Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint). Leave empty to use the icon for the selected stat |
+| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph/stat icon. Leave empty to use the glyph |
+| `custom_image_colorize` | bool | `false` | When `true`, tint the custom image with the same dynamic color the glyph would use |
 | `path` | string | `"/"` | Mount path for `disk_pct` (ignored otherwise) |
 | `interface` | string | `""` | Network interface to monitor for `net_rx`/`net_tx`; empty uses the total across all non-loopback interfaces |
 | `network_speed_unit` | string | `"auto"` | Unit for `net_rx`/`net_tx`: `"auto"` (scales between B/s, kB/s, MB/s, GB/s), `"kb"` (always kB/s), or `"mb"` (always MB/s) |
@@ -302,6 +304,8 @@ Shows PipeWire output (speaker) or input (microphone) volume and mute state.
 | `device` | string | `"output"` | Audio target: `"output"` (default sink) or `"input"` (default source / microphone) |
 | `glyph` | string | `""` | Custom icon glyph for the active state. Leave empty to use the built-in dynamic icons |
 | `mute_glyph` | string | `""` | Icon glyph used when muted or at 0% volume. Leave empty to use the built-in mute icon |
+| `custom_image` | string | `""` | Path to a custom image displayed instead of the active/mute glyphs. Leave empty to use the glyph |
+| `custom_image_colorize` | bool | `false` | When `true`, tint the custom image with the same color the glyph would use, including `mute_color` while muted |
 | `scroll_step` | int | `5` | Percentage change applied on each mouse wheel step (1–25) |
 | `show_label` | bool | `true` | Show the volume percentage next to the glyph (horizontal and vertical bars) |
 | `mute_color` | string | `"error"` | Color role or hex color for the icon and label when muted |
@@ -537,6 +541,8 @@ Left-click cycles layouts using the compositor backend when supported. Override 
 | `hide_when_single_layout` | bool | `false` | Hide the widget unless more than one keyboard layout is configured |
 | `show_icon` | bool | `true` | Show the keyboard glyph |
 | `glyph` | string | `"keyboard"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint. Shown only when `show_icon = true` |
+| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Shown only when `show_icon = true` |
+| `custom_image_colorize` | bool | `false` | When `true`, tint the custom image with the widget icon color |
 | `show_label` | bool | `true` | Show the layout text label next to the keyboard glyph |
 | `display` | string | `"short"` | `"short"` = compact code; `"full"` = full layout name. Ignored when `show_label = false`. |
 | `custom_labels` | table | `{}` | Exact layout-name to label overrides. Matching labels override `display`; unmatched layouts still use `short` or `full`. |
@@ -601,6 +607,34 @@ custom_image_colorize = true
 
 ---
 
+## `custom_button`
+
+Shows a custom glyph/image, optional label, and runs configured shell commands.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `glyph` | string | `"heart"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint |
+| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Leave empty to use the glyph |
+| `custom_image_colorize` | bool | `false` | When `true`, tint the custom image with the widget icon color |
+| `label` | string | `""` | Optional text label shown next to the glyph or image |
+| `tooltip` | string | `""` | Optional hover tooltip |
+| `command` | string | `""` | Shell command run on left click |
+| `right_command` | string | `""` | Shell command run on right click |
+| `middle_command` | string | `""` | Shell command run on middle click |
+| `scroll_up_command` | string | `""` | Shell command run on scroll up |
+| `scroll_down_command` | string | `""` | Shell command run on scroll down |
+
+```toml
+[widget.quick-action]
+type = "custom_button"
+custom_image = "/path/to/icon.png"
+custom_image_colorize = true
+label = "Action"
+command = "notify-send Noctalia"
+```
+
+---
+
 ## `clipboard`
 
 Shows a clipboard glyph and opens or closes the clipboard panel on click. History limits, clear/delete confirmation, auto-paste, and image actions are configured under `[shell]` - see [Shell settings](/v5/shell/#shell-settings) (`clipboard_*` keys).
@@ -608,6 +642,8 @@ Shows a clipboard glyph and opens or closes the clipboard panel on click. Histor
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `glyph` | string | `"clipboard"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint |
+| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Leave empty to use the glyph |
+| `custom_image_colorize` | bool | `false` | When `true`, tint the custom image with the widget icon color |
 
 ```toml
 [widget.clipboard]
@@ -627,6 +663,8 @@ Captures the screen through the compositor's `wlr-screencopy` protocol (Niri, Hy
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `glyph` | string | `"screenshot"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint |
+| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Leave empty to use the glyph |
+| `custom_image_colorize` | bool | `false` | When `true`, tint the custom image with the widget icon color |
 | `primary_click` | string | `"region"` | Left-click action: `"region"` (interactive drag selection) or `"fullscreen"` (see below) |
 
 The capture **output policy** (save to file, output directory, filename pattern, clipboard, freeze, pipe command) is global and lives under [`[shell.screenshot]`](/v5/shell/#shell-settings), shared by this widget and the IPC commands. The widget only sets its glyph and left-click action.
@@ -806,6 +844,24 @@ noctalia msg theme-mode-toggle
 
 ---
 
+## `settings`
+
+Shows a glyph/image and opens the Settings window on click.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `glyph` | string | `"settings"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint |
+| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Leave empty to use the glyph |
+| `custom_image_colorize` | bool | `false` | When `true`, tint the custom image with the widget icon color |
+
+```toml
+[widget.settings]
+custom_image = "/path/to/settings.png"
+custom_image_colorize = true
+```
+
+---
+
 ## `session`
 
 Shows a power glyph and opens the session menu panel on click.
@@ -813,6 +869,8 @@ Shows a power glyph and opens the session menu panel on click.
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `glyph` | string | `"shutdown"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint |
+| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Leave empty to use the glyph |
+| `custom_image_colorize` | bool | `false` | When `true`, tint the custom image with the widget icon color |
 
 ```toml
 [widget.session]
@@ -828,6 +886,8 @@ Shows a glyph and opens the wallpaper picker panel on click.
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `glyph` | string | `"wallpaper-selector"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint |
+| `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Leave empty to use the glyph |
+| `custom_image_colorize` | bool | `false` | When `true`, tint the custom image with the widget icon color |
 
 ```toml
 [widget.wallpaper]
