@@ -347,6 +347,8 @@ Configure under **`[shell.session]`** in TOML, or use **Settings → Power → S
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `action` | string | *required* | `lock`, `logout`, `suspend`, `lock_and_suspend`, `reboot`, `shutdown`, or `command` (custom entry). |
+| `grid` | bool | `false` | When `true`, displays the session panel actions in a multi-row grid based on `grid_columns`. |
+| `grid_columns` | number | `3` | The number of actions to show per row when `grid` is `true`. |
 | `enabled` | bool | `true` | When `false`, the button is hidden. |
 | `command` | string | *unset* | Optional. If set, the string is run with `/bin/sh -c` instead of the built-in handler. For `action = "command"`, this field is required. |
 | `label` | string | *unset* | Optional button label (otherwise translated defaults). |
@@ -359,6 +361,8 @@ Omitting `[[shell.session.actions]]` entirely keeps the default five actions. To
 
 ```toml
 [shell.session]
+grid = false
+grid_columns = 3
 actions = []
 
 # Example: reorder, disable reboot, custom suspend, override lock
