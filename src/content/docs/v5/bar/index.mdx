@@ -62,10 +62,16 @@ round-off: the corner bulges *outward* into a rounded spike that hugs the screen
 so the bar appears to melt into the screen. The spike's size is the absolute value
 (e.g. `radius_bottom_left = -16` gives a 16 px spike).
 
+In **Settings → Bar → Shape** you don't type a negative number: each per-corner slider
+shows the positive radius, and an **invert** toggle beside it carries the sign — turning
+it on stores the negative value that produces the concave spike. The toggle is enabled
+only for the two inner corners (below); on the outer, screen-edge corners it appears
+disabled, since a concave spike there has no room to grow.
+
 Concave spikes only render on the bar's two **inner** corners, the corners facing away
 from the screen edge, because the bar can't grow along the edge it's anchored to:
 
-| Bar position | Inner corners (set these negative) |
+| Bar position | Inner corners (invertible) |
 | --- | --- |
 | `top`    | `radius_bottom_left`, `radius_bottom_right` |
 | `bottom` | `radius_top_left`, `radius_top_right` |
@@ -73,8 +79,8 @@ from the screen edge, because the bar can't grow along the edge it's anchored to
 | `right`  | `radius_top_left`, `radius_bottom_left` |
 
 The spike depth is capped at half the bar `thickness`. A negative value on an outer
-(screen-edge) corner has no room to grow and is clipped, so leave those at `0` or a
-positive radius.
+(screen-edge) corner has no room to grow and is clipped (in the config file), so leave
+those at `0` or a positive radius.
 
 Multiple `[bar.*]` entries are supported - each is independently configured and rendered on all monitors.
 
