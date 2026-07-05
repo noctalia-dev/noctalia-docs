@@ -101,6 +101,14 @@ button {
 	background-color: var(--sl-color-bg);
 }
 
+/* Mobile hamburger / close menu button — give it explicit contrast so it does
+   not blend into the header. The generic `button` rule above and the
+   `--sl-color-black` override otherwise leave it near-invisible (esp. light). */
+starlight-menu-button button {
+	background-color: var(--sl-color-accent);
+	color: var(--sl-color-bg);
+}
+
 summary {
 	color: var(--sl-color-accent);
 }
@@ -325,8 +333,8 @@ snake-toc a[data-visible="true"] {
 
 /* Layout tweaks: wider content, narrower TOC, fixed banner */
 :root {
-	--sl-content-width: 55rem;
-	--sl-sidebar-width: 16rem;
+	--sl-content-width: 59rem;
+	--sl-sidebar-width: 19rem;
 	--sl-banner-height: 2rem;
 }
 
@@ -343,13 +351,42 @@ snake-toc a[data-visible="true"] {
 }
 
 @media (min-width: 72rem) {
-	[data-has-sidebar][data-has-toc] .main-pane {
-		--sl-content-margin-inline: 0 auto;
-		width: calc(100% - var(--sl-sidebar-width));
+	/*
+	 * Center the whole layout (left sidebar + content + right TOC) as a tight
+	 * group and push all the leftover space to the extreme left and right
+	 * edges, instead of gapping between the columns.
+	 *
+	 * --layout-outer-gap is the equal margin added on each outer edge once the
+	 * viewport grows wider than the natural width of the three columns.
+	 */
+	:root {
+		--layout-outer-gap: max(0rem,
+				(100vw - var(--sl-content-width) - (2 * var(--sl-content-pad-x)) - (2 * var(--sl-sidebar-width))) / 2);
 	}
 
-	[data-has-sidebar][data-has-toc] .content-panel {
-		padding-inline-start: clamp(2rem, 4vw, 4rem);
+	/* Pull the fixed left sidebar in from the viewport edge. */
+	.sidebar-pane {
+		inset-inline-start: var(--layout-outer-gap);
+	}
+
+	/* Offset the content area to clear the shifted sidebar. The leftover space
+	   then falls naturally on the far right, mirroring the left gap. */
+	.main-frame {
+		padding-inline-start: calc(var(--sl-sidebar-width) + var(--layout-outer-gap));
+	}
+
+	/* Shift the top nav content in by the same gap so the logo and search stay
+	   aligned with the sidebar and TOC below them. */
+	.header {
+		padding-inline: calc(var(--sl-nav-pad-x) + var(--layout-outer-gap));
+	}
+
+	/* The content pane is exactly as wide as the content itself, so it hugs the
+	   left sidebar and the TOC sits right beside it — no gap in the middle. */
+	[data-has-sidebar][data-has-toc] .main-pane {
+		--sl-content-margin-inline: 0;
+		width: min(calc(var(--sl-content-width) + (2 * var(--sl-content-pad-x))),
+				calc(100% - var(--sl-sidebar-width)));
 	}
 
 	[data-has-sidebar][data-has-toc] .right-sidebar-container {
