@@ -36,6 +36,7 @@ margin_edge        = 10          # distance from the nearest screen edge (positi
 margin_opposite_edge = 0         # extra reserved space on the inward side of the bar (below for top, above for bottom)
 padding            = 14          # main-axis padding from bar edges to start/end widget sections
 widget_spacing     = 6           # gap between widgets within a section
+hover_highlight    = true        # softly tint the widget under the mouse pointer with its foreground color
 scale              = 1.0         # content scale multiplier for icons and text
 font_weight        = "regular"   # "regular" | "bold" - primary label weight for bar widgets
 font_family        = ""          # typeface for this bar's widgets; empty inherits the global font
@@ -62,10 +63,16 @@ round-off: the corner bulges *outward* into a rounded spike that hugs the screen
 so the bar appears to melt into the screen. The spike's size is the absolute value
 (e.g. `radius_bottom_left = -16` gives a 16 px spike).
 
+In **Settings → Bar → Shape** you don't type a negative number: each per-corner slider
+shows the positive radius, and an **invert** toggle beside it carries the sign — turning
+it on stores the negative value that produces the concave spike. The toggle is enabled
+only for the two inner corners (below); on the outer, screen-edge corners it appears
+disabled, since a concave spike there has no room to grow.
+
 Concave spikes only render on the bar's two **inner** corners, the corners facing away
 from the screen edge, because the bar can't grow along the edge it's anchored to:
 
-| Bar position | Inner corners (set these negative) |
+| Bar position | Inner corners (invertible) |
 | --- | --- |
 | `top`    | `radius_bottom_left`, `radius_bottom_right` |
 | `bottom` | `radius_top_left`, `radius_top_right` |
@@ -73,8 +80,8 @@ from the screen edge, because the bar can't grow along the edge it's anchored to
 | `right`  | `radius_top_left`, `radius_bottom_left` |
 
 The spike depth is capped at half the bar `thickness`. A negative value on an outer
-(screen-edge) corner has no room to grow and is clipped, so leave those at `0` or a
-positive radius.
+(screen-edge) corner has no room to grow and is clipped (in the config file), so leave
+those at `0` or a positive radius.
 
 Multiple `[bar.*]` entries are supported - each is independently configured and rendered on all monitors.
 
@@ -192,6 +199,7 @@ Set under `[bar.<name>]` or `[bar.<name>.monitor.*]`:
 | `capsule_padding` | number | `6` | Inner padding in logical pixels before `scale` is applied (clamped 0–48). |
 | `capsule_opacity` | number | `1.0` | Capsule background opacity (0.0–1.0). |
 | `capsule_border` | string | *(omitted)* | Color role for the capsule border; fixed hex colors are also supported. If omitted, no border by default. If present as `""`, no border. |
+| `hover_highlight` | bool | `true` | Softly tint the widget under the mouse pointer with its own foreground color. Works with and without capsules; inside a capsule group only the hovered member lights up. The highlight never changes widget layout or spacing. Set `false` to disable the effect on this bar. |
 
 ### Per-widget overrides
 
