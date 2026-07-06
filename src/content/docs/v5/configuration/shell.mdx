@@ -292,6 +292,8 @@ up       = ["up"]
 down     = ["down"]
 tab_next = ["tab"]
 tab_previous = ["shift+tab", "iso_left_tab"]
+delete   = ["del"]
+delete_no_confirm = ["shift+del"]
 ```
 
 Each action accepts a single string chord or an array of chords.
@@ -302,7 +304,7 @@ Each action accepts a single string chord or an array of chords.
 
 **`super` bindings are rejected** (`super`, `win`, `windows`, `logo`, `meta`, `mod4`) and produce a config parse error.
 
-**Supported actions:** `validate`, `cancel`, `left`, `right`, `up`, `down`, `tab_next`, `tab_previous`
+**Supported actions:** `validate`, `cancel`, `left`, `right`, `up`, `down`, `tab_next`, `tab_previous`, `delete`, `delete_no_confirm`
 
 | Action | Default role |
 |--------|----------------|
@@ -310,6 +312,8 @@ Each action accepts a single string chord or an array of chords.
 | `cancel` | Close a popup/panel or dismiss the current operation. |
 | `left` / `right` / `up` / `down` | Move within the focused region (list rows, launcher grid columns, slider nudge on left/right, and similar). |
 | `tab_next` / `tab_previous` | Move between major panes in split layouts (for example Settings sidebar ↔ content, or Control Center sidebar ↔ tab body). |
+| `delete` | Delete the selected item (for example, a clipboard history entry). |
+| `delete_no_confirm` | Delete the selected item without confirmation. |
 
 On split-pane surfaces (**Settings** and **Control Center**), `tab_next` / `tab_previous` switch between the sidebar and the main content area. Arrow keys stay inside the active pane: the sidebar uses roving focus, and the content area moves between controls on up/down while leaving left/right to control-native behavior (such as slider nudge). The session panel uses arrow keys to move between actions once focus has entered the button list; it does not pre-select an action on open.
 
