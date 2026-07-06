@@ -25,6 +25,7 @@ radius_top_left     = 16         # optional per-corner overrides
 radius_top_right    = 16
 radius_bottom_left  = 16
 radius_bottom_right = 16
+concave_edge_corners = false     # carve the screen-edge corners inward; requires margin_edge = 0
 margin_ends         = 0          # inset from each end of the dock along its main axis
 margin_edge         = 8          # distance from the nearest screen edge (positive values float the dock)
 
@@ -51,6 +52,8 @@ pinned = ["firefox", "code", "kitty"]
 ```
 
 `radius` sets all four corners at once. Any `radius_*` key overrides just that corner.
+
+`concave_edge_corners = true` inverts the two corners on the side that touches the screen edge, so the dock flares outward and blends into it. The corner radii still control the curve size. Only applies when the dock actually touches the edge (`margin_edge = 0`).
 
 Shadow blur, offset, and alpha are global under `[shell.shadow]`. The dock only exposes `shadow = true|false`.
 
