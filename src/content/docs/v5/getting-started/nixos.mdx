@@ -19,7 +19,7 @@ To make Noctalia's wifi, bluetooth, power-profile, and battery feature available
 ## Installation
 Noctalia v5 can be installed both with and without flakes. As of writing, noctalia v5 does not yet exist in nixpkgs, meaning you will have to compile from source or use the [binary cache](#binary-cache).
 
-To install Noctalia v5, first [add the input](#add-input) using your preferred input-pinning method. Then you can [install the package](#install-package) directly or use either the [Home Manager](#home-manager) or [Hjem](#hjem) modules.
+To install Noctalia v5, first [add the input](#add-input) using your preferred input-pinning method. Then you can [install the package](#install-package) directly or use either the [NixOS](#nixos-module), [Home Manager](#home-manager), or [Hjem](#hjem) module.
 
 ### Adding the input {#add-input}
 
@@ -255,9 +255,52 @@ For those using Hjem instead of Home Manager, a Hjem module is also available.
   </TabItem>
 </Tabs>
 
+
+### NixOS Module {#nixos-module}
+
+The NixOS module installs the package system-wide and can enable some recommended services.
+
+<Tabs>
+  <TabItem label="flakes/tack">
+    ```nix
+    { inputs, ... }:
+    {
+      imports = [
+        inputs.noctalia.nixosModules.default
+      ];
+    
+      programs.noctalia = {
+        enable = true;
+    
+        # Enables NetworkManager, Bluetooth, UPower, and a power profile service.
+        recommendedServices.enable = true;
+      };
+    }
+    ```
+  </TabItem>
+  <TabItem label="npins/tarball">
+    ```nix
+    let
+      # see adding the input above
+    in {
+      imports = [
+        noctalia.nixosModule
+      ];
+      
+      programs.noctalia = {
+        enable = true;
+      
+        # Enables NetworkManager, Bluetooth, UPower, and a power profile service.
+        recommendedServices.enable = true;
+      };
+    }
+    ```
+  </TabItem>
+</Tabs>
+
 ### Systemd Service {#systemd}
 
-Both of the above modules include a systemd user service for Noctalia, which can be enabled by setting `programs.noctalia.systemd.enable = true`.
+Each of the above modules includes a systemd user service for Noctalia, which can be enabled by setting `programs.noctalia.systemd.enable = true`.
 
 :::note
 When using the service, it is recommended to enable `launch_apps_as_systemd_services`, otherwise any apps launched by Noctalia will be terminated when the service restarts.
