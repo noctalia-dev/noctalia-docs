@@ -57,7 +57,11 @@ for their rendering APIs and controls.
 ## `barWidget.*` - widget presentation + settings
 
 `setText` · `setGlyph` · `setImage` · `setTooltip` · `clearTooltip` · `setFont` · `setColor` · `setGlyphColor` ·
-`setVisible` · `isVertical` · `getConfig(key)`
+`setVisible` · `isVertical` · `render` · `getConfig(key)`
+
+A bar widget can either patch the built-in glyph/text row with the imperative setters below, or describe composite
+content as a `ui.*` tree with `barWidget.render(tree)` - see
+[Declarative UI](/v5/plugins/development/declarative-ui/#barwidgetrender--declarative-bar-widget-ui).
 
 ```lua
 local label = barWidget.getConfig("label")

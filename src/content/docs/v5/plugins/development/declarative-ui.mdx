@@ -10,8 +10,8 @@ sidebar:
 The plugin system is in **beta**. The manifest format and APIs may still change before v5 is stable, so build with that in mind.
 :::
 
-Desktop widgets and panels do not patch a fixed control. They describe their UI as a retained `ui.*` tree; Noctalia
-diffs each render against the previous tree and updates native controls in place.
+Desktop widgets, panels, and (optionally) bar widgets do not have to patch a fixed control. They can describe their UI
+as a retained `ui.*` tree; Noctalia diffs each render against the previous tree and updates native controls in place.
 
 ## `desktopWidget.*` - declarative desktop widget UI {#desktopwidget--declarative-desktop-widget-ui}
 
@@ -78,7 +78,7 @@ prop is logged and skipped - typos surface in the log instead of failing silentl
   a button click; `onChange = "name"` fires when a toggle/slider/select/input value changes (the value is passed to the
   global as a string - `"true"`/`"false"` for a toggle, a number for a slider, the text for an input, the index for a
   select); `onSubmit` fires when the user presses Enter in an input.
-- **Multiline input**: `ui.input` with `multiline = true` becomes a wrapping text area with vertical scrolling —
+- **Multiline input**: `ui.input` with `multiline = true` becomes a wrapping text area with vertical scrolling, 
   Enter inserts a newline and `onSubmit` fires on **Ctrl+Enter** instead. Give it a `height` or `flexGrow` for the
   editing area; `multiline` and `password` are mutually exclusive.
 - **Focus**: `ui.input` with `focus = true` grabs keyboard focus once, when the control is **created**, never on
@@ -102,6 +102,37 @@ prop is logged and skipped - typos surface in the log instead of failing silentl
 
 The reference implementation is the official `noctalia/timer` plugin - a countdown timer with start/pause/reset
 buttons and a progress bar.
+
+## `barWidget.render` - declarative bar widget UI {#barwidgetrender--declarative-bar-widget-ui}
+
+A `[[widget]]` entry can render a `ui.*` tree with `barWidget.render(tree)` instead of the imperative
+`setText`/`setGlyph`/`setImage` patches - use it for composite content (multiple labels, glyph+text combinations,
+inline buttons). Simple widgets should keep the imperative API; both remain available, but once a script calls
+`render()` the tree **replaces** the built-in glyph/text row (later `setText`/`setGlyph` calls have no visible effect
+and log a warning).
+
+```lua
+function update()
+  local container = barWidget.isVertical() and ui.column or ui.row
+  barWidget.render(container({ gap = 6, align = "center" }, {
+    ui.glyph({ name = "cpu", size = 14 }),
+    ui.label({ text = readLoad(), fontWeight = "bold" }),
+    ui.button({ glyph = "refresh", glyphSize = 12, variant = "ghost", onClick = "onRefresh" }),
+  }))
+end
+```
+
+Bar-specific constraints:
+
+- **Cross-axis is the bar thickness**: the widget capsule clips to it, so keep the tree one control tall (row on a
+  horizontal bar, column on a side bar - branch on `barWidget.isVertical()`). Only the main axis grows with content.
+- **No keyboard**: the bar never takes keyboard focus, so `ui.input`, `ui.select`, and `ui.scroll` are skipped with a
+  warning. Pointer controls (`ui.button`, `ui.toggle`, `ui.slider`, `ui.progress`, `ui.graph`, …) work.
+- **Clicks compose**: an inline control consumes its own clicks; the widget-level `onClick`/`onRightClick` still fire
+  for the rest of the capsule (and its padding).
+- Ticks stay on `noctalia.setUpdateInterval` - there is no frame-tick API in the bar.
+
+The `declarative` widget in the official `noctalia/example` plugin is the reference implementation.
 
 ## `panel.*` - declarative panel UI {#panel--declarative-panel-ui}
 
