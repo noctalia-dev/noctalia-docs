@@ -43,6 +43,10 @@ end
 The available controls and their props (sizes are logical px, scaled with the surface). **Desktop widgets and panels
 share this vocabulary** - panels additionally use the interactive controls below (`ui.input`, `ui.select`, etc.).
 
+`ui.label` and `ui.glyph` inherit the host's text defaults when a prop is unset: in a bar widget they use the bar's
+(or widget's) `font_family`/`font_weight` and the widget `scale`, matching the imperative `barWidget.setText` look.
+An explicit `fontSize`/`size`/`fontWeight` prop overrides the default.
+
 | Constructor | Props |
 |-------------|-------|
 | `ui.column` / `ui.row` | `gap`, `padding`, `paddingH`, `paddingV`, `align` (`start`/`center`/`end`/`stretch`), `justify` (`start`/`center`/`end`/`space_between`), `fill`, `radius`, `border`, `borderWidth`, `minWidth`, `minHeight` |
