@@ -74,6 +74,10 @@ Supported JSON fields:
 |--------|---------|-------------|
 | Random wallpaper now | <IpcCommand command="wallpaper-random" /> | Switch to a random wallpaper immediately on all monitors. |
 | Random wallpaper (one monitor) | <IpcCommand command="wallpaper-random <connector>" /> | Switch to a random wallpaper on the monitor named by **connector** (e.g. `DP-1`). Other monitors are unchanged. Respects per-monitor directory configuration and theme mode. |
+| Next wallpaper | <IpcCommand command="wallpaper-next" /> | Advance to the next wallpaper in order immediately on all monitors. |
+| Next wallpaper (one monitor) | <IpcCommand command="wallpaper-next <connector>" /> | Advance to the next wallpaper on the monitor named by **connector** (e.g. `DP-1`). Other monitors are unchanged. Respects per-monitor directory configuration and theme mode. |
+| Previous wallpaper | <IpcCommand command="wallpaper-previous" /> | Go back to the previous wallpaper in order immediately on all monitors. |
+| Previous wallpaper (one monitor) | <IpcCommand command="wallpaper-previous <connector>" /> | Go back to the previous wallpaper on the monitor named by **connector** (e.g. `DP-1`). Other monitors are unchanged. Respects per-monitor directory configuration and theme mode. |
 | Get wallpaper | <IpcCommand command="wallpaper-get" /> | Print the default wallpaper path persisted in `settings.toml`. |
 | Get wallpaper (one monitor) | <IpcCommand command="wallpaper-get <connector>" /> | Print the effective wallpaper path for the monitor named by **connector** (e.g. `DP-1`). |
 | Set wallpaper (all monitors) | <IpcCommand command="wallpaper-set <path>" /> | Set every connected monitor and the default wallpaper, persisted to `settings.toml` (per-monitor entries plus `wallpaper.default.path`). |
