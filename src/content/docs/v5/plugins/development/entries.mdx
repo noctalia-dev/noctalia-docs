@@ -23,8 +23,33 @@ apply depends on the entry kind:
 | `onOpen(context)` / `onClose()` | | | | | ✓ | | the panel is opened / closed |
 | `onFrameTick(deltaMs)` | | | | ✓ | | | every frame, after `desktopWidget.setNeedsFrameTick(true)` |
 | `onIpc(event, payload)` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | `noctalia msg plugin …` |
+| `onConfigChanged()` | | | | | | ✓ | a plugin setting changed (see below) |
 
 The top level of the script runs once at load - set up state and register `noctalia.state.watch` handlers there.
+
+### Reacting to settings changes in a service
+
+When a user edits a plugin setting, the change reaches each entry differently:
+
+- **Widgets, desktop widgets, panels** are rebuilt, so their next `getConfig(...)` reads the new value automatically.
+- **Services** are long-lived. If a service defines **`onConfigChanged()`**, the host updates its settings in place and
+  calls that function , `noctalia.getConfig(...)` returns the new values, and the service keeps all its in-memory state
+  (timers, caches, connections). If a service does **not** define `onConfigChanged()`, the host instead **restarts the
+  service runtime** (the top-level chunk re-runs with the new settings).
+
+Either way, `noctalia.state` is **process-lifetime** and survives a service restart, so any cache you store there must be
+keyed by the config it depends on , otherwise a service will keep serving data fetched for the old settings. For example,
+store the location alongside cached results and re-fetch when it differs:
+
+```lua
+function onConfigChanged()
+  local loc = noctalia.getConfig("city") .. "|" .. noctalia.getConfig("country")
+  if loc ~= noctalia.state.get("location") then
+    noctalia.state.set("location", loc)
+    refetch()   -- location changed; invalidate and reload
+  end
+end
+```
 
 Desktop widgets and panels use declarative `ui.*` trees. See [Declarative UI](/v5/plugins/development/declarative-ui/)
 for their rendering APIs and controls.
