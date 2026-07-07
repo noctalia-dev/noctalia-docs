@@ -139,7 +139,7 @@ dataAttributes['data-doc-version'] = pathname.startsWith('/v4/') || pathname ===
 				if (import.meta.env.DEV) return;
 				const onIdle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
 				onIdle(async () => {
-					// @ts-expect-error — Missing types for @pagefind/default-ui package.
+					// @ts-expect-error, Missing types for @pagefind/default-ui package.
 					const { PagefindUI } = await import('@pagefind/default-ui');
 					const ui = new PagefindUI({
 						...pagefindUserConfig,

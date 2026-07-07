@@ -101,7 +101,7 @@ button {
 	background-color: var(--sl-color-bg);
 }
 
-/* Mobile hamburger / close menu button — give it explicit contrast so it does
+/* Mobile hamburger / close menu button, give it explicit contrast so it does
    not blend into the header. The generic `button` rule above and the
    `--sl-color-black` override otherwise leave it near-invisible (esp. light). */
 starlight-menu-button button {
@@ -273,7 +273,7 @@ snake-toc a[data-visible="true"] {
 	color: var(--sl-color-text-accent);
 }
 
-/* Search result breadcrumb — value injected via JS into --result-path custom property */
+/* Search result breadcrumb, value injected via JS into --result-path custom property */
 #starlight__search .pagefind-ui__result-inner > .pagefind-ui__result-title {
 	line-height: 1.1rem;
 }
@@ -291,7 +291,7 @@ snake-toc a[data-visible="true"] {
 	display: none;
 }
 
-/* Caution aside — bright yellow bg with dark text */
+/* Caution aside, bright yellow bg with dark text */
 :root[data-theme='dark'] .starlight-aside--caution {
 	--sl-color-asides-text-accent: #070722;
 	--sl-color-asides-border: #c4b200;
@@ -382,7 +382,7 @@ snake-toc a[data-visible="true"] {
 	}
 
 	/* The content pane is exactly as wide as the content itself, so it hugs the
-	   left sidebar and the TOC sits right beside it — no gap in the middle. */
+	   left sidebar and the TOC sits right beside it, no gap in the middle. */
 	[data-has-sidebar][data-has-toc] .main-pane {
 		--sl-content-margin-inline: 0;
 		width: min(calc(var(--sl-content-width) + (2 * var(--sl-content-pad-x))),

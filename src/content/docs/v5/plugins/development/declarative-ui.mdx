@@ -62,11 +62,11 @@ share this vocabulary** - panels additionally use the interactive controls below
 | `ui.input` | `value` (initial text only - see below), `placeholder`, `fontSize`, `password` (bool), `multiline` (bool), `focus` (bool), `enabled`, `onChange`, `onSubmit` |
 
 Every control also accepts `width`, `height`, `flexGrow`, `opacity`, and `visible`. Colors are a palette role token
-(`primary`, `on_surface`, …), a role token with an alpha suffix (`primary/0.6` — the role at 60% alpha, resolved live
+(`primary`, `on_surface`, …), a role token with an alpha suffix (`primary/0.6`, the role at 60% alpha, resolved live
 against the palette so it still tracks the theme), or a hex value (`#rrggbb` / `#rrggbbaa`). An unknown control type or
 prop is logged and skipped - typos surface in the log instead of failing silently.
 
-- **Translucent background, opaque content**: `opacity` is a *group* opacity — it fades a container **and all its
+- **Translucent background, opaque content**: `opacity` is a *group* opacity, it fades a container **and all its
   children** (text included), like CSS `opacity` on a parent. To make only the background semi-transparent, leave
   `opacity` alone and give the container a translucent `fill` instead: `ui.column({ fill = "surface_variant/0.6" }, …)`
   keeps the text fully opaque.
@@ -81,7 +81,7 @@ prop is logged and skipped - typos surface in the log instead of failing silentl
 - **Multiline input**: `ui.input` with `multiline = true` becomes a wrapping text area with vertical scrolling —
   Enter inserts a newline and `onSubmit` fires on **Ctrl+Enter** instead. Give it a `height` or `flexGrow` for the
   editing area; `multiline` and `password` are mutually exclusive.
-- **Focus**: `ui.input` with `focus = true` grabs keyboard focus once, when the control is **created** — never on
+- **Focus**: `ui.input` with `focus = true` grabs keyboard focus once, when the control is **created**, never on
   later re-renders, so it won't steal focus while the user interacts elsewhere. To focus again (e.g. a new document
   in the same editor slot), give the input a fresh `key`. The seeded `value` places the caret at the end.
 - **Controlled vs. uncontrolled**: `toggle`/`slider`/`select` are **value-driven** - pass the current value on every
@@ -114,7 +114,7 @@ any callback that changes state):
 
 Panel **size is host-owned**: declare `width` and `height` on the `[[panel]]` entry, so the surface is the
 same size on every open. There is no `setSize` at runtime. Each axis takes a positive number (logical px) or the
-string `"fill"`, which spans the output's available extent on that axis — the compositor subtracts every exclusive
+string `"fill"`, which spans the output's available extent on that axis, the compositor subtracts every exclusive
 zone (bars, docks, third-party clients), so a `height = "fill"` panel sits exactly between them. `"fill"` requires
 `placement = "floating"`. Fixed pixel sizes are clamped to the output, so an oversized value degrades to
 full-available rather than a broken surface.

@@ -95,7 +95,7 @@ entry is removed, or Noctalia stops the plugin.
 | `noctalia.removeFile(path)` | bool, optional error | Deletes a file. Refuses directories. |
 | `noctalia.renameFile(from, to)` | bool, optional error | Renames or moves a file. |
 | `noctalia.fileExists(path)` | bool | Checks whether a path exists. |
-| `noctalia.fileInfo(path)` | table, or `nil, err` | `{ size, mtime, isDir }` — size in bytes, mtime in unix seconds. |
+| `noctalia.fileInfo(path)` | table, or `nil, err` | `{ size, mtime, isDir }`, size in bytes, mtime in unix seconds. |
 | `noctalia.listDir(path)` | array, or `nil, err` | Lists filenames in a directory. |
 | `noctalia.pluginDir()` | string or `nil` | Returns this plugin's runtime directory. |
 
