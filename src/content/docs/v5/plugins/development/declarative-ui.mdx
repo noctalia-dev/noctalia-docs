@@ -62,8 +62,14 @@ share this vocabulary** - panels additionally use the interactive controls below
 | `ui.input` | `value` (initial text only - see below), `placeholder`, `fontSize`, `password` (bool), `multiline` (bool), `focus` (bool), `enabled`, `onChange`, `onSubmit` |
 
 Every control also accepts `width`, `height`, `flexGrow`, `opacity`, and `visible`. Colors are a palette role token
-(`primary`, `on_surface`, …) or a hex value (`#rrggbb`). An unknown control type or prop is logged and skipped - typos
-surface in the log instead of failing silently.
+(`primary`, `on_surface`, …), a role token with an alpha suffix (`primary/0.6` — the role at 60% alpha, resolved live
+against the palette so it still tracks the theme), or a hex value (`#rrggbb` / `#rrggbbaa`). An unknown control type or
+prop is logged and skipped - typos surface in the log instead of failing silently.
+
+- **Translucent background, opaque content**: `opacity` is a *group* opacity — it fades a container **and all its
+  children** (text included), like CSS `opacity` on a parent. To make only the background semi-transparent, leave
+  `opacity` alone and give the container a translucent `fill` instead: `ui.column({ fill = "surface_variant/0.6" }, …)`
+  keeps the text fully opaque.
 
 - **Layout default**: `ui.column` / `ui.row` / `ui.scroll` **stretch** their children across the cross axis (a column
   fills its width, a row fills its height), like CSS flexbox. Override per node with `align` - e.g. a row of
