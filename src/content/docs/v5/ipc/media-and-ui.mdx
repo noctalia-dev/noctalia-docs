@@ -17,11 +17,38 @@ These commands control user-facing shell features that are not tied to one persi
 | Disable Do Not Disturb | <IpcCommand command="notification-dnd-set off" /> | Show notification toasts again. |
 | Toggle Do Not Disturb | <IpcCommand command="notification-dnd-toggle" /> | Toggle notification toast visibility. Notification history still fills. |
 | Show Do Not Disturb status | <IpcCommand command="notification-dnd-status" /> | Print the current Do Not Disturb state. |
+| Send internal notification | <IpcCommand command="notification-show <summary>" /> | Create a Noctalia-origin notification with the provided summary text. |
 | Invoke latest notification | <IpcCommand command="notification-invoke-latest" /> | Invoke the default action of the most recent active notification (raises/focuses the source app), mirroring a toast left-click. |
 | Clear active notifications | <IpcCommand command="notification-clear-active" /> | Dismiss all currently visible active notifications. |
 | Clear notification history | <IpcCommand command="notification-clear-history" /> | Remove all entries from notification history. |
 
 DND enable/disable IPC commands show a short OSD for the new state.
+
+`notification-show` accepts a summary, and CLI usage can pass body as a second argument:
+
+```sh
+noctalia msg notification-show "Build finished"
+noctalia msg notification-show "Build finished" "All tests passed"
+```
+
+When a body argument is passed, the CLI forwards it as structured payload (`summary` + `body`) to the IPC handler.
+
+For full control, pass a JSON payload object:
+
+```sh
+noctalia msg notification-show '{"app_name":"Noctalia","summary":"Build finished","body":"All tests passed","urgency":"low","timeout_ms":4000,"icon":"circle-check"}'
+```
+
+Supported JSON fields:
+
+- `app_name` (string): application label shown for the notification (default `Noctalia`)
+- `summary` (string, required for JSON mode): notification title text
+- `body` (string): body text
+- `urgency` (string): one of `low`, `normal`, `critical`
+- `timeout_ms` (integer): auto-dismiss timeout in milliseconds (`0` keeps it persistent)
+- `icon` (string): icon hint. Plain names are treated as Noctalia glyphs (for example `circle-check`), while paths and URLs are treated as image icons.
+- `category` (string): freedesktop category
+- `desktop_entry` (string): desktop entry id
 
 ## Clipboard
 
