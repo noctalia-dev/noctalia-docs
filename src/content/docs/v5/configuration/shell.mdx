@@ -118,6 +118,8 @@ save_to_file      = true                       # write captures as PNG to the ou
 directory         = ""                          # output folder; empty = ~/Pictures
 filename_pattern  = "screenshot_%Y%m%d_%H%M%S"  # strftime pattern, no extension (.png is added)
 copy_to_clipboard = false                       # also place the PNG on the clipboard
+
+`avatar_path` controls the avatar Noctalia shows in shell UI such as the Control Center Home tab. When AccountsService is reachable, Noctalia also updates your user's `IconFile` there so other consumers such as Noctalia Greeter can reuse the same avatar. If **accountsservice** is missing or disabled, the shell still uses `avatar_path`, but login greeters that depend on AccountsService will not see that image.
 freeze_screen     = false                       # freeze the desktop before region selection
 confirm_region    = false                       # confirm region captures with Enter or Space
 pipe_to_command   = false                       # pipe the PNG to a shell command on stdin

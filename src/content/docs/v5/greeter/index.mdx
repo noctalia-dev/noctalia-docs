@@ -23,6 +23,8 @@ Pair it with **Noctalia v5** if you want your wallpaper and palette copied from 
 
 Install **noctalia-greeter** from your distribution if a package is available. You also need **greetd**, **D-Bus**, and **polkit** on the machine where greetd runs.
 
+For user avatars in the login picker, also install and enable **accountsservice** (usually the `accounts-daemon` service). Noctalia Greeter reads each user's avatar from `org.freedesktop.Accounts` and shows a fallback when that service is unavailable or has no `IconFile` set.
+
 Your desktop sessions (niri, Hyprland, and so on) are separate - install those as you normally would.
 
 If your distro does not package the greeter yet, see the [noctalia-greeter repository](https://github.com/noctalia-dev/noctalia-greeter) for build and install steps. After installing, run the included system setup script as root so `/var/lib/noctalia-greeter/` and `greeter.toml` are created for the greetd user.
@@ -91,6 +93,8 @@ sudo sv restart greetd
 
 With Noctalia v5 and the greeter both installed, open **Settings → Security → Noctalia Greeter → Sync Now**. Noctalia copies your wallpaper, palette, enabled session actions (`shell.session` plus `[shell.session.power]` overrides), and (when you use multiple monitors) monitor layout to the greeter (you will be prompted for admin access via polkit, through `pkexec` or `run0`).
 
+User avatars are not part of greeter appearance sync. They come from AccountsService, so keep **accountsservice** running if you want the avatar you picked in Noctalia to appear on the greeter too.
+
 Enable **Settings → Security → Auto-Sync Greeter** to automatically sync whenever your wallpaper, colors, or theme mode change. Syncing triggers after a short debounce so rapid changes (like dragging a color picker) are batched into one sync.
 
 Sync Now shows a notification while it waits for that approval. If **logind** or **elogind** is running, enable **Settings → Security → Polkit agent** to approve from the desktop.
@@ -145,6 +149,7 @@ The greeter works without a mouse.
 - **Black screen after reboot** - Session logs are written to `/var/log/noctalia-greeter.log` and `/var/lib/noctalia-greeter/greeter.log` when those paths are writable. Create them once during setup if needed.
 - **Wrong session on startup** - If `[session].default` is set in `greeter.toml`, it wins over last-used `[session].last`. Run `noctalia-greeter sessions` for exact **Name** spelling.
 - **Synced look missing** - Install Noctalia v5, the greeter, and the polkit policy; sync again from Settings; restart greetd or log out once.
+- **User avatars missing on the login screen** - Install and enable **accountsservice** / `accounts-daemon`. The greeter reads the avatar from the user's AccountsService `IconFile`; without it, the picker falls back to a placeholder.
 - **Sync fails with no privilege escalator** - Greeter sync needs `pkexec` or `run0` on `PATH` (for example when `pkexec` is disabled on NixOS, install `run0` from systemd ≥ 256). A polkit authentication agent must be running in your session.
 - **Sync Now does nothing / no `appearance.json`** - Sync stages files first, then waits for polkit to authorize `noctalia-greeter-apply-appearance`. On **seatd without logind**, Noctalia's polkit agent cannot register; run the `pkexec` command from the Sync Now notification in a terminal. Sync Now warns after 90 seconds if approval is still pending.
 - **Polkit agent: `No session for pid`** - Expected on seatd-only setups. Install elogind for in-session prompts, or use terminal/console `pkexec` for greeter sync.
