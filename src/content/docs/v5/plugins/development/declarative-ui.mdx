@@ -10,8 +10,8 @@ sidebar:
 The plugin system is in **beta**. The manifest format and APIs may still change before v5 is stable, so build with that in mind.
 :::
 
-Desktop widgets and panels do not patch a fixed control. They describe their UI as a retained `ui.*` tree; Noctalia
-diffs each render against the previous tree and updates native controls in place.
+Desktop widgets, panels, and (optionally) bar widgets do not have to patch a fixed control. They can describe their UI
+as a retained `ui.*` tree; Noctalia diffs each render against the previous tree and updates native controls in place.
 
 ## `desktopWidget.*` - declarative desktop widget UI {#desktopwidget--declarative-desktop-widget-ui}
 
@@ -43,6 +43,12 @@ end
 The available controls and their props (sizes are logical px, scaled with the surface). **Desktop widgets and panels
 share this vocabulary** - panels additionally use the interactive controls below (`ui.input`, `ui.select`, etc.).
 
+`ui.label` and `ui.glyph` inherit the host's text defaults when a prop is unset: in a bar widget they use the bar's
+(or widget's) `font_family`/`font_weight` and the widget `scale`, matching the imperative `barWidget.setText` look.
+An explicit `fontSize`/`size`/`fontWeight` prop overrides the default. In bar widgets, `ui.button` renders compact —
+it hugs its content instead of using the taller settings-panel control height (pass `width`/`height` to size it
+explicitly).
+
 | Constructor | Props |
 |-------------|-------|
 | `ui.column` / `ui.row` | `gap`, `padding`, `paddingH`, `paddingV`, `align` (`start`/`center`/`end`/`stretch`), `justify` (`start`/`center`/`end`/`space_between`), `fill`, `radius`, `border`, `borderWidth`, `minWidth`, `minHeight` |
@@ -62,8 +68,14 @@ share this vocabulary** - panels additionally use the interactive controls below
 | `ui.input` | `value` (initial text only - see below), `placeholder`, `fontSize`, `password` (bool), `multiline` (bool), `focus` (bool), `enabled`, `onChange`, `onSubmit` |
 
 Every control also accepts `width`, `height`, `flexGrow`, `opacity`, and `visible`. Colors are a palette role token
-(`primary`, `on_surface`, …) or a hex value (`#rrggbb`). An unknown control type or prop is logged and skipped - typos
-surface in the log instead of failing silently.
+(`primary`, `on_surface`, …), a role token with an alpha suffix (`primary/0.6`, the role at 60% alpha, resolved live
+against the palette so it still tracks the theme), or a hex value (`#rrggbb` / `#rrggbbaa`). An unknown control type or
+prop is logged and skipped - typos surface in the log instead of failing silently.
+
+- **Translucent background, opaque content**: `opacity` is a *group* opacity, it fades a container **and all its
+  children** (text included), like CSS `opacity` on a parent. To make only the background semi-transparent, leave
+  `opacity` alone and give the container a translucent `fill` instead: `ui.column({ fill = "surface_variant/0.6" }, …)`
+  keeps the text fully opaque.
 
 - **Layout default**: `ui.column` / `ui.row` / `ui.scroll` **stretch** their children across the cross axis (a column
   fills its width, a row fills its height), like CSS flexbox. Override per node with `align` - e.g. a row of
@@ -72,10 +84,10 @@ surface in the log instead of failing silently.
   a button click; `onChange = "name"` fires when a toggle/slider/select/input value changes (the value is passed to the
   global as a string - `"true"`/`"false"` for a toggle, a number for a slider, the text for an input, the index for a
   select); `onSubmit` fires when the user presses Enter in an input.
-- **Multiline input**: `ui.input` with `multiline = true` becomes a wrapping text area with vertical scrolling —
+- **Multiline input**: `ui.input` with `multiline = true` becomes a wrapping text area with vertical scrolling, 
   Enter inserts a newline and `onSubmit` fires on **Ctrl+Enter** instead. Give it a `height` or `flexGrow` for the
   editing area; `multiline` and `password` are mutually exclusive.
-- **Focus**: `ui.input` with `focus = true` grabs keyboard focus once, when the control is **created** — never on
+- **Focus**: `ui.input` with `focus = true` grabs keyboard focus once, when the control is **created**, never on
   later re-renders, so it won't steal focus while the user interacts elsewhere. To focus again (e.g. a new document
   in the same editor slot), give the input a fresh `key`. The seeded `value` places the caret at the end.
 - **Controlled vs. uncontrolled**: `toggle`/`slider`/`select` are **value-driven** - pass the current value on every
@@ -97,6 +109,37 @@ surface in the log instead of failing silently.
 The reference implementation is the official `noctalia/timer` plugin - a countdown timer with start/pause/reset
 buttons and a progress bar.
 
+## `barWidget.render` - declarative bar widget UI {#barwidgetrender--declarative-bar-widget-ui}
+
+A `[[widget]]` entry can render a `ui.*` tree with `barWidget.render(tree)` instead of the imperative
+`setText`/`setGlyph`/`setImage` patches - use it for composite content (multiple labels, glyph+text combinations,
+inline buttons). Simple widgets should keep the imperative API; both remain available, but once a script calls
+`render()` the tree **replaces** the built-in glyph/text row (later `setText`/`setGlyph` calls have no visible effect
+and log a warning).
+
+```lua
+function update()
+  local container = barWidget.isVertical() and ui.column or ui.row
+  barWidget.render(container({ gap = 6, align = "center" }, {
+    ui.glyph({ name = "cpu", size = 14 }),
+    ui.label({ text = readLoad(), fontWeight = "bold" }),
+    ui.button({ glyph = "refresh", glyphSize = 12, variant = "ghost", onClick = "onRefresh" }),
+  }))
+end
+```
+
+Bar-specific constraints:
+
+- **Cross-axis is the bar thickness**: the widget capsule clips to it, so keep the tree one control tall (row on a
+  horizontal bar, column on a side bar - branch on `barWidget.isVertical()`). Only the main axis grows with content.
+- **No keyboard**: the bar never takes keyboard focus, so `ui.input`, `ui.select`, and `ui.scroll` are skipped with a
+  warning. Pointer controls (`ui.button`, `ui.toggle`, `ui.slider`, `ui.progress`, `ui.graph`, …) work.
+- **Clicks compose**: an inline control consumes its own clicks; the widget-level `onClick`/`onRightClick` still fire
+  for the rest of the capsule (and its padding).
+- Ticks stay on `noctalia.setUpdateInterval` - there is no frame-tick API in the bar.
+
+The `declarative` widget in the official `noctalia/example` plugin is the reference implementation.
+
 ## `panel.*` - declarative panel UI {#panel--declarative-panel-ui}
 
 A panel is a pop-up surface that describes its UI as a `ui.*` tree, exactly like a desktop widget - but it is
@@ -108,7 +151,7 @@ any callback that changes state):
 
 Panel **size is host-owned**: declare `width` and `height` on the `[[panel]]` entry, so the surface is the
 same size on every open. There is no `setSize` at runtime. Each axis takes a positive number (logical px) or the
-string `"fill"`, which spans the output's available extent on that axis — the compositor subtracts every exclusive
+string `"fill"`, which spans the output's available extent on that axis, the compositor subtracts every exclusive
 zone (bars, docks, third-party clients), so a `height = "fill"` panel sits exactly between them. `"fill"` requires
 `placement = "floating"`. Fixed pixel sizes are clamped to the output, so an oversized value degrades to
 full-available rather than a broken surface.

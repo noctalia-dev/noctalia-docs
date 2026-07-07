@@ -73,7 +73,7 @@
 			}
 			const a = e.target.closest && e.target.closest("a[href]");
 			if (!a) return;
-			// FAQ items own their own anchor/open behavior — leave them alone.
+			// FAQ items own their own anchor/open behavior, leave them alone.
 			if (a.classList.contains("faq-anchor") || a.closest("summary")) return;
 
 			let url;
@@ -109,6 +109,6 @@
 	}
 	// Page content swaps on Starlight view transitions; re-check the URL.
 	document.addEventListener("astro:page-load", run);
-	// FAQ items inject their own TOC entries after load — rewrite those too.
+	// FAQ items inject their own TOC entries after load, rewrite those too.
 	document.addEventListener("faq-toc-ready", rewriteHrefs);
 })();

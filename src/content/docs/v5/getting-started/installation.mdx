@@ -53,7 +53,15 @@ The simplest way to install Noctalia on Arch Linux is through the Arch User Repo
 
 ## Fedora {#fedora}
 
-Noctalia is available via [LionHeartP Copr](https://copr.fedorainfracloud.org/coprs/lionheartp/Hyprland/) repository.
+Noctalia is available from the default repos for Fedora 44 and up.
+
+**Step 1**: Install noctalia
+
+```bash
+sudo dnf install noctalia
+```
+
+An alternate version using git snapshots is available from the [LionHeartP Copr](https://copr.fedorainfracloud.org/coprs/lionheartp/Hyprland/) repository.
 
 **Step 1**: Enable the repository
 
@@ -66,8 +74,6 @@ sudo dnf copr enable lionheartp/Hyprland
 ```bash
 sudo dnf install noctalia-git
 ```
-
-Installing noctalia-git will automatically install all runtime dependencies and display optional dependencies.
 
 ---
 
@@ -156,22 +162,11 @@ Noctalia is available through a custom XBPS repository.
 
 **Step 1**: Add the repository source
 
-<Tabs>
-  <TabItem label="GLibc">
-    ```bash
-	echo "repository=https://universalrepository.pages.dev/void" \
-  	| sudo tee /etc/xbps.d/10-noctalia.conf
-	```
-  </TabItem>
-  <TabItem label="Musl">
-    ```bash
-	echo "repository=https://universalrepository.pages.dev/void-musl" \
-  	| sudo tee /etc/xbps.d/10-noctalia.conf
-	```
-  </TabItem>
-</Tabs>
+```bash
+echo "repository=https://repo.voiders.dev" | sudo tee /etc/xbps.d/10-voiders-community.conf
+```
 
-**Step 2**: Sync and install noctalia
+**Step 2**: Sync and install Noctalia
 
 ```bash
 sudo xbps-install -S
@@ -179,7 +174,7 @@ sudo xbps-install noctalia
 ```
 
 :::note
-If your noctalia fails on run install sdbus from UniversalRepository because its up-to-update
+If Noctalia fails to run, install the `sdbus-c++` package.
 :::
 ---
 
