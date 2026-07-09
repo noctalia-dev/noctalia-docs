@@ -22,6 +22,7 @@ collapse_on_dismiss      = true        # slide remaining toasts to close gaps wh
 [notification.filter.rhythmbox]
 enabled         = true
 match           = "rhythmbox"
+# match_content   = "now playing"           # optional regex matched against summary or body
 show_toast      = true
 save_history    = false
 play_sound      = true
@@ -46,6 +47,7 @@ External notifications (from `org.freedesktop.Notifications` clients) can be fil
 
 - `[notification.filter.<name>]` - per-sender rules evaluated in `filter_order` (first matching enabled filter wins). Each filter has:
  - `match` - one case-insensitive token matched against the app name (exact or substring), `desktop-entry`, or `category`.
+ - `match_content` - optional regular expression matched against the notification summary or body.
  - `allowed_urgencies` - when non-empty, only listed urgency levels pass this filter. Values: `low`, `normal`, `critical`. Omit or list all three to allow every level.
  - `show_toast` - show a toast popup (default `true`).
  - `save_history` - keep the notification in control-center history (default `true`).
