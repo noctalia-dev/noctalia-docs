@@ -1,23 +1,27 @@
 ---
 title: Shell
-description: IPC commands for shell status, config reload, settings, window switcher, and session actions.
+description: IPC commands for shell status, logging, config reload, settings, window switcher, and session actions.
 sidebar:
   order: 1
 ---
 
 import IpcCommand from '../../../../components/IpcCommand.astro';
 
-These commands control shell state, settings windows, the window switcher, and session actions.
+These commands control shell state, logging, settings windows, the window switcher, and session actions.
 
 ## General
 
 | Action | Command | Description |
 |--------|---------|-------------|
 | Print status | <IpcCommand command="status" /> | Print basic shell state as JSON. |
+| Show log level | <IpcCommand command="log-level-status" /> | Print the current console log level. |
+| Set log level | <IpcCommand command="log-level-set debug" /> | Set the console log level for the running session. Use `debug`, `info`, `warn`, or `error`. |
 | Reload config | <IpcCommand command="config-reload" /> | Reload the merged Noctalia config stack immediately. |
 | Open settings | <IpcCommand command="settings-open [context]" /> | Open or focus the graphical settings window, optionally at a specific section (e.g. `bar`). |
 | Close settings | <IpcCommand command="settings-close" /> | Close the graphical settings window. |
 | Toggle settings | <IpcCommand command="settings-toggle [context]" /> | Open or close the graphical settings window, optionally at a specific section. |
+
+Set `NOCTALIA_LOG_LEVEL` to `debug`, `info`, `warn`, or `error` before startup to choose the initial console log level. The default is `info`; the file log remains unfiltered.
 
 ## Window Switcher
 
