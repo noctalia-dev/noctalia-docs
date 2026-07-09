@@ -397,3 +397,24 @@ sudo sv restart wpa_supplicant
 ```
 
 </FaqItem>
+
+<FaqItem question="Why can't I connect to my VPN in NetworkManager?">
+
+By default, NetworkManager generates VPN system connections for the current user only. This saves secrets to `nm-applet`. If you have `nm-applet` this should work fine, however if you don't have it you will need to create the system connection for all users. 
+
+To do this
+* Open `nm-connection-editor` (Titled "Advanced Network Configuration")
+* Go to the VPN tab > Authentication > Password
+* On the right side of the box, click the icon to change the password type
+
+```txt title='Example Connection'
+[] Store the password only for this user
+[x] Store the password for all users
+[] Ask for this password every time
+[] The password is not required
+```
+
+Use the option in the example to save the password to the connection or the 'ask everytime' option if you want to be prompted for every connection.
+Be sure to input your password before saving.
+
+</FaqItem>
