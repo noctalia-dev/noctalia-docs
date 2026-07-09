@@ -45,7 +45,7 @@ share this vocabulary** - panels additionally use the interactive controls below
 
 `ui.label` and `ui.glyph` inherit the host's text defaults when a prop is unset: in a bar widget they use the bar's
 (or widget's) `font_family`/`font_weight` and the widget `scale`, matching the imperative `barWidget.setText` look.
-An explicit `fontSize`/`size`/`fontWeight` prop overrides the default. In bar widgets, `ui.button` renders compact —
+An explicit `fontSize`/`size`/`fontWeight`/`fontFamily` prop overrides the default. In bar widgets, `ui.button` renders compact —
 it hugs its content instead of using the taller settings-panel control height (pass `width`/`height` to size it
 explicitly).
 
@@ -53,7 +53,7 @@ explicitly).
 |-------------|-------|
 | `ui.column` / `ui.row` | `gap`, `padding`, `paddingH`, `paddingV`, `align` (`start`/`center`/`end`/`stretch`), `justify` (`start`/`center`/`end`/`space_between`), `fill`, `radius`, `border`, `borderWidth`, `minWidth`, `minHeight` |
 | `ui.scroll` | a vertically scrolling container; same layout props as a column plus `fill`, `radius`, `border`, `borderWidth` |
-| `ui.label` | `text`, `fontSize`, `color`, `fontWeight` (`thin`…`heavy`), `maxWidth`, `maxLines`, `textAlign` |
+| `ui.label` | `text`, `fontSize`, `color`, `fontWeight` (`thin`…`heavy`), `fontFamily` (a family name; load a file with `noctalia.loadFont`), `baseline` (`text`/`textFixedHeight`/`inkCentered`/`pictographic`), `maxWidth`, `maxLines`, `textAlign` |
 | `ui.glyph` | `name` (Tabler/Nerd-Font glyph), `size`, `color` |
 | `ui.image` | `path` (plugin-relative, `~`, or absolute), `width`, `height`, `radius`, `fit` (`contain`/`cover`/`stretch`), `border`, `borderWidth`, `onClick` |
 | `ui.box` | `fill`, `radius`, `border`, `borderWidth`, `softness`, `width`, `height`, `onClick` |

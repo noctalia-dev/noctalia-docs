@@ -77,6 +77,28 @@ function onClick()
 end
 ```
 
+### Custom fonts
+
+Register a font file with [`noctalia.loadFont(path)`](/v5/plugins/development/runtime-api/#filesystem), then pass the
+returned family name to `setFont`. The font becomes usable anywhere text is drawn - `setFont` and a `ui.*` label's
+`fontFamily` prop - and stays available across every surface once loaded.
+
+`setFont(family, baseline?)` takes a font family name and an optional baseline mode:
+
+| Baseline | Use |
+|----------|-----|
+| `"text"` *(default)* | Normal text, cap-band centered. |
+| `"textFixedHeight"` | Text whose row height is locked to the font metrics (steady height in lists). |
+| `"inkCentered"` | Centers the glyph's ink. |
+| `"pictographic"` | Art/icon fonts anchored at the ink top (keeps pose art steady, e.g. bongocat). |
+
+```lua
+local font = noctalia.loadFont("fonts/bongocat.otf")
+if font then
+  barWidget.setFont(font, "pictographic")
+end
+```
+
 ## `shortcut.*` - control-center tile
 
 `setLabel(text)` · `setIcon(on [, off])` · `setActive(bool)` · `setEnabled(bool)`
