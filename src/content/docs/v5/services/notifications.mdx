@@ -25,6 +25,8 @@ match           = "rhythmbox"
 show_toast      = true
 save_history    = false
 play_sound      = true
+# allow_permanent = true                      # allow this sender to create persistent (0-timeout) toasts
+# override_duration = 5000                    # override the timeout (in ms) for all toasts from this sender
 # allowed_urgencies = ["normal", "critical"]  # omit or list all three to allow every level
 ```
 
@@ -48,6 +50,8 @@ External notifications (from `org.freedesktop.Notifications` clients) can be fil
  - `show_toast` - show a toast popup (default `true`).
  - `save_history` - keep the notification in control-center history (default `true`).
  - `play_sound` - play the notification sound when a toast is shown (default `true`).
+ - `allow_permanent` - allow this sender to create persistent (0-timeout) toasts (default `true`). When `false`, persistent toasts are forced to the standard expiration timeout.
+ - `override_duration` - force a specific display duration in milliseconds, overriding both the default timeout and any timeout requested by the sender.
 
 When no filter matches, all flags default to allow. A fully suppressed notification (no toast and no history) still returns a valid D-Bus id; `CloseNotification` on that id succeeds without showing a toast.
 
