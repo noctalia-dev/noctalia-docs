@@ -38,7 +38,7 @@ enable_community_templates = true
 community_ids              = []        # opt-in; fetched from api.noctalia.dev/templates
 ```
 
-`community_ids` selects which community templates run. Metadata and files are cached in `~/.cache/noctalia/community-templates/` (honoring `XDG_CACHE_HOME`).
+`community_ids` selects which community templates run. Metadata and files are stored in `~/.local/state/noctalia/community-templates/` (honoring `NOCTALIA_STATE_HOME`, then `XDG_STATE_HOME`).
 
 Cached community template files are treated as editable local copies. Sync updates files only while their content still matches the last Noctalia-written md5; local edits are preserved until you delete the edited cached file.
 

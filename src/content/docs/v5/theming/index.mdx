@@ -57,7 +57,7 @@ Available palettes: `Ayu`, `Catppuccin`, `Dracula`, `Eldritch`, `Gruvbox`, `Kana
 
 ## `community_palette`
 
-Names a palette served by `https://api.noctalia.dev/palette/<name>`. The shell downloads the palette on first use and caches it in `~/.cache/noctalia/community-palettes/` (honoring `XDG_CACHE_HOME`).
+Names a palette served by `https://api.noctalia.dev/palette/<name>`. The shell downloads the palette on first use and stores it in `~/.local/state/noctalia/community-palettes/` (honoring `NOCTALIA_STATE_HOME`, then `XDG_STATE_HOME`).
 
 The Settings GUI lists palette names from the cached `https://api.noctalia.dev/palettes` catalog when that catalog is available.
 
