@@ -211,6 +211,7 @@ Set under `[widget.<name>]`:
 | `capsule_border` | string | *(from bar)* | Color role for the capsule border; fixed hex colors are also supported. Omit to inherit bar policy. Present but empty/whitespace-only = no border. |
 | `color` | string | *(unset)* | Icon + label color role with or without capsule; fixed hex colors are also supported. Resolution order: `color` → `capsule_foreground` → built-in defaults. |
 | `icon_color` | string | *(unset)* | Overrides `color` for icons only. Resolution order for icons: `icon_color` → `color` → `capsule_foreground` → built-in defaults. Labels always use `color`. |
+| `interactive` | bool | `true` | Set `false` to make the widget passive: hover highlight and tooltips are disabled, and pointer events (clicks, scrolls) pass through to the bar underneath. The widget is still drawn — use `enabled = false` to hide it entirely. |
 | `enabled` | bool | `true` | Show or hide this widget on the bar. Disabled widgets are not created and consume no resources. |
 
 Prefer color role names so widget styling follows the active palette. Role names use **snake_case** (e.g. `on_surface`, `surface_variant`, `secondary`). Use fixed hex colors only when you deliberately want a non-palette color; hex may use `#RGB`, `#RGBA`, `#RRGGBB`, or `#RRGGBBAA`. Invalid role names or malformed hex colors are treated as config errors.
@@ -293,6 +294,11 @@ enabled = true
 | `padding` | number | `6` | Inner padding between the capsule edge and its widgets, in logical pixels (clamped 0–48). |
 | `radius` | number | *(auto pill)* | Capsule corner radius in logical pixels (0–80). Omit for automatic pill radius. |
 | `opacity` | number | `1.0` | Capsule background opacity (0.0–1.0). |
+| `drawer_enabled` | bool | `false` | Replace the group's inline members with a drawer button that opens them in a panel. |
+| `drawer_detached` | bool | `false` | Open the drawer as a detached panel instead of keeping it attached to the bar. |
+| `drawer_glyph_closed` | string | `chevron-down` | Drawer button glyph when the panel is closed. |
+| `drawer_glyph_opened` | string | `chevron-up` | Drawer button glyph when the panel is open. |
+| `drawer_columns` | number | `3` | Number of widget slots per row in the drawer panel (`1` to `5`). |
 
 A group's style can be overridden per monitor by declaring `[[bar.<name>.monitor.<match>.capsule_group]]` tables
 with matching `id` values. A reused widget name (e.g. several `spacer` instances) can appear in different groups
