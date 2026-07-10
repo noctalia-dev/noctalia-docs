@@ -180,6 +180,7 @@ circle = true
 | `format` | string | `"{:%H:%M}"` | Digital clock format string. Ignored when `clock_style = "analog"`. Supports the same syntax and tokens as the bar clock `format`; see [Date format tokens](/v5/configuration/date-format-tokens/). |
 | `center_text` | bool | `false` | Digital only. Center-aligns the formatted time inside the clock box. When `false`, the clock keeps the leading edge stable as digits change width. |
 | `circle` | bool | `true` | Analog only. Shows the outer ring and minute tick marks around the dial. When disabled, only the hands are drawn. |
+| `timezone` | string | `""` | Optional timezone identifier (e.g. `Europe/Berlin`, `UTC`) to use for this clock. If empty, uses the system's local time. |
 
 ---
 
