@@ -218,6 +218,7 @@ Set under `[widget.<name>]`:
 | `capsule_border` | string | *(from bar)* | Color role for the capsule border; fixed hex colors are also supported. Omit to inherit bar policy. Present but empty/whitespace-only = no border. |
 | `color` | string | *(unset)* | Icon + label color role with or without capsule; fixed hex colors are also supported. Resolution order: `color` → `capsule_foreground` → built-in defaults. |
 | `icon_color` | string | *(unset)* | Overrides `color` for icons only. Resolution order for icons: `icon_color` → `color` → `capsule_foreground` → built-in defaults. Labels always use `color`. |
+| `interactive` | bool | `true` | Set `false` to make the widget passive: hover highlight and tooltips are disabled, and pointer events (clicks, scrolls) pass through to the bar underneath. The widget is still drawn — use `enabled = false` to hide it entirely. |
 | `enabled` | bool | `true` | Show or hide this widget on the bar. Disabled widgets are not created and consume no resources. |
 
 Prefer color role names so widget styling follows the active palette. Role names use **snake_case** (e.g. `on_surface`, `surface_variant`, `secondary`). Use fixed hex colors only when you deliberately want a non-palette color; hex may use `#RGB`, `#RGBA`, `#RRGGBB`, or `#RRGGBBAA`. Invalid role names or malformed hex colors are treated as config errors.

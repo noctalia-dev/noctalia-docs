@@ -109,6 +109,69 @@ the current filter has no candidate match, pressing Enter returns the typed text
 The command talks to the running Noctalia instance on the same `XDG_RUNTIME_DIR` and `WAYLAND_DISPLAY`; start Noctalia
 first, then call `noctalia dmenu` from scripts or compositor commands.
 
+### Persistent dmenu entries
+
+You can also add persistent dmenu-style launcher providers from config. These are useful for custom command palettes,
+small script menus, SSH host lists, package-maintenance commands, and other actions you want to run from the launcher
+without writing a plugin.
+
+Each entry lives under `[shell.launcher.dmenu.entry.<id>]`, where `<id>` is the provider's stable config id:
+
+```toml
+[shell.launcher.dmenu.entry.commands]
+command = "printf 'Open Config\nShow Date\n'"
+label = "Commands"
+prefix = "/cmd"
+glyph = "terminal"
+global = false
+exec = "case \"{selection}\" in Open*) xdg-open ~/.config/noctalia ;; Show*) notify-send \"$(date)\" ;; esac"
+```
+
+Open the launcher, type `/cmd`, then select one of the listed results. `command` is run to produce newline-separated
+candidates. A tab in a candidate splits the display into title and description:
+
+```toml
+[shell.launcher.dmenu.entry.commands]
+command = "printf 'DNF Upgrade\tRun dnf upgrade --refresh\n'"
+label = "Commands"
+prefix = "/cmd"
+glyph = "terminal"
+global = false
+exec = "foot -e bash -lc 'pkexec dnf upgrade --refresh; read -rp \"Press Enter to close...\"'"
+```
+
+Fields:
+
+| Key | Description |
+| --- | --- |
+| `command` | Shell command run through `/bin/sh -lc`; each stdout line becomes a launcher result |
+| `exec` | Optional shell command run when a result is activated; `{selection}` is the selected raw line, `{query}` is the typed text after the prefix |
+| `prefix` | Optional launcher prefix such as `/cmd`; if this is empty, set `global = true` or the entry is unreachable |
+| `label` | Provider title shown in the launcher provider overview; defaults to the entry id |
+| `glyph` | Tabler glyph name for results; defaults to `terminal` |
+| `global` | Whether results participate in normal non-prefixed launcher search |
+| `freeform` | Whether non-empty typed text can become an activatable result |
+
+Noctalia runs `exec` as a detached command; it does not automatically open a terminal. For interactive commands such as
+`dnf upgrade`, launch your terminal emulator explicitly (`foot -e ...`, `kitty -e ...`, `alacritty -e ...`, etc.).
+
+Set `freeform = true` when the typed text itself should be activatable. The typed text after the prefix is available as
+`{query}`:
+
+```toml
+[shell.launcher.dmenu.entry.notify]
+label = "Notify"
+prefix = "/notify"
+glyph = "bell"
+global = false
+freeform = true
+exec = "notify-send \"{query}\""
+```
+
+Typing `/notify Build finished` shows `Build finished` as a result. Activating it runs
+`notify-send "Build finished"`. `command` is optional for freeform entries; add one only when you also want suggested
+results.
+
 ---
 
 ## Configuration
