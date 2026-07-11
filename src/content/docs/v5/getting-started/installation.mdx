@@ -282,6 +282,12 @@ sudo apt update
 sudo apt install noctalia
 ```
 
+**Step 4**: Ensure signing key remains current
+The key used to sign the packages will be updated each year. To avoid needing to manaully reinstall it (repeating Step 1), install the key package so that it will automatically update.
+```bash
+sudo apt install nickh-archive-keyring
+```
+
 :::note
 The APT repository provides `amd64` packages only.
 :::
