@@ -6,6 +6,7 @@ sidebar:
 ---
 
 - [Shell settings](#shell-settings)
+- [Accessibility](#accessibility)
 - [OSD](#osd)
 - [Lock screen](#lock-screen)
 - [Keybinds](#keybinds)
@@ -18,7 +19,6 @@ Global UI settings that apply across all shell surfaces.
 
 ```toml
 [shell]
-ui_scale              = 1.0             # content scale for panels and non-bar shell UI
 corner_radius_scale   = 1.0             # 0 = square, 1 = default, 2 = extra rounded
 font_family           = "sans-serif"    # Pango family string; Fontconfig handles fallback
 lang                  = "en"            # override language detection; BCP-47 or POSIX locale
@@ -127,7 +127,6 @@ pipe_command      = ""                          # annotator/uploader, e.g. "swap
 ```
 
 Notes:
-- `ui_scale` is completely separate from `bar.scale` and `[widget.*].scale`: bar scale settings only affect bar widget content; `ui_scale` covers the control center, launcher, clipboard, and other non-bar surfaces. Neither changes Wayland output / HiDPI buffer scale.
 - `font_family` sets the primary Pango family for all shell text. Can be a concrete family like `Inter` or a generic like `sans-serif`.
 - `time_format` and `date_format` are fallbacks for shell-owned displays such as the home tab, calendar tab, and lock screen. Widget-specific clock formats still use their own widget settings. See [Date format tokens](/v5/configuration/date-format-tokens/).
 - `offline_mode` prevents the shell from making any outgoing HTTP requests (weather, community palettes, community templates, album art, remote notification icons). Distro packagers can default to `true` to comply with policies requiring explicit user consent for network access.
@@ -195,6 +194,21 @@ Glyphs, symbolic tray icons, media album art, and other non-app-bitmap images ar
 Icons are desaturated on the CPU, contrast-normalized, then tinted. Changes apply immediately when you edit the setting in **Settings → Appearance → Interface**, switch light/dark mode, or change the palette.
 
 Per-widget `colorize_icons` / `icon_colorization` keys on the dock or tray are no longer used - configure this only under `[shell]`.
+
+---
+
+## Accessibility
+
+Global accessibility settings.
+
+```toml
+[accessibility]
+ui_scale              = 1.0             # content scale for panels and non-bar shell UI
+high_contrast         = false           # enable high contrast mode for visually impaired
+```
+
+- `ui_scale` is completely separate from `bar.scale` and `[widget.*].scale`: bar scale settings only affect bar widget content; `ui_scale` covers the control center, launcher, clipboard, and other non-bar surfaces. Neither changes Wayland output / HiDPI buffer scale.
+- `high_contrast` increases visibility and contrast by ensuring pure black backgrounds and high visibility borders for visually impaired users. It forces the `pure_black_dark` override under the hood for dark themes.
 
 ---
 
