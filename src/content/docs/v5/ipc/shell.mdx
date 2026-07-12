@@ -35,7 +35,7 @@ Alt+Tab-style overlay: a dimmed fullscreen layer with a centered grid of open wi
 Example Hyprland bind:
 
 ```ini
-hl.bind("ALT + Tab", hl.dsp.exec_cmd("noctalia msg window-switcher"))
+hl.bind("ALT + TAB", hl.dsp.exec_cmd("noctalia msg window-switcher"))
 ```
 
 While the overlay is open it takes exclusive keyboard focus on its layer surface:
@@ -47,6 +47,33 @@ While the overlay is open it takes exclusive keyboard focus on its layer surface
 - **Pointer** - click a tile to switch; click the close control on a tile to close that window
 
 The window list refreshes while the overlay stays open (new windows, closed windows, and title changes such as Discord channel switches). Selection stays on the same window when its title updates.
+
+### Hyprland specific configuration
+
+Add this to your `hyprland.lua` for intended Alt+Tab behaviour:
+
+**This only applies to the specific `ALT + TAB` keybind, disregard the following configuration if you are using e.g. `SUPER + TAB`**
+
+```ini
+hl.bind('ALT + TAB', function() 
+hl.dispatch(hl.dsp.exec_cmd("noctalia msg window-switcher"))
+hl.dispatch(hl.dsp.submap 'window_switcher')
+end)
+
+hl.define_submap('window_switcher', function()
+hl.bind('RETURN', hl.dsp.submap 'reset') -- Necessary for the submap to register
+
+hl.on('layer.closed', function(layer)
+if layer.namespace == 'noctalia-window-switcher' then hl.dispatch(hl.dsp.submap 'reset') end
+    end)
+end)
+```
+
+Please note that some of the following overlay keybinds might not work when the keybind is set to `ALT + TAB`:
+- **Arrow keys** - move within the grid (up to five columns)
+- **Enter** - focus the selected window and close
+- **Escape** - close without switching
+
 
 ## Session
 
