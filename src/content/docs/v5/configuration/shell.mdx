@@ -6,6 +6,7 @@ sidebar:
 ---
 
 - [Shell settings](#shell-settings)
+- [Accessibility](#accessibility)
 - [OSD](#osd)
 - [Lock screen](#lock-screen)
 - [Keybinds](#keybinds)
@@ -18,7 +19,6 @@ Global UI settings that apply across all shell surfaces.
 
 ```toml
 [shell]
-ui_scale              = 1.0             # content scale for panels and non-bar shell UI
 corner_radius_scale   = 1.0             # 0 = square, 1 = default, 2 = extra rounded
 font_family           = "sans-serif"    # Pango family string; Fontconfig handles fallback
 lang                  = "en"            # override language detection; BCP-47 or POSIX locale
@@ -127,7 +127,6 @@ pipe_command      = ""                          # annotator/uploader, e.g. "swap
 ```
 
 Notes:
-- `ui_scale` is completely separate from `bar.scale` and `[widget.*].scale`: bar scale settings only affect bar widget content; `ui_scale` covers the control center, launcher, clipboard, and other non-bar surfaces. Neither changes Wayland output / HiDPI buffer scale.
 - `font_family` sets the primary Pango family for all shell text. Can be a concrete family like `Inter` or a generic like `sans-serif`.
 - `time_format` and `date_format` are fallbacks for shell-owned displays such as the home tab, calendar tab, and lock screen. Widget-specific clock formats still use their own widget settings. See [Date format tokens](/v5/configuration/date-format-tokens/).
 - `offline_mode` prevents the shell from making any outgoing HTTP requests (weather, community palettes, community templates, album art, remote notification icons). Distro packagers can default to `true` to comply with policies requiring explicit user consent for network access.
@@ -195,6 +194,21 @@ Glyphs, symbolic tray icons, media album art, and other non-app-bitmap images ar
 Icons are desaturated on the CPU, contrast-normalized, then tinted. Changes apply immediately when you edit the setting in **Settings → Appearance → Interface**, switch light/dark mode, or change the palette.
 
 Per-widget `colorize_icons` / `icon_colorization` keys on the dock or tray are no longer used - configure this only under `[shell]`.
+
+---
+
+## Accessibility
+
+Global accessibility settings.
+
+```toml
+[accessibility]
+ui_scale              = 1.0             # content scale for panels and non-bar shell UI
+high_contrast         = false           # enable high contrast mode for visually impaired
+```
+
+- `ui_scale` is completely separate from `bar.scale` and `[widget.*].scale`: bar scale settings only affect bar widget content; `ui_scale` covers the control center, launcher, clipboard, and other non-bar surfaces. Neither changes Wayland output / HiDPI buffer scale.
+- `high_contrast` increases visibility and contrast by ensuring pure black backgrounds and high visibility borders for visually impaired users. It forces the `pure_black_dark` override under the hood for dark themes.
 
 ---
 
@@ -344,17 +358,24 @@ shutdown = "sudo -n poweroff"
 
 When an override is set, Noctalia runs that command for the built-in suspend/reboot/shutdown actions (session panel, launcher, IPC, idle, and greeter sync). Per-row `command` still overrides a single menu button when you need one-off behavior (including logout via `noctalia msg session logout`).
 
-Configure under **`[shell.session]`** in TOML, or use **Settings → Power → Session menu**: entries, reorder, and **Show** are listed inline; use the **settings** (cog) control on a row for behavior, label, command, icon, shortcut, countdown, and style. **Add action** appends a custom-command entry by default. The default five actions are assigned keyboard shortcuts **1**–**5**; pressing the key while the panel is open triggers the action (or starts its countdown when configured).
+Configure under **`[shell.session]`** in TOML, or use **Settings → Power → Session panel**: entries, reorder, and **Show** are listed inline; use the **settings** (cog) control on a row for behavior, label, command, icon, shortcut, countdown, and style. **Add action** appends a custom-command entry by default. The default five actions are assigned keyboard shortcuts **1**–**5**; pressing the key while the panel is open triggers the action (or starts its countdown when configured). **Grid Layout** and its **Columns** stepper control how the buttons are arranged; with grid off, the panel fits the actions on one row (wrapping to a second row past five). Arrow keys follow the resulting rows and columns.
+
+Panel-level settings under `[shell.session]`:
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `grid` | bool | `false` | When `true`, lays the session actions out over multiple rows of `grid_columns` instead of fitting them on a single row. |
+| `grid_columns` | number | `3` | Actions per row when `grid` is `true` (1-5). Ignored when `grid` is `false`. |
+
+Each entry in the `[[shell.session.actions]]` array takes:
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `action` | string | *required* | `lock`, `logout`, `suspend`, `lock_and_suspend`, `reboot`, `shutdown`, or `command` (custom entry). |
-| `grid` | bool | `false` | When `true`, displays the session panel actions in a multi-row grid based on `grid_columns`. |
-| `grid_columns` | number | `3` | The number of actions to show per row when `grid` is `true`. |
 | `enabled` | bool | `true` | When `false`, the button is hidden. |
 | `command` | string | *unset* | Optional. If set, the string is run with `/bin/sh -c` instead of the built-in handler. For `action = "command"`, this field is required. |
 | `label` | string | *unset* | Optional button label (otherwise translated defaults). |
-| `glyph` | string | *unset* | Optional bar-style icon id (otherwise defaults per action). Under **Session menu** in Settings → Power, open a row’s settings (cog) editor and use the icon preview to pick a glyph. |
+| `glyph` | string | *unset* | Optional bar-style icon id (otherwise defaults per action). Under **Session panel** in Settings → Power, open a row’s settings (cog) editor and use the icon preview to pick a glyph. |
 | `shortcut` | string | `"1"`–`"5"` | Optional keyboard shortcut that triggers the action while the session panel is open. Any XKB key name (e.g. `1`, `F1`, `Escape`) or modifier combo (`Ctrl+1`). Clear to disable. |
 | `countdown_seconds` | number | `0` | When greater than zero, the first activation starts a per-entry countdown (shown on the button badge). Activate the same entry again to run immediately, or wait for the timer. **Escape** or moving to another entry cancels. `0` runs immediately. |
 | `variant` | string | `"default"` | Button style: `default`, `primary`, `secondary`, `destructive` (warning), or `outline`. |

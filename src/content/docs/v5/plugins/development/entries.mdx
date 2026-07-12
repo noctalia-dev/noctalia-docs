@@ -57,11 +57,17 @@ for their rendering APIs and controls.
 ## `barWidget.*` - widget presentation + settings
 
 `setText` · `setGlyph` · `setImage` · `setTooltip` · `clearTooltip` · `setFont` · `setColor` · `setGlyphColor` ·
-`setVisible` · `isVertical` · `render` · `getConfig(key)`
+`setVisible` · `isVertical` · `outputName` · `render` · `getConfig(key)`
 
 A bar widget can either patch the built-in glyph/text row with the imperative setters below, or describe composite
 content as a `ui.*` tree with `barWidget.render(tree)` - see
 [Declarative UI](/v5/plugins/development/declarative-ui/#barwidgetrender--declarative-bar-widget-ui).
+
+`outputName()` returns the connector name of the monitor this widget instance's bar is on (or `nil` when unknown).
+Each placement of the widget gets its own value, so a widget on two bars can scope its content per monitor - unlike
+`noctalia.focusedOutputName()`, which returns the same globally focused output everywhere. Cross-reference
+[`noctalia.outputs()`](/v5/plugins/development/runtime-api/#outputs-wallpaper-and-panels) by name when you need
+geometry.
 
 ```lua
 local label = barWidget.getConfig("label")
