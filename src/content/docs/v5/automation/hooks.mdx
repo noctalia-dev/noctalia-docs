@@ -8,8 +8,8 @@ sidebar:
 Hooks are advanced automation entries under `[hooks]` in the Noctalia config stack. For hand-written hooks, put them in
 any `*.toml` file under `~/.config/noctalia/`. They run extra commands when specific Noctalia events happen.
 
-Each event is a string (one command) or an array of strings (run in order). The same `noctalia:` prefix rules apply as
-in [idle behaviors](/v5/services/idle/).
+Each event is a shell command string or an array of shell command strings that run in order. Use `noctalia msg ...` when
+a hook needs to call Noctalia IPC.
 
 Hooks do not replace Noctalia's built-in behavior. For example, external or IPC-initiated Wi-Fi, Bluetooth, and power
 profile changes show an OSD. `notify-send` can be useful while testing that a hook fires, but it is not required for
@@ -117,11 +117,11 @@ theme_mode_changed = "logger -t noctalia-hooks \"mode: $NOCTALIA_THEME_MODE\""
 # Combine normal shell commands with Noctalia IPC commands.
 session_locked = [
   "playerctl pause",
-  "noctalia:bar-hide",
+  "noctalia msg bar-hide",
 ]
 session_unlocked = [
-  "noctalia:bar-show",
-  "noctalia:dpms-on",
+  "noctalia msg bar-show",
+  "noctalia msg dpms-on && notify-send 'Session resumed'",
 ]
 
 logging_out   = "logger -t noctalia-hooks 'logout requested'"
