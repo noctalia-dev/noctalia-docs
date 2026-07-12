@@ -226,7 +226,7 @@ System resource monitor. Shows an icon and value for one configurable stat. Mult
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `stat` | string | `"cpu_usage"` | Which stat to display (see table below) |
+| `stat` | string | `"cpu_usage"` | Which stat to display. See [Available stats](/v5/services/system-monitor/#available-stats) |
 | `glyph` | string | `""` | Custom bar glyph name (Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint). Leave empty to use the icon for the selected stat |
 | `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph/stat icon. Leave empty to use the glyph |
 | `custom_image_colorize` | bool | `false` | When `true`, tint the custom image with the same dynamic color the glyph would use |
@@ -239,25 +239,7 @@ System resource monitor. Shows an icon and value for one configurable stat. Mult
 | `show_label` | bool | `true` | Show the text value next to the graph or gauge (always shown in `"text"` mode) |
 | `label_min_width` | float | `0` | Minimum label width in pixels to prevent resizing as values change. Only relevant when `show_label` is enabled. |
 
-**`stat` values:**
-
-| Value | Display | Description |
-|-------|---------|-------------|
-| `cpu_usage` | `75%` | CPU utilisation (all cores) |
-| `cpu_temp` | `65°C` | CPU package temperature |
-| `gpu_temp` | `72°C` | GPU temperature |
-| `gpu_vram` | `42%` | GPU VRAM usage |
-| `ram_used` | `4.2 GiB` | RAM used (binary, auto-scaled) |
-| `ram_pct` | `26%` | RAM used % |
-| `swap_pct` | `12%` | Swap used % |
-| `disk_pct` | `45%` | Disk used % for `path` |
-| `net_rx` | `1.2 MB/s` | Network download speed (decimal, auto-scaled) |
-| `net_tx` | `256 kB/s` | Network upload speed (decimal, auto-scaled) |
-
-For `net_rx` and `net_tx`, set `interface` to an exact kernel interface name from `/proc/net/dev` (for example `wlan0` or `enp5s0`) to show only that interface. Leave it empty to show the total across all non-loopback interfaces.
-
-GPU temperature is read from Linux hwmon when available, with an NVML fallback for NVIDIA proprietary drivers.
-GPU VRAM is read from AMDGPU DRM sysfs when available, with an NVML fallback for NVIDIA proprietary drivers.
+The stats a `sysmon` widget can show, what each one displays, and where the values come from are listed under [Available stats](/v5/services/system-monitor/#available-stats).
 
 ```toml
 [widget.cpu]
