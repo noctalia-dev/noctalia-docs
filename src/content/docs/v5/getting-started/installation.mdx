@@ -245,10 +245,10 @@ or [whole-system configuration](https://guix.gnu.org/manual/devel/en/html_node/S
 
 Noctalia provides an APT repository for Debian-based distributions.
 
-**Step 1**: Import the repository signing key
+**Step 1**: Install the repository signing key
 
 ```bash
-sudo wget -O /usr/share/keyrings/nickh-archive-keyring.gpg https://pkg.noctalia.dev/deb/nickh-archive-keyring.gpg
+wget https://pkg.noctalia.dev/deb/nickh-archive-keyring.deb && sudo dpkg -i nickh-archive-keyring.deb
 ```
 
 **Step 2**: Add the repository
@@ -276,13 +276,6 @@ sudo wget -O /usr/share/keyrings/nickh-archive-keyring.gpg https://pkg.noctalia.
 ```bash
 sudo apt update
 sudo apt install noctalia
-```
-
-**Step 4**: Ensure signing key remains current
-
-The key used to sign the packages will be updated each year. To avoid needing to manually reinstall it (repeating Step 1), install the key package so that it will automatically update.
-```bash
-sudo apt install nickh-archive-keyring
 ```
 
 :::note

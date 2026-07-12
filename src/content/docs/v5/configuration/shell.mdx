@@ -20,6 +20,7 @@ Global UI settings that apply across all shell surfaces.
 ```toml
 [shell]
 corner_radius_scale   = 1.0             # 0 = square, 1 = default, 2 = extra rounded
+button_borders        = true            # draw outlines around buttons throughout the shell
 font_family           = "sans-serif"    # Pango family string; Fontconfig handles fallback
 lang                  = "en"            # override language detection; BCP-47 or POSIX locale
 time_format           = "{:%H:%M}"      # default time format for shell UI without its own setting
@@ -148,6 +149,7 @@ Notes:
 - `clipboard_auto_paste`: `auto` = image entries use `Ctrl+V`, text entries use `Ctrl+Shift+V`; `off` = copy only, no automatic paste.
 - `clipboard_image_action_command`: when non-empty, image clipboard previews show an action button. Use `{path}` to receive an exported image file path. Use `{stdin}` (expanded to `-`) or omit `{path}` to receive the image bytes on stdin, matching the v4 annotation tool behavior (`satty -f -`, `gradia`, etc.).
 - `corner_radius_scale` scales rounded corners across shell surfaces: `0` = square, `1` = default, `2` = extra rounded.
+- `button_borders`: when `true` (default), buttons use the outline defined by their built-in or custom style. Set it to `false` for borderless buttons throughout the shell. Other controls, cards, panels, and explicitly configured raw borders are unaffected. Toggle in **Settings → Appearance → Interface**.
 - `launch_apps_as_systemd_services`: when `true`, apps launched from the launcher, dock, and taskbar run as transient systemd scopes (`systemd-run --user --scope`) so they survive a shell restart and get their own cgroup.
 - `launch_apps_custom_command`: when non-empty, wraps every app launched from the launcher, dock, and taskbar. The literal `$CMD` is replaced with the app's own command - e.g. `uwsm-app -- $CMD` or `gamemoderun $CMD`. Mutually exclusive with `launch_apps_as_systemd_services`; when both are set, the systemd scope wins and the custom command is ignored.
 - `screen_time_enabled`: when `true`, Noctalia tracks per-app usage time for the Control Center screen-time view and its shortcut. Disabled by default; no usage is recorded while off.
