@@ -244,6 +244,7 @@ or [whole-system configuration](https://guix.gnu.org/manual/devel/en/html_node/S
 ## Debian {#debian}
 
 Noctalia provides an APT repository for Debian-based distributions.
+
 **Step 1**: Import the repository signing key
 
 ```bash
@@ -278,6 +279,7 @@ sudo apt install noctalia
 ```
 
 **Step 4**: Ensure signing key remains current
+
 The key used to sign the packages will be updated each year. To avoid needing to manaully reinstall it (repeating Step 1), install the key package so that it will automatically update.
 ```bash
 sudo apt install nickh-archive-keyring
