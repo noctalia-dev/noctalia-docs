@@ -1,6 +1,6 @@
 ---
 title: Configuration
-description: greeter.toml settings for sessions, color scheme, monitors, UI scale, cursor theme, and keyboard layout.
+description: greeter.toml settings for sessions, color scheme, monitors, output mode, UI scale, cursor theme, and keyboard layout.
 sidebar:
   order: 1
 ---
@@ -12,6 +12,7 @@ If the file is missing, the greeter uses built-in defaults (auto UI scale, all m
 - [Keys the greeter remembers](#keys-the-greeter-remembers)
 - [Admin-only keys](#admin-only-keys)
 - [Multi-monitor](#multi-monitor)
+- [Output mode](#output-mode)
 - [UI scale](#ui-scale)
 - [Cursor theme](#cursor-theme)
 - [Keyboard layout](#keyboard-layout)
@@ -42,6 +43,8 @@ Set these yourself. The greeter UI does not change them.
 | `[user].default` | Username to select on startup. Opens the password step immediately. `--user` on the greetd command line wins. Press **Esc** or **Back** to pick another user. |
 | `[output].name` | Wayland connector name to show the greeter on (see [Multi-monitor](#multi-monitor)) |
 | `[output].layout` | Multi-monitor positions as `NAME:X,Y; ...` in logical pixels (see [Multi-monitor](#multi-monitor)) |
+| `[output].width` | Preferred DRM mode width in pixels (see [Output mode](#output-mode)) |
+| `[output].height` | Preferred DRM mode height in pixels (see [Output mode](#output-mode)) |
 | `[output].scale` | Manual UI scale factor (see [UI scale](#ui-scale)) |
 | `[cursor].theme` | Cursor theme name (e.g. `Adwaita`); missing → wlroots default cursor (see [Cursor theme](#cursor-theme)) |
 | `[cursor].size` | Cursor size in pixels (e.g. `24`); missing → `24` |
@@ -72,6 +75,8 @@ hide_logo = false
 [output]
 name = "DP-2"
 layout = "DP-1:0,0; DP-2:2560,0"
+width = 5120
+height = 2160
 scale = 1.5
 
 [cursor]
@@ -123,11 +128,36 @@ List connector names from a running Wayland session:
 noctalia-greeter outputs
 ```
 
-Restart greetd after changing `[output].name`:
+Restart greetd after changing `[output].name` or `[output].width` / `[output].height`:
 
 ```sh
 sudo systemctl restart greetd
 ```
+
+---
+
+## Output mode
+
+By default the greeter compositor modesets each connector to the EDID preferred mode (highest refresh at that size). On some setups that preferred mode differs from your desktop session resolution, so login flashes or modesets when the session starts.
+
+To pin the greeter to a specific resolution, set both `[output].width` and `[output].height`:
+
+```toml
+[output]
+name = "DP-2"
+width = 5120
+height = 2160
+```
+
+When both values are set, the compositor picks the **highest-refresh DRM mode** that matches that size. If no mode of that size is advertised, it logs a warning and falls back to the preferred mode.
+
+Both keys are required. If only one is set, the greeter ignores the partial override and uses preferred mode. Invalid (non-positive) values are also ignored.
+
+:::note
+`[output].width` / `[output].height` control the **physical DRM mode** (pixels). They are separate from `[output].scale`, which only affects greeter UI scaling.
+:::
+
+Match these values to the mode your desktop session uses if you want a seamless greeter → session transition.
 
 ---
 
