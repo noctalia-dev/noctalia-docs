@@ -96,6 +96,18 @@ When `magnification = true` (default), icons grow as the pointer moves along the
 - The launcher button participates when shown.
 - Hovering an entry shows a tooltip with its app name (launcher button shows **Launcher**).
 
+## Reordering pinned apps
+
+Pinned dock icons can be reordered by drag-and-drop:
+
+1. Press and hold a **pinned** icon for about 300 ms.
+2. Drag along the dock axis to the desired position. Neighboring pinned icons shift to show where the item will land.
+3. Release to save the new order to `settings.toml` immediately (same persistence path as pin/unpin from the context menu).
+
+Running-only entries (apps shown because `show_running = true` but not in `pinned`) cannot be dragged, their order is not persisted. An app that is both running and pinned is treated as pinned and can be reordered.
+
+Leaving the dock surface while dragging cancels the reorder. Tooltips are hidden for the duration of a drag.
+
 ---
 
 ## Auto-hide
