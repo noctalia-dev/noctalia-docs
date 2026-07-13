@@ -62,7 +62,7 @@ Widget IDs generated in the editor use the `lockscreen-widget-` prefix. Login bo
 
 The login box uses the same inspector layout as other lockscreen widgets:
 
-- **Widget** - login button visibility, password field opacity and corner radius (`show_login_button`, `input_opacity`, `input_radius`)
+- **Widget** - login button visibility, password field opacity, corner radius, and text alignment (`show_login_button`, `input_opacity`, `input_radius`, `center_password_text`)
 - **Background** - outer bar color, opacity, and corner radius (`background_color`, `background_opacity`, `background_radius`)
 
 | Setting | Default | Range | Description |
@@ -73,6 +73,7 @@ The login box uses the same inspector layout as other lockscreen widgets:
 | `show_login_button` | `true` | bool | Show the check button beside the password field |
 | `input_opacity` | `1.0` | `0.0`–`1.0` | Password field background opacity |
 | `input_radius` | `6` | `0`–`32` | Password field corner radius (logical px) |
+| `center_password_text` | `false` | bool | Center password dots and placeholder inside the field |
 
 ```toml
 [lockscreen_widgets.widget."lockscreen-login-box@DP-1".settings]
