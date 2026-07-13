@@ -61,6 +61,15 @@ dependencies = ["slurp"]
 
 Catalog rows require `id` and `name`; rows without either are ignored.
 
-Users add your repo with `noctalia msg plugins source add <name> git <url>`, then enable plugins from it. To contribute
-to the official catalog, open a PR against
-[official-plugins](https://github.com/noctalia-dev/official-plugins).
+Users add your repo with `noctalia msg plugins source add <name> git <url>`, then enable plugins from it.
+
+## Sharing your plugin
+
+To get your plugin into the plugin store every Noctalia user already has, open a PR against
+[community-plugins](https://github.com/noctalia-dev/community-plugins) - its README has the submission rules. Your
+plugin ships a `plugin.toml`, its entry scripts, a `README.md`, a `thumbnail.webp`, and `translations/en.json`; CI
+validates all of it and regenerates the catalog on merge. Directory names are first-come in that repo, so a plugin
+named `weather` can only exist once there.
+
+[official-plugins](https://github.com/noctalia-dev/official-plugins) is maintained by the core team and does not take
+third-party plugins.
