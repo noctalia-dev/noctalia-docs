@@ -336,6 +336,7 @@ snake-toc a[data-visible="true"] {
 	--sl-content-width: 59rem;
 	--sl-sidebar-width: 19rem;
 	--sl-banner-height: 2rem;
+	--sl-layout-width: calc(var(--sl-content-width) + (2 * var(--sl-content-pad-x)) + (2 * var(--sl-sidebar-width)));
 }
 
 .sidebar-pane {
@@ -352,16 +353,12 @@ snake-toc a[data-visible="true"] {
 
 @media (min-width: 72rem) {
 	/*
-	 * Center the whole layout (left sidebar + content + right TOC) as a tight
-	 * group and push all the leftover space to the extreme left and right
-	 * edges, instead of gapping between the columns.
-	 *
-	 * --layout-outer-gap is the equal margin added on each outer edge once the
-	 * viewport grows wider than the natural width of the three columns.
+	 * Keep the navigation and all three content columns inside the same fluid,
+	 * centered frame. The minimum gutter preserves normal navbar breathing room
+	 * before the viewport is wide enough to show the full layout.
 	 */
 	:root {
-		--layout-outer-gap: max(0rem,
-				(100vw - var(--sl-content-width) - (2 * var(--sl-content-pad-x)) - (2 * var(--sl-sidebar-width))) / 2);
+		--layout-outer-gap: max(var(--sl-nav-pad-x), (100vw - var(--sl-layout-width)) / 2);
 	}
 
 	/* Pull the fixed left sidebar in from the viewport edge. */
@@ -373,12 +370,13 @@ snake-toc a[data-visible="true"] {
 	   then falls naturally on the far right, mirroring the left gap. */
 	.main-frame {
 		padding-inline-start: calc(var(--sl-sidebar-width) + var(--layout-outer-gap));
+		padding-inline-end: var(--layout-outer-gap);
 	}
 
-	/* Shift the top nav content in by the same gap so the logo and search stay
-	   aligned with the sidebar and TOC below them. */
-	.header {
-		padding-inline: calc(var(--sl-nav-pad-x) + var(--layout-outer-gap));
+	/* Only pad the outer PageFrame header. Targeting `.header` also catches the
+	   header component inside it and makes the search shrink on wide screens. */
+	.page > .header {
+		padding-inline: var(--layout-outer-gap);
 	}
 
 	/* The content pane is exactly as wide as the content itself, so it hugs the
@@ -391,6 +389,12 @@ snake-toc a[data-visible="true"] {
 
 	[data-has-sidebar][data-has-toc] .right-sidebar-container {
 		width: var(--sl-sidebar-width);
+	}
+
+	/* Let the search use the article column instead of becoming a small island
+	   between the logo and the actions on large displays. */
+	.header-search button[data-open-modal] {
+		max-width: 28rem;
 	}
 }
 

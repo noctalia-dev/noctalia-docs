@@ -1,26 +1,44 @@
 ---
-import Default from '@astrojs/starlight/components/Header.astro';
+import config from 'virtual:starlight/user-config';
+import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
+import Search from 'virtual:starlight/components/Search';
+import SiteTitle from 'virtual:starlight/components/SiteTitle';
+import SocialIcons from 'virtual:starlight/components/SocialIcons';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
 import { isV5Path } from '../lib/versioning';
 
 const pathname = Astro.url.pathname;
 const isV5 = isV5Path(pathname);
+const shouldRenderSearch =
+  config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
 
 const faqHref = /^\/v5(?:\/|$)/.test(pathname)
   ? '/v5/getting-started/faq/'
   : '/v4/getting-started/faq/';
 ---
 
-<Default {...Astro.props}><slot /></Default>
-
-<div class="faq-button-container">
-  <a href={faqHref} class="faq-button">
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10"></circle>
-      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-      <path d="M12 17h.01"></path>
-    </svg>
-    <span>FAQ</span>
-  </a>
+<div class="header-inner">
+  <div class="title-wrapper sl-flex">
+    <SiteTitle />
+  </div>
+  <div class="header-search sl-flex print:hidden">
+    {shouldRenderSearch && <Search />}
+    <a href={faqHref} class="faq-button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+        <path d="M12 17h.01"></path>
+      </svg>
+      <span>FAQ</span>
+    </a>
+  </div>
+  <div class="sl-hidden md:sl-flex print:hidden right-group">
+    <div class="sl-flex social-icons">
+      <SocialIcons />
+    </div>
+    <ThemeSelect />
+    <LanguageSelect />
+  </div>
 </div>
 
 <div class:list={['version-alert-banner', isV5 ? 'is-beta' : 'is-stable']} role="alert">
@@ -49,15 +67,6 @@ const faqHref = /^\/v5(?:\/|$)/.test(pathname)
     faqButton.href = /^\/v5(?:\/|$)/.test(window.location.pathname)
       ? '/v5/getting-started/faq/'
       : '/v4/getting-started/faq/';
-  }
-
-  function positionFaqButton() {
-    const container = document.querySelector('.faq-button-container');
-    const search = document.querySelector('site-search, starlight-search, .search-container, [data-search]');
-    updateFaqHref();
-    if (container && search) {
-      search.parentElement?.insertBefore(container, search.nextSibling);
-    }
   }
 
   function positionBanner() {
@@ -93,20 +102,68 @@ const faqHref = /^\/v5(?:\/|$)/.test(pathname)
     }
   }
 
-  positionFaqButton();
+  updateFaqHref();
   positionBanner();
   document.addEventListener('astro:page-load', () => {
-    positionFaqButton();
+    updateFaqHref();
     positionBanner();
     updateBannerVersion();
   });
 </script>
 
 <style>
-  .faq-button-container {
+  .header-inner {
     display: flex;
     align-items: center;
-    margin-inline: 1rem;
+    justify-content: space-between;
+    gap: var(--sl-nav-gap);
+    width: 100%;
+    height: 100%;
+  }
+
+  .title-wrapper {
+    min-width: 0;
+    margin: -0.25rem;
+    padding: 0.25rem;
+    overflow: clip;
+  }
+
+  .header-search {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .right-group,
+  .social-icons {
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .social-icons::after {
+    content: '';
+    height: 2rem;
+    border-inline-end: 1px solid var(--sl-color-gray-5);
+  }
+
+  @media (min-width: 50rem) {
+    .header-inner {
+      display: grid;
+      grid-template-columns: var(--sl-sidebar-width) minmax(0, 1fr) var(--sl-sidebar-width);
+      gap: 0;
+    }
+
+    .header-search {
+      justify-content: flex-start;
+      padding-inline: var(--sl-content-pad-x);
+    }
+
+    .right-group {
+      justify-content: flex-end;
+    }
   }
 
   .faq-button {
