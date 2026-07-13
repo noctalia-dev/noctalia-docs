@@ -13,6 +13,7 @@ If the file is missing, the greeter uses built-in defaults (auto UI scale, all m
 - [Admin-only keys](#admin-only-keys)
 - [Multi-monitor](#multi-monitor)
 - [Output mode](#output-mode)
+- [Synced wallpapers](#synced-wallpapers)
 - [Idle blanking](#idle-blanking)
 - [UI scale](#ui-scale)
 - [Cursor theme](#cursor-theme)
@@ -163,6 +164,25 @@ Both keys are required. If only one is set, the greeter ignores the partial over
 :::
 
 Match these values to the mode your desktop session uses if you want a seamless greeter → session transition.
+
+---
+
+## Synced wallpapers
+
+**Settings → Security → Noctalia Greeter → Sync Now** copies palette colors and wallpapers into `/var/lib/noctalia-greeter/`.
+
+With a current Noctalia shell and greeter:
+
+| File / field | Purpose |
+|--------------|---------|
+| `wallpaper.<ext>` + `appearance.json` → `wallpaper` | Legacy **single** image (always written) |
+| `wallpaper-<connector>.*` + `appearance.json` → `wallpapers` | **Per-connector** map (`DP-2`, `HDMI-A-1`, …) |
+
+The greeter picks the image for each view by the bound connector name. If you pin with `[output].name = "DP-2"`, you see the DP-2 wallpaper (when that entry exists).
+
+Older greeters that only understand the single `wallpaper` field keep working: Sync still fills that fallback. When `[output].name` is set, the shell prefers that connector’s wallpaper for the fallback image as well.
+
+No extra greeter.toml keys are required for wallpapers — only Sync Now (and optional pin as above).
 
 ---
 
