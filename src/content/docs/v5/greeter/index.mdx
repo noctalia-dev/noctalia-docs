@@ -120,7 +120,7 @@ After syncing, log out or restart greetd to see the changes on the login screen.
 
 The greeter adds a **Synced** color scheme when sync data is present. Session and scheme choices you make on the login screen are remembered in `/var/lib/noctalia-greeter/greeter.toml`.
 
-For monitor selection, UI scale, cursor theme, and other admin settings, see [Configuration](/v5/greeter/configuration/).
+For monitor selection, output mode, UI scale, cursor theme, and other admin settings, see [Configuration](/v5/greeter/configuration/).
 
 ---
 
@@ -153,5 +153,6 @@ The greeter works without a mouse.
 - **Sync fails with no privilege escalator** - Greeter sync needs `pkexec` or `run0` on `PATH` (for example when `pkexec` is disabled on NixOS, install `run0` from systemd ≥ 256). A polkit authentication agent must be running in your session.
 - **Sync Now does nothing / no `appearance.json`** - Sync stages files first, then waits for polkit to authorize `noctalia-greeter-apply-appearance`. On **seatd without logind**, Noctalia's polkit agent cannot register; run the `pkexec` command from the Sync Now notification in a terminal. Sync Now warns after 90 seconds if approval is still pending.
 - **Polkit agent: `No session for pid`** - Expected on seatd-only setups. Install elogind for in-session prompts, or use terminal/console `pkexec` for greeter sync.
+- **Blank flash or modeset at login** - The greeter may be using a different DRM mode than your desktop session. Set matching `[output].width` and `[output].height` in `greeter.toml`. See [Output mode](/v5/greeter/configuration/#output-mode).
 - **UI too small or too large on a high-DPI monitor** - Set `[output].scale` in `greeter.toml`. See [Configuration](/v5/greeter/configuration/#ui-scale).
 - **Wrong or default cursor theme** - Set `[cursor].theme` (and `[cursor].size`) in `greeter.toml`, or the `XCURSOR_*` variables in the greetd command. If the theme is not on the default search path, also set `[cursor].path` / `XCURSOR_PATH`. See [Cursor theme](/v5/greeter/configuration/#cursor-theme).
