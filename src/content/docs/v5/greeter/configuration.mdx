@@ -138,7 +138,7 @@ sudo systemctl restart greetd
 
 ## Output mode
 
-By default the greeter compositor modesets each connector to the EDID preferred mode (highest refresh at that size). On some setups that preferred mode differs from your desktop session resolution, so login flashes or modesets when the session starts.
+By default the greeter compositor modesets each connector using the EDID preferred resolution, then the **highest refresh rate** available at that size. On some setups that mode differs from your desktop session (resolution and/or refresh), so login flashes or modesets when the session starts.
 
 To pin the greeter to a specific resolution, set both `[output].width` and `[output].height`:
 
@@ -149,9 +149,9 @@ width = 5120
 height = 2160
 ```
 
-When both values are set, the compositor picks the **highest-refresh DRM mode** that matches that size. If no mode of that size is advertised, it logs a warning and falls back to the preferred mode.
+When both values are set, the compositor uses that size and still picks the **highest-refresh** advertised mode for it. If no mode of that size is advertised, it logs a warning and falls back to the preferred-resolution path above.
 
-Both keys are required. If only one is set, the greeter ignores the partial override and uses preferred mode. Invalid (non-positive) values are also ignored.
+Both keys are required. If only one is set, the greeter ignores the partial override and uses the preferred-resolution path. Invalid (non-positive) values are also ignored.
 
 :::note
 `[output].width` / `[output].height` control the **physical DRM mode** (pixels). They are separate from `[output].scale`, which only affects greeter UI scaling.
