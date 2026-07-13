@@ -197,6 +197,29 @@ sudo xbps-remove quickshell
 ```
 :::
 
+### Alternative: Build from source using xbps-src
+
+```
+# Install git, wget
+sudo xbps-install git wget
+
+# Set up the Void packages tree
+git clone --depth 1 https://github.com/void-linux/void-packages.git
+cd void-packages
+./xbps-src binary-bootstrap
+
+# Copy Noctalia build templates
+mkdir srcpkgs/noctalia-shell srcpkgs/noctalia-qs
+wget https://git.voiders.dev/voiders-community/repository/raw/branch/main/pkgs/noctalia-shell/template -P srcpkgs/noctalia-shell/
+wget https://git.voiders.dev/voiders-community/repository/raw/branch/main/pkgs/noctalia-qs/template -P srcpkgs/noctalia-qs/
+
+# Build the packages
+./xbps-src pkg noctalia-shell
+
+# Install the built packages
+sudo xbps-install --repository=hostdir/binpkgs noctalia-shell
+```
+
 ---
 
 ## Manual Installation {#manual-install}
