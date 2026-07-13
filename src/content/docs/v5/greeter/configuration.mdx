@@ -179,10 +179,11 @@ timeout = 300
 
 While blanked, the greeter client stays running. Any **key press**, **mouse button press**, or **touch** wakes the displays and restarts the idle timer. Pointer motion and scroll only wake a blanked screen — they do not reset the timer while the screen is on (wireless mice often emit motion noise that would otherwise prevent blanking).
 
-Optional environment override (wins when set), useful because greetd starts greeters with an empty environment:
+Optional environment override (wins when set), useful because greetd starts greeters with an empty environment. Put it on the greetd session **command** (not only as a bare shell assignment):
 
-```sh
-NOCTALIA_GREETER_IDLE_TIMEOUT=300
+```toml
+[default_session]
+command = "env NOCTALIA_GREETER_IDLE_TIMEOUT=300 /usr/bin/noctalia-greeter-session"
 ```
 
 On NixOS you can set the same value through the module:
