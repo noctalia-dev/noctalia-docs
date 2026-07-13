@@ -1,6 +1,6 @@
 ---
 title: Configuration
-description: greeter.toml settings for sessions, color scheme, monitors, output mode, idle blanking, UI scale, cursor theme, and keyboard layout.
+description: greeter.toml settings for sessions, color scheme, monitors, output mode, transforms, idle blanking, UI scale, cursor theme, and keyboard layout.
 sidebar:
   order: 1
 ---
@@ -13,6 +13,7 @@ If the file is missing, the greeter uses built-in defaults (auto UI scale, all m
 - [Admin-only keys](#admin-only-keys)
 - [Multi-monitor](#multi-monitor)
 - [Output mode](#output-mode)
+- [Output transform](#output-transform)
 - [Idle blanking](#idle-blanking)
 - [UI scale](#ui-scale)
 - [Cursor theme](#cursor-theme)
@@ -46,6 +47,7 @@ Set these yourself. The greeter UI does not change them.
 | `[output].layout` | Multi-monitor positions as `NAME:X,Y; ...` in logical pixels (see [Multi-monitor](#multi-monitor)) |
 | `[output].width` | Preferred DRM mode width in pixels (see [Output mode](#output-mode)) |
 | `[output].height` | Preferred DRM mode height in pixels (see [Output mode](#output-mode)) |
+| `[output].transforms` | Per-connector DRM rotation (see [Output transform](#output-transform)) |
 | `[output].scale` | Manual UI scale factor (see [UI scale](#ui-scale)) |
 | `[idle].timeout` | Seconds with no input before blanking outputs; `0` disables (see [Idle blanking](#idle-blanking)) |
 | `[cursor].theme` | Cursor theme name (e.g. `Adwaita`); missing → wlroots default cursor (see [Cursor theme](#cursor-theme)) |
@@ -80,6 +82,7 @@ layout = "DP-1:0,0; DP-2:2560,0"
 width = 5120
 height = 2160
 scale = 1.5
+transforms = "HDMI-A-1:270"
 
 [idle]
 timeout = 300
@@ -163,6 +166,44 @@ Both keys are required. If only one is set, the greeter ignores the partial over
 :::
 
 Match these values to the mode your desktop session uses if you want a seamless greeter → session transition.
+
+---
+
+## Output transform
+
+Portrait panels often need a DRM transform so the greeter UI is upright. Set `[output].transforms` to a semicolon-separated list of `CONNECTOR:TOKEN` entries:
+
+```toml
+[output]
+# optional: pin greeter to the portrait panel only
+# name = "HDMI-A-1"
+transforms = "HDMI-A-1:270"
+```
+
+Supported tokens: `normal` / `0` / `none`, `90`, `180`, `270`, `flipped`, `flipped-90`, `flipped-180`, `flipped-270`.
+
+Multiple connectors:
+
+```toml
+[output]
+transforms = "DP-1:normal; HDMI-A-1:90"
+```
+
+:::note
+Transform is independent of `[output].width` / `[output].height` (those select the physical DRM mode size before rotation) and of `[output].scale` (UI scale).
+:::
+
+Noctalia **Sync Now** does not write transforms yet — set them in `greeter.toml` by hand (or via your Nix module). Restart greetd after changes:
+
+```sh
+sudo systemctl restart greetd
+```
+
+List connector names from a running Wayland session:
+
+```sh
+noctalia-greeter outputs
+```
 
 ---
 
