@@ -103,6 +103,7 @@ entry = "widget.luau"
   [[widget.setting]]
   key     = "label"
   type    = "string"
+  label_key = "settings.label.label"
   default = "Hello"
 ```
 
@@ -122,15 +123,17 @@ label = "Short"
 |-------|-------|
 | `key` | required; the config key |
 | `type` | `string`, `string_list`, `bool`, `int`, `double`, `select`, `file`, `folder`, `glyph`, `color` |
-| `label` / `description` | literal text shown in the settings GUI |
-| `label_key` / `description_key` | translation keys resolved from `translations/en.json` and the active language file; do not combine with the literal field |
+| `label_key` | required; translation key for the label shown in the settings GUI |
+| `description_key` | optional; translation key for the description |
 | `default` | seeded value (must match the type) |
 | `min` / `max` | for `int` / `double` |
-| `options` | for `select`: array of `{ value, label }` or `{ value, label_key }` |
+| `options` | for `select`: array of `{ value, label_key }`; both fields are required |
 | `visible_when` | `{ key = "other_key", values = ["true"] }` - conditional visibility |
 | `advanced` | hide behind the "show advanced" toggle |
 
-Translated setting labels live in the same optional `translations/<lang>.json` files as script strings:
+Setting labels and descriptions are always translation keys - literal `label` / `description` fields are rejected. The
+text lives in the same `translations/<lang>.json` files as script strings, so a plugin with settings needs at least a
+`translations/en.json`:
 
 ```json
 {
