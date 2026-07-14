@@ -18,6 +18,7 @@ apply depends on the entry kind:
 | `update()` | ✓ | | | ✓ | ✓ | ✓ | every update interval |
 | `onClick()` / `onRightClick()` | ✓ | ✓ | | | | | pointer press |
 | `onMiddleClick()` | ✓ | | | | | | middle press |
+| `onScroll(axis, steps)` | ✓ | | | | | | wheel or touchpad scroll over the widget (see below) |
 | `onQuery(text)` | | | ✓ | | | | launcher text changed (behind the prefix) |
 | `onActivate(id)` | | | ✓ | | | | a launcher result was selected |
 | `onOpen(context)` / `onClose()` | | | | | ✓ | | the panel is opened / closed |
@@ -27,6 +28,27 @@ apply depends on the entry kind:
 | `onExit(signal)` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | the entry runtime is about to be destroyed (see below) |
 
 The top level of the script runs once at load - set up state and register `noctalia.state.watch` handlers there.
+
+### Reacting to scroll
+
+Define `onScroll(axis, steps)` on a bar widget to handle mouse-wheel and touchpad scrolling over it. `axis` is
+`"vertical"` or `"horizontal"`, and `steps` is a number of whole wheel detents: negative scrolls up or left, positive
+scrolls down or right. A mouse wheel reports one step per notch; a touchpad accumulates its finer movement and reports a
+step once a full detent's worth has built up, so one gesture means the same thing on both devices.
+
+```lua
+local volume = 50
+
+function onScroll(axis, steps)
+  if axis ~= "vertical" then
+    return
+  end
+  volume = math.clamp(volume - steps * 5, 0, 100)
+  barWidget.setText(tostring(volume) .. "%")
+end
+```
+
+Scroll events the widget does not define `onScroll` for are left for the bar underneath to handle.
 
 ### Cleaning up when an entry exits
 
