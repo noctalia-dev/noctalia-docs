@@ -41,6 +41,22 @@ geometry changes.
 `setWallpaper(path)` behaves like the built-in wallpaper panel. Prefer it and `togglePanel(id)` over shelling out to the
 `noctalia` CLI from a plugin; the API path runs in-process and avoids an IPC round trip.
 
+## Dialogs
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `noctalia.openColorPicker(initialColor, onClose)` | bool | Opens the color picker with a `#RRGGBB` initial color. The callback receives the selected canonical `#RRGGBB` value, or `nil` when cancelled. |
+
+The return value says whether the request was accepted. An entry can have one color picker callback pending at a time.
+
+```lua
+noctalia.openColorPicker("#FFF59B", function(color)
+  if color ~= nil then
+    noctalia.log("Selected " .. color)
+  end
+end)
+```
+
 ## Application icons
 
 | Method | Returns | Description |
