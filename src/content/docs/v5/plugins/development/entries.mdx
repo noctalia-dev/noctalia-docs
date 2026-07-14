@@ -24,8 +24,25 @@ apply depends on the entry kind:
 | `onFrameTick(deltaMs)` | | | | ✓ | | | every frame, after `desktopWidget.setNeedsFrameTick(true)` |
 | `onIpc(event, payload)` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | `noctalia msg plugin …` |
 | `onConfigChanged()` | | | | | | ✓ | a plugin setting changed (see below) |
+| `onExit(signal)` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | the entry runtime is about to be destroyed (see below) |
 
 The top level of the script runs once at load - set up state and register `noctalia.state.watch` handlers there.
+
+### Cleaning up when an entry exits
+
+Define `onExit(signal)` to release resources owned by an entry before its Luau runtime is destroyed. It runs when
+Noctalia exits normally, when a plugin or entry is disabled or removed, and before a runtime is restarted or reloaded.
+The callback receives `2` for a graceful `SIGINT` shutdown, `15` for `SIGTERM`, and `0` for every other teardown. You
+may omit the parameter when the reason does not matter:
+
+```lua
+function onExit(_signal)
+  noctalia.runAsync("pkill -TERM -x my-plugin-helper 2>/dev/null || true")
+end
+```
+
+Keep cleanup short: `onExit` has the normal callback time budget. It cannot run after `SIGKILL`, a process crash, or
+another abrupt termination that prevents Noctalia from shutting down gracefully.
 
 ### Reacting to settings changes in a service
 
