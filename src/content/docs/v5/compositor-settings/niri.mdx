@@ -220,3 +220,23 @@ layer-rule {
   match namespace="^noctalia-desktop-widget-weather-"
 }
 ```
+
+## Laptop
+
+To lock the screen when you close your laptop lid, add this to your Niri config file:
+``` kdl
+switch-events {
+    lid-close { spawn "noctalia" "msg" "session" "lock-and-suspend"; }
+}
+```
+
+You may also need to edit your `logind.conf` to set:
+```
+HandleLidSwitch=ignore
+HandleLidSwitchExternalPower=ignore
+```
+
+:::note
+This file is usually located in `/etc/systemd/logind.conf` or `/etc/elogind/logind.conf` if you don't use systemd.
+If you can't find it, use this command: `find / -name "logind.conf" 2>/dev/null`.
+:::
