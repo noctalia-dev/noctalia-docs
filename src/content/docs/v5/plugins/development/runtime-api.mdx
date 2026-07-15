@@ -128,10 +128,32 @@ entry is removed, or Noctalia stops the plugin.
 | `noctalia.fileInfo(path)` | table, or `nil, err` | `{ size, mtime, isDir }`, size in bytes, mtime in unix seconds. |
 | `noctalia.listDir(path)` | array, or `nil, err` | Lists filenames in a directory. |
 | `noctalia.pluginDir()` | string or `nil` | Returns this plugin's runtime directory. |
+| `noctalia.pluginDataDir()` | string, or `nil, err` | Returns this plugin's persistent data directory, creating it on demand. |
 | `noctalia.loadFont(path)` | string, or `nil, err` | Registers a font file and returns its family name. |
 
 Filesystem paths resolve as follows: `~` expands to `$HOME`, absolute paths are used as-is, and relative paths resolve
 against the plugin's own directory. Plugins are trusted code, so these helpers are not sandboxed.
+
+### Persisting data across restarts
+
+`noctalia.state` (below) lives only in memory - it is cleared when the plugin stops. To keep data across restarts, write
+it to a file. Do **not** persist inside `noctalia.pluginDir()`: for git-installed plugins that directory is a runtime copy
+that Noctalia rewrites on update, so anything you save there is lost.
+
+Use `noctalia.pluginDataDir()` instead. It returns a per-plugin folder that survives updates, is scoped to your plugin id,
+follows Noctalia's `NOCTALIA_STATE_HOME` override, and is created for you on first call.
+
+```lua
+local dir = noctalia.pluginDataDir()
+local path = dir .. "/data.json"
+
+-- save
+noctalia.writeFile(path, noctalia.json.encode(myTable))
+
+-- restore on load
+local raw = noctalia.readFile(path)
+if raw then myTable = noctalia.json.decode(raw) end
+```
 
 ## HTTP and downloads
 
@@ -198,6 +220,9 @@ state channel:
 
 Values are **copied** across entries, so they must be plain data - strings, numbers, booleans, and tables of those (not
 functions). A typical pattern is a `[[service]]` publishing data that the widget and shortcut watch.
+
+This channel is **in-memory only** - it is not saved to disk and is cleared when the plugin stops. For data that must
+survive a restart, write it to [`noctalia.pluginDataDir()`](#persisting-data-across-restarts).
 
 ```lua
 -- ticker.luau (service)
