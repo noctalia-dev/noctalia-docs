@@ -18,10 +18,10 @@ as a retained `ui.*` tree; Noctalia diffs each render against the previous tree 
 A desktop widget hands its tree to `desktopWidget.render(tree)`. Build trees with the `ui.*` constructors (available in
 every desktop-widget script); each takes a props table and an optional children array:
 
-`render(tree)` · `setWantsSecondTicks(bool)` · `setNeedsFrameTick(bool)` · `getConfig(key)`
+`render(tree)` · `setWantsSecondTicks(bool)` · `setNeedsFrameTick(bool)`
 
 ```lua
-local color = desktopWidget.getConfig("color")
+local color = noctalia.getConfig("color")
 
 function update()
   desktopWidget.setWantsSecondTicks(true) -- tick update() on second boundaries
@@ -153,7 +153,7 @@ A panel is a pop-up surface that describes its UI as a `ui.*` tree, exactly like
 `ui.slider`, `ui.toggle`, `ui.scroll`) because it takes keyboard focus while open. Render in `onOpen` (and again from
 any callback that changes state):
 
-`render(tree)` · `close()` · `setWantsSecondTicks(bool)` · `getConfig(key)`
+`render(tree)` · `close()` · `setWantsSecondTicks(bool)`
 
 Panel **size is host-owned**: declare `width` and `height` on the `[[panel]]` entry, so the surface is the
 same size on every open. There is no `setSize` at runtime. Each axis takes a positive number (logical px) or the

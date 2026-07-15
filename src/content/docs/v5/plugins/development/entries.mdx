@@ -70,7 +70,8 @@ another abrupt termination that prevents Noctalia from shutting down gracefully.
 
 When a user edits a plugin setting, the change reaches each entry differently:
 
-- **Widgets, desktop widgets, panels** are rebuilt, so their next `getConfig(...)` reads the new value automatically.
+- **Widgets, desktop widgets, panels** are rebuilt, so their next `noctalia.getConfig(...)` reads the new value
+  automatically.
 - **Services** are long-lived. If a service defines **`onConfigChanged()`**, the host updates its settings in place and
   calls that function , `noctalia.getConfig(...)` returns the new values, and the service keeps all its in-memory state
   (timers, caches, connections). If a service does **not** define `onConfigChanged()`, the host instead **restarts the
@@ -93,10 +94,10 @@ end
 Desktop widgets and panels use declarative `ui.*` trees. See [Declarative UI](/v5/plugins/development/declarative-ui/)
 for their rendering APIs and controls.
 
-## `barWidget.*` - widget presentation + settings
+## `barWidget.*` - widget presentation
 
 `setText` · `setGlyph` · `setImage` · `setTooltip` · `clearTooltip` · `setFont` · `setColor` · `setGlyphColor` ·
-`setVisible` · `isVertical` · `outputName` · `render` · `getConfig(key)`
+`setVisible` · `isVertical` · `outputName` · `render`
 
 A bar widget can either patch the built-in glyph/text row with the imperative setters below, or describe composite
 content as a `ui.*` tree with `barWidget.render(tree)` - see
@@ -109,7 +110,7 @@ Each placement of the widget gets its own value, so a widget on two bars can sco
 geometry.
 
 ```lua
-local label = barWidget.getConfig("label")
+local label = noctalia.getConfig("label")
 
 function update()
   noctalia.setUpdateInterval(1000)
@@ -171,12 +172,12 @@ A launcher provider answers queries behind a **prefix** declared in the manifest
 everything after it is passed to `onQuery(text)`; the provider replies with `launcher.setResults(query, results)`.
 `onActivate(id)` runs when a result is selected (the `id` is whatever you set on that result).
 
-Manifest fields on a `[[launcher_provider]]` entry: `prefix` (the trigger - use a leading `/` to match the built-in
-providers and appear in the launcher's `/` overview), `glyph` (default result icon), `include_in_global_search`
+Manifest fields on a `[[launcher_provider]]` entry: `prefix` (the lowercase ASCII trigger without a leading symbol),
+`glyph` (default result icon), `include_in_global_search`
 (also answer the un-prefixed search; default `false`), and `debounce_ms` (wait this long after the last keystroke
 before running `onQuery` - set it for network-backed providers so you aren't called on every character; default `0`).
 
-`setResults(query, results)` · `setQuery(query)` · `getConfig(key)`
+`setResults(query, results)` · `setQuery(query)`
 
 - `query` **must echo** the `text` from `onQuery`, so late results map back to the query they answer - the latest one
   wins. Calling it with an empty list clears the provider's results.
