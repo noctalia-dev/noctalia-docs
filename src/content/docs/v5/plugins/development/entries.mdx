@@ -172,8 +172,9 @@ A launcher provider answers queries behind a **prefix** declared in the manifest
 everything after it is passed to `onQuery(text)`; the provider replies with `launcher.setResults(query, results)`.
 `onActivate(id)` runs when a result is selected (the `id` is whatever you set on that result).
 
-Manifest fields on a `[[launcher_provider]]` entry: `prefix` (the lowercase ASCII trigger without a leading symbol),
-`glyph` (default result icon), `include_in_global_search`
+Manifest fields on a `[[launcher_provider]]` entry: `prefix` (the trigger word - a bare word combined with the
+launcher's common prefix character like the built-in providers, e.g. `tr` -> `/tr`, and shown in the launcher's `/`
+overview; do not include the prefix character yourself), `glyph` (default result icon), `include_in_global_search`
 (also answer the un-prefixed search; default `false`), and `debounce_ms` (wait this long after the last keystroke
 before running `onQuery` - set it for network-backed providers so you aren't called on every character; default `0`).
 
@@ -203,7 +204,7 @@ then call `setResults` again from an async callback (HTTP, subprocess) when the 
 [[launcher_provider]]
 id     = "translate"
 entry  = "translator.luau"
-prefix = "/tr"
+prefix = "tr"
 glyph  = "language"
 ```
 
