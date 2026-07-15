@@ -227,7 +227,7 @@ Examples:
 ```text
 {{ colors.primary.default.hex | blend: "#ff0000", 0.5 }}
 {{ colors.primary.default.hex | harmonize: "#00ff88" }}
-{{ "#ffaa00" | to_color | darken 0.1 }}
+{{ "#ffaa00" | to_color | darken 10 }}
 ```
 
 ### String Filters
@@ -419,6 +419,26 @@ output_path = "$XDG_CONFIG_HOME/my-app/theme.css"
 ```
 
 `blend` defaults to `true`, which harmonizes the custom color with the active palette. Set `blend = false` in the table form when the generated roles should keep the source hue as closely as possible.
+
+#### Separate dark and light colors
+
+The table form also accepts `color_dark` and `color_light` to use a different source hue per mode, instead of deriving the non-active mode from a single `color`:
+
+```toml
+[config.custom_colors.warning]
+color_dark  = "#f97316"
+color_light = "#c2410c"
+blend       = true
+```
+
+Each mode resolves its source hue with this precedence: its own `color_dark` / `color_light` if set, otherwise the shared `color`, otherwise the other mode's value. So:
+
+- `color` only: both modes use `color` (default behavior).
+- `color_dark` only (or `color_light` only): that single value is used for both modes.
+- `color_dark` + `color_light`: each mode uses its own value.
+- `color` + one of `color_dark` / `color_light`: the override applies to its mode, `color` applies to the other.
+
+`{name}_source` and `{name}_value` reflect the per-mode source, so `{{ colors.warning_source.dark.hex }}` and `{{ colors.warning_source.light.hex }}` return the dark and light source hues respectively.
 
 Generated tokens per mode:
 
