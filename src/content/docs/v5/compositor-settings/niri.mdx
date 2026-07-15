@@ -226,7 +226,7 @@ layer-rule {
 To lock the screen when you close your laptop lid, add this to your Niri config file:
 ``` kdl
 switch-events {
-    lid-close { spawn "noctalia" "msg" "session" "lock-and-suspend"; }
+    lid-close { spawn-sh "noctalia msg session lock-and-suspend"; }
 }
 ```
 
