@@ -263,7 +263,7 @@ secondary_color    = "secondary"
 
 ### weather
 
-Draws the current weather glyph alongside the temperature and short condition, driven by the shared `WeatherService`. Requires `[weather] enabled = true` in `config.toml` (see [Services - Weather](/v5/services/#weather)) - the widget will render a placeholder otherwise.
+Draws the current weather glyph alongside the temperature and short condition, driven by the shared `WeatherService`. Requires `[weather] enabled = true` in `config.toml` (see [Services - Weather](/v5/services/weather/)) - the widget will render a placeholder otherwise.
 
 ```toml
 [desktop_widgets.widget.weather_main]
@@ -446,7 +446,7 @@ background     = true
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `display` | string | `"graph"` | `"graph"` shows a scrolling history chart; `"gauge"` shows a compact pill gauge like the bar sysmon widget |
-| `stat` | string | `"cpu_usage"` | Primary stat: `"cpu_usage"`, `"cpu_temp"`, `"gpu_temp"`, `"gpu_vram"`, `"ram_pct"`, `"swap_pct"`, `"net_rx"`, `"net_tx"` |
+| `stat` | string | `"cpu_usage"` | Primary stat. See [Available stats](/v5/services/system-monitor/#available-stats) |
 | `stat2` | string | - | Graph mode only. Optional secondary stat (same values as `stat`). Omit for single curve. |
 | `gauge_layout` | string | `"horizontal"` | Gauge mode only. `"horizontal"` lays out icon, vertical pill gauge, and value in a row; `"vertical"` stacks icon, horizontal pill gauge, and value |
 | `interface` | string | `""` | Network interface to monitor for `net_rx`/`net_tx`; empty uses the total across all non-loopback interfaces |
@@ -458,7 +458,4 @@ background     = true
 | `show_label` | bool | `true` | Show the current value as text |
 | `label_min_width` | int | `0` | Gauge mode only. Minimum width for the value label in logical pixels (`0` = auto) |
 
-For `net_rx` and `net_tx`, set `interface` to an exact kernel interface name from `/proc/net/dev` (for example `wlan0` or `enp5s0`) to show only that interface. Leave it empty to show the total across all non-loopback interfaces.
-
-GPU temperature is read from Linux hwmon when available, with an NVML fallback for NVIDIA proprietary drivers.
-GPU VRAM is read from AMDGPU DRM sysfs when available, with an NVML fallback for NVIDIA proprietary drivers.
+The stats a `sysmon` widget can show, what each one displays, and where the values come from are listed under [Available stats](/v5/services/system-monitor/#available-stats). Desktop widgets support every stat except `ram_used` and `disk_pct`.

@@ -10,7 +10,7 @@ sidebar:
 enabled = true                      # sample CPU, memory, network, load, temperature, GPU VRAM, and disk statistics
 cpu_temp_sensor_path = ""           # exact temp*_input path for CPU temperature override; empty = auto
 cpu_poll_seconds = 2.0              # CPU usage, CPU temperature, and load average
-gpu_poll_seconds = 0.0              # GPU temperature and VRAM usage (0 = disabled by default)
+gpu_poll_seconds = 0.0              # GPU temperature, usage, and VRAM (0 = disabled by default)
 memory_poll_seconds = 2.0           # RAM usage
 network_poll_seconds = 3.0          # network throughput
 disk_poll_seconds = 10.0            # disk usage and swap usage
@@ -23,12 +23,12 @@ Poll intervals are configured globally under `[system.monitor]`, not per widget.
 | Key | Default | Metrics |
 |-----|---------|---------|
 | `cpu_poll_seconds` | `2.0` | CPU usage %, CPU temperature, and load average (`1` / `5` / `15` min) |
-| `gpu_poll_seconds` | `0.0` | GPU temperature and VRAM usage. Disabled by default so a discrete GPU is not woken on laptops; the Control Center GPU card stays hidden until you set a non-zero interval. If you enable it, `5` seconds is a good interval - GPU stats rarely need sub-second sampling, and a short interval keeps the GPU busy |
+| `gpu_poll_seconds` | `0.0` | GPU temperature, usage %, and VRAM used/total. Disabled by default so a discrete GPU is not woken on laptops; the Control Center GPU card stays hidden until you set a non-zero interval. If you enable it, `5` seconds is a good interval - GPU stats rarely need sub-second sampling, and a short interval keeps the GPU busy |
 | `memory_poll_seconds` | `2.0` | RAM usage % and used/total MB |
 | `network_poll_seconds` | `3.0` | Network download and upload throughput |
 | `disk_poll_seconds` | `10.0` | Disk usage % for paths used by bar `sysmon` widgets with `stat = "disk_pct"`, plus swap usage % and used/total MB |
 
-CPU usage and CPU temperature share `cpu_poll_seconds` because both are tied to the same CPU sampling pass. GPU temperature and VRAM share `gpu_poll_seconds`. Swap and disk usage share `disk_poll_seconds`. Network Rx and Tx share `network_poll_seconds` because they come from the same `/proc/net/dev` read. The aggregate network values exclude loopback; bar and desktop `sysmon` widgets can set `interface` to an exact `/proc/net/dev` interface name to show only that interface.
+CPU usage and CPU temperature share `cpu_poll_seconds` because both are tied to the same CPU sampling pass. GPU temperature, usage, and VRAM share `gpu_poll_seconds`. Swap and disk usage share `disk_poll_seconds`. Network Rx and Tx share `network_poll_seconds` because they come from the same `/proc/net/dev` read. The aggregate network values exclude loopback; bar and desktop `sysmon` widgets can set `interface` to an exact `/proc/net/dev` interface name to show only that interface.
 
 Bar and desktop `sysmon` widgets in **graph** mode, plus the Control Center System graphs, scroll using the same cadence as the fastest poll interval above (the minimum of the enabled, non-zero intervals). There is no separate graph-only setting. If every metric is set to `0`, no history is recorded and the graphs stop updating.
 
@@ -56,7 +56,43 @@ for h in /sys/class/hwmon/hwmon*; do
 done
 ```
 
-GPU temperature is read from Linux hwmon when available, with an NVML fallback for NVIDIA proprietary drivers. GPU VRAM is read from AMDGPU DRM sysfs when available, with the same NVML fallback.
+## Available stats
+
+Bar and desktop `sysmon` widgets and the Control Center System tab all draw from the same sampling thread, so they share one catalog of stats. Each widget picks one with `stat` (desktop graphs take an optional second with `stat2`).
+
+| Value | Display | Description | Bar | Desktop |
+|-------|---------|-------------|-----|---------|
+| `cpu_usage` | `75%` | CPU utilisation (all cores) | ✓ | ✓ |
+| `cpu_temp` | `65°C` | CPU package temperature | ✓ | ✓ |
+| `gpu_temp` | `72°C` | GPU temperature | ✓ | ✓ |
+| `gpu_usage` | `48%` | GPU utilisation | ✓ | ✓ |
+| `gpu_vram` | `42%` | GPU VRAM usage | ✓ | ✓ |
+| `ram_used` | `4.2 GiB` | RAM used (binary, auto-scaled) | ✓ | — |
+| `ram_pct` | `26%` | RAM used % | ✓ | ✓ |
+| `swap_pct` | `12%` | Swap used % | ✓ | ✓ |
+| `disk_pct` | `45%` | Disk used % for the widget's `path` | ✓ | — |
+| `net_rx` | `1.2 MB/s` | Network download speed (decimal, auto-scaled) | ✓ | ✓ |
+| `net_tx` | `256 kB/s` | Network upload speed (decimal, auto-scaled) | ✓ | ✓ |
+
+A stat whose source is unavailable on the machine - GPU VRAM on an integrated GPU, for example - is shown as unavailable rather than as zero. The GPU stats are also disabled by default: they report nothing until `gpu_poll_seconds` is set to a non-zero value, and what each GPU vendor can report is covered under [GPU data sources](#gpu-data-sources).
+
+The stats are read once and shared, but a few *presentation* options stay per widget, because two widgets showing the same stat may want to show it differently: `path` selects which mount `disk_pct` measures, and `interface` selects which kernel interface `net_rx`/`net_tx` measures (an exact name from `/proc/net/dev` such as `wlan0` or `enp5s0`; empty means the total across all non-loopback interfaces). Both are documented with the widget settings.
+
+## GPU data sources
+
+Noctalia reads GPU statistics straight from the kernel and from the vendor's own management library where one exists. No elevated privileges and no external tool (`nvidia-smi`, `intel_gpu_top`, `radeontop`) are required.
+
+| GPU | Temperature | Usage | VRAM |
+|-----|-------------|-------|------|
+| AMD | `amdgpu` hwmon | `gpu_busy_percent` | `mem_info_vram_used` / `mem_info_vram_total` |
+| NVIDIA | NVML, hwmon otherwise | NVML | NVML |
+| Intel | `i915` / `xe` hwmon | per-client DRM statistics | `xe` device query |
+
+On AMD, ROCm SMI is used instead of sysfs when the ROCm runtime is installed. On NVIDIA, NVML comes from the proprietary driver; on a hybrid laptop whose discrete GPU is asleep, NVML is skipped so the GPU is not woken, and the integrated GPU is reported instead.
+
+Intel is the odd one out: it publishes no device-wide busy counter, so usage is summed from the per-client statistics the kernel exposes for each process using the GPU. Two consequences follow. Work done by *other users'* processes is not counted, which is invisible on a normal single-user desktop. And usage needs two samples before it can report anything, so the first value appears one `gpu_poll_seconds` interval after startup.
+
+Intel VRAM is reported only for discrete cards such as Intel Arc, and **requires Linux 6.18 or newer** — earlier kernels release the used-memory figure only to privileged processes, so Noctalia reports VRAM as unavailable rather than showing a permanent zero. Integrated Intel GPUs have no dedicated video memory and never report VRAM.
 
 ## Value highlighting
 

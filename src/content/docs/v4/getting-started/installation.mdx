@@ -7,6 +7,12 @@ sidebar:
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
+:::caution[Choose your package source carefully]
+The Noctalia team maintains only the **Arch Linux/AUR packages** and the **manual installation method**. Packages shipped in a distribution's official repositories are built and reviewed under that distribution's own packaging process.
+
+All other packages and third-party repositories listed here are maintained independently by community members in good faith. The Noctalia team does not build, audit, or control those packaged binaries and cannot guarantee their integrity. Before installing one, review its source, maintainer, and repository, and decide whether you trust it. A listing on this page is not an endorsement or a security guarantee.
+:::
+
 Noctalia is available on the following distributions:
 
 - [Arch Linux](#arch)
@@ -196,6 +202,29 @@ If you already have the `quickshell` or `quickshell-git` package installed, you 
 sudo xbps-remove quickshell
 ```
 :::
+
+### Alternative: Build from source using xbps-src
+
+```
+# Install git, wget
+sudo xbps-install git wget
+
+# Set up the Void packages tree
+git clone --depth 1 https://github.com/void-linux/void-packages.git
+cd void-packages
+./xbps-src binary-bootstrap
+
+# Copy Noctalia build templates
+mkdir srcpkgs/noctalia-shell srcpkgs/noctalia-qs
+wget https://git.voiders.dev/voiders-community/repository/raw/branch/main/pkgs/noctalia-shell/template -P srcpkgs/noctalia-shell/
+wget https://git.voiders.dev/voiders-community/repository/raw/branch/main/pkgs/noctalia-qs/template -P srcpkgs/noctalia-qs/
+
+# Build the packages
+./xbps-src pkg noctalia-shell
+
+# Install the built packages
+sudo xbps-install --repository=hostdir/binpkgs noctalia-shell
+```
 
 ---
 

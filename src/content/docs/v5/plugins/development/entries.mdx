@@ -18,20 +18,60 @@ apply depends on the entry kind:
 | `update()` | ✓ | | | ✓ | ✓ | ✓ | every update interval |
 | `onClick()` / `onRightClick()` | ✓ | ✓ | | | | | pointer press |
 | `onMiddleClick()` | ✓ | | | | | | middle press |
+| `onScroll(axis, steps)` | ✓ | | | | | | wheel or touchpad scroll over the widget (see below) |
 | `onQuery(text)` | | | ✓ | | | | launcher text changed (behind the prefix) |
 | `onActivate(id)` | | | ✓ | | | | a launcher result was selected |
 | `onOpen(context)` / `onClose()` | | | | | ✓ | | the panel is opened / closed |
 | `onFrameTick(deltaMs)` | | | | ✓ | | | every frame, after `desktopWidget.setNeedsFrameTick(true)` |
 | `onIpc(event, payload)` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | `noctalia msg plugin …` |
 | `onConfigChanged()` | | | | | | ✓ | a plugin setting changed (see below) |
+| `onExit(signal)` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | the entry runtime is about to be destroyed (see below) |
 
 The top level of the script runs once at load - set up state and register `noctalia.state.watch` handlers there.
+
+### Reacting to scroll
+
+Define `onScroll(axis, steps)` on a bar widget to handle mouse-wheel and touchpad scrolling over it. `axis` is
+`"vertical"` or `"horizontal"`, and `steps` is a number of whole wheel detents: negative scrolls up or left, positive
+scrolls down or right. A mouse wheel reports one step per notch; a touchpad accumulates its finer movement and reports a
+step once a full detent's worth has built up, so one gesture means the same thing on both devices.
+
+```lua
+local volume = 50
+
+function onScroll(axis, steps)
+  if axis ~= "vertical" then
+    return
+  end
+  volume = math.clamp(volume - steps * 5, 0, 100)
+  barWidget.setText(tostring(volume) .. "%")
+end
+```
+
+Scroll events the widget does not define `onScroll` for are left for the bar underneath to handle.
+
+### Cleaning up when an entry exits
+
+Define `onExit(signal)` to release resources owned by an entry before its Luau runtime is destroyed. It runs when
+Noctalia exits normally, when a plugin or entry is disabled or removed, and before a runtime is restarted or reloaded.
+The callback receives `2` for a graceful `SIGINT` shutdown, `15` for `SIGTERM`, and `0` for every other teardown. You
+may omit the parameter when the reason does not matter:
+
+```lua
+function onExit(_signal)
+  noctalia.runAsync("pkill -TERM -x my-plugin-helper 2>/dev/null || true")
+end
+```
+
+Keep cleanup short: `onExit` has the normal callback time budget. It cannot run after `SIGKILL`, a process crash, or
+another abrupt termination that prevents Noctalia from shutting down gracefully.
 
 ### Reacting to settings changes in a service
 
 When a user edits a plugin setting, the change reaches each entry differently:
 
-- **Widgets, desktop widgets, panels** are rebuilt, so their next `getConfig(...)` reads the new value automatically.
+- **Widgets, desktop widgets, panels** are rebuilt, so their next `noctalia.getConfig(...)` reads the new value
+  automatically.
 - **Services** are long-lived. If a service defines **`onConfigChanged()`**, the host updates its settings in place and
   calls that function , `noctalia.getConfig(...)` returns the new values, and the service keeps all its in-memory state
   (timers, caches, connections). If a service does **not** define `onConfigChanged()`, the host instead **restarts the
@@ -54,17 +94,23 @@ end
 Desktop widgets and panels use declarative `ui.*` trees. See [Declarative UI](/v5/plugins/development/declarative-ui/)
 for their rendering APIs and controls.
 
-## `barWidget.*` - widget presentation + settings
+## `barWidget.*` - widget presentation
 
 `setText` · `setGlyph` · `setImage` · `setTooltip` · `clearTooltip` · `setFont` · `setColor` · `setGlyphColor` ·
-`setVisible` · `isVertical` · `render` · `getConfig(key)`
+`setVisible` · `isVertical` · `outputName` · `render`
 
 A bar widget can either patch the built-in glyph/text row with the imperative setters below, or describe composite
 content as a `ui.*` tree with `barWidget.render(tree)` - see
 [Declarative UI](/v5/plugins/development/declarative-ui/#barwidgetrender--declarative-bar-widget-ui).
 
+`outputName()` returns the connector name of the monitor this widget instance's bar is on (or `nil` when unknown).
+Each placement of the widget gets its own value, so a widget on two bars can scope its content per monitor - unlike
+`noctalia.focusedOutputName()`, which returns the same globally focused output everywhere. Cross-reference
+[`noctalia.outputs()`](/v5/plugins/development/runtime-api/#outputs-wallpaper-and-panels) by name when you need
+geometry.
+
 ```lua
-local label = barWidget.getConfig("label")
+local label = noctalia.getConfig("label")
 
 function update()
   noctalia.setUpdateInterval(1000)
@@ -126,12 +172,13 @@ A launcher provider answers queries behind a **prefix** declared in the manifest
 everything after it is passed to `onQuery(text)`; the provider replies with `launcher.setResults(query, results)`.
 `onActivate(id)` runs when a result is selected (the `id` is whatever you set on that result).
 
-Manifest fields on a `[[launcher_provider]]` entry: `prefix` (the trigger - use a leading `/` to match the built-in
-providers and appear in the launcher's `/` overview), `glyph` (default result icon), `include_in_global_search`
+Manifest fields on a `[[launcher_provider]]` entry: `prefix` (the trigger word - a bare word combined with the
+launcher's common prefix character like the built-in providers, e.g. `tr` -> `/tr`, and shown in the launcher's `/`
+overview; do not include the prefix character yourself), `glyph` (default result icon), `include_in_global_search`
 (also answer the un-prefixed search; default `false`), and `debounce_ms` (wait this long after the last keystroke
 before running `onQuery` - set it for network-backed providers so you aren't called on every character; default `0`).
 
-`setResults(query, results)` · `setQuery(query)` · `getConfig(key)`
+`setResults(query, results)` · `setQuery(query)`
 
 - `query` **must echo** the `text` from `onQuery`, so late results map back to the query they answer - the latest one
   wins. Calling it with an empty list clears the provider's results.
@@ -157,7 +204,7 @@ then call `setResults` again from an async callback (HTTP, subprocess) when the 
 [[launcher_provider]]
 id     = "translate"
 entry  = "translator.luau"
-prefix = "/tr"
+prefix = "tr"
 glyph  = "language"
 ```
 

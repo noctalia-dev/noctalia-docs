@@ -16,6 +16,7 @@ sync_all_monitors = false   # if set to true, makes every display have the same 
 
 [brightness.monitor.eDP-1]
 backend = "backlight"   # auto | none | backlight | ddcutil
+backlight_device = "intel_backlight"   # explicit sysfs device name or path
 
 [brightness.monitor.DP-1]
 backend = "ddcutil"
@@ -29,6 +30,7 @@ Notes:
 - Per-monitor overrides use the same connector/description matching rules as bar monitor overrides.
 - `backend = "auto"` prefers kernel backlight when available and falls back to `ddcutil`.
 - `backend = "none"` hides brightness control for the matched monitor.
+- `backlight_device` pins a monitor to a specific sysfs backlight device when a connector exposes more than one - accepts a bare name (`intel_backlight`) or a full path; run `noctalia msg brightness-list-backlight-devices` to list the available device names.
 - `ddcutil` is treated as best-effort - repeated DDC failures cool down that monitor to avoid hammering the bus.
 
 ## Related IPC

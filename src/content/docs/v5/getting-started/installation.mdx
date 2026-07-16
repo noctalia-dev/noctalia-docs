@@ -15,6 +15,12 @@ On most distributions, v4 and v5 can be installed at the same time, and you can 
 Only your **compositor** keybinds need attention. Keybinds live in your compositor config, so update the bindings that launch the Noctalia launcher, panels, settings UI, or other commands when switching between v4 and v5.
 :::
 
+:::caution[Choose your package source carefully]
+The Noctalia team maintains only the **Arch Linux/AUR packages** and the **manual installation method**. Packages shipped in a distribution's official repositories, such as Fedora's official package, are built and reviewed under that distribution's own packaging process.
+
+All other packages and third-party repositories listed here are maintained independently by community members in good faith. The Noctalia team does not build, audit, or control those packaged binaries and cannot guarantee their integrity. Before installing one, review its source, maintainer, and repository, and decide whether you trust it. A listing on this page is not an endorsement or a security guarantee.
+:::
+
 Noctalia v5 is available on the following distributions:
 
 - [Arch Linux](#arch)
@@ -176,6 +182,29 @@ sudo xbps-install noctalia
 :::note
 If Noctalia fails to run, install the `sdbus-c++` package.
 :::
+
+### Alternative: Build from source using xbps-src
+
+```
+# Install git, wget
+sudo xbps-install git wget
+
+# Set up the Void packages tree
+git clone --depth 1 https://github.com/void-linux/void-packages.git
+cd void-packages
+./xbps-src binary-bootstrap
+
+# Copy Noctalia build templates
+mkdir srcpkgs/noctalia
+wget https://git.voiders.dev/voiders-community/repository/raw/branch/main/pkgs/noctalia/template -P srcpkgs/noctalia/
+
+# Build the packages
+./xbps-src pkg noctalia
+
+# Install the built packages
+sudo xbps-install --repository=hostdir/binpkgs noctalia
+```
+
 ---
 
 ## GNU Guix {#guix}
@@ -245,14 +274,10 @@ or [whole-system configuration](https://guix.gnu.org/manual/devel/en/html_node/S
 
 Noctalia provides an APT repository for Debian-based distributions.
 
-:::caution[Alpha builds]
-The Debian repository currently ships alpha builds built directly from the `main` branch. There are no stable releases yet.
-:::
-
-**Step 1**: Import the repository signing key
+**Step 1**: Install the repository signing key
 
 ```bash
-curl -fsSL https://pkg.noctalia.dev/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/noctalia.gpg
+wget https://pkg.noctalia.dev/deb/nickh-archive-keyring.deb && sudo dpkg -i nickh-archive-keyring.deb
 ```
 
 **Step 2**: Add the repository
@@ -260,22 +285,17 @@ curl -fsSL https://pkg.noctalia.dev/gpg.key | sudo gpg --dearmor -o /etc/apt/key
 <Tabs>
   <TabItem label="Debian Trixie">
     ```bash
-    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt trixie main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    sudo wget -O /etc/apt/sources.list.d/noctalia-trixie.sources https://pkg.noctalia.dev/deb/noctalia-trixie.sources
     ```
   </TabItem>
   <TabItem label="Debian Sid">
     ```bash
-    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt sid main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    sudo wget -O /etc/apt/sources.list.d/noctalia-unstable.sources https://pkg.noctalia.dev/deb/noctalia-unstable.sources
     ```
   </TabItem>
-  <TabItem label="Ubuntu 25.04">
+  <TabItem label="Ubuntu 26.04">
     ```bash
-    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt plucky main" | sudo tee /etc/apt/sources.list.d/noctalia.list
-    ```
-  </TabItem>
-  <TabItem label="Ubuntu 25.10">
-    ```bash
-    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt questing main" | sudo tee /etc/apt/sources.list.d/noctalia.list
+    sudo wget -O /etc/apt/sources.list.d/noctalia-resolute.sources https://pkg.noctalia.dev/deb/noctalia-resolute.sources
     ```
   </TabItem>
 </Tabs>
@@ -288,7 +308,7 @@ sudo apt install noctalia
 ```
 
 :::note
-The APT repository provides `amd64` packages only. The same binary is served across all supported distributions.
+The APT repository provides `amd64` packages only.
 :::
 
 ---
@@ -428,7 +448,7 @@ bundle/
   share/noctalia/assets/
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md#runtime-assets) for the full runtime asset lookup order.
+See [CONTRIBUTING.md](https://github.com/noctalia-dev/noctalia/blob/main/CONTRIBUTING.md#runtime-assets) for the full runtime asset lookup order.
 
 ## Getting Help
 

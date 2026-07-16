@@ -1,6 +1,6 @@
 ---
 title: Configuration
-description: greeter.toml settings for sessions, color scheme, monitors, UI scale, cursor theme, and keyboard layout.
+description: greeter.toml settings for sessions, color scheme, monitors, output mode, transforms, idle blanking, UI scale, cursor theme, and keyboard layout.
 sidebar:
   order: 1
 ---
@@ -12,6 +12,9 @@ If the file is missing, the greeter uses built-in defaults (auto UI scale, all m
 - [Keys the greeter remembers](#keys-the-greeter-remembers)
 - [Admin-only keys](#admin-only-keys)
 - [Multi-monitor](#multi-monitor)
+- [Output mode](#output-mode)
+- [Output transform](#output-transform)
+- [Idle blanking](#idle-blanking)
 - [UI scale](#ui-scale)
 - [Cursor theme](#cursor-theme)
 - [Keyboard layout](#keyboard-layout)
@@ -42,7 +45,11 @@ Set these yourself. The greeter UI does not change them.
 | `[user].default` | Username to select on startup. Opens the password step immediately. `--user` on the greetd command line wins. Press **Esc** or **Back** to pick another user. |
 | `[output].name` | Wayland connector name to show the greeter on (see [Multi-monitor](#multi-monitor)) |
 | `[output].layout` | Multi-monitor positions as `NAME:X,Y; ...` in logical pixels (see [Multi-monitor](#multi-monitor)) |
+| `[output].width` | Preferred DRM mode width in pixels (see [Output mode](#output-mode)) |
+| `[output].height` | Preferred DRM mode height in pixels (see [Output mode](#output-mode)) |
+| `[output].transforms` | Per-connector DRM transform (rotation / flip; see [Output transform](#output-transform)) |
 | `[output].scale` | Manual UI scale factor (see [UI scale](#ui-scale)) |
+| `[idle].timeout` | Seconds with no input before blanking outputs; `0` disables (see [Idle blanking](#idle-blanking)) |
 | `[cursor].theme` | Cursor theme name (e.g. `Adwaita`); missing → wlroots default cursor (see [Cursor theme](#cursor-theme)) |
 | `[cursor].size` | Cursor size in pixels (e.g. `24`); missing → `24` |
 | `[cursor].path` | Colon-separated theme search path (sets `XCURSOR_PATH`); needed when the theme is not on the default search path (`~/.icons:/usr/share/icons:/usr/share/pixmaps`) |
@@ -72,7 +79,12 @@ hide_logo = false
 [output]
 name = "DP-2"
 layout = "DP-1:0,0; DP-2:2560,0"
+width = 5120
+height = 2160
 scale = 1.5
+
+[idle]
+timeout = 300
 
 [cursor]
 theme = "Adwaita"
@@ -123,7 +135,104 @@ List connector names from a running Wayland session:
 noctalia-greeter outputs
 ```
 
-Restart greetd after changing `[output].name`:
+Restart greetd after changing `[output].name` or `[output].width` / `[output].height`:
+
+```sh
+sudo systemctl restart greetd
+```
+
+---
+
+## Output mode
+
+By default the greeter compositor modesets each connector using the EDID preferred resolution, then the **highest refresh rate** available at that size. On some setups that mode differs from your desktop session (resolution and/or refresh), so login flashes or modesets when the session starts.
+
+To pin the greeter to a specific resolution, set both `[output].width` and `[output].height`:
+
+```toml
+[output]
+name = "DP-2"
+width = 5120
+height = 2160
+```
+
+When both values are set, the compositor uses that size and still picks the **highest-refresh** advertised mode for it. If no mode of that size is advertised, it logs a warning and falls back to the preferred-resolution path above.
+
+Both keys are required. If only one is set, the greeter ignores the partial override and uses the preferred-resolution path. Invalid (non-positive) values are also ignored.
+
+:::note
+`[output].width` / `[output].height` control the **physical DRM mode** (pixels). They are separate from `[output].scale`, which only affects greeter UI scaling.
+:::
+
+Match these values to the mode your desktop session uses if you want a seamless greeter → session transition.
+
+---
+
+## Output transform
+
+Portrait panels often need a DRM transform so the greeter UI is upright. Set `[output].transforms` to a semicolon-separated list of `CONNECTOR:TOKEN` entries:
+
+```toml
+[output]
+# optional: pin greeter to the portrait panel only
+# name = "HDMI-A-1"
+transforms = "HDMI-A-1:270"
+```
+
+Supported tokens: `normal` / `0` / `none`, `90`, `180`, `270`, `flipped`, `flipped-90`, `flipped-180`, `flipped-270`.
+
+Multiple connectors:
+
+```toml
+[output]
+transforms = "DP-1:normal; HDMI-A-1:90"
+```
+
+:::note
+Transform is independent of `[output].width` / `[output].height` (those select the physical DRM mode size before rotation) and of `[output].scale` (UI scale).
+:::
+
+Noctalia **Sync Now** does not write transforms yet — set them in `greeter.toml` by hand (or via your Nix module). Restart greetd after changes:
+
+```sh
+sudo systemctl restart greetd
+```
+
+List connector names from a running Wayland session:
+
+```sh
+noctalia-greeter outputs
+```
+
+---
+
+## Idle blanking
+
+By default the greeter never blanks the screen. To turn off active DRM outputs after a period with no input, set `[idle].timeout` in seconds:
+
+```toml
+[idle]
+timeout = 300
+```
+
+`0` or omitting the key disables blanking. Valid values are `0`–`86400` (24 hours).
+
+While blanked, the greeter client stays running. Any **key press**, **mouse button press**, or **touch** wakes the displays and restarts the idle timer. Pointer motion and scroll only wake a blanked screen — they do not reset the timer while the screen is on (wireless mice often emit motion noise that would otherwise prevent blanking).
+
+Optional environment override (wins when set), useful because greetd starts greeters with an empty environment. Put it on the greetd session **command** (not only as a bare shell assignment):
+
+```toml
+[default_session]
+command = "env NOCTALIA_GREETER_IDLE_TIMEOUT=300 /usr/bin/noctalia-greeter-session"
+```
+
+On NixOS you can set the same value through the module:
+
+```nix
+programs.noctalia-greeter.settings.idle.timeout = 300;
+```
+
+Restart greetd after changing the timeout:
 
 ```sh
 sudo systemctl restart greetd

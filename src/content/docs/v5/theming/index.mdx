@@ -24,10 +24,11 @@ Palette changes apply live when the resolved config changes, whether through Set
 ## `mode`
 
 `dark` or `light` selects the palette variant directly. `auto` switches between them using the shared sunrise/sunset
-schedule in [`[location]`](/v5/services/location/) (same rules as [Night Light](/v5/services/night-light/)): resolved
-coordinates from `auto_locate`/`address`, otherwise manual `latitude` / `longitude`, otherwise fixed `sunset` / `sunrise`
-times. Night light does not need to be enabled for theme auto to follow the schedule. When the schedule cannot be
-resolved, `auto` uses the light (day) palette until a valid schedule is available.
+schedule in [`[location]`](/v5/services/location/) (same rules as [Night Light](/v5/services/night-light/)): sunrise and
+sunset computed from your coordinates, or your own `sunset` / `sunrise` times when
+[`custom_schedule = true`](/v5/services/location/#custom-schedule). Night light does not need to be enabled for theme
+auto to follow the schedule. When the schedule cannot be resolved, `auto` uses the light (day) palette until a valid
+schedule is available.
 
 ### Related IPC
 

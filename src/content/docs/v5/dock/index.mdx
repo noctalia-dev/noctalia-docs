@@ -30,7 +30,8 @@ margin_ends         = 0          # inset from each end of the dock along its mai
 margin_edge         = 0          # distance from the nearest screen edge (positive values float the dock)
 
 show_running        = true       # also show running apps not in the pinned list
-auto_hide           = false      # fade out when pointer leaves; fade in on approach
+auto_hide           = false      # slide out when pointer leaves; reveal from edge trigger strip
+smart_auto_hide     = false      # show when the active workspace is empty; hide when it has windows
 reserve_space       = true       # reserve compositor exclusive zone / push windows away
 
 active_scale        = 1.0        # icon scale for the focused app (clamped 0.1–1.75)
@@ -96,13 +97,39 @@ When `magnification = true` (default), icons grow as the pointer moves along the
 - The launcher button participates when shown.
 - Hovering an entry shows a tooltip with its app name (launcher button shows **Launcher**).
 
+## Reordering pinned apps
+
+Pinned dock icons can be reordered by drag-and-drop:
+
+1. Press and hold a **pinned** icon for about 300 ms.
+2. Drag along the dock axis to the desired position. Neighboring pinned icons shift to show where the item will land.
+3. Release to save the new order to `settings.toml` immediately (same persistence path as pin/unpin from the context menu).
+
+Running-only entries (apps shown because `show_running = true` but not in `pinned`) cannot be dragged, their order is not persisted. An app that is both running and pinned is treated as pinned and can be reordered.
+
+Leaving the dock surface while dragging cancels the reorder. Tooltips are hidden for the duration of a drag.
+
 ---
 
 ## Auto-hide
 
-When `auto_hide = true`, the dock fades out after the pointer leaves and fades back in when the pointer enters the thin edge trigger strip.
+Dock settings expose **Off**, **On**, and **Smart** as one control. In config they map to `auto_hide` and `smart_auto_hide`:
 
-`reserve_space` controls whether the dock keeps a compositor exclusive zone. With `auto_hide = false`, `reserve_space = true` keeps windows pushed away; `reserve_space = false` overlays the dock on top of full-screen clients. With `auto_hide = true`, `reserve_space = false` retracts the dock as an overlay (no gap); `reserve_space = true` keeps the gap while the dock slides out of view.
+- **Off** — `auto_hide = false`, `smart_auto_hide = false`
+- **On** — pointer auto-hide (`auto_hide = true`)
+- **Smart** — workspace-based hide (`smart_auto_hide = true`, `auto_hide = false`)
+
+When `auto_hide = true`, the dock slides out after the pointer leaves and slides back in when the pointer reaches the matching screen edge trigger strip.
+
+### Smart auto-hide
+
+Set auto-hide to **Smart** in dock settings (or `smart_auto_hide = true` with `auto_hide = false` in config). The dock stays visible while the active workspace on that monitor is empty and hides when the workspace has windows.
+
+- Mutually exclusive with pointer auto-hide; if both are set in config, smart auto-hide takes precedence.
+- Uses the same slide animation and edge reveal strip while hidden.
+- On compositors that report overview state (Niri, Triad), the dock is kept visible while overview is open.
+
+`reserve_space` controls whether the dock keeps a compositor exclusive zone. With both auto-hide modes off, `reserve_space = true` keeps windows pushed away; `reserve_space = false` overlays the dock on top of full-screen clients. With pointer or smart auto-hide active, `reserve_space = false` retracts the dock as an overlay (no gap); `reserve_space = true` keeps the gap while the dock slides out of view.
 
 ---
 

@@ -6,6 +6,7 @@ sidebar:
 ---
 
 - [Shell settings](#shell-settings)
+- [Accessibility](#accessibility)
 - [OSD](#osd)
 - [Lock screen](#lock-screen)
 - [Keybinds](#keybinds)
@@ -18,8 +19,8 @@ Global UI settings that apply across all shell surfaces.
 
 ```toml
 [shell]
-ui_scale              = 1.0             # content scale for panels and non-bar shell UI
 corner_radius_scale   = 1.0             # 0 = square, 1 = default, 2 = extra rounded
+button_borders        = true            # draw outlines around buttons throughout the shell
 font_family           = "sans-serif"    # Pango family string; Fontconfig handles fallback
 lang                  = "en"            # override language detection; BCP-47 or POSIX locale
 time_format           = "{:%H:%M}"      # default time format for shell UI without its own setting
@@ -75,12 +76,29 @@ open_near_click_wallpaper      = false  # attached/floating: follow the bar clic
 open_near_click_session        = false  # attached/floating: follow the bar click instead of bar-center
 
 [shell.launcher]
-categories     = true   # show launcher category filters; Tab toggles them while open
-show_icons     = true   # show application icons in launcher results
-compact        = false  # smaller icons and tighter rows; hides subtitles
-app_grid       = false  # icon grid with labels underneath when results are apps only
-session_search = false  # include session actions in general search, not only behind /session
-sort_by_usage  = true   # boost frequently used apps and show Recently Used filter
+categories      = true   # show launcher category filters; Tab toggles them while open
+show_icons      = true   # show application icons in launcher results
+compact         = false  # smaller icons and tighter rows; hides subtitles
+app_grid        = false  # icon grid with labels underneath when results are apps only
+sort_by_usage   = true   # boost frequently used apps and show Recently Used filter
+provider_prefix = "/"    # common prefix character for provider trigger words (e.g. "/" or ".")
+
+[shell.launcher.providers.calculator]
+prefix = ""              # calculator has no default trigger, so it stays in global search
+global = true            # set false to only show calculator results behind a custom prefix
+
+[shell.launcher.providers.emoji]
+prefix = "emo"           # trigger word (triggers on provider_prefix + trigger, e.g. "/emo")
+
+[shell.launcher.providers.session]
+prefix = "session"       # trigger word for session actions (e.g. "/session")
+global = false           # set true to also include session actions in un-prefixed search
+
+[shell.launcher.providers.wallpaper]
+prefix = "wall"          # trigger word for wallpaper selector (e.g. "/wall")
+
+[shell.launcher.providers.windows]
+prefix = "win"           # trigger word for windows (e.g. "/win")
 
 # Dmenu-style providers: a command emits newline-separated candidates that show up
 # in the launcher. A tab in a line splits it into title \t description. On activate,
@@ -88,9 +106,15 @@ sort_by_usage  = true   # boost frequently used apps and show Recently Used filt
 [shell.launcher.dmenu.entry.ssh]
 command = "awk '/^Host /{print $2}' ~/.ssh/config"  # one candidate per stdout line
 exec    = "foot ssh {selection}"   # {selection} = the chosen line; run detached
-prefix  = "/ssh"                   # route behind a prefix; leave empty for global only
+prefix  = "ssh"                    # trigger word (composed with provider_prefix -> "/ssh"); empty = global only
 glyph   = "server"                 # optional Tabler glyph shared by every result
 global  = false                    # true = also surface in unprefixed search
+
+# Plugin launcher providers default to the prefix/global set in their manifest.
+# Override either from config, keyed by the plugin's fully-qualified "<pluginId>:<entry>".
+[shell.launcher.providers."author/my-plugin:search"]
+prefix = "mp"            # overrides the manifest prefix (triggers on "/mp")
+global = true            # overrides the manifest include_in_global_search
 
 [shell.screen_corners]
 enabled = false    # overlay black rounded corners on each screen
@@ -127,7 +151,6 @@ pipe_command      = ""                          # annotator/uploader, e.g. "swap
 ```
 
 Notes:
-- `ui_scale` is completely separate from `bar.scale` and `[widget.*].scale`: bar scale settings only affect bar widget content; `ui_scale` covers the control center, launcher, clipboard, and other non-bar surfaces. Neither changes Wayland output / HiDPI buffer scale.
 - `font_family` sets the primary Pango family for all shell text. Can be a concrete family like `Inter` or a generic like `sans-serif`.
 - `time_format` and `date_format` are fallbacks for shell-owned displays such as the home tab, calendar tab, and lock screen. Widget-specific clock formats still use their own widget settings. See [Date format tokens](/v5/configuration/date-format-tokens/).
 - `offline_mode` prevents the shell from making any outgoing HTTP requests (weather, community palettes, community templates, album art, remote notification icons). Distro packagers can default to `true` to comply with policies requiring explicit user consent for network access.
@@ -149,6 +172,7 @@ Notes:
 - `clipboard_auto_paste`: `auto` = image entries use `Ctrl+V`, text entries use `Ctrl+Shift+V`; `off` = copy only, no automatic paste.
 - `clipboard_image_action_command`: when non-empty, image clipboard previews show an action button. Use `{path}` to receive an exported image file path. Use `{stdin}` (expanded to `-`) or omit `{path}` to receive the image bytes on stdin, matching the v4 annotation tool behavior (`satty -f -`, `gradia`, etc.).
 - `corner_radius_scale` scales rounded corners across shell surfaces: `0` = square, `1` = default, `2` = extra rounded.
+- `button_borders`: when `true` (default), buttons use the outline defined by their built-in or custom style. Set it to `false` for borderless buttons throughout the shell. Other controls, cards, panels, and explicitly configured raw borders are unaffected. Toggle in **Settings → Appearance → Interface**.
 - `launch_apps_as_systemd_services`: when `true`, apps launched from the launcher, dock, and taskbar run as transient systemd scopes (`systemd-run --user --scope`) so they survive a shell restart and get their own cgroup.
 - `launch_apps_custom_command`: when non-empty, wraps every app launched from the launcher, dock, and taskbar. The literal `$CMD` is replaced with the app's own command - e.g. `uwsm-app -- $CMD` or `gamemoderun $CMD`. Mutually exclusive with `launch_apps_as_systemd_services`; when both are set, the systemd scope wins and the custom command is ignored.
 - `screen_time_enabled`: when `true`, Noctalia tracks per-app usage time for the Control Center screen-time view and its shortcut. Disabled by default; no usage is recorded while off.
@@ -170,8 +194,11 @@ Notes:
 - `shell.launcher.app_grid` switches to a multi-column icon grid with labels underneath when every visible result is an application. Mixed results (global search, prefixed providers, session actions, and so on) stay in the default list layout.
 - `shell.launcher.sort_by_usage` boosts frequently launched apps toward the top of results and exposes a **Recently Used** category filter. Disable it for strictly alphabetical ordering within each provider.
 - Reset stored launcher usage data from **Settings → Panels → Launcher → Reset Usage Data** (clears `usage_counts.json` and `recently_used.json` while Noctalia is running).
-- `shell.launcher.session_search` surfaces session actions (lock, suspend, reboot, shutdown, logout) in the general launcher search once you type at least two characters, instead of only behind the `/session` prefix. Disabled by default.
-- `shell.launcher.dmenu.entry.<id>` defines a dmenu-style provider. Each entry runs `command` (a shell string via `/bin/sh -lc`) once per launcher session and presents its stdout lines as candidates; a tab in a line splits it into title and description. `prefix` routes the entry behind a launcher prefix (e.g. `/ssh`); with no prefix, set `global = true` or the entry is unreachable. On activate, `exec` runs detached with `{selection}` substituted by the chosen line - when `exec` is omitted the line is copied to the clipboard instead. Entries hot-reload with the config.
+- `shell.launcher.provider_prefix` sets the common prefix character used to trigger all provider prefixes (default `"/"`). See [Launcher: Provider prefixes](/v5/launcher/#provider-prefixes) for how prefixes, trigger words, and global search fit together.
+- `shell.launcher.providers.<name>.prefix` sets the trigger word for a specific built-in provider (`calculator`, `emoji`, `session`, `wallpaper`, `windows`; keys are matched case-insensitively). The provider is activated when typing the `provider_prefix` followed by this trigger word (e.g. `/session` or `/emo`). Setting the prefix to an empty string (`""`) falls back to the provider's built-in default trigger — it does **not** make the provider global. The `calculator` provider has no default trigger, so it stays in global search. The Applications provider cannot be prefixed and is always queryable globally.
+- `shell.launcher.providers.<name>.global` includes a prefixed provider in the un-prefixed (global) search in addition to its prefix. Unset keeps the provider's built-in default (`true` for `calculator`, `false` for the others). This replaces the removed `session_search` option.
+- `shell.launcher.dmenu.entry.<id>` defines a dmenu-style provider. Each entry runs `command` (a shell string via `/bin/sh -lc`) once per launcher session and presents its stdout lines as candidates; a tab in a line splits it into title and description. `prefix` sets the entry's trigger word, combined with `provider_prefix` like the built-in providers (e.g. `ssh` triggers on `/ssh`) — write it bare, without the prefix character. With no prefix, set `global = true` or the entry is unreachable. On activate, `exec` runs detached with `{selection}` substituted by the chosen line - when `exec` is omitted the line is copied to the clipboard instead. Entries hot-reload with the config.
+- `shell.launcher.providers."<pluginId>:<entry>"` overrides a plugin launcher provider's `prefix` and/or `global` without editing the plugin. Key the table by the plugin's fully-qualified entry id (e.g. `"author/my-plugin:search"`); the referenced plugin must be enabled. When unset, each field falls back to the value declared in the plugin's `[[launcher_provider]]` manifest entry. Unknown provider names, disabled plugins, and two providers resolving to the same prefix are reported as config warnings.
 - `shell.mpris.blacklist` excludes matching MPRIS players from Noctalia media UI and active-player selection. Entries are case-insensitive and match player bus name, identity, desktop entry, or a bus-name substring token (for example `"spotify"`).
 - `shell.screenshot` holds the global output policy for all screenshot captures (region, fullscreen), shared by the screenshot bar widget and the `screenshot-region` / `screenshot-fullscreen` IPC commands. At least one of `save_to_file`, `copy_to_clipboard`, or `pipe_to_command` must be enabled or the capture reports "No screenshot output enabled". `directory` accepts `~`; `filename_pattern` is a [strftime](/v5/configuration/date-format-tokens/) pattern (the `.png` extension is appended). `copy_to_clipboard` requires clipboard integration (`clipboard_enabled = true`). `pipe_command` runs via `/bin/sh -lc` with the PNG written to its stdin - use it for annotators or uploaders (`swappy -f -`, `satty -f -`); for plain clipboard copies use `copy_to_clipboard` instead. `confirm_region` keeps the region overlay open after selection until you press Enter or Space (Esc cancels; drag again to reselect). The bar widget itself only configures its `glyph` and `primary_click` (region vs fullscreen). On **multiple monitors**, fullscreen from the bar (or `screenshot-fullscreen pick`) opens a display picker with one button per connector; scripts can skip the picker with `noctalia msg screenshot-fullscreen DP-1` (connector name). Edit in **Settings → Shell → Screenshot**.
 - When `pipe_to_command` runs, `NOCTALIA_SCREENSHOT_PATH` is set to the generated PNG path for that capture. If `save_to_file = true`, Noctalia writes the original PNG there before launching the command; if it is false, the path is still available for commands that need an output target, such as `satty -f - -o "$NOCTALIA_SCREENSHOT_PATH"`.
@@ -195,6 +222,21 @@ Glyphs, symbolic tray icons, media album art, and other non-app-bitmap images ar
 Icons are desaturated on the CPU, contrast-normalized, then tinted. Changes apply immediately when you edit the setting in **Settings → Appearance → Interface**, switch light/dark mode, or change the palette.
 
 Per-widget `colorize_icons` / `icon_colorization` keys on the dock or tray are no longer used - configure this only under `[shell]`.
+
+---
+
+## Accessibility
+
+Global accessibility settings.
+
+```toml
+[accessibility]
+ui_scale              = 1.0             # content scale for panels and non-bar shell UI
+high_contrast         = false           # enable high contrast mode for visually impaired
+```
+
+- `ui_scale` is completely separate from `bar.scale` and `[widget.*].scale`: bar scale settings only affect bar widget content; `ui_scale` covers the control center, launcher, clipboard, and other non-bar surfaces. Neither changes Wayland output / HiDPI buffer scale.
+- `high_contrast` increases visibility and contrast by ensuring pure black backgrounds and high visibility borders for visually impaired users. It forces the `pure_black_dark` override under the hood for dark themes.
 
 ---
 
@@ -344,17 +386,24 @@ shutdown = "sudo -n poweroff"
 
 When an override is set, Noctalia runs that command for the built-in suspend/reboot/shutdown actions (session panel, launcher, IPC, idle, and greeter sync). Per-row `command` still overrides a single menu button when you need one-off behavior (including logout via `noctalia msg session logout`).
 
-Configure under **`[shell.session]`** in TOML, or use **Settings → Power → Session menu**: entries, reorder, and **Show** are listed inline; use the **settings** (cog) control on a row for behavior, label, command, icon, shortcut, countdown, and style. **Add action** appends a custom-command entry by default. The default five actions are assigned keyboard shortcuts **1**–**5**; pressing the key while the panel is open triggers the action (or starts its countdown when configured).
+Configure under **`[shell.session]`** in TOML, or use **Settings → Power → Session panel**: entries, reorder, and **Show** are listed inline; use the **settings** (cog) control on a row for behavior, label, command, icon, shortcut, countdown, and style. **Add action** appends a custom-command entry by default. The default five actions are assigned keyboard shortcuts **1**–**5**; pressing the key while the panel is open triggers the action (or starts its countdown when configured). **Grid Layout** and its **Columns** stepper control how the buttons are arranged; with grid off, the panel fits the actions on one row (wrapping to a second row past five). Arrow keys follow the resulting rows and columns.
+
+Panel-level settings under `[shell.session]`:
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `grid` | bool | `false` | When `true`, lays the session actions out over multiple rows of `grid_columns` instead of fitting them on a single row. |
+| `grid_columns` | number | `3` | Actions per row when `grid` is `true` (1-5). Ignored when `grid` is `false`. |
+
+Each entry in the `[[shell.session.actions]]` array takes:
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `action` | string | *required* | `lock`, `logout`, `suspend`, `lock_and_suspend`, `reboot`, `shutdown`, or `command` (custom entry). |
-| `grid` | bool | `false` | When `true`, displays the session panel actions in a multi-row grid based on `grid_columns`. |
-| `grid_columns` | number | `3` | The number of actions to show per row when `grid` is `true`. |
 | `enabled` | bool | `true` | When `false`, the button is hidden. |
 | `command` | string | *unset* | Optional. If set, the string is run with `/bin/sh -c` instead of the built-in handler. For `action = "command"`, this field is required. |
 | `label` | string | *unset* | Optional button label (otherwise translated defaults). |
-| `glyph` | string | *unset* | Optional bar-style icon id (otherwise defaults per action). Under **Session menu** in Settings → Power, open a row’s settings (cog) editor and use the icon preview to pick a glyph. |
+| `glyph` | string | *unset* | Optional bar-style icon id (otherwise defaults per action). Under **Session panel** in Settings → Power, open a row’s settings (cog) editor and use the icon preview to pick a glyph. |
 | `shortcut` | string | `"1"`–`"5"` | Optional keyboard shortcut that triggers the action while the session panel is open. Any XKB key name (e.g. `1`, `F1`, `Escape`) or modifier combo (`Ctrl+1`). Clear to disable. |
 | `countdown_seconds` | number | `0` | When greater than zero, the first activation starts a per-entry countdown (shown on the button badge). Activate the same entry again to run immediately, or wait for the timer. **Escape** or moving to another entry cancels. `0` runs immediately. |
 | `variant` | string | `"default"` | Button style: `default`, `primary`, `secondary`, `destructive` (warning), or `outline`. |
