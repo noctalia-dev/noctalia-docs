@@ -19,6 +19,8 @@ main_axis_padding   = 16          # inner padding along the icon row (main axis)
 cross_axis_padding  = 8           # inner padding perpendicular to the icon row
 item_spacing        = 6          # gap between items in pixels
 background_opacity  = 0.88
+border              = "outline"  # color role or #RRGGBB for the dock outline
+border_width        = 0.0        # inside outline width in pixels; 0 disables it
 shadow              = true       # cast the global [shell.shadow]
 radius              = 16
 radius_top_left     = 16         # optional per-corner overrides
@@ -55,6 +57,8 @@ pinned = ["firefox", "code", "kitty"]
 `radius` sets all four corners at once. Any `radius_*` key overrides just that corner.
 
 `concave_edge_corners = true` inverts the two corners on the side that touches the screen edge, so the dock flares outward and blends into it. The corner radii still control the curve size. Only applies when the dock actually touches the edge (`margin_edge = 0`).
+
+`border_width` draws an inside outline using `border`.
 
 Shadow blur, offset, and alpha are global under `[shell.shadow]`. The dock only exposes `shadow = true|false`.
 
