@@ -54,12 +54,12 @@ license      = "MIT"
 icon         = "puzzle"
 description  = "A friendly greeter."
 deprecated   = false
-min_noctalia = "5.0.0"
+plugin_api   = 3
 tags         = ["demo"]
 dependencies = ["slurp"]
 ```
 
-Catalog rows require `id` and `name`; rows without either are ignored.
+Catalog rows require `id`, `name`, and a positive integer `plugin_api`; rows without them are ignored.
 
 Users add your repo with `noctalia msg plugins source add <name> git <url>`, then enable plugins from it.
 
