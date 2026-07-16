@@ -14,6 +14,7 @@ position                 = "top_right" # top_right | top_left | top_center | bot
 layer                    = "top"       # top | overlay; overlay appears above fullscreen apps
 scale                    = 1.0         # toast size multiplier on top of shell.ui_scale
 background_opacity       = 0.97        # toast card background alpha; lower values let compositor blur show through
+border                   = true        # outline around toast cards; set false for a borderless look
 offset_x                 = 20          # absolute horizontal margin from the screen edge
 offset_y                 = 8           # absolute vertical margin from the screen edge
 monitors                 = []          # empty = all monitors; otherwise connector/description selectors (e.g. ["eDP-1", "DP-1"])
@@ -40,6 +41,7 @@ play_sound      = true
 - Selector matching follows monitor override rules: exact connector name (`eDP-1`) or a word-boundary token in the monitor description.
 - Internal Noctalia notifications are transient toasts and are not stored in notification history.
 - `collapse_on_dismiss = true` (default) causes remaining toasts to slide into a compact stack when one is dismissed. Set to `false` for stable-slot behavior where toasts keep their original positions.
+- `border = true` (default) draws an outline around toast cards. Set to `false` for a borderless look.
 
 ## Filtering
 
