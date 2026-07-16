@@ -76,12 +76,29 @@ open_near_click_wallpaper      = false  # attached/floating: follow the bar clic
 open_near_click_session        = false  # attached/floating: follow the bar click instead of bar-center
 
 [shell.launcher]
-categories     = true   # show launcher category filters; Tab toggles them while open
-show_icons     = true   # show application icons in launcher results
-compact        = false  # smaller icons and tighter rows; hides subtitles
-app_grid       = false  # icon grid with labels underneath when results are apps only
-session_search = false  # include session actions in general search, not only behind /session
-sort_by_usage  = true   # boost frequently used apps and show Recently Used filter
+categories      = true   # show launcher category filters; Tab toggles them while open
+show_icons      = true   # show application icons in launcher results
+compact         = false  # smaller icons and tighter rows; hides subtitles
+app_grid        = false  # icon grid with labels underneath when results are apps only
+sort_by_usage   = true   # boost frequently used apps and show Recently Used filter
+provider_prefix = "/"    # common prefix character for provider trigger words (e.g. "/" or ".")
+
+[shell.launcher.providers.calculator]
+prefix = ""              # calculator has no default trigger, so it stays in global search
+global = true            # set false to only show calculator results behind a custom prefix
+
+[shell.launcher.providers.emoji]
+prefix = "emo"           # trigger word (triggers on provider_prefix + trigger, e.g. "/emo")
+
+[shell.launcher.providers.session]
+prefix = "session"       # trigger word for session actions (e.g. "/session")
+global = false           # set true to also include session actions in un-prefixed search
+
+[shell.launcher.providers.wallpaper]
+prefix = "wall"          # trigger word for wallpaper selector (e.g. "/wall")
+
+[shell.launcher.providers.windows]
+prefix = "win"           # trigger word for windows (e.g. "/win")
 
 # Dmenu-style providers: a command emits newline-separated candidates that show up
 # in the launcher. A tab in a line splits it into title \t description. On activate,
@@ -89,9 +106,15 @@ sort_by_usage  = true   # boost frequently used apps and show Recently Used filt
 [shell.launcher.dmenu.entry.ssh]
 command = "awk '/^Host /{print $2}' ~/.ssh/config"  # one candidate per stdout line
 exec    = "foot ssh {selection}"   # {selection} = the chosen line; run detached
-prefix  = "/ssh"                   # route behind a prefix; leave empty for global only
+prefix  = "ssh"                    # trigger word (composed with provider_prefix -> "/ssh"); empty = global only
 glyph   = "server"                 # optional Tabler glyph shared by every result
 global  = false                    # true = also surface in unprefixed search
+
+# Plugin launcher providers default to the prefix/global set in their manifest.
+# Override either from config, keyed by the plugin's fully-qualified "<pluginId>:<entry>".
+[shell.launcher.providers."author/my-plugin:search"]
+prefix = "mp"            # overrides the manifest prefix (triggers on "/mp")
+global = true            # overrides the manifest include_in_global_search
 
 [shell.screen_corners]
 enabled = false    # overlay black rounded corners on each screen
@@ -171,8 +194,11 @@ Notes:
 - `shell.launcher.app_grid` switches to a multi-column icon grid with labels underneath when every visible result is an application. Mixed results (global search, prefixed providers, session actions, and so on) stay in the default list layout.
 - `shell.launcher.sort_by_usage` boosts frequently launched apps toward the top of results and exposes a **Recently Used** category filter. Disable it for strictly alphabetical ordering within each provider.
 - Reset stored launcher usage data from **Settings → Panels → Launcher → Reset Usage Data** (clears `usage_counts.json` and `recently_used.json` while Noctalia is running).
-- `shell.launcher.session_search` surfaces session actions (lock, suspend, reboot, shutdown, logout) in the general launcher search once you type at least two characters, instead of only behind the `/session` prefix. Disabled by default.
-- `shell.launcher.dmenu.entry.<id>` defines a dmenu-style provider. Each entry runs `command` (a shell string via `/bin/sh -lc`) once per launcher session and presents its stdout lines as candidates; a tab in a line splits it into title and description. `prefix` routes the entry behind a launcher prefix (e.g. `/ssh`); with no prefix, set `global = true` or the entry is unreachable. On activate, `exec` runs detached with `{selection}` substituted by the chosen line - when `exec` is omitted the line is copied to the clipboard instead. Entries hot-reload with the config.
+- `shell.launcher.provider_prefix` sets the common prefix character used to trigger all provider prefixes (default `"/"`). See [Launcher: Provider prefixes](/v5/launcher/#provider-prefixes) for how prefixes, trigger words, and global search fit together.
+- `shell.launcher.providers.<name>.prefix` sets the trigger word for a specific built-in provider (`calculator`, `emoji`, `session`, `wallpaper`, `windows`; keys are matched case-insensitively). The provider is activated when typing the `provider_prefix` followed by this trigger word (e.g. `/session` or `/emo`). Setting the prefix to an empty string (`""`) falls back to the provider's built-in default trigger — it does **not** make the provider global. The `calculator` provider has no default trigger, so it stays in global search. The Applications provider cannot be prefixed and is always queryable globally.
+- `shell.launcher.providers.<name>.global` includes a prefixed provider in the un-prefixed (global) search in addition to its prefix. Unset keeps the provider's built-in default (`true` for `calculator`, `false` for the others). This replaces the removed `session_search` option.
+- `shell.launcher.dmenu.entry.<id>` defines a dmenu-style provider. Each entry runs `command` (a shell string via `/bin/sh -lc`) once per launcher session and presents its stdout lines as candidates; a tab in a line splits it into title and description. `prefix` sets the entry's trigger word, combined with `provider_prefix` like the built-in providers (e.g. `ssh` triggers on `/ssh`) — write it bare, without the prefix character. With no prefix, set `global = true` or the entry is unreachable. On activate, `exec` runs detached with `{selection}` substituted by the chosen line - when `exec` is omitted the line is copied to the clipboard instead. Entries hot-reload with the config.
+- `shell.launcher.providers."<pluginId>:<entry>"` overrides a plugin launcher provider's `prefix` and/or `global` without editing the plugin. Key the table by the plugin's fully-qualified entry id (e.g. `"author/my-plugin:search"`); the referenced plugin must be enabled. When unset, each field falls back to the value declared in the plugin's `[[launcher_provider]]` manifest entry. Unknown provider names, disabled plugins, and two providers resolving to the same prefix are reported as config warnings.
 - `shell.mpris.blacklist` excludes matching MPRIS players from Noctalia media UI and active-player selection. Entries are case-insensitive and match player bus name, identity, desktop entry, or a bus-name substring token (for example `"spotify"`).
 - `shell.screenshot` holds the global output policy for all screenshot captures (region, fullscreen), shared by the screenshot bar widget and the `screenshot-region` / `screenshot-fullscreen` IPC commands. At least one of `save_to_file`, `copy_to_clipboard`, or `pipe_to_command` must be enabled or the capture reports "No screenshot output enabled". `directory` accepts `~`; `filename_pattern` is a [strftime](/v5/configuration/date-format-tokens/) pattern (the `.png` extension is appended). `copy_to_clipboard` requires clipboard integration (`clipboard_enabled = true`). `pipe_command` runs via `/bin/sh -lc` with the PNG written to its stdin - use it for annotators or uploaders (`swappy -f -`, `satty -f -`); for plain clipboard copies use `copy_to_clipboard` instead. `confirm_region` keeps the region overlay open after selection until you press Enter or Space (Esc cancels; drag again to reselect). The bar widget itself only configures its `glyph` and `primary_click` (region vs fullscreen). On **multiple monitors**, fullscreen from the bar (or `screenshot-fullscreen pick`) opens a display picker with one button per connector; scripts can skip the picker with `noctalia msg screenshot-fullscreen DP-1` (connector name). Edit in **Settings → Shell → Screenshot**.
 - When `pipe_to_command` runs, `NOCTALIA_SCREENSHOT_PATH` is set to the generated PNG path for that capture. If `save_to_file = true`, Noctalia writes the original PNG there before launching the command; if it is false, the path is still available for commands that need an output target, such as `satty -f - -o "$NOCTALIA_SCREENSHOT_PATH"`.
