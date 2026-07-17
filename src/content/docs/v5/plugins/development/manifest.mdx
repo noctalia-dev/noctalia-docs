@@ -13,21 +13,22 @@ The plugin system is in **beta**. The manifest format and APIs may still change 
 ## The manifest
 
 ```toml
-id           = "me/hello"     # "<author>/<plugin>" - globally unique
+id           = "me/hello" # "<author>/<plugin>" - globally unique
 name         = "Hello"
 version      = "1.0.0"
-min_noctalia = "5.0.0"        # mandatory: minimum Noctalia version
+plugin_api   = 3          # mandatory: oldest plugin API level required
 author       = "me"
-license      = "MIT"          # optional; defaults to MIT
-deprecated   = false          # optional; defaults to false
-icon         = "puzzle"       # optional
+license      = "MIT"     # optional; defaults to MIT
+deprecated   = false     # optional; defaults to false
+icon         = "puzzle"  # optional
 description  = "A friendly greeter."
-tags         = ["demo"]       # optional, for catalog search
-dependencies = ["slurp"]      # optional, external tools/packages users must install
+tags         = ["demo"]  # optional, for catalog search
+dependencies = ["slurp"] # optional, external tools/packages users must install
 ```
 
-`name` and `min_noctalia` are required - a manifest without either is rejected. `min_noctalia` gates enable, the
-catalog badge, and the post-update safety rollback.
+`name` and `plugin_api` are required - a manifest without either is rejected. `plugin_api` is a positive integer and
+gates enable, the catalog badge, and update safety. API levels are cumulative: leave the value unchanged until the
+plugin adopts a capability introduced by a newer level. Noctalia v5 beta3 uses plugin API 3.
 
 `license` defaults to `MIT` when omitted. `deprecated = true` marks the plugin as deprecated in plugin listings; it is a
 soft status marker, not a compatibility gate.

@@ -113,14 +113,16 @@ needed.
 
 `noctalia msg plugins update <source>` updates the source and hot-reloads its enabled plugins. Git sources can opt into
 `auto_update` for a background update on startup. Updates are safe per enabled plugin: if one enabled plugin's new
-version requires a newer Noctalia, Noctalia keeps that plugin's previous exported copy, still updates compatible enabled
-plugins from the same source, and advances the source catalog. After Noctalia is updated, the held plugin can catch up
-from the already-updated source revision.
+version targets an unsupported plugin API level, Noctalia keeps that plugin's previous exported copy, still updates
+compatible enabled plugins from the same source, and advances the source catalog. After Noctalia gains support for that
+API level, the held plugin can catch up from the already-updated source revision.
 
 ## Compatibility
 
-Every plugin declares a mandatory `min_noctalia` in its manifest. A plugin requiring a newer Noctalia than you run is
-shown but badged **"requires newer Noctalia"** and cannot be enabled.
+Every plugin declares a mandatory integer `plugin_api` in its manifest. It is the oldest Noctalia plugin API level that
+the plugin requires, independent of both the plugin's version and Noctalia's release version. Noctalia v5 beta3 exposes
+plugin API 3. Plugins outside the API range supported by the running shell are shown but badged
+**"incompatible plugin API"** and cannot be enabled.
 
 ## Writing your own
 

@@ -64,7 +64,8 @@ Supported JSON fields:
 | Next track | <IpcCommand command="media next" /> | Ask the active MPRIS player to go to the next item. |
 | Play/pause toggle | <IpcCommand command="media toggle" /> | Toggle play/pause on the active MPRIS player. |
 | Play | <IpcCommand command="media play" /> | Resume playback on the active MPRIS player. |
-| Stop playback | <IpcCommand command="media stop" /> | Pause the active MPRIS player (falls back to the MPRIS `Stop` method for players that do not support pause). No-op when nothing is playing. |
+| Pause | <IpcCommand command="media pause" /> | Pause the active MPRIS player. No-op when nothing is playing. |
+| Stop playback | <IpcCommand command="media stop" /> | Send the MPRIS `Stop` command to the active player and dismiss it: the player is hidden from the media widget until it starts playing again or is explicitly selected with `next-player`/`previous-player`. Use `media pause` to pause without dismissing. |
 | Previous player | <IpcCommand command="media previous-player" /> | Switch the active player to the previous available MPRIS player and pin it. |
 | Next player | <IpcCommand command="media next-player" /> | Switch the active player to the next available MPRIS player and pin it. |
 

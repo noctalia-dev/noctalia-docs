@@ -15,7 +15,7 @@ Applies Noctalia's generated color palette to [Obsidian](https://obsidian.md/) a
 2. **Enable User Templates in Noctalia:**
 	- **Settings → Templates → Toggle Enable User Templates ON → Toggle obsidian (editor) ON**
 
-3. **Set the Obsidian files**
+3. **Set up Obsidian files**
 	- Open a terminal and navigate to `.config/noctalia`. Create a file named `obsidian.toml`
 	```shell 
 	cd ~/.config/noctalia 
@@ -28,7 +28,7 @@ Applies Noctalia's generated color palette to [Obsidian](https://obsidian.md/) a
 	cp ~/Downloads/obsidian.css ~/.config/noctalia/Obsidian
 	```
 
-4. **Set the Noctalia files**
+4. **Set up Noctalia files**
 	- Navigate to wherever your Obsidian Vault is located, and create a folder called `snippets`. Create a file inside the `/snippets` folder named `noctalia.css`. The command `touch` creates empty files, `mkdir` makes folders.
 	```shell 
 	mkdir ~/Documents/vault/.obsidian/snippets
@@ -36,7 +36,7 @@ Applies Noctalia's generated color palette to [Obsidian](https://obsidian.md/) a
 	touch noctalia.css
 	```
 
-5. **Open the `obsidian.toml` file that we created in Step 2. Copy and paste the following, substituting your local paths:**
+5. **Open the `obsidian.toml` file that we created in Step 3. Copy and paste the following, substituting your local paths:**
 	```toml
 	[theme.templates.user.obsidian_extra]
 	input_path = "/home/$USER/.config/noctalia/Obsidian/obsidian.css"
