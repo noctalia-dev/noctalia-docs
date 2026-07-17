@@ -49,6 +49,8 @@ end
 ```
 
 Scroll events the widget does not define `onScroll` for are left for the bar underneath to handle.
+Host setting `enable_scroll` (default `true`) on the bar widget instance gates wheel and touchpad delivery to
+`onScroll`; set it to `false` to disable scroll actions without removing the handler.
 
 ### Cleaning up when an entry exits
 

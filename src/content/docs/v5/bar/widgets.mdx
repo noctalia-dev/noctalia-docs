@@ -101,6 +101,7 @@ Pill styling and `capsule_radius` apply only when `style = "regular"`.
 | `focused_output_only` | bool | `false` | Only highlight the active workspace on the monitor that has keyboard or pointer focus; other monitors show their active workspace in the occupied color. |
 | `labels_only_when_occupied` | bool | `false` | Show id/name labels on workspaces with open windows and on the active workspace even when empty; other empty tags stay unlabeled. Requires `display = "id"` or `"name"`. |
 | `hide_when_empty` | bool | `false` | Hide workspace pills with no open windows. |
+| `enable_scroll` | bool | `true` | Allow mouse wheel and trackpad scrolling to switch to the adjacent workspace. |
 
 ```toml
 [widget.workspaces]
@@ -109,6 +110,7 @@ display = "id"          # none | id | name
 max_label_chars = 2     # truncate long workspace names (e.g. "VESKTOP" → "VE")
 labels_only_when_occupied = true  # (1) (2*) ( ) (4) - occupied tags and the active tag show labels (*active but empty)
 hide_when_empty = true
+enable_scroll = true
 pill_scale = 1.0
 active_pill_size = 2.2
 inactive_pill_size = 1.0
@@ -155,6 +157,7 @@ Set `workspace_group_capsule = false` to drop the group background/border while 
 | `occupied_color` | string | `"secondary"` | Workspace disc fill when occupied |
 | `empty_color` | string | `"secondary"` | Workspace disc fill when empty (shown at reduced opacity) |
 | `focused_output_only` | bool | `false` | Only use the focused color for the active workspace disc on the monitor that has keyboard or pointer focus; other monitors use the occupied color. Applies to the workspace label, so it is only meaningful with `show_workspace_label = true`. |
+| `enable_scroll` | bool | `true` | Allow mouse wheel and trackpad scrolling to switch to the adjacent window (or workspace when `group_by_workspace` is on). |
 
 ```toml
 [widget.taskbar]
@@ -173,6 +176,7 @@ focused_color = "primary"
 occupied_color = "secondary"
 empty_color = "secondary"
 focused_output_only = false  # true = only the focused monitor highlights its active workspace
+enable_scroll = true
 ```
 
 ---
@@ -290,6 +294,7 @@ Shows PipeWire output (speaker) or input (microphone) volume and mute state.
 | `mute_glyph` | string | `""` | Icon glyph used when muted or at 0% volume. Leave empty to use the built-in mute icon |
 | `custom_image` | string | `""` | Path to a custom image displayed instead of the active/mute glyphs. Leave empty to use the glyph |
 | `custom_image_colorize` | bool | `false` | When `true`, tint the custom image with the same color the glyph would use, including `mute_color` while muted |
+| `enable_scroll` | bool | `true` | Allow mouse wheel and trackpad scrolling to change volume |
 | `scroll_step` | int | `5` | Percentage change applied on each mouse wheel step (1–25) |
 | `show_label` | bool | `true` | Show the volume percentage next to the glyph (horizontal and vertical bars) |
 | `mute_color` | string | `"error"` | Color role or hex color for the icon and label when muted |
@@ -299,6 +304,7 @@ Shows PipeWire output (speaker) or input (microphone) volume and mute state.
 device = "output"   # output | input
 glyph = ""          # custom active glyph; empty = built-in dynamic icons
 mute_glyph = ""     # custom mute/0% glyph; empty = built-in mute icon
+enable_scroll = true
 scroll_step = 10
 show_label = false
 mute_color = "error"
@@ -470,11 +476,13 @@ Shows the current monitor brightness level and adjusts it via scroll wheel. Hide
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
+| `enable_scroll` | bool | `true` | Allow mouse wheel and trackpad scrolling to change brightness |
 | `scroll_step` | int | `5` | Percentage change applied on each mouse wheel step (1–25) |
 | `show_label` | bool | `true` | Show the brightness percentage next to the glyph (horizontal and vertical bars) |
 
 ```toml
 [widget.brightness]
+enable_scroll = true
 scroll_step = 10
 show_label = false
 ```
@@ -605,6 +613,7 @@ Shows a custom glyph/image, optional label, and runs configured shell commands.
 | `command` | string | `""` | Shell command run on left click |
 | `right_command` | string | `""` | Shell command run on right click |
 | `middle_command` | string | `""` | Shell command run on middle click |
+| `enable_scroll` | bool | `true` | Allow mouse wheel and trackpad scrolling to run the scroll commands |
 | `scroll_up_command` | string | `""` | Shell command run on scroll up |
 | `scroll_down_command` | string | `""` | Shell command run on scroll down |
 
@@ -615,6 +624,7 @@ custom_image = "/path/to/icon.png"
 custom_image_colorize = true
 label = "Action"
 command = "notify-send Noctalia"
+enable_scroll = true
 ```
 
 ---
@@ -770,7 +780,14 @@ Tip: right-click a tray item and use `Pin` / `Unpin` in the item menu to update 
 
 Shows the current power profile using a glyph and cycles to the next available profile on click.
 
-No configurable settings.
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `enable_scroll` | bool | `true` | Allow mouse wheel and trackpad scrolling to cycle power profiles |
+
+```toml
+[widget.power_profile]
+enable_scroll = true
+```
 
 ---
 
