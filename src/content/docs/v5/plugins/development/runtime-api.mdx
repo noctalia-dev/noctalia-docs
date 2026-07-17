@@ -160,6 +160,7 @@ if raw then myTable = noctalia.json.decode(raw) end
 | Method | Returns | Description |
 |--------|---------|-------------|
 | `noctalia.http(request, cb)` | bool | Starts an async HTTP request and calls `cb(response)`. |
+| `noctalia.httpStream(request, onLine, onClose)` | handle or `nil` | Starts a long-lived streaming request (e.g. SSE) and delivers each line to `onLine`. |
 | `noctalia.download(url, dest, cb)` | bool | Downloads a URL to a file and calls `cb(ok)` with a boolean. |
 
 `request` is a table:
@@ -187,6 +188,34 @@ Only `url` is required. `http()` calls `cb(response)` once with:
 ```
 
 `download()` resolves `dest` like other filesystem paths, so a relative destination writes inside the plugin directory.
+
+### Streaming requests
+
+`httpStream()` (plugin API 4) keeps the connection open and delivers the response body incrementally - use it for
+server-sent events or any line-oriented streaming endpoint. Because headers travel through the native HTTP client,
+credentials such as an `Authorization: Bearer ...` header never appear in a process command line, unlike a spawned
+`curl`.
+
+```lua
+local stream = noctalia.httpStream({
+  url = "http://homeassistant.local:8123/api/stream",
+  headers = { "Accept: text/event-stream", "Authorization: Bearer " .. token },
+}, function(line)
+  -- one call per received line, CR trimmed
+end, function(result)
+  -- fires exactly once when the transfer ends: { ok = false, status = 0 }
+  if not result.ok then reconnect() end
+end)
+
+stream.stop() -- cancel; idempotent, suppresses onClose
+```
+
+It returns a handle with a `stop()` function, or `nil` when the stream could not be started. `onClose` fires exactly
+once when the transfer ends - server close, network error, or an HTTP error response fully read - unless the stream was
+stopped. Non-2xx responses are not special-cased: their body streams to `onLine` and the status arrives in `onClose`
+(`ok = true, status = 401` for a rejected token). There is no overall transfer timeout; reconnecting after `onClose` is
+the caller's job. Active streams are cancelled when the script reloads, the entry is removed, or Noctalia stops the
+plugin. With `[shell] offline_mode = true` the stream never connects and `onClose` fires with `ok = false`.
 
 ## Translations and data helpers
 
