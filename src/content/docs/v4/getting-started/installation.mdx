@@ -221,9 +221,10 @@ wget https://git.voiders.dev/voiders-community/repository/raw/branch/main/pkgs/n
 
 # Build the packages
 ./xbps-src pkg noctalia-shell
+./xbps-src pkg noctalia-qs
 
 # Install the built packages
-sudo xbps-install --repository=hostdir/binpkgs noctalia-shell
+sudo xbps-install -R hostdir/binpkgs noctalia-shell
 ```
 
 ---
