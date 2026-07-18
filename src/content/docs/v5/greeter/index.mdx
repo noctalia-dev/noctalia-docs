@@ -143,10 +143,10 @@ The greeter works without a mouse.
 
 ## Troubleshooting
 
-- **Blank screen** - Check `/var/log/noctalia-greeter.log` and `/var/lib/noctalia-greeter/greeter.log`. If the log files are missing, run `just setup-log-dir` from the greeter source tree (or create them manually with the greetd user as owner).
+- **Blank screen** - Check `/var/lib/noctalia-greeter/greeter.log`. If it is missing, run `just setup-log-dir` from the greeter source tree (or create the state dir with the greetd user as owner).
 - **`Failed to spawn client` / wrong path in greetd config** - `command` must be the full path from `which noctalia-greeter-session` (often `/usr/bin/...` on packaged installs, not `/usr/local/bin/...`).
 - **`WAYLAND_DISPLAY is not set`** - greetd must use `noctalia-greeter-session` (it starts `noctalia-greeter-compositor`). Fix `command` in `/etc/greetd/config.toml`.
-- **Black screen after reboot** - Session logs are written to `/var/log/noctalia-greeter.log` and `/var/lib/noctalia-greeter/greeter.log` when those paths are writable. Create them once during setup if needed.
+- **Black screen after reboot** - Session logs go to `/var/lib/noctalia-greeter/greeter.log` when that path is writable. Create the state dir once during setup if needed.
 - **Wrong session on startup** - If `[session].default` is set in `greeter.toml`, it wins over last-used `[session].last`. Run `noctalia-greeter sessions` for exact **Name** spelling.
 - **Synced look missing** - Install Noctalia v5, the greeter, and the polkit policy; sync again from Settings; restart greetd or log out once.
 - **User avatars missing on the login screen** - Install and enable **accountsservice** / `accounts-daemon`. The greeter reads the avatar from the user's AccountsService `IconFile`; without it, the picker falls back to a placeholder.
