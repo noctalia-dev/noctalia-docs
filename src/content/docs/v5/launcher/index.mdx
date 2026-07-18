@@ -54,8 +54,8 @@ A built-in expression evaluator powered by [`libqalculate`](https://qalculate.gi
   unit conversion (`10 cm to in`, `100 km/h to mph`), number bases (`0xff`), and currency conversion
   (`10 USD to EUR`). Pressing **Enter** copies the result to your clipboard.
 - **Currency rates**: Exchange rates are cached locally and refreshed in the background from libqalculate's
-  ECB/global providers. Refresh is skipped when `[shell].offline_mode` is enabled, in which case the last
-  cached rates are used.
+  ECB/global providers when `shell.launcher.fetch_exchange_rates` is enabled (the default). Refresh is also
+  skipped when `[shell].offline_mode` is enabled; in either case the last cached rates are used.
 
 ### Emoji
 
@@ -179,7 +179,7 @@ results.
 The launcher itself is mostly automatic, but its behavior is influenced by other sections of your config:
 
 - **[Keybinds](/v5/shell/#keybinds)**: Customize navigation (`up`, `down`) and activation (`validate`, `cancel`).
-- **[Shell](/v5/shell/#shell-settings)**: `ui_scale` and `font_family` affect the launcher's appearance. `shell.launcher.categories` controls the category filters. `show_icons`, `compact`, `app_grid`, and `sort_by_usage` adjust result layout and ordering (Settings → Panels → Launcher). `[shell.launcher.dmenu.entry.<id>]` adds custom dmenu-style providers backed by a shell command.
+- **[Shell](/v5/shell/#shell-settings)**: `ui_scale` and `font_family` affect the launcher's appearance. `shell.launcher.categories` controls the category filters. `show_icons`, `compact`, `app_grid`, `sort_by_usage`, and `fetch_exchange_rates` adjust result layout, ordering, and currency rate refresh (Settings → Launcher). `[shell.launcher.dmenu.entry.<id>]` adds custom dmenu-style providers backed by a shell command.
 - **[Wallpaper](/v5/desktop/wallpaper/)**: Defines the search paths for the Wallpaper provider.
 - **[Session actions](/v5/shell/#session-panel)**: Defines the actions shown by the Session provider.
 
