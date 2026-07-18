@@ -143,7 +143,7 @@ The greeter works without a mouse.
 
 ## Troubleshooting
 
-- **Blank screen** - Check greetd / journal logs (stderr by default). If using `NOCTALIA_GREETER_LOG`, check that file. Ensure `/var/lib/noctalia-greeter` exists (`just setup-log-dir` from the greeter source tree, or create it owned by the greetd user).
+- **Blank screen** - Check greetd / journal logs (info → stdout, warn/error → stderr by default). If using `NOCTALIA_GREETER_LOG`, check that file. Ensure `/var/lib/noctalia-greeter` exists (`just setup-log-dir` from the greeter source tree, or create it owned by the greetd user).
 - **`Failed to spawn client` / wrong path in greetd config** - `command` must be the full path from `which noctalia-greeter-session` (often `/usr/bin/...` on packaged installs, not `/usr/local/bin/...`).
 - **`WAYLAND_DISPLAY is not set`** - greetd must use `noctalia-greeter-session` (it starts `noctalia-greeter-compositor`). Fix `command` in `/etc/greetd/config.toml`.
 - **Black screen after reboot** - With default logging, inspect the greetd service journal (or your init's capture of session stdout/stderr).
