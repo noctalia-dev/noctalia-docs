@@ -460,6 +460,7 @@ Each template entry supports:
 - `compare_to`
 - `pre_hook`
 - `post_hook`
+- `post_action`
 - `input_path_modes`
 - `index`
 - `requires_path`
@@ -522,6 +523,11 @@ Behavior:
 - `pre_hook` runs before any output files are written
 - `post_hook` runs after a template is processed successfully, even when rendered output was unchanged
 - `closest_color` is available inside hooks
+
+`post_action` selects a Noctalia-owned native operation that runs after all outputs are written successfully. The
+canonical `kde-color-scheme` action requires exactly one output, merges that generated KDE color scheme into
+`$XDG_CONFIG_HOME/kdeglobals`, and notifies running KDE applications over the session bus. Unknown action names fail
+the template entry.
 
 Additional variables available inside hooks and templates:
 
