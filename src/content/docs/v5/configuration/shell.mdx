@@ -64,6 +64,7 @@ alpha     = 0.55    # multiplied by each component's background opacity
 transparency_mode     = "solid"  # solid | soft | glass; controls floating/centered opacity and card translucency
 borders               = true   # outline on floating/centered panel shells and section cards inside panels
 shadow                = true   # cast the global [shell.shadow] from panel surfaces
+list_item_background  = false  # filled rounded background behind launcher and clipboard list items
 launcher_placement       = "centered" # attached | floating | centered
 clipboard_placement      = "centered" # attached | floating | centered
 control_center_placement = "attached" # attached | floating | centered
@@ -190,6 +191,7 @@ Notes:
 - `shell.panel.transparency_mode` controls panel glass styling. `solid` keeps cards opaque and floating/centered panels solid, `soft` makes floating/centered panels lightly translucent and cards subtly translucent, and `glass` makes both visibly translucent while clamping card opacity high enough for readable text. Attached panels continue to use the effective panel background opacity inherited from the host bar.
 - `shell.panel.borders` draws an outline on detached panel shells and on section cards inside panels (control center tabs, clipboard preview, setup wizard steps, etc.). Attached bar-merged panels stay borderless on the shell edge. Default is `true`; set to `false` for a flatter, borderless look.
 - `shell.panel.shadow` toggles the rendered drop shadow on attached, floating, and centered panels. Shadow direction and alpha come from `[shell.shadow]`.
+- `shell.panel.list_item_background` draws a filled rounded background behind each item in the launcher results (list and app-grid views) and the clipboard history list. The fill uses the same rounded shape as the hover highlight and follows the panel transparency mode; hover and keyboard-selection colors are unchanged. Default is `false`. Toggle in **Settings → Panels → Effects**.
 - `shell.panel.launcher_placement`, `clipboard_placement`, `control_center_placement`, `wallpaper_placement`, `session_placement`, and `polkit_placement` accept `attached` or `floating`. `attached` merges the panel with the host bar where the bar's position and placement allow it; `floating` keeps the panel detached. Defaults are floating for Launcher and Clipboard (with `*_position = "center"`), attached for Control Center, Wallpaper, and Session, and floating centered for the polkit auth prompt (`polkit_placement = "floating"`, `polkit_position = "center"`).
 - Per-panel `*_position` keys (`launcher_position`, `clipboard_position`, `control_center_position`, `wallpaper_position`, `session_position`, `polkit_position`) apply when placement is `floating`. `auto` keeps the panel bar-relative; `center` and the edge/corner tokens anchor on screen (same vocabulary as notification/OSD position).
 - `shell.panel.floating_offset` sets the gap in pixels between a floating or detached panel and the bar edge (default `8`). It applies to `floating` placement and to panels using the reserved edge area when multiple bars share an edge; `attached` and `centered` panels ignore it.
