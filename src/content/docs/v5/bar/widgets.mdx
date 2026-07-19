@@ -542,8 +542,8 @@ Left-click cycles layouts using the compositor backend when supported. Override 
 | `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Shown only when `show_icon = true` |
 | `custom_image_colorize` | bool | `false` | When `true`, tint the custom image with the widget icon color |
 | `show_label` | bool | `true` | Show the layout text label next to the keyboard glyph |
-| `display` | string | `"short"` | `"short"` = compact code; `"full"` = full layout name. Ignored when `show_label = false`. |
-| `custom_labels` | table | `{}` | Exact layout-name to label overrides. Matching labels override `display`; unmatched layouts still use `short` or `full`. |
+| `display` | string | `"short"` | `"short"` = compact code; `"full"` = full layout name. Ignored when `show_label = false`. Also used by the keyboard-layout OSD and lockscreen indicator. |
+| `custom_labels` | table | `{}` | Exact layout-name to label overrides. Matching labels override `display`; unmatched layouts still use `short` or `full`. Shared with the keyboard-layout OSD and lockscreen indicator. |
 
 At least one of `show_icon` or `show_label` must be `true`.
 
