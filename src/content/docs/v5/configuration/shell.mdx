@@ -451,6 +451,8 @@ countdown_seconds = 5
 
 ### Greeter sync
 
+Requires [Noctalia Greeter](/v5/greeter/) and `noctalia-greeter-apply-appearance` on `PATH`. When those are missing, auto-sync stays off, Security settings for greeter sync are hidden, and the `greeter-sync` IPC command is not registered.
+
 **Settings → Security → Auto-Sync Greeter** and **Settings → Security → Greeter Sync Privilege Command**, or in TOML:
 
 ```toml
@@ -461,7 +463,7 @@ privilege_command = "ghostty -e pkexec"
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| `auto_sync` | `bool` | `false` | Automatically sync the greeter whenever wallpaper, colors, or theme mode change. |
+| `auto_sync` | `bool` | `false` | Automatically sync the greeter whenever wallpaper, colors, or theme mode change. Ignored when the greeter is not installed. |
 | `privilege_command` | `string` | `""` | Replaces the default `pkexec` or `run0` prefix for **Sync Now**. Noctalia appends the `noctalia-greeter-apply-appearance` path and staging directory. Leave empty for the default escalator. |
 
 See [Noctalia Greeter](/v5/greeter/) for seatd and polkit notes.
