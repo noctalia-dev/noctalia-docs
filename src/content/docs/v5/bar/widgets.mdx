@@ -519,10 +519,12 @@ Shows the current network connection (Wi-Fi SSID and signal, or wired) via Netwo
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `show_label` | bool | `true` | Show the SSID or interface name next to the glyph |
+| `show_vpn_label` | bool | `false` | If a VPN is connected, replace the label with the first active VPN connection name. Only effective when `show_label` is `true`. |
 
 ```toml
 [widget.network]
 show_label = false
+show_vpn_label = false
 ```
 
 ---
