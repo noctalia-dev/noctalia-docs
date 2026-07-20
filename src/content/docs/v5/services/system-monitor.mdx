@@ -80,7 +80,25 @@ The stats are read once and shared, but a few *presentation* options stay per wi
 
 ## GPU data sources
 
-Noctalia reads GPU statistics straight from the kernel and from the vendor's own management library where one exists. No elevated privileges and no external tool (`nvidia-smi`, `intel_gpu_top`, `radeontop`) are required.
+Noctalia reads GPU statistics straight from the kernel and from the vendor's own management library where one exists. No elevated privileges are required, and Noctalia does not invoke command-line monitoring tools such as `nvidia-smi`, `intel_gpu_top`, or `radeontop`.
+
+::::note[Integrated GPUs are supported]
+GPU monitoring is not limited to discrete GPUs. Noctalia can report temperature and usage for supported integrated AMD and Intel GPUs when their kernel drivers expose those metrics. The `gpu_vram` stat is different: an integrated GPU that shares system memory has no dedicated VRAM to report, so that one stat is unavailable even though its other GPU stats can work.
+::::
+
+| GPU | Runtime requirement | Extra package needed? |
+|-----|---------------------|-----------------------|
+| AMD | The kernel `amdgpu` driver and its sysfs interfaces | No. The optional ROCm SMI library (`librocm_smi64.so`) is preferred when installed, but the normal kernel interfaces are sufficient |
+| NVIDIA | The proprietary NVIDIA driver and NVML (`libnvidia-ml.so.1`) | Usually supplied by the driver's userspace utilities package. On Arch Linux, install `nvidia-utils` |
+| Intel | The kernel `i915` or `xe` driver and DRM interfaces | No |
+
+For NVIDIA, the driver and userspace library must be compatible; installing `nvidia-utils` alone does not replace the matching kernel driver. You can check that the required NVML library is visible to applications with:
+
+```sh
+ldconfig -p | grep 'libnvidia-ml.so.1'
+```
+
+The open-source Nouveau driver does not provide NVML, so NVIDIA usage and VRAM monitoring require the proprietary driver. The `nvidia-smi` executable may be installed by the same package, but Noctalia loads NVML directly and does not run it.
 
 | GPU | Temperature | Usage | VRAM |
 |-----|-------------|-------|------|
@@ -88,9 +106,9 @@ Noctalia reads GPU statistics straight from the kernel and from the vendor's own
 | NVIDIA | NVML, hwmon otherwise | NVML | NVML |
 | Intel | `i915` / `xe` hwmon | per-client DRM statistics | `xe` device query |
 
-On AMD, ROCm SMI is used instead of sysfs when the ROCm runtime is installed. On NVIDIA, NVML comes from the proprietary driver; on a hybrid laptop whose discrete GPU is asleep, NVML is skipped so the GPU is not woken, and the integrated GPU is reported instead.
+On AMD, ROCm SMI is used instead of sysfs when the ROCm runtime is installed. On a hybrid laptop whose discrete NVIDIA GPU is asleep, NVML is skipped so the GPU is not woken, and the integrated GPU is reported instead.
 
-Intel is the odd one out: it publishes no device-wide busy counter, so usage is summed from the per-client statistics the kernel exposes for each process using the GPU. Two consequences follow. Work done by *other users'* processes is not counted, which is invisible on a normal single-user desktop. And usage needs two samples before it can report anything, so the first value appears one `gpu_poll_seconds` interval after startup.
+Intel is the odd one out: it publishes no device-wide busy counter, so usage is summed from the per-client statistics the kernel exposes for each process using the GPU. Three consequences follow. Work done by *other users'* processes is not counted, which is invisible on a normal single-user desktop. Usage needs two samples before it can report anything, so the first value appears one `gpu_poll_seconds` interval after startup. Noctalia currently counts Intel render and compute engines, but not media/video engines; hardware-accelerated video playback can therefore show `0%` while a per-engine monitor that includes video decoding reports activity. This difference does not mean the integrated GPU is unsupported.
 
 Intel VRAM is reported only for discrete cards such as Intel Arc, and **requires Linux 6.18 or newer** — earlier kernels release the used-memory figure only to privileged processes, so Noctalia reports VRAM as unavailable rather than showing a permanent zero. Integrated Intel GPUs have no dedicated video memory and never report VRAM.
 
