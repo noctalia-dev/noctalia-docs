@@ -41,7 +41,31 @@ GTK applications include most GNOME apps and many Linux applications. Noctalia c
 
 3. **Enable GTK theming in Noctalia:**
   - Open **Settings → Templates**
-  - Toggle on **GTK**
+  - Toggle on **GTK 3** and/or **GTK 4**
+
+Enabling those built-in templates writes `noctalia.css` and runs the shipped
+[`apply.sh`](https://github.com/noctalia-dev/noctalia/blob/main/assets/templates/gtk/apply.sh)
+`post_hook` (`bash '…/gtk/apply.sh' dark|light`). That script imports
+`noctalia.css` into `gtk.css` and syncs `adw-gtk3` / `adw-gtk3-dark` plus
+`org.gnome.desktop.interface.color-scheme`. A theme mode change re-applies the
+templates, so the same full hook runs again — you do not need a separate hook
+for that path.
+
+### Optional: appearance sync without GTK templates
+
+If you are **not** using the GTK templates but still want GNOME’s
+`color-scheme` preference updated on dark/light switches, add a
+[`theme_mode_changed`](/v5/automation/hooks/) hook with `--appearance-only`
+(skips the CSS import and does not change `gtk-theme`):
+
+```toml
+[hooks]
+theme_mode_changed = "/usr/share/noctalia/assets/templates/gtk/apply.sh --appearance-only $NOCTALIA_THEME_MODE"
+```
+
+Use `/usr/local/share/noctalia/...` instead if you installed with Meson’s default prefix.
+`$NOCTALIA_THEME_MODE` is set by the hook (`dark` or `light`). Switching
+`color-scheme` can flash some apps (browsers especially); keep this opt-in.
 
 ### Troubleshooting
 
