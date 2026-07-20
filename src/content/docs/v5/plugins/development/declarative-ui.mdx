@@ -226,3 +226,68 @@ noctalia msg panel-toggle noctalia/example:panel
 The reference implementation is the `panel` entry of the official `noctalia/example` plugin - a settings-style panel
 exercising every interactive control. `noctalia/wallhaven:browser` is a network-backed panel (thumbnail grid, filters,
 download + apply via `noctalia.wallpaperDirectory()` and `noctalia.setWallpaper()`).
+
+## Drag and drop (panels only) {#drag-and-drop-panels-only}
+
+Panels can offer pointer drag and drop for reorderable lists, kanban-style groups, and cross-container moves
+(requires `plugin_api = 5`). The host owns the whole interaction - pointer capture, hit testing, the drag ghost,
+target highlighting, and cursor changes - and the plugin receives **one callback after a completed drop**. The plugin
+owns its data: mutate the model in the callback and re-render. Nothing moves by itself.
+
+`ui.dragSource` marks a subtree (usually a grip glyph, or a whole row) as draggable. `ui.dropZone` is a flex
+container that accepts drops. Both take the common layout props of a column/row plus:
+
+| Constructor | Props |
+|-------------|-------|
+| `ui.dragSource` | `dragType` (**required** string, matched against `accepts`), `payload` (**required** opaque string, first callback argument), `enabled`, `tooltip`, `previewAncestor` (int 0-8: how many parent levels the ghost shows; `1` previews the row around a grip), `liftFromLayout` (bool: remove the previewed row from layout while dragging - pair with `expandOnDrag` insertion zones) |
+| `ui.dropZone` | `accepts` (**required** array of drag types; `{}` accepts nothing), `value` (**required** opaque string, second callback argument), `onDrop` (**required** global callback name), `direction` (`column`/`row`), `enabled`, `expandOnDrag` (bool: a fixed-height zone animates to the dragged row's height while targeted), `hitSlop` (number: extra drag-only hit distance around the zone, without changing layout or normal clicks) |
+
+A press becomes a drag only after a small movement threshold, so clicks on controls inside a dragged row still work.
+While dragging, the source dims (or lifts out of layout), a ghost of the previewed subtree follows the pointer, and
+the accepted target under the pointer highlights with the primary color. Releasing over an accepted zone calls
+`onDrop(payload, value)`; releasing anywhere else cancels silently. Nested zones resolve to the deepest accepting
+zone; zones with `hitSlop` are considered first, closest wins.
+
+```lua
+local items = { "alpha", "beta", "gamma" }
+
+local function row(id)
+  return ui.row({ key = "row-" .. id, gap = 8, align = "center" }, {
+    ui.dragSource({
+      key = "grip-" .. id, dragType = "item", payload = id,
+      previewAncestor = 1, liftFromLayout = true,
+      width = 24, height = 24,
+    }, { ui.glyph({ name = "menu-2", size = 14 }) }),
+    ui.label({ text = id, flexGrow = 1 }),
+  })
+end
+
+local function gap(anchor, place) -- thin insertion zone between rows
+  return ui.dropZone({
+    key = "gap-" .. place .. "-" .. anchor,
+    accepts = { "item" }, value = place .. "|" .. anchor, onDrop = "onReorder",
+    height = 3, expandOnDrag = true, hitSlop = 48,
+  })
+end
+
+function onReorder(id, target)
+  local place, anchor = string.match(target, "^([^|]+)|(.+)$")
+  moveItem(id, anchor, place) -- plugin-owned mutation
+  render()                    -- re-render so the drop lands without a flash
+end
+```
+
+- **Sortable lists**: place a thin `expandOnDrag` + `hitSlop` insertion zone before every row and one after the last;
+  with `liftFromLayout` on the source the list shows exactly one open gap that follows the pointer. Encode the
+  insertion point in `value` (`"before:<id>"`, `"end"`, ...) - the callback never receives coordinates.
+- **Cross-container moves**: use the same `dragType` in every compatible container and a different `value` per
+  container. Keep a container-level `ui.dropZone` around each list so an empty list stays a valid target.
+- **Validation is strict**: a missing, mistyped, empty, or over-limit required prop logs and disables that control for
+  the render - it never silently reuses the previous value. Limits: `payload` 16 KiB; `dragType`, `value`, `onDrop`,
+  and each `accepts` entry 256 bytes; at most 16 `accepts` entries.
+- **Update the model before slow persistence**: mutate + `render()` first, then save; keep a snapshot to roll back on
+  failure. `enabled = false` on sources/zones is useful while a save is in flight.
+- **Scope and limits**: panels only (the constructors are rejected with a log message on other surfaces); drags stay
+  inside one panel; only the left button drags; there is no OS/Wayland drag and drop, no keyboard drag (keep a
+  non-drag alternative such as a move-to selector for keyboard users), and the mouse wheel cannot scroll the panel
+  while a drag is active.
