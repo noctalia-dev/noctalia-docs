@@ -14,6 +14,7 @@ Pair it with **Noctalia v5** if you want your wallpaper and palette copied from 
 - [Installing](#installing)
 - [Setting up greetd](#setting-up-greetd)
 - [Matching your Noctalia desktop](#matching-your-noctalia-desktop)
+- [Logging](#logging)
 - [Keyboard](#keyboard)
 - [Troubleshooting](#troubleshooting)
 
@@ -124,6 +125,32 @@ For monitor selection, output mode, idle blanking, UI scale, cursor theme, and o
 
 ---
 
+## Logging
+
+Under greetd, noctalia-greeter logs to **syslog** by default (journald on systemd; metalog, syslog-ng, and similar on OpenRC). That rides along with the greetd service instead of a dedicated greeter log file. The session wrapper parks stdout/stderr so wlroots/libseat messages do not flash on the VT before DRM takes over.
+
+On systemd:
+
+```sh
+journalctl -u greetd -b | grep noctalia-greeter
+```
+
+Overrides (optional):
+
+| Value | Effect |
+|-------|--------|
+| unset (default) | syslog; stdout/stderr parked |
+| `NOCTALIA_GREETER_LOG=stderr` | console debug (info/debug → stdout, warn/error → stderr) |
+| `NOCTALIA_GREETER_LOG=/path/to/file` | append to that file (plus syslog) |
+
+Example console debug:
+
+```toml
+command = "env NOCTALIA_GREETER_LOG=stderr WLR_LOG=info /usr/bin/noctalia-greeter-session"
+```
+
+---
+
 ## Keyboard
 
 The greeter works without a mouse.
@@ -143,10 +170,10 @@ The greeter works without a mouse.
 
 ## Troubleshooting
 
-- **Blank screen** - Check greetd / journal logs (info → stdout, warn/error → stderr by default). If using `NOCTALIA_GREETER_LOG`, check that file. Ensure `/var/lib/noctalia-greeter` exists (`just setup-log-dir` from the greeter source tree, or create it owned by the greetd user).
+- **Blank screen** - Check greetd / system logs (`journalctl -u greetd` and the `noctalia-greeter` syslog identifier, or your OpenRC logger). If you set `NOCTALIA_GREETER_LOG`, check that file or console instead. Ensure `/var/lib/noctalia-greeter` exists (`just setup-log-dir` from the greeter source tree, or create it owned by the greetd user).
 - **`Failed to spawn client` / wrong path in greetd config** - `command` must be the full path from `which noctalia-greeter-session` (often `/usr/bin/...` on packaged installs, not `/usr/local/bin/...`).
 - **`WAYLAND_DISPLAY is not set`** - greetd must use `noctalia-greeter-session` (it starts `noctalia-greeter-compositor`). Fix `command` in `/etc/greetd/config.toml`.
-- **Black screen after reboot** - With default logging, inspect the greetd service journal (or your init's capture of session stdout/stderr).
+- **Black screen after reboot** - Same as blank screen: greetd/syslog first. Confirm the state dir and synced appearance files are present.
 - **Wrong session on startup** - If `[session].default` is set in `greeter.toml`, it wins over last-used `[session].last`. Run `noctalia-greeter sessions` for exact **Name** spelling.
 - **Synced look missing** - Install Noctalia v5, the greeter, and the polkit policy; sync again from Settings; restart greetd or log out once.
 - **User avatars missing on the login screen** - Install and enable **accountsservice** / `accounts-daemon`. The greeter reads the avatar from the user's AccountsService `IconFile`; without it, the picker falls back to a placeholder.
