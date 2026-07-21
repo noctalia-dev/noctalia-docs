@@ -28,7 +28,7 @@ dependencies = ["slurp"] # optional, external tools/packages users must install
 
 `name` and `plugin_api` are required - a manifest without either is rejected. `plugin_api` is a positive integer and
 gates enable, the catalog badge, and update safety. API levels are cumulative: leave the value unchanged until the
-plugin adopts a capability introduced by a newer level. Noctalia v5 uses plugin API 4.
+plugin adopts a capability introduced by a newer level. Noctalia v5 currently supports plugin API 6.
 
 `license` defaults to `MIT` when omitted. `deprecated = true` marks the plugin as deprecated in plugin listings; it is a
 soft status marker, not a compatibility gate.
@@ -122,7 +122,7 @@ label = "Short"
 | Field | Notes |
 |-------|-------|
 | `key` | required; the config key |
-| `type` | `string`, `string_list`, `bool`, `int`, `double`, `select`, `file`, `folder`, `glyph`, `color` |
+| `type` | `string`, `string_list`, `string_map`, `bool`, `int`, `double`, `select`, `file`, `folder`, `glyph`, `color` |
 | `label_key` | required; translation key for the label shown in the settings GUI |
 | `description_key` | optional; translation key for the description |
 | `default` | seeded value (must match the type) |
@@ -130,6 +130,27 @@ label = "Short"
 | `options` | for `select`: array of `{ value, label_key }`; both fields are required |
 | `visible_when` | `{ key = "other_key", values = ["true"] }` - conditional visibility |
 | `advanced` | hide behind the "show advanced" toggle |
+
+`string_map` requires `plugin_api = 6`. It stores string keys associated with string values and is returned from
+`noctalia.getConfig()` as an associative Luau table. Its default is a TOML table:
+
+```toml
+plugin_api = 6
+
+[[widget.setting]]
+key = "output_glyphs"
+type = "string_map"
+label_key = "settings.output_glyphs.label"
+default = { "eDP-1" = "laptop", "DP-1" = "monitor" }
+```
+
+Configure a widget instance with a subtable:
+
+```toml
+[widget.display-output.output_glyphs]
+"eDP-1" = "laptop"
+"DP-1" = "monitor"
+```
 
 Setting labels and descriptions are always translation keys - literal `label` / `description` fields are rejected. The
 text lives in the same `translations/<lang>.json` files as script strings, so a plugin with settings needs at least a
