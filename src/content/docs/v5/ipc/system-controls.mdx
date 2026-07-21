@@ -18,8 +18,10 @@ These commands are useful for media keys, compositor binds, scripts, and custom 
 | Raise output by amount | <IpcCommand command="volume-up 10" /> | Raise output volume by a custom step. |
 | Lower output volume | <IpcCommand command="volume-down" /> | Lower output volume by the default step. |
 | Mute output | <IpcCommand command="volume-mute" /> | Toggle output mute. |
+| Show volume OSD | <IpcCommand command="volume-osd" /> | Show the volume OSD at the current volume without changing it. |
+| Show volume OSD at value | <IpcCommand command="volume-osd 72" /> | Show the volume OSD at the given value without changing volume. |
 
-Default step is 5% when not specified. Output volume is clamped to 100% unless `[audio] enable_overdrive = true`, which allows up to 150%.
+Default step is 5% when not specified. Output volume is clamped to 100% unless `[audio] enable_overdrive = true`, which allows up to 150%. The same ceiling applies to the value accepted by `volume-osd`.
 
 ## Microphone
 
@@ -30,6 +32,10 @@ Default step is 5% when not specified. Output volume is clamped to 100% unless `
 | Raise mic by amount | <IpcCommand command="mic-volume-up 5%" /> | Raise microphone volume by a custom step. |
 | Lower mic volume | <IpcCommand command="mic-volume-down" /> | Lower microphone volume by the default step. |
 | Mute mic | <IpcCommand command="mic-mute" /> | Toggle microphone mute. |
+| Show mic OSD | <IpcCommand command="mic-volume-osd" /> | Show the microphone OSD at the current volume without changing it. |
+| Show mic OSD at value | <IpcCommand command="mic-volume-osd 40%" /> | Show the microphone OSD at the given value without changing volume. |
+
+`volume-osd` and `mic-volume-osd` never change the level. Called with no value they show the current one, which suits a "show me the volume" bind. Called with a value they show that value instead, for scripts that manage volume outside Noctalia such as an MPD volume sync. Both appear on whichever monitors are configured under `[osd].monitors`, and both reflect the real mute state of the device.
 
 ## Brightness
 
