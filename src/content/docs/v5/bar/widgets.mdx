@@ -79,6 +79,25 @@ length = 24
 
 ---
 
+## `text`
+
+Fixed text on the bar. Requires a named `[widget.<name>]` entry.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `text` | string | `""` | Text shown on the bar |
+
+```toml
+[widget.hostname]
+type = "text"
+text = "noctalia"
+
+[bar.main]
+start = ["hostname", "workspaces"]
+```
+
+---
+
 ## `workspaces`
 
 Workspace switcher with three styles: regular animated pills, minimal text-only labels, or Focus Hint (small dots for inactive workspaces and an expanded active pill with the focused app icon).
