@@ -143,18 +143,21 @@ Where Noctalia keeps everything, by purpose:
 |------|-------|---------|
 | Your config | `~/.config/noctalia/config.toml` | hand-written / declarative - the base layer |
 | GUI overrides | `~/.local/state/noctalia/settings.toml` | written by Settings; wins over your config |
-| Internal UI state | `~/.local/state/noctalia/state.toml` | app-managed (calendar account tokens, last-used values) |
+| Internal UI state | `~/.local/state/noctalia/state.toml` | app-managed non-secret state and last-used values |
+| Calendar credentials | Desktop Secret Service or an explicit CalDAV password file | CalDAV passwords and Google refresh tokens |
 | Custom palettes | `~/.config/noctalia/palettes/` | your own color palette files |
 | Local plugins | `~/.local/share/noctalia/plugins/` | plugins you install or place by hand |
 | Plugin source repos | `~/.local/state/noctalia/plugins/sources/` | git-source repo caches, re-fetchable |
 | Exported plugin files | `~/.local/state/noctalia/plugins/materialized/` | runtime files exported from git sources |
 | Community palettes / templates | `~/.local/state/noctalia/community-*/` | downloaded catalogs, re-fetchable |
 
-It comes down to **two buckets**:
+It comes down to **three storage owners**:
 
 - **Yours** - `~/.config/noctalia/` (settings you write) and `~/.local/share/noctalia/` (plugins you install).
-- **Noctalia's** - `~/.local/state/noctalia/` (everything the app writes or fetches: GUI overrides, UI state, plugin
-  repo caches, exported plugin files, downloaded catalogs) - app-managed and regenerable, so it's always safe to delete.
+- **Noctalia's** - `~/.local/state/noctalia/` (GUI overrides, UI state, plugin repo caches, exported plugin files, and
+  downloaded catalogs).
+- **Credential provider's** - durable calendar credentials managed by Secret Service, or CalDAV password files managed
+  by an external provisioner such as agenix. Deleting Noctalia's state directory does not remove them.
 
 Every path honors the standard `XDG_CONFIG_HOME` / `XDG_STATE_HOME` / `XDG_DATA_HOME` variables (and the
 `NOCTALIA_CONFIG_HOME` / `NOCTALIA_STATE_HOME` / `NOCTALIA_DATA_HOME` overrides).
