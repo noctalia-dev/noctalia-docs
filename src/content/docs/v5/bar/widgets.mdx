@@ -145,12 +145,14 @@ focused_output_only = false  # true = only the focused monitor highlights its ac
 
 ## `taskbar`
 
-Icon-only running application list. By default it follows the bar’s monitor (only windows the compositor associates with that monitor). Enable **Show all monitors** when you use one bar for everything but still want to see and focus apps on other monitors.
+Icon-only running application list, with optional pinned apps on the flat strip. By default it follows the bar’s monitor (only windows the compositor associates with that monitor). Enable **Show all monitors** when you use one bar for everything but still want to see and focus apps on other monitors.
 
 Application icons use global `[shell.app_icon_colorize]` when enabled (see [Shell → App icon colorization](/v5/shell/#app-icon-colorization)).
 
-Left-click an icon to focus that window. Middle-click an icon to close that window (the active window when a grouped app tile represents several). Middle-click in the gaps between icons still opens the taskbar widget settings when `[shell].middle_click_opens_widget_settings` is enabled. The active window shows a small primary dot under the icon.
-When grouped app collapsing is enabled, multi-window app tiles also show compact right-edge dots over the icon.
+Left-click an icon to focus that window (or launch a pinned app that is not running). Middle-click an icon to close that window (the active window when a grouped or pinned multi-window tile represents several). Middle-click in the gaps between icons still opens the taskbar widget settings when `[shell].middle_click_opens_widget_settings` is enabled. The active window shows a small primary dot under the icon.
+When grouped app collapsing is enabled, multi-window app tiles also show compact right-edge dots over the icon. Pinned apps with multiple windows use the same dots and left-click cycles their windows.
+
+**Pinned apps** (`pinned`) keep desktop entries on the taskbar when they are not running. Matching uses the same desktop-entry rules as the [dock](/v5/dock/#pinned-matching). Pinned apps appear first (in list order), collapsed to one icon per app; other running windows follow as usual. Right-click an icon and choose **Pin** / **Unpin** to update the list. Pins are only used on the flat strip — when `group_by_workspace` is on they are ignored (settings hide the list, and pin menu actions are unavailable).
 
 **Only active workspace** limits the list to windows the shell can place on a workspace that is currently active on its monitor (same idea as the v4 taskbar option). It works with or without `group_by_workspace`; with grouping, inactive workspace capsules are omitted.
 
@@ -163,6 +165,7 @@ Set `workspace_group_capsule = false` to drop the group background/border while 
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
+| `pinned` | array of string | `[]` | Desktop entry IDs to keep on the flat taskbar when not running. Ignored while `group_by_workspace` is on. |
 | `group_by_workspace` | bool | `false` | Group icons into workspace capsules when per-window workspace assignment is available. |
 | `show_all_outputs` | bool | `false` | Include windows from all monitors. With `group_by_workspace`, workspaces from every monitor are merged; capsule badges use `tag·n` (workspace tag, middle dot, monitor index in bar monitor order) when there is more than one monitor. |
 | `only_active_workspace` | bool | `false` | Show only windows on the active workspace for each relevant monitor. Depends on compositor workspace data; if a window’s workspace cannot be resolved, it is still shown. |
@@ -183,6 +186,7 @@ Set `workspace_group_capsule = false` to drop the group background/border while 
 
 ```toml
 [widget.taskbar]
+pinned = ["firefox", "code", "kitty"]
 group_by_workspace = true
 show_all_outputs = true
 only_active_workspace = true
