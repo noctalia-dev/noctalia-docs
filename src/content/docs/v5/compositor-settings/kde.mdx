@@ -36,7 +36,7 @@ Clipboard history needs `ext-data-control-v1` or `zwlr-data-control-unstable-v1`
 
 ### Clipboard auto-paste
 
-Selecting a history entry can auto-send a paste key chord (`Ctrl+V` / `Ctrl+Shift+V`, etc.). That path prefers `zwp_virtual_keyboard_v1`, then falls back to [`wtype`](https://github.com/atx/wtype). On Plasma, virtual-keyboard is typically missing; install `wtype` if you want the fallback. With neither available, auto-paste fails (copy still works when history is available).
+Selecting a history entry can auto-send a paste key chord (`Ctrl+V` / `Ctrl+Shift+V`, etc.). That path requires `zwp_virtual_keyboard_v1`, which stock KWin typically does not expose, so auto-paste is unavailable on Plasma. Installing `wtype` does not change this because it requires the same protocol. Selecting an entry still copies it when clipboard history is available.
 
 ### Screenshots
 
@@ -90,7 +90,7 @@ If you run Plasma apps (for example Dolphin) under another compositor while KDE 
 | Workspaces | ✅ Works (Plasma virtual desktops) |
 | Taskbar / dock windows | ⚠️ Works via KWin script (degraded vs protocol) |
 | Clipboard history | ❌ Usually unavailable (no data-control) |
-| Clipboard auto-paste | ⚠️ Needs `wtype` if no virtual-keyboard |
+| Clipboard auto-paste | ❌ Usually unavailable (no virtual-keyboard) |
 | Screenshots (Noctalia) | ❌ Usually unavailable (no screencopy) |
 | Lock desktop capture | ❌ Unavailable without screencopy |
 | Night light (Noctalia) | ❌ Unavailable (no gamma-control) |
