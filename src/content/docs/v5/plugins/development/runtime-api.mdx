@@ -174,8 +174,14 @@ if raw then myTable = noctalia.json.decode(raw) end
   basic_username = "user",
   basic_password = "pass",
   follow_redirects = false,
+  allow_insecure_tls = false,
 }
 ```
+
+`allow_insecure_tls` requires plugin API 7. When true, it disables certificate-chain and hostname verification for
+the request, including any HTTPS redirects. Keep it false unless the endpoint is explicitly trusted and cannot use a
+publicly trusted certificate. The option applies to both `http()` and `httpStream()` and does not disable HTTPS proxy
+certificate verification.
 
 Only `url` is required. `http()` calls `cb(response)` once with:
 
