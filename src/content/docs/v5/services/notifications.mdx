@@ -63,6 +63,29 @@ Legacy `blacklist` keys are migrated on read into filters with all actions disab
 
 Configure filtering in **Settings → Notifications → Filtering**, or in the Noctalia TOML config stack.
 
+### Disable notification history
+
+To keep showing external notification toasts without retaining them in control-center history, add a catch-all filter:
+
+```toml
+[notification]
+filter_order = ["no_history"]
+
+[notification.filter.no_history]
+enabled       = true
+match_content = ".*"
+show_toast    = true
+save_history  = false
+play_sound    = true
+```
+
+The empty app match and `.*` content regex match every external notification. Because the first matching enabled filter
+wins, keep `no_history` first in `filter_order` if you add other filters. In Settings, leave **App** empty, enter `.*`
+for **Content Regex**, and disable **Save to history**.
+
+This affects new notifications only. Use `noctalia msg notification-clear-history` to remove entries already stored in
+history.
+
 ## Related IPC
 
 For Do Not Disturb status/toggle commands and notification clear actions, see
