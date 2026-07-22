@@ -91,7 +91,7 @@ cache results keyed by app id instead of resolving on every `update()`.
 | `noctalia.runAsync(cmd)` | bool | Starts a detached shell command and returns whether it launched. No output is captured. |
 | `noctalia.runAsync(cmd, cb)` | bool | Runs a shell command with output capture, then calls `cb(result)`. |
 | `noctalia.runStream(cmd, onLine)` | bool | Runs a long-lived shell command and calls `onLine(line)` for each stdout line. |
-| `noctalia.runInTerminal(cmd)` | bool | Starts a shell command in the configured terminal. |
+| `noctalia.runInTerminal(cmd)` | bool | Starts a shell command in a terminal. Uses `$TERMINAL` when set (no `-e` in the value), otherwise discovers a terminal on `PATH`. See [Shell settings](/v5/configuration/shell/#shell-settings). |
 | `noctalia.commandExists(name)` | bool | Checks whether an executable is available on `PATH`. |
 | `noctalia.processMatches(cb, ...needles)` | bool | Asynchronously checks running processes; `cb(matched)` receives a boolean. |
 | `noctalia.flatpakAppInstalled(id)` | bool | Checks whether a Flatpak app id is installed. |

@@ -43,6 +43,7 @@ When `shell.launcher.app_grid` is enabled and every visible result is an applica
 - **Source**: Reads `.desktop` entries from standard XDG directories (e.g., `/usr/share/applications`, `~/.local/share/applications`).
 - **Search**: Matches against the application name, generic name, keywords, and categories.
 - **Scoring**: Uses fuzzy matching with weights. Activation count boosts the score.
+- **Terminal apps**: Entries with `Terminal=true` run inside a terminal. Prefer `export TERMINAL=wezterm` (or another emulator on `PATH`); do not put `-e` in `$TERMINAL`. See [Shell: launching apps](/v5/configuration/shell/#shell-settings) for discovery order and how this differs from `launch_apps_custom_command`.
 
 ### Calculator
 
@@ -154,6 +155,8 @@ Fields:
 
 Noctalia runs `exec` as a detached command; it does not automatically open a terminal. For interactive commands such as
 `dnf upgrade`, launch your terminal emulator explicitly (`foot -e ...`, `kitty -e ...`, `alacritty -e ...`, etc.).
+That is different from Application results with `Terminal=true`, which use `$TERMINAL` / terminal discovery
+(see [Shell settings](/v5/configuration/shell/#shell-settings)).
 
 Set `freeform = true` when the typed text itself should be activatable. The typed text after the prefix is available as
 `{query}`:
