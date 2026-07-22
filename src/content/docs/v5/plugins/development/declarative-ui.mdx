@@ -51,16 +51,16 @@ to size it explicitly).
 
 | Constructor | Props |
 |-------------|-------|
-| `ui.column` / `ui.row` | `gap`, `padding`, `paddingH`, `paddingV`, `align` (`start`/`center`/`end`/`stretch`), `justify` (`start`/`center`/`end`/`space_between`), `fill`, `radius`, `border`, `borderWidth`, `minWidth`, `minHeight` |
+| `ui.column` / `ui.row` | `gap`, `padding`, `paddingH`, `paddingV`, `align` (`start`/`center`/`end`/`stretch`), `justify` (`start`/`center`/`end`/`space_between`), `fill`, `radius`, `border`, `borderWidth`, `minWidth`, `minHeight`, `onClick`, `onHover` |
 | `ui.scroll` | a vertically scrolling container; same layout props as a column plus `fill`, `radius`, `border`, `borderWidth` |
 | `ui.label` | `text`, `fontSize`, `color`, `fontWeight` (`thin`…`heavy`), `fontFamily` (a family name; load a file with `noctalia.loadFont`), `baseline` (`text`/`textFixedHeight`/`inkCentered`/`pictographic`), `maxWidth`, `maxLines`, `textAlign` |
 | `ui.glyph` | `name` (Tabler/Nerd-Font glyph), `size`, `color` |
-| `ui.image` | `path` (plugin-relative, `~`, or absolute), `width`, `height`, `radius`, `fit` (`contain`/`cover`/`stretch`), `border`, `borderWidth`, `onClick` |
-| `ui.box` | `fill`, `radius`, `border`, `borderWidth`, `softness`, `width`, `height`, `onClick` |
+| `ui.image` | `path` (plugin-relative, `~`, or absolute), `width`, `height`, `radius`, `fit` (`contain`/`cover`/`stretch`), `border`, `borderWidth`, `onClick`, `onHover` |
+| `ui.box` | `fill`, `radius`, `border`, `borderWidth`, `softness`, `width`, `height`, `onClick`, `onHover` |
 | `ui.separator` | `thickness`, `color`, `spacing`, `orientation` (`auto`/`horizontal`/`vertical`) |
 | `ui.spacer` | flexible filler (use `flexGrow`) |
 | `ui.progress` | `progress` (0–1), `fill`, `track`, `radius`, `width`, `height` |
-| `ui.button` | `text`, `glyph`, `fontSize`, `glyphSize`, `variant` (`default`/`primary`/`secondary`/`destructive`/`outline`/`ghost`), `contentAlign` (`start`/`center`/`end`), `controlSize` (`sm`/`md`/`lg`), `tooltip`, `enabled`, `selected`, `onClick`, `onRightClick` |
+| `ui.button` | `text`, `glyph`, `fontSize`, `glyphSize`, `variant` (`default`/`primary`/`secondary`/`destructive`/`outline`/`ghost`), `contentAlign` (`start`/`center`/`end`), `controlSize` (`sm`/`md`/`lg`), `tooltip`, `enabled`, `selected`, `onClick`, `onRightClick`, `onHover` |
 | `ui.graph` | `values` / `values2` (arrays of 0–1 numbers), `color` / `color2`, `lineWidth`, `fillOpacity`, `width`, `height` |
 | `ui.toggle` | `checked` (bool), `enabled`, `onChange` |
 | `ui.slider` | `min`, `max`, `step`, `value`, `controlSize` (`sm`/`md`/`lg`), `enabled`, `onChange`, `onDragEnd` |
@@ -90,6 +90,26 @@ prop is logged and skipped - typos surface in the log instead of failing silentl
   a button click; `onChange = "name"` fires when a toggle/slider/select/input value changes (the value is passed to the
   global as a string - `"true"`/`"false"` for a toggle, a number for a slider, the text for an input, the index for a
   select); `onSubmit` fires when the user presses Enter in an input.
+- **Hover**: `onHover = "name"` fires on pointer enter and leave for `ui.row`, `ui.column`, `ui.box`, `ui.image`, and
+  `ui.button`. The global receives two strings: the state (`"true"` on enter, `"false"` on leave) and the node's `key`
+  (empty when the node has none), so a single handler can serve a whole keyed list:
+  ```lua
+  -- track which chip is hovered, then re-render the tree
+  function onChipHover(state, key)
+    hovered = (state == "true") and key or nil
+  end
+  ```
+  Only the innermost hovered element reports: if a container with `onHover` contains a button or another interactive
+  child, hovering that child makes *it* the hover target and the container reports `"false"`. Every `"true"` is
+  matched by a `"false"`, including when the hovered node disappears in a later render, so a hover flag never gets
+  stuck on.
+- **Clickable containers**: `onClick` on `ui.row` and `ui.column` makes the whole container a click target while
+  keeping its layout and sizing, so an entire chip (glyph + label) activates as one unit rather than only a bare
+  `ui.box`. The same applies to `ui.image` and `ui.box` (thumbnail grids, placeholder tiles). A clickable container
+  joins the keyboard tab order and activates with Enter or Space. A container that declares only `onHover` and no
+  `onClick` does not swallow clicks: they pass through to an enclosing click target, so a hover cue can wrap something
+  that is already clickable. On these four, an empty `onClick`/`onHover` name counts as unset, so clearing the name
+  drops the target instead of leaving a dead one behind.
 - **Multiline input**: `ui.input` with `multiline = true` becomes a wrapping text area with vertical scrolling, 
   Enter inserts a newline and `onSubmit` fires on **Ctrl+Enter** instead. Give it a `height` or `flexGrow` for the
   editing area; `multiline` and `password` are mutually exclusive.
@@ -102,8 +122,7 @@ prop is logged and skipped - typos surface in the log instead of failing silentl
   the input a stable `key` so it keeps its text across renders.
 - **Identity**: give list children a `key` prop so reordering reuses the same native controls.
 - **Images**: `ui.image` loads **local files only** - download remote previews with `noctalia.download(url, dest, cb)`
-  first, then pass the saved path. `onClick` on `ui.image` and `ui.box` wraps the visual in a click target (thumbnail
-  grids, placeholder tiles).
+  first, then pass the saved path.
 - **Glyph-only buttons**: when only `glyph` is set, any previous `text` is cleared so retained buttons do not keep
   stale labels across re-renders.
 - **Ticks**: `setWantsSecondTicks(true)` runs `update()` on second boundaries (clocks/timers).
