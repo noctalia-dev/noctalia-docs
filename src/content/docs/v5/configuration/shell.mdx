@@ -87,6 +87,7 @@ app_grid        = false  # icon grid with labels underneath when results are app
 sort_by_usage   = true   # boost frequently used apps and show Recently Used filter
 fetch_exchange_rates = true  # refresh currency rates from third-party online sources
 provider_prefix = "/"    # common prefix character for provider trigger words (e.g. "/" or ".")
+auto_paste      = "auto" # off | auto | ctrl_v | ctrl_shift_v | shift_insert (after copy activations)
 
 [shell.launcher.providers.calculator]
 prefix = ""              # calculator has no default trigger, so it stays in global search
@@ -204,6 +205,7 @@ Notes:
 - `shell.launcher.app_grid` switches to a multi-column icon grid with labels underneath when every visible result is an application. Mixed results (global search, prefixed providers, session actions, and so on) stay in the default list layout.
 - `shell.launcher.sort_by_usage` boosts frequently launched apps toward the top of results and exposes a **Recently Used** category filter. Disable it for strictly alphabetical ordering within each provider.
 - `shell.launcher.fetch_exchange_rates` refreshes currency exchange rates in the background from libqalculate's third-party online sources (enabled by default). Disable it to opt out of those requests; the last cached rates are still used for conversion. Refresh is also skipped when `[shell].offline_mode` is enabled.
+- `shell.launcher.auto_paste` controls virtual-keyboard paste after copy-style activations (calculator, emoji, copy-mode dmenu). Providers that copy opt in with `supportsAutoPaste`. Same values as `shell.clipboard_auto_paste` (`off` | `auto` | `ctrl_v` | `ctrl_shift_v` | `shift_insert`). Default `auto`.
 - Reset stored launcher usage data from **Settings → Panels → Launcher → Reset Usage Data** (clears `usage_counts.json` and `recently_used.json` while Noctalia is running).
 - `shell.launcher.provider_prefix` sets the common prefix character used to trigger all provider prefixes (default `"/"`). See [Launcher: Provider prefixes](/v5/launcher/#provider-prefixes) for how prefixes, trigger words, and global search fit together.
 - `shell.launcher.providers.<name>.prefix` sets the trigger word for a specific built-in provider (`calculator`, `emoji`, `session`, `wallpaper`, `windows`; keys are matched case-insensitively). The provider is activated when typing the `provider_prefix` followed by this trigger word (e.g. `/session` or `/emo`). Setting the prefix to an empty string (`""`) falls back to the provider's built-in default trigger — it does **not** make the provider global. The `calculator` provider has no default trigger, so it stays in global search. The Applications provider cannot be prefixed and is always queryable globally.
