@@ -162,6 +162,7 @@ When `group_by_workspace` is enabled, workspace **disc indicators** (the small n
 Set `[widget.taskbar].capsule_radius` for just the taskbar, or `[bar.<name>].capsule_radius` as the bar default.
 Set `show_workspace_label = false` to hide workspace disc indicators (icons only).
 Set `workspace_group_capsule = false` to drop the group background/border while keeping grouping and disc labels.
+With grouping, `workspace_group_content` chooses what each capsule shows for its windows: `icons` (default app tiles), `count` (window count), or `dots` (one dot per window; the focused window uses the primary color when `show_active_indicator` is on). Dot mode shows at most five dots and a `+N` overflow when there are more windows. Left-click on count/dots activates that workspace. `group_single_icon_per_app` only applies when content is `icons`.
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
@@ -174,8 +175,9 @@ Set `workspace_group_capsule = false` to drop the group background/border while 
 | `workspace_label_placement` | string | `corner` | With grouping: `corner`, `centered` (on the pill edge), or `inside` (first tile in the pill). Requires `show_workspace_label`. |
 | `hide_empty_workspaces` | bool | `false` | When `group_by_workspace` is on, do not show capsules for workspaces that have no windows in the taskbar list. |
 | `workspace_group_capsule` | bool | `true` | Draw the background/border capsule around each workspace group. Set `false` for grouped icons and labels only. |
-| `group_single_icon_per_app` | bool | `false` | With `group_by_workspace`, collapse multiple windows of the same app into one tile per workspace group. Left-click cycles that app's windows; right-edge overlay dots indicate multiple windows. |
-| `show_active_indicator` | bool | `true` | Show a small dot below the active window icon in the taskbar. |
+| `workspace_group_content` | string | `icons` | With grouping: `icons` (app tiles), `count` (window count), or `dots` (up to five dots per group, then `+N` for the rest). |
+| `group_single_icon_per_app` | bool | `false` | With `group_by_workspace` and `workspace_group_content = icons`, collapse multiple windows of the same app into one tile per workspace group. Left-click cycles that app's windows; right-edge overlay dots indicate multiple windows. |
+| `show_active_indicator` | bool | `true` | Show a small dot below the active window icon in the taskbar. With `workspace_group_content = dots`, highlights the focused window's dot instead. |
 | `active_opacity` | float | `1.0` | Opacity of the icon for the active (focused) window. |
 | `inactive_opacity` | float | `1.0` | Opacity of icons for inactive (unfocused) windows. |
 | `focused_color` | string | `"primary"` | Workspace disc fill when active (same roles as the workspaces widget) |
@@ -196,6 +198,7 @@ show_workspace_label = true
 workspace_label_placement = "corner"
 hide_empty_workspaces = true
 workspace_group_capsule = true
+workspace_group_content = "icons"
 group_single_icon_per_app = true
 show_active_indicator = true
 active_opacity = 1.0
