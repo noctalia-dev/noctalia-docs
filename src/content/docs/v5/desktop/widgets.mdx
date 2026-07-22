@@ -30,7 +30,7 @@ rotation = 0.0
 format = "{:%H:%M}"
 ```
 
-When enabled, Noctalia renders each desktop widget as its own tightly-sized layer-shell surface on the `Bottom` layer. The current implementation ships `button`, `clock`, `label`, `audio_visualizer`, `fancy_audio_visualizer`, `sticker`, `weather`, `media_player`, and `sysmon` widget types plus an interactive edit mode.
+When enabled, Noctalia renders each desktop widget as its own tightly-sized layer-shell surface on the `Bottom` layer. The current implementation ships `button`, `clock`, `label`, `audio_visualizer`, `fancy_audio_visualizer`, `sticker`, `weather`, `media_player`, `volume`, and `sysmon` widget types plus an interactive edit mode.
 
 ---
 
@@ -408,6 +408,43 @@ background  = true
 | `color` | string | `"on_surface"` | Text color role for both lines; fixed hex colors are also supported |
 | `opacity` | float | `1.0` | Text opacity from `0.0` to `1.0` |
 | `shadow` | bool | `true` | Drop shadow on the text |
+
+---
+
+### volume
+
+Default-sink or default-source volume tile with a large glyph that fills bottom-up by volume percent. Left side shows the percentage, a Volume/Mic/Muted status line, and optionally the device name. Click the glyph to toggle mute; scroll anywhere on the widget to change volume (respects `[audio].enable_overdrive`). Requires PipeWire.
+
+```toml
+[desktop_widgets.widget.volume_main]
+type     = "volume"
+output   = "DP-1"
+cx       = 400.0
+cy       = 800.0
+box_width  = 0.0
+box_height = 0.0
+rotation = 0.0
+
+[desktop_widgets.widget.volume_main.settings]
+device       = "output"
+glyph        = ""
+fill_color   = "primary"
+track_color  = "on_surface_variant"
+show_device  = true
+scroll_step  = 5
+shadow       = true
+background   = true
+```
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `device` | string | `"output"` | `"output"` for the default sink, `"input"` for the default source (mic). Same key as the bar volume widget. |
+| `glyph` | string | `""` | Optional glyph override. Empty uses the same dynamic volume/mic glyphs as the bar. |
+| `fill_color` | string | `"primary"` | Accent color for the percentage and the filled portion of the glyph |
+| `track_color` | string | `"on_surface_variant"` | Dim base glyph color (shown at reduced opacity) |
+| `show_device` | bool | `true` | Show the default sink/source name under the status line |
+| `scroll_step` | int | `5` | Percent change per scroll step |
+| `shadow` | bool | `true` | Drop shadow on text and the track glyph |
 
 ---
 
