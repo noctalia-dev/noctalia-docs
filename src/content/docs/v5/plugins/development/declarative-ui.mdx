@@ -181,6 +181,10 @@ zone (bars, docks, third-party clients), so a `height = "fill"` panel sits exact
 `placement = "floating"`. Fixed pixel sizes are clamped to the output, so an oversized value degrades to
 full-available rather than a broken surface.
 
+Set `dismiss_on_outside_click = false` for auth-style prompts (password / API key) so a misclick does not discard
+the panel; the default is `true`. Requires `plugin_api = 8`. Escape and an explicit Close / Cancel control still
+dismiss it.
+
 **Placement** matches built-in shell panels (`attached` merges with the bar, `floating` opens detached). The host
 injects three standard settings for every `[[panel]]` entry - you do **not** declare them as `[[panel.setting]]` unless
 you need a custom key. They appear in **Settings → Plugins** (gear on the plugin row) with the same controls as built-in
@@ -192,6 +196,7 @@ Click**.
 | `placement` | `<entry>_placement` | `attached` or `floating` (default `floating`) |
 | `position` | `<entry>_position` | `auto`, `center`, or a screen anchor; only applies when floating |
 | `open_near_click` | `<entry>_open_near_click` | Open near the bar widget that toggled the panel (default `false`) |
+| `dismiss_on_outside_click` | _(none, manifest only)_ | Close when clicking outside (default `true`; requires `plugin_api = 8`) |
 
 Declare defaults on the `[[panel]]` table; users override through the plugin settings GUI or
 `[plugin_settings."author/plugin"]`. Position and open-near-click follow the same rules as built-in panels (pinned
