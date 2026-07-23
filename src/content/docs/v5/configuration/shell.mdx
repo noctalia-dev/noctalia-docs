@@ -246,6 +246,13 @@ encrypted files. Restore the original key to reopen them. If the configured file
 history and the calendar event cache remain session-only; after provisioning the correct file, use the relevant Retry
 action in Settings.
 
+When the original key cannot be restored, or saved data is damaged, Settings also offers **Recover Private Storage**.
+The first click arms a confirmation and the second permanently removes both saved clipboard history and the calendar
+event cache. With `key_source = "secret-service"`, Noctalia then replaces the shared master key. With
+`key_source = "file"`, the configured file remains authoritative and is never edited or deleted; recovery simply
+reopens storage using its current contents. Retry with the correct key before resetting if the saved data is still
+needed.
+
 ### App icon colorization
 
 When `app_icon_colorize = true`, Noctalia recolors **application bitmap icons** (desktop/tray pixmaps and file-backed icons) so they follow the active palette:

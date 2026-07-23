@@ -94,6 +94,9 @@ The file format and generation instructions are documented under
 live calendar sync continues but events are not read from or written to disk. A legacy plaintext `events.json` is
 deleted only after its contents have been parsed and an authenticated encrypted replacement has been written
 successfully. Missing or incorrect keys preserve existing files and surface a retry action in Settings.
+If the original key cannot be restored, or the cache is damaged, **Recover Private Storage** provides a confirmed
+reset. Because clipboard and calendar storage share one master key, this reset also removes saved clipboard history.
+A configured storage key file is never modified.
 
 ## CalDAV setup
 
