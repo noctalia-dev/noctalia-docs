@@ -145,6 +145,7 @@ Where Noctalia keeps everything, by purpose:
 | GUI overrides | `~/.local/state/noctalia/settings.toml` | written by Settings; wins over your config |
 | Internal UI state | `~/.local/state/noctalia/state.toml` | app-managed non-secret state and last-used values |
 | Calendar credentials | Desktop Secret Service or an explicit CalDAV password file | CalDAV passwords and Google refresh tokens |
+| Clipboard encryption key | Desktop Secret Service or an explicit key file | opens encrypted clipboard history |
 | Custom palettes | `~/.config/noctalia/palettes/` | your own color palette files |
 | Local plugins | `~/.local/share/noctalia/plugins/` | plugins you install or place by hand |
 | Plugin source repos | `~/.local/state/noctalia/plugins/sources/` | git-source repo caches, re-fetchable |
@@ -156,8 +157,9 @@ It comes down to **three storage owners**:
 - **Yours** - `~/.config/noctalia/` (settings you write) and `~/.local/share/noctalia/` (plugins you install).
 - **Noctalia's** - `~/.local/state/noctalia/` (GUI overrides, UI state, plugin repo caches, exported plugin files, and
   downloaded catalogs).
-- **Credential provider's** - durable calendar credentials managed by Secret Service, or CalDAV password files managed
-  by an external provisioner such as agenix. Deleting Noctalia's state directory does not remove them.
+- **Credential provider's** - durable calendar credentials and the clipboard encryption key managed by Secret Service,
+  or explicit credential/key files managed by an external provisioner such as agenix. Deleting Noctalia's state
+  directory does not remove them.
 
 Every path honors the standard `XDG_CONFIG_HOME` / `XDG_STATE_HOME` / `XDG_DATA_HOME` variables (and the
 `NOCTALIA_CONFIG_HOME` / `NOCTALIA_STATE_HOME` / `NOCTALIA_DATA_HOME` overrides).
