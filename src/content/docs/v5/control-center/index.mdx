@@ -112,6 +112,25 @@ Weather configuration is documented under [Weather](/v5/services/weather/).
 
 The Calendar tab shows the month view and events from configured calendar accounts. Calendar accounts and sync behavior are documented under [Calendar](/v5/services/calendar/).
 
+`[control_center.calendar]` holds how the tab is drawn; `[calendar]` holds whether events are synced at all.
+
+```toml
+[control_center.calendar]
+show_events_card  = true
+show_week_numbers = false       # ISO 8601 week numbers in the month grid
+event_date_format = "%A %e %B"  # date heading above the event list
+event_time_format = "%H:%M"     # per-event start time
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `show_events_card` | bool | `true` | Show the event list beside the month grid. Also toggled from the calendar button in the tab header. |
+| `show_week_numbers` | bool | `false` | Show a column of ISO 8601 week numbers to the left of the month grid, separated from it by a divider. Each row is numbered by the week its Thursday falls in. |
+| `event_date_format` | string | `"%A %e %B"` | strftime format for the date heading above the event list. |
+| `event_time_format` | string | `"%H:%M"` | strftime format for each event's start time. All-day events show an "All day" label instead. |
+
+Week numbers are a decoration of the month grid, so they work with `[calendar].enabled = false` and no accounts configured. The other three options only have visible effect once events are syncing.
+
 ## Notifications
 
 The Notifications tab shows notification history and notification actions, including Do Not Disturb. Notification daemon and history behavior are documented under [Notifications](/v5/services/notifications/).
