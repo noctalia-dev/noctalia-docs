@@ -308,7 +308,7 @@ sudo apt install noctalia
 ```
 
 :::note
-The APT repository provides `amd64` packages only.
+The APT repository provides `amd64` and `arm64` packages only.
 :::
 
 ---
@@ -350,21 +350,21 @@ If you prefer to install Noctalia locally or want more control over the installa
   </TabItem>
   <TabItem label="Debian/Ubuntu">
     ```bash
-    sudo apt install meson g++ just \
-      libwayland-dev wayland-protocols \
-      libegl-dev libgles-dev \
-      libfreetype-dev libfontconfig-dev \
-      libcairo2-dev libpango1.0-dev \
-      libxkbcommon-dev libglib2.0-dev \
-      libsdbus-c++-dev libpipewire-0.3-dev libwireplumber-0.5-dev \
-      libpam0g-dev libpolkit-agent-1-dev libpolkit-gobject-1-dev \
-      libcurl4-gnutls-dev libwebp-dev librsvg2-dev
+    sudo apt install just meson libwayland-dev
+      wayland-protocols libfreetype-dev libfontconfig-dev \
+      libcairo2-dev libpango1.0-dev librsvg2-dev libxkbcommon-dev \
+      libepoxy-dev libgles-dev libwebp-dev libcurl4-gnutls-dev \
+      libmd4c-dev nlohmann-json3-dev libsdbus-c++-dev libsecret-1-dev \
+      libsodium-dev libstb-dev libtomlplusplus-dev \
+      libpipewire-0.3-dev libpam0g-dev libpolkit-agent-1-dev \
+      libpolkit-gobject-1-dev libqalculate-dev libwireplumber-0.5-dev \
+      libxml2-dev libjemalloc-dev git
     ```
   </TabItem>
 </Tabs>
 
 Vendored dependencies, with no system package needed: `Wuffs`, `nanosvg`,
-`nlohmann/json`, `Luau`, `dr_wav`, `fzy`, `stb_image_resize2`, and Material Color Utilities.
+`Luau`, `dr_wav`, `fzy`, and Material Color Utilities.
 
 Dependencies that are vendored by default, with a meson option to instead use the system package: `tomlplusplus`
 
