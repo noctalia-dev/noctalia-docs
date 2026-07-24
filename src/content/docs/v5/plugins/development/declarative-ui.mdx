@@ -201,6 +201,33 @@ Set `dismiss_on_outside_click = false` for auth-style prompts (password / API ke
 the panel; the default is `true`. Requires `plugin_api = 8`. Escape and an explicit Close / Cancel control still
 dismiss it.
 
+### Keyboard focus
+
+By default a panel takes keyboard focus when the user clicks it (`keyboard_focus = "on_demand"`), and
+`"exclusive"` takes it as soon as the panel opens - what a search or password field needs. Both only decide the
+*initial* focus, and only on compositors without focus-grab support; on the others the panel settles on
+on-demand focus shortly after opening either way.
+
+`keyboard_focus = "none"` is different in kind: the panel **never** takes keyboard focus, not even when clicked,
+so the window the user is typing into keeps it. That is what an on-screen keyboard, a macro pad, or any panel
+that drives another application needs. Because outside-click dismissal works by either covering the screen with a
+click catcher or grabbing focus, and neither is compatible with never touching focus, `keyboard_focus = "none"`
+requires `dismiss_on_outside_click = false`. Requires `plugin_api = 10`.
+
+### Persistent panels
+
+Normally the shell keeps one panel open at a time: opening the control center closes yours. A panel with
+`persistent = true` lives outside that slot, so it stays on screen until an explicit toggle, `panel.close()`, or
+`noctalia ipc panel-close <id>` dismisses it. Several persistent panels can be open at once, alongside a normal
+panel. Requires `plugin_api = 11`.
+
+Persistent panels trade away the features that only make sense for a transient pop-up:
+
+- always floating, so `placement` is neither read nor offered as a setting (`position` still applies)
+- no outside-click dismissal, so `dismiss_on_outside_click = false` is required
+- `keyboard_focus = "exclusive"` is rejected: a surface that is never dismissed would hold the keyboard forever
+- no `ui.select` dropdowns or context menus inside the panel yet
+
 **Placement** matches built-in shell panels (`attached` merges with the bar, `floating` opens detached). The host
 injects three standard settings for every `[[panel]]` entry - you do **not** declare them as `[[panel.setting]]` unless
 you need a custom key. They appear in **Settings → Plugins** (gear on the plugin row) with the same controls as built-in
@@ -213,6 +240,8 @@ Click**.
 | `position` | `<entry>_position` | `auto`, `center`, or a screen anchor; only applies when floating |
 | `open_near_click` | `<entry>_open_near_click` | Open near the bar widget that toggled the panel (default `false`) |
 | `dismiss_on_outside_click` | _(none, manifest only)_ | Close when clicking outside (default `true`; requires `plugin_api = 8`) |
+| `keyboard_focus` | _(none, manifest only)_ | `on_demand` (default), `exclusive`, or `none` (requires `plugin_api = 10`) |
+| `persistent` | _(none, manifest only)_ | Keep open when another panel opens (requires `plugin_api = 11`) |
 
 Declare defaults on the `[[panel]]` table; users override through the plugin settings GUI or
 `[plugin_settings."author/plugin"]`. Position and open-near-click follow the same rules as built-in panels (pinned
@@ -230,6 +259,20 @@ height = 410
 placement = "floating"
 position = "center"
 open_near_click = false
+```
+
+An on-screen keyboard, which needs every one of the options above:
+
+```toml
+[[panel]]
+id = "keys"
+entry = "keys.luau"
+width = "fill"
+height = 240
+position = "bottom_center"
+keyboard_focus = "none"
+dismiss_on_outside_click = false
+persistent = true
 ```
 
 ```toml
