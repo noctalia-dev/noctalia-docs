@@ -6,6 +6,8 @@ sidebar:
   order: 5
 ---
 
+import PluginApiBadge from '../../../../../components/PluginApiBadge.astro';
+
 :::caution[Beta - APIs may still change]
 The plugin system is in **beta**. The manifest format and APIs may still change before v5 is stable, so build with that in mind.
 :::
@@ -77,12 +79,70 @@ cache results keyed by app id instead of resolving on every `update()`.
 |--------|---------|-------------|
 | `noctalia.formatTime(pattern)` | string | Formats the current local time with the same tokens as Noctalia clock and filename settings. |
 | `noctalia.formatTime(pattern, unixSeconds)` | string | Formats a specific Unix timestamp in local time. |
+| `noctalia.nowMs()` | number | Wall-clock milliseconds since the Unix epoch. Requires <PluginApiBadge feature="system-stats" />. |
 | `noctalia.notify(title, body)` | nothing | Shows an informational notification. `body` is optional. |
 | `noctalia.notifyError(title, body)` | nothing | Shows an error notification. `body` is optional. |
 | `noctalia.copyToClipboard(text, mime)` | bool | Copies text to the clipboard with an explicit MIME type, for example `"text/plain"` or `"text/uri-list"`. |
 | `noctalia.clipboardText()` | string or `nil` | Latest text clipboard content (`nil` when empty or non-text). |
 
 `%s` in `formatTime()` expands to Unix epoch seconds.
+
+`formatTime()` and Luau's own `os.time()` are both whole-second. `nowMs()` is the only way to see sub-second time, for
+example to phase an entry's updates onto a second boundary.
+
+## System stats
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `noctalia.systemStats()` | table or `nil` | Snapshot of the host's system monitor. `nil` when `[system.monitor]` is disabled. Requires <PluginApiBadge feature="system-stats" />. |
+| `noctalia.cpuCores()` | array or `nil` | Per-core CPU usage percentages. `nil` when the monitor is disabled or no sample is ready yet. Requires <PluginApiBadge feature="system-stats" />. |
+
+`systemStats()` returns a copy of the host's most recent sample. It never enables a metric the host was not already
+collecting, so reading it costs nothing beyond the copy.
+
+```lua
+local stats = noctalia.systemStats()
+if stats ~= nil then
+  noctalia.log(string.format("cpu %.0f%% ram %.0f%%", stats.cpu.usagePercent, stats.ram.usagePercent))
+end
+```
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `cpu.usagePercent` | number | Aggregate CPU busy percentage, 0-100. |
+| `cpu.tempC` | number | Absent when no CPU temperature sensor was found. |
+| `ram.usagePercent`, `ram.usedMb`, `ram.totalMb` | number | |
+| `swap.usedMb`, `swap.totalMb` | number | |
+| `gpu.tempC`, `gpu.usagePercent`, `gpu.vramUsedBytes`, `gpu.vramTotalBytes` | number | Each is absent when that GPU probe is unavailable. |
+| `net.rxBytesPerSec`, `net.txBytesPerSec` | number | Totalled across interfaces. |
+| `loadAvg` | array | The 1, 5, and 15 minute load averages. |
+
+Absent sensors are `nil` rather than `0`, so a plugin can tell "no probe" from "idle". Test with
+`if stats.gpu.tempC ~= nil then` before using an optional field.
+
+Values refresh on the poll intervals configured in [`[system.monitor]`](/v5/services/system-monitor/), CPU every 2
+seconds by default, not on every call. Calling `systemStats()` more often than that returns the same sample again.
+
+### Per-core CPU usage
+
+```lua
+local cores = noctalia.cpuCores()
+if cores ~= nil then
+  for i, usage in ipairs(cores) do
+    noctalia.log(string.format("core %d: %.0f%%", i, usage))
+  end
+end
+```
+
+The first call opts the plugin into per-core sampling, which costs one extra `/proc/stat` read per second for as long as
+the plugin stays loaded. `systemStats()` on its own does not, so only call `cpuCores()` if you actually draw per-core
+data. Sampling runs on a fixed 1 second cadence, independent of `cpu_poll_seconds`.
+
+Two reads are needed to produce the first result, so expect `nil` for up to a second after the first call. Treat `nil`
+as "not ready yet" rather than "this machine has no cores".
+
+Cores are in `/proc/stat` order. Offline cores are absent from that file, so the array length can change between calls,
+and an entry's position is not necessarily its core id.
 
 ## Subprocesses and environment
 
@@ -178,7 +238,7 @@ if raw then myTable = noctalia.json.decode(raw) end
 }
 ```
 
-`allow_insecure_tls` requires plugin API 7. When true, it disables certificate-chain and hostname verification for
+`allow_insecure_tls` requires <PluginApiBadge feature="allow-insecure-tls" />. When true, it disables certificate-chain and hostname verification for
 the request, including any HTTPS redirects. Keep it false unless the endpoint is explicitly trusted and cannot use a
 publicly trusted certificate. The option applies to both `http()` and `httpStream()` and does not disable HTTPS proxy
 certificate verification.
@@ -197,7 +257,7 @@ Only `url` is required. `http()` calls `cb(response)` once with:
 
 ### Streaming requests
 
-`httpStream()` (plugin API 4) keeps the connection open and delivers the response body incrementally - use it for
+`httpStream()` (<PluginApiBadge feature="http-stream" />) keeps the connection open and delivers the response body incrementally - use it for
 server-sent events or any line-oriented streaming endpoint. Because headers travel through the native HTTP client,
 credentials such as an `Authorization: Bearer ...` header never appear in a process command line, unlike a spawned
 `curl`.

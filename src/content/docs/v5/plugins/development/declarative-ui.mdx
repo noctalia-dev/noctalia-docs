@@ -6,6 +6,8 @@ sidebar:
   order: 4
 ---
 
+import PluginApiBadge from '../../../../../components/PluginApiBadge.astro';
+
 :::caution[Beta - APIs may still change]
 The plugin system is in **beta**. The manifest format and APIs may still change before v5 is stable, so build with that in mind.
 :::
@@ -86,7 +88,7 @@ prop is logged and skipped - typos surface in the log instead of failing silentl
   with `ui.glyph`'s numeric `size`, which is a glyph size in px.)
 - **Tooltips**: `ui.button` accepts a `tooltip` string, shown on hover. Dropping the prop on a later render clears it.
   Tooltips appear for buttons in bar widgets and panels; desktop widgets do not show them.
-- **Callbacks**: a callback prop takes either a **function** (requires `plugin_api = 9`) or the **name of a global
+- **Callbacks**: a callback prop takes either a **function** (requires <PluginApiBadge feature="ui-callback-closures" />) or the **name of a global
   function in your script**. `onClick` fires on a button click; `onChange` fires when a toggle/slider/select/input value
   changes (the value is passed as a string - `"true"`/`"false"` for a toggle, a number for a slider, the text for an
   input, the index for a select); `onSubmit` fires when the user presses Enter in an input.
@@ -198,7 +200,7 @@ zone (bars, docks, third-party clients), so a `height = "fill"` panel sits exact
 full-available rather than a broken surface.
 
 Set `dismiss_on_outside_click = false` for auth-style prompts (password / API key) so a misclick does not discard
-the panel; the default is `true`. Requires `plugin_api = 8`. Escape and an explicit Close / Cancel control still
+the panel; the default is `true`. Requires <PluginApiBadge feature="dismiss-on-outside-click" />. Escape and an explicit Close / Cancel control still
 dismiss it.
 
 ### Keyboard focus
@@ -212,14 +214,14 @@ on-demand focus shortly after opening either way.
 so the window the user is typing into keeps it. That is what an on-screen keyboard, a macro pad, or any panel
 that drives another application needs. Because outside-click dismissal works by either covering the screen with a
 click catcher or grabbing focus, and neither is compatible with never touching focus, `keyboard_focus = "none"`
-requires `dismiss_on_outside_click = false`. Requires `plugin_api = 10`.
+requires `dismiss_on_outside_click = false`. Requires <PluginApiBadge feature="keyboard-focus" />.
 
 ### Persistent panels
 
 Normally the shell keeps one panel open at a time: opening the control center closes yours. A panel with
 `persistent = true` lives outside that slot, so it stays on screen until an explicit toggle, `panel.close()`, or
 `noctalia ipc panel-close <id>` dismisses it. Several persistent panels can be open at once, alongside a normal
-panel. Requires `plugin_api = 11`.
+panel. Requires <PluginApiBadge feature="persistent-panel" />.
 
 Persistent panels trade away the features that only make sense for a transient pop-up:
 
@@ -239,9 +241,9 @@ Click**.
 | `placement` | `<entry>_placement` | `attached` or `floating` (default `floating`) |
 | `position` | `<entry>_position` | `auto`, `center`, or a screen anchor; only applies when floating |
 | `open_near_click` | `<entry>_open_near_click` | Open near the bar widget that toggled the panel (default `false`) |
-| `dismiss_on_outside_click` | _(none, manifest only)_ | Close when clicking outside (default `true`; requires `plugin_api = 8`) |
-| `keyboard_focus` | _(none, manifest only)_ | `on_demand` (default), `exclusive`, or `none` (requires `plugin_api = 10`) |
-| `persistent` | _(none, manifest only)_ | Keep open when another panel opens (requires `plugin_api = 11`) |
+| `dismiss_on_outside_click` | _(none, manifest only)_ | Close when clicking outside (default `true`; requires <PluginApiBadge feature="dismiss-on-outside-click" />) |
+| `keyboard_focus` | _(none, manifest only)_ | `on_demand` (default), `exclusive`, or `none` (requires <PluginApiBadge feature="keyboard-focus" />) |
+| `persistent` | _(none, manifest only)_ | Keep open when another panel opens (requires <PluginApiBadge feature="persistent-panel" />) |
 
 Declare defaults on the `[[panel]]` table; users override through the plugin settings GUI or
 `[plugin_settings."author/plugin"]`. Position and open-near-click follow the same rules as built-in panels (pinned
@@ -313,7 +315,7 @@ download + apply via `noctalia.wallpaperDirectory()` and `noctalia.setWallpaper(
 ## Drag and drop (panels only) {#drag-and-drop-panels-only}
 
 Panels can offer pointer drag and drop for reorderable lists, kanban-style groups, and cross-container moves
-(requires `plugin_api = 5`). The host owns the whole interaction - pointer capture, hit testing, the drag ghost,
+(requires <PluginApiBadge feature="drag-and-drop" />). The host owns the whole interaction - pointer capture, hit testing, the drag ghost,
 target highlighting, and cursor changes - and the plugin receives **one callback after a completed drop**. The plugin
 owns its data: mutate the model in the callback and re-render. Nothing moves by itself.
 

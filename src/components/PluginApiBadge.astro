@@ -1,0 +1,14 @@
+---
+// Inline "plugin_api = N" marker resolved from a feature key, so it can never disagree with the
+// ledger in PluginApiTable. The surrounding prose supplies the verb ("Requires", "requires").
+import { pluginApiLevelFor } from '../data/plugin-api';
+
+interface Props {
+  feature: string;
+}
+
+const { feature } = Astro.props;
+const { level } = pluginApiLevelFor(feature);
+---
+
+<code>plugin_api = {level}</code>

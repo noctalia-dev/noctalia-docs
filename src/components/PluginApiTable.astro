@@ -1,0 +1,34 @@
+---
+// The plugin API ledger, rendered from src/data/plugin-api.ts.
+import { PLUGIN_API_LEVELS } from '../data/plugin-api';
+
+// `introduced` carries markdown inline code so the data file stays readable and holds no raw HTML.
+// Escape first, then convert backtick pairs.
+function renderInlineCode(text: string): string {
+  const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return escaped.replace(/`([^`]+)`/g, '<code>$1</code>');
+}
+---
+
+<table>
+  <thead>
+    <tr>
+      <th>Plugin API</th>
+      <th>Noctalia version</th>
+      <th>Introduced</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      PLUGIN_API_LEVELS.map((entry) => (
+        <tr>
+          <td>
+            <code>{entry.level}</code>
+          </td>
+          <td>{entry.noctaliaVersion === null ? 'Unreleased' : <code>{entry.noctaliaVersion}</code>}</td>
+          <td set:html={renderInlineCode(entry.introduced)} />
+        </tr>
+      ))
+    }
+  </tbody>
+</table>

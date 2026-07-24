@@ -1,0 +1,105 @@
+/**
+ * Single source of truth for plugin API levels.
+ *
+ * Adding a level means adding one entry here. The ledger table, the supported-range prose, and
+ * every inline "requires plugin_api = N" marker all derive from this array, so they cannot drift
+ * apart. Render them with <PluginApiTable />, <PluginApiRange /> and <PluginApiBadge />.
+ *
+ * `kOldestSupportedPluginApiVersion` and `kCurrentPluginApiVersion` in the shell's
+ * src/scripting/plugin_api.h are the runtime authority; keep OLDEST_SUPPORTED_PLUGIN_API and the
+ * highest level here in step with them.
+ */
+
+export interface PluginApiLevel {
+  /** The `plugin_api` value a manifest declares. */
+  level: number;
+  /** Noctalia release that first shipped this level, or null while it is unreleased. */
+  noctaliaVersion: string | null;
+  /**
+   * Stable key a page passes to <PluginApiBadge feature="..." />. Mirrors the matching
+   * k<Feature>PluginApiVersion constant in plugin_api.h where one exists.
+   */
+  feature: string;
+  /** What the level introduced, for the ledger table. Backticks render as inline code. */
+  introduced: string;
+}
+
+export const OLDEST_SUPPORTED_PLUGIN_API = 3;
+
+export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
+  {
+    level: 3,
+    noctaliaVersion: 'v5.0.0-beta.3',
+    feature: 'api-declaration',
+    introduced: 'Mandatory `plugin_api` compatibility declaration, replacing `min_noctalia`.',
+  },
+  {
+    level: 4,
+    noctaliaVersion: 'v5.0.0-beta.4',
+    feature: 'http-stream',
+    introduced: '`noctalia.httpStream()` for streaming HTTP responses.',
+  },
+  {
+    level: 5,
+    noctaliaVersion: 'v5.0.0-beta.4',
+    feature: 'drag-and-drop',
+    introduced: '`ui.dragSource()` and `ui.dropZone()` for declarative panel drag and drop.',
+  },
+  {
+    level: 6,
+    noctaliaVersion: 'v5.0.0-beta.4',
+    feature: 'string-map-setting',
+    introduced: 'The `string_map` plugin setting type.',
+  },
+  {
+    level: 7,
+    noctaliaVersion: 'v5.0.0-beta.4',
+    feature: 'allow-insecure-tls',
+    introduced: 'The `allow_insecure_tls` HTTP request option.',
+  },
+  {
+    level: 8,
+    noctaliaVersion: 'v5.0.0-beta.4',
+    feature: 'dismiss-on-outside-click',
+    introduced: 'The `dismiss_on_outside_click` panel entry option.',
+  },
+  {
+    level: 9,
+    noctaliaVersion: null,
+    feature: 'ui-callback-closures',
+    introduced: 'Luau closures directly in UI tree callback props.',
+  },
+  {
+    level: 10,
+    noctaliaVersion: null,
+    feature: 'keyboard-focus',
+    introduced: 'The `keyboard_focus` panel entry option.',
+  },
+  {
+    level: 11,
+    noctaliaVersion: null,
+    feature: 'persistent-panel',
+    introduced: 'The `persistent` panel entry option.',
+  },
+  {
+    level: 12,
+    noctaliaVersion: null,
+    feature: 'system-stats',
+    introduced: '`noctalia.systemStats()`, `noctalia.cpuCores()`, and `noctalia.nowMs()`.',
+  },
+];
+
+export const CURRENT_PLUGIN_API = Math.max(...PLUGIN_API_LEVELS.map((entry) => entry.level));
+
+/**
+ * Resolves a feature key to its level. Throws on an unknown key so a typo fails the build instead
+ * of rendering a silently wrong or empty version marker.
+ */
+export function pluginApiLevelFor(feature: string): PluginApiLevel {
+  const match = PLUGIN_API_LEVELS.find((entry) => entry.feature === feature);
+  if (match === undefined) {
+    const known = PLUGIN_API_LEVELS.map((entry) => entry.feature).join(', ');
+    throw new Error(`Unknown plugin API feature key "${feature}". Known keys: ${known}.`);
+  }
+  return match;
+}
