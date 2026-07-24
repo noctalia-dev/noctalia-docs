@@ -86,13 +86,29 @@ prop is logged and skipped - typos surface in the log instead of failing silentl
   with `ui.glyph`'s numeric `size`, which is a glyph size in px.)
 - **Tooltips**: `ui.button` accepts a `tooltip` string, shown on hover. Dropping the prop on a later render clears it.
   Tooltips appear for buttons in bar widgets and panels; desktop widgets do not show them.
-- **Callbacks**: a callback prop names a **global function in your script** (not a closure). `onClick = "name"` fires on
-  a button click; `onChange = "name"` fires when a toggle/slider/select/input value changes (the value is passed to the
-  global as a string - `"true"`/`"false"` for a toggle, a number for a slider, the text for an input, the index for a
-  select); `onSubmit` fires when the user presses Enter in an input.
+- **Callbacks**: a callback prop takes either a **function** (requires `plugin_api = 9`) or the **name of a global
+  function in your script**. `onClick` fires on a button click; `onChange` fires when a toggle/slider/select/input value
+  changes (the value is passed as a string - `"true"`/`"false"` for a toggle, a number for a slider, the text for an
+  input, the index for a select); `onSubmit` fires when the user presses Enter in an input.
+- **Closures**: a function callback captures the surrounding scope, which is the simplest way to tell rows of a list
+  apart - each row's handler already knows which row it belongs to:
+  ```lua
+  for index, task in ipairs(tasks) do
+    table.insert(rows, ui.button({
+      key = task.id,
+      text = task.title,
+      onClick = function() completeTask(index) end,
+    }))
+  end
+  ```
+  Handlers belong to the render that produced them: re-rendering replaces them, and a click on a node the current tree
+  no longer contains does nothing. Give repeated nodes a `key` so their handlers survive a re-render unchanged, the
+  same identity keys already give the reconciler. A function callback receives the same string arguments a named one
+  does, so `onChange = function(value) ... end` still reads `"true"`/`"false"` for a toggle.
 - **Hover**: `onHover = "name"` fires on pointer enter and leave for `ui.row`, `ui.column`, `ui.box`, `ui.image`, and
-  `ui.button`. The global receives two strings: the state (`"true"` on enter, `"false"` on leave) and the node's `key`
-  (empty when the node has none), so a single handler can serve a whole keyed list:
+  `ui.button`. The handler receives two strings: the state (`"true"` on enter, `"false"` on leave) and the node's `key`
+  (empty when the node has none), so a single named handler can serve a whole keyed list (a closure captures the row it
+  belongs to instead):
   ```lua
   -- track which chip is hovered, then re-render the tree
   function onChipHover(state, key)
@@ -185,6 +201,33 @@ Set `dismiss_on_outside_click = false` for auth-style prompts (password / API ke
 the panel; the default is `true`. Requires `plugin_api = 8`. Escape and an explicit Close / Cancel control still
 dismiss it.
 
+### Keyboard focus
+
+By default a panel takes keyboard focus when the user clicks it (`keyboard_focus = "on_demand"`), and
+`"exclusive"` takes it as soon as the panel opens - what a search or password field needs. Both only decide the
+*initial* focus, and only on compositors without focus-grab support; on the others the panel settles on
+on-demand focus shortly after opening either way.
+
+`keyboard_focus = "none"` is different in kind: the panel **never** takes keyboard focus, not even when clicked,
+so the window the user is typing into keeps it. That is what an on-screen keyboard, a macro pad, or any panel
+that drives another application needs. Because outside-click dismissal works by either covering the screen with a
+click catcher or grabbing focus, and neither is compatible with never touching focus, `keyboard_focus = "none"`
+requires `dismiss_on_outside_click = false`. Requires `plugin_api = 10`.
+
+### Persistent panels
+
+Normally the shell keeps one panel open at a time: opening the control center closes yours. A panel with
+`persistent = true` lives outside that slot, so it stays on screen until an explicit toggle, `panel.close()`, or
+`noctalia ipc panel-close <id>` dismisses it. Several persistent panels can be open at once, alongside a normal
+panel. Requires `plugin_api = 11`.
+
+Persistent panels trade away the features that only make sense for a transient pop-up:
+
+- always floating, so `placement` is neither read nor offered as a setting (`position` still applies)
+- no outside-click dismissal, so `dismiss_on_outside_click = false` is required
+- `keyboard_focus = "exclusive"` is rejected: a surface that is never dismissed would hold the keyboard forever
+- no `ui.select` dropdowns or context menus inside the panel yet
+
 **Placement** matches built-in shell panels (`attached` merges with the bar, `floating` opens detached). The host
 injects three standard settings for every `[[panel]]` entry - you do **not** declare them as `[[panel.setting]]` unless
 you need a custom key. They appear in **Settings → Plugins** (gear on the plugin row) with the same controls as built-in
@@ -197,6 +240,8 @@ Click**.
 | `position` | `<entry>_position` | `auto`, `center`, or a screen anchor; only applies when floating |
 | `open_near_click` | `<entry>_open_near_click` | Open near the bar widget that toggled the panel (default `false`) |
 | `dismiss_on_outside_click` | _(none, manifest only)_ | Close when clicking outside (default `true`; requires `plugin_api = 8`) |
+| `keyboard_focus` | _(none, manifest only)_ | `on_demand` (default), `exclusive`, or `none` (requires `plugin_api = 10`) |
+| `persistent` | _(none, manifest only)_ | Keep open when another panel opens (requires `plugin_api = 11`) |
 
 Declare defaults on the `[[panel]]` table; users override through the plugin settings GUI or
 `[plugin_settings."author/plugin"]`. Position and open-near-click follow the same rules as built-in panels (pinned
@@ -214,6 +259,20 @@ height = 410
 placement = "floating"
 position = "center"
 open_near_click = false
+```
+
+An on-screen keyboard, which needs every one of the options above:
+
+```toml
+[[panel]]
+id = "keys"
+entry = "keys.luau"
+width = "fill"
+height = 240
+position = "bottom_center"
+keyboard_focus = "none"
+dismiss_on_outside_click = false
+persistent = true
 ```
 
 ```toml
@@ -264,7 +323,7 @@ container that accepts drops. Both take the common layout props of a column/row 
 | Constructor | Props |
 |-------------|-------|
 | `ui.dragSource` | `dragType` (**required** string, matched against `accepts`), `payload` (**required** opaque string, first callback argument), `enabled`, `tooltip`, `previewAncestor` (int 0-8: how many parent levels the ghost shows; `1` previews the row around a grip), `liftFromLayout` (bool: remove the previewed row from layout while dragging - pair with `expandOnDrag` insertion zones) |
-| `ui.dropZone` | `accepts` (**required** array of drag types; `{}` accepts nothing), `value` (**required** opaque string, second callback argument), `onDrop` (**required** global callback name), `direction` (`column`/`row`), `enabled`, `expandOnDrag` (bool: a fixed-height zone animates to the dragged row's height while targeted), `hitSlop` (number: extra drag-only hit distance around the zone, without changing layout or normal clicks) |
+| `ui.dropZone` | `accepts` (**required** array of drag types; `{}` accepts nothing), `value` (**required** opaque string, second callback argument), `onDrop` (**required** callback), `direction` (`column`/`row`), `enabled`, `expandOnDrag` (bool: a fixed-height zone animates to the dragged row's height while targeted), `hitSlop` (number: extra drag-only hit distance around the zone, without changing layout or normal clicks) |
 
 A press becomes a drag only after a small movement threshold, so clicks on controls inside a dragged row still work.
 While dragging, the source dims (or lifts out of layout), a ghost of the previewed subtree follows the pointer, and

@@ -1,0 +1,29 @@
+---
+title: Plugin API Versions
+description: See which plugin capabilities each API level introduced and which Noctalia version first shipped them.
+sidebar:
+  label: Plugin API Versions
+  order: 6
+---
+
+:::caution[Beta - APIs may still change]
+The plugin system is in **beta**. The manifest format and APIs may still change before v5 is stable, so build with that in mind.
+:::
+
+Every plugin declares the oldest API level it requires with `plugin_api` in `plugin.toml`. API levels are cumulative:
+use the oldest level that includes every capability your plugin needs to keep it compatible with as many Noctalia
+versions as possible.
+
+| Plugin API | Noctalia version | Introduced |
+| --- | --- | --- |
+| `3` | `v5.0.0-beta.3` | Mandatory `plugin_api` compatibility declaration, replacing `min_noctalia`. |
+| `4` | `v5.0.0-beta.4` | `noctalia.httpStream()` for streaming HTTP responses. |
+| `5` | `v5.0.0-beta.4` | `ui.dragSource()` and `ui.dropZone()` for declarative panel drag and drop. |
+| `6` | `v5.0.0-beta.4` | The `string_map` plugin setting type. |
+| `7` | `v5.0.0-beta.4` | The `allow_insecure_tls` HTTP request option. |
+| `8` | `v5.0.0-beta.4` | The `dismiss_on_outside_click` panel entry option. |
+| `9` | Unreleased | Luau closures directly in UI tree callback props. |
+| `10` | Unreleased | The `keyboard_focus` panel entry option. |
+| `11` | Unreleased | The `persistent` panel entry option. |
+
+Noctalia currently supports plugin API levels 3 through 11. A plugin declaring an older or newer level is rejected.

@@ -610,11 +610,14 @@ Render from a precomputed theme JSON:
 noctalia theme --theme-json theme.json -r input.txt:output.txt
 ```
 
-Process a TOML config:
+Combine both: `-c` and `-r` can be used in the same command. The config's
+`[config.custom_colors]` are loaded first, so the `-r` templates can reference them:
 
 ```sh
-noctalia theme <image> -c templates.toml
+noctalia theme <image> -c templates.toml -r input.txt:output.txt
 ```
+
+The `-r` files are rendered first, then the templates declared in the config.
 
 Set the default template mode:
 

@@ -18,6 +18,10 @@ sidebar:
 Global UI settings that apply across all shell surfaces.
 
 ```toml
+[storage]
+key_source = "secret-service" # secret-service | file
+key_file   = ""               # absolute path; required only when key_source = "file"
+
 [shell]
 corner_radius_scale   = 1.0             # 0 = square, 1 = default, 2 = extra rounded
 button_borders        = true            # draw outlines around buttons throughout the shell
@@ -52,10 +56,6 @@ clipboard_auto_paste  = "auto"          # off | auto | ctrl_v | ctrl_shift_v | s
 clipboard_image_action_command = ""     # image clipboard action; e.g. "gimp {path}" or "satty -f -"
 shared_gl_context     = true            # startup-only; share GPU textures across surfaces
 disable_mipmaps       = false           # startup-only; disable texture mipmaps if downscaled icons/wallpaper show GPU artifacts
-
-[shell.clipboard_storage]
-key_source = "secret-service" # secret-service | file
-key_file   = ""               # absolute path; required only when key_source = "file"
 
 [shell.animation]
 enabled = true
@@ -95,8 +95,8 @@ provider_prefix = "/"    # common prefix character for provider trigger words (e
 auto_paste      = "auto" # off | auto | ctrl_v | ctrl_shift_v | shift_insert (after copy activations)
 
 [shell.launcher.providers.calculator]
-prefix = ""              # calculator has no default trigger, so it stays in global search
-global = true            # set false to only show calculator results behind a custom prefix
+prefix = "calc"          # trigger word for calculator expressions (e.g. "/calc")
+global = true            # also show calculator results in un-prefixed search
 
 [shell.launcher.providers.emoji]
 prefix = "emo"           # trigger word (triggers on provider_prefix + trigger, e.g. "/emo")
@@ -180,7 +180,7 @@ Notes:
 - `app_icon_colorize` and `app_icon_color`: global application icon tinting for the dock, system tray (bar and drawer), taskbar, active-window widget, and launcher panel results. See [App icon colorization](#app-icon-colorization). Bar `launcher` / `control-center` widgets can optionally tint `custom_image` via `custom_image_colorize` using the widget **Color** setting (Presentation group in the widget editor).
 - `lang`: empty follows `$LC_ALL`, `$LC_MESSAGES`, then `$LANG`. Values may be BCP-47 tags (`pt-BR`, `zh-Hans`) or POSIX locale names (`pt_BR.UTF-8`, `zh_CN.UTF-8`). Chinese region locales infer script before matching catalogs, so `zh_CN` and `zh_SG` match `zh-Hans`, while `zh_TW`, `zh_HK`, and `zh_MO` match `zh-Hant`.
 - `clipboard_enabled`: when `false`, disables clipboard **history** only - the history is no longer recorded or persisted, and the clipboard panel and bar/control-center shortcuts are unavailable. The live clipboard transport stays active, so basic copy/cut/paste in text fields and launcher math/emoji copy-to-clipboard actions keep working.
-- Clipboard history is encrypted at rest with a dedicated data key. The default `secret-service` source stores it through Secret Service. If the provider is unavailable or locked, history still works for the current session but is not read from or written to disk; unlock or start the provider and use **Settings → Shell → Clipboard → Retry**. Existing plaintext history is migrated only after the encrypted replacement is complete, and encrypted files are preserved if their key is missing.
+- Clipboard history is encrypted at rest with a purpose-specific key derived from the Noctalia storage master key. The default `secret-service` source stores the master key through Secret Service. If the provider is unavailable or locked, history still works for the current session but is not read from or written to disk; unlock or start the provider and use **Settings → Shell → Clipboard → Retry**. Existing plaintext history is migrated only after the encrypted replacement is complete, and encrypted files are preserved if their key is missing.
 - `clipboard_history_max_entries`: caps how many **unpinned** clipboard history rows Noctalia keeps (default `100`, range `10`–`10000`). Pinned entries stay outside this limit. Lowering the value trims older unpinned rows on reload.
 - `clipboard_confirm_clear_history`: when `true` (default), the clipboard panel asks before **Clear history** and before deleting an **unpinned** entry (trash in the preview, or double-click a row). When `false`, those actions apply immediately: sidebar clear removes unpinned rows and keeps pins when any exist, or clears everything when nothing is pinned; unpinned single deletes are immediate. **Pinned** entries still require confirmation before delete. With confirmation enabled, the clear dialog only offers **Keep pinned** when both pinned and unpinned rows exist; if history is all pinned or all unpinned, the description matches that case. Toggle in **Settings → Shell → Clipboard**.
 - `clipboard_auto_paste`: `auto` = image entries use `Ctrl+V`, text entries use `Ctrl+Shift+V`; `off` = copy only, no automatic paste.
@@ -216,7 +216,7 @@ Notes:
 - `shell.launcher.auto_paste` controls virtual-keyboard paste after copy-style activations (calculator, emoji, copy-mode dmenu). Providers that copy opt in with `supportsAutoPaste`. Same values as `shell.clipboard_auto_paste` (`off` | `auto` | `ctrl_v` | `ctrl_shift_v` | `shift_insert`). Default `auto`.
 - Reset stored launcher usage data from **Settings → Panels → Launcher → Reset Usage Data** (clears `usage_counts.json` and `recently_used.json` while Noctalia is running).
 - `shell.launcher.provider_prefix` sets the common prefix character used to trigger all provider prefixes (default `"/"`). See [Launcher: Provider prefixes](/v5/launcher/#provider-prefixes) for how prefixes, trigger words, and global search fit together.
-- `shell.launcher.providers.<name>.prefix` sets the trigger word for a specific built-in provider (`calculator`, `emoji`, `session`, `wallpaper`, `windows`; keys are matched case-insensitively). The provider is activated when typing the `provider_prefix` followed by this trigger word (e.g. `/session` or `/emo`). Setting the prefix to an empty string (`""`) falls back to the provider's built-in default trigger — it does **not** make the provider global. The `calculator` provider has no default trigger, so it stays in global search. The Applications provider cannot be prefixed and is always queryable globally.
+- `shell.launcher.providers.<name>.prefix` sets the trigger word for a specific built-in provider (`calculator`, `emoji`, `session`, `wallpaper`, `windows`; keys are matched case-insensitively). The provider is activated when typing the `provider_prefix` followed by this trigger word (e.g. `/calc`, `/session`, or `/emo`). Setting the prefix to an empty string (`""`) falls back to the provider's built-in default trigger — it does **not** make the provider global. The Applications provider cannot be prefixed and is always queryable globally.
 - `shell.launcher.providers.<name>.global` includes a prefixed provider in the un-prefixed (global) search in addition to its prefix. Unset keeps the provider's built-in default (`true` for `calculator`, `false` for the others). This replaces the removed `session_search` option.
 - `shell.launcher.dmenu.entry.<id>` defines a dmenu-style provider. Each entry runs `command` (a shell string via `/bin/sh -lc`) once per launcher session and presents its stdout lines as candidates; a tab in a line splits it into title and description. `prefix` sets the entry's trigger word, combined with `provider_prefix` like the built-in providers (e.g. `ssh` triggers on `/ssh`) — write it bare, without the prefix character. With no prefix, set `global = true` or the entry is unreachable. On activate, `exec` runs detached with `{selection}` substituted by the chosen line - when `exec` is omitted the line is copied to the clipboard instead. Entries hot-reload with the config.
 - `shell.launcher.providers."<pluginId>:<entry>"` overrides a plugin launcher provider's `prefix` and/or `global` without editing the plugin. Key the table by the plugin's fully-qualified entry id (e.g. `"author/my-plugin:search"`); the referenced plugin must be enabled. When unset, each field falls back to the value declared in the plugin's `[[launcher_provider]]` manifest entry. Unknown provider names, disabled plugins, and two providers resolving to the same prefix are reported as config warnings.
@@ -226,25 +226,32 @@ Notes:
 - **Window switcher** is an Alt+Tab-style overlay with no `[shell]` settings yet. Bind your compositor shortcut to `noctalia msg window-switcher` (see [Shell → Window switcher](/v5/ipc/shell/#window-switcher)). While open, windows appear in a centered grid (up to five columns) with application icons, titles, and a per-window close control. Tab / Shift+Tab cycle selection; arrow keys move within the grid; releasing Alt or Enter confirms; Escape cancels. The list updates live when windows open, close, or retitle while the overlay stays open.
 - **Hot corners** let you trigger actions by pushing your mouse pointer into one of the four screen corners. When `[hot_corners].enabled = true`, the shell places invisible hit areas in each corner. `delay_ms` (default `0`) is how long the pointer must stay in the corner before the action runs — raise it to reduce accidental triggers. Each corner (`top_left`, `top_right`, `bottom_left`, `bottom_right`) takes an `action`. If `action` is `"command"`, provide a shell `command` to execute. Configure under **Settings → Desktop → Hot Corners**.
 
-### Clipboard encryption key
+### Encrypted storage master key
 
-`shell.clipboard_storage.key_source = "file"` makes the configured `key_file` authoritative. Noctalia does not look up,
-create, edit, or delete a Secret Service key for clipboard storage in this mode. The path must be absolute and resolve
-to a regular file containing exactly 64 lowercase hexadecimal characters (32 random bytes), with an optional final LF.
-This works with agenix, sops-nix, and systemd credentials as long as the decrypted file is readable by the user running
-Noctalia.
+`storage.key_source = "file"` makes the configured `key_file` authoritative. Noctalia does not look up, create, edit,
+or delete a Secret Service storage key in this mode. The path must be absolute and resolve to a regular file containing
+exactly 64 lowercase hexadecimal characters (32 random bytes), with an optional final LF. This works with agenix,
+sops-nix, and systemd credentials as long as the decrypted file is readable by the user running Noctalia.
 
 Generate the key once, then encrypt that file with your provisioner:
 
 ```sh
 umask 077
-head -c 32 /dev/urandom | xxd -p -c 64 > noctalia-clipboard-key
+head -c 32 /dev/urandom | xxd -p -c 64 > noctalia-storage-key
 ```
 
-Keep this key stable. Replacing it does not rotate existing history: authentication fails, Settings reports a storage
-error, and Noctalia preserves the encrypted files. Restore the original key to reopen them. If the configured file is
-missing or invalid, clipboard history remains session-only; after provisioning the correct file, use
-**Settings → Shell → Clipboard → Retry**.
+Noctalia derives independent clipboard-history and calendar-event keys from this master key. Keep it stable. Replacing
+it does not rotate existing data: authentication fails, Settings reports storage errors, and Noctalia preserves the
+encrypted files. Restore the original key to reopen them. If the configured file is missing or invalid, clipboard
+history and the calendar event cache remain session-only; after provisioning the correct file, use the relevant Retry
+action in Settings.
+
+When the original key cannot be restored, or saved data is damaged, Settings also offers **Recover Private Storage**.
+The first click arms a confirmation and the second permanently removes both saved clipboard history and the calendar
+event cache. With `key_source = "secret-service"`, Noctalia then replaces the shared master key. With
+`key_source = "file"`, the configured file remains authoritative and is never edited or deleted; recovery simply
+reopens storage using its current contents. Retry with the correct key before resetting if the saved data is still
+needed.
 
 ### App icon colorization
 
