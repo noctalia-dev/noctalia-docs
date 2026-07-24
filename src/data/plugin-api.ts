@@ -87,6 +87,12 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     feature: 'system-stats',
     introduced: '`noctalia.systemStats()`, `noctalia.cpuCores()`, and `noctalia.nowMs()`.',
   },
+  {
+    level: 13,
+    noctaliaVersion: null,
+    feature: 'panel-capture-keys',
+    introduced: 'The `capture_keys` panel entry option and the `onKey` callback.',
+  },
 ];
 
 export const CURRENT_PLUGIN_API = Math.max(...PLUGIN_API_LEVELS.map((entry) => entry.level));

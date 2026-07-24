@@ -22,6 +22,7 @@ apply depends on the entry kind:
 | `onQuery(text)` | | | ✓ | | | | launcher text changed (behind the prefix) |
 | `onActivate(id)` | | | ✓ | | | | a launcher result was selected |
 | `onOpen(context)` / `onClose()` | | | | | ✓ | | the panel is opened / closed |
+| `onKey(chord, pressed)` | | | | | ✓ | | a `capture_keys` chord while the panel is focused ([details](/v5/plugins/development/declarative-ui/#handling-keys-directly)) |
 | `onFrameTick(deltaMs)` | | | | ✓ | | | every frame, after `desktopWidget.setNeedsFrameTick(true)` |
 | `onIpc(event, payload)` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | `noctalia msg plugin …` |
 | `onConfigChanged()` | | | | | | ✓ | a plugin setting changed (see below) |
