@@ -49,8 +49,9 @@ When `shell.launcher.app_grid` is enabled and every visible result is an applica
 
 A built-in expression evaluator powered by [`libqalculate`](https://qalculate.github.io/).
 
-- **Prefix**: None (Global).
-- **Trigger**: Automatically activates when the query contains a digit and evaluates to a result.
+- **Prefix**: `/calc ` (also available globally).
+- **Trigger**: Automatically activates in global search when the query contains a digit. The explicit `/calc` prefix
+  also accepts digit-free expressions such as `/calc EUR`.
 - **Functionality**: Standard arithmetic and functions (`sin`, `cos`, `sqrt`, `pi`, `e`, …), plus
   unit conversion (`10 cm to in`, `100 km/h to mph`), number bases (`0xff`), and currency conversion
   (`10 USD to EUR`). Pressing **Enter** copies the result to your clipboard.
