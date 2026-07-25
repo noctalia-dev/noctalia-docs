@@ -50,13 +50,17 @@ You can also turn edit mode on from **Settings → Desktop → Toggle Editor**. 
 
 | Action | Effect |
 |--------|--------|
-| Drag widget body | Move |
-| Drag outer selection ring | Rotate |
-| Drag bottom-right handle | Resize uniformly |
+| Drag widget body | Move (moves the whole multi-selection together) |
+| Drag empty desktop | Lasso-select widgets whose bounds intersect the rectangle |
+| `Ctrl` + click widget | Add/remove that widget from the selection |
+| `Ctrl` + lasso | Add intersecting widgets to the current selection |
+| Drag outer selection ring | Rotate (rotates and orbits the whole multi-selection) |
+| Drag corner handles | Resize (scales the whole multi-selection about the resize anchor) |
 | Drag toolbar handle | Reposition the editor toolbar on that output |
 | `G` | Toggle snap grid |
 | `Shift` + drag | Temporarily disable snapping |
-| `Delete` / `Backspace` | Remove selected widget |
+| `Delete` / `Backspace` | Remove selected widgets |
+| `Ctrl`+`C` / `Ctrl`+`V` | Copy / paste selection |
 | Settings inspector → **Reset to Defaults** | Restore all settings for the selected widget to built-in defaults |
 | `Escape` / click `Done` | Exit edit mode |
 
