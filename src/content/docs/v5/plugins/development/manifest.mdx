@@ -6,6 +6,9 @@ sidebar:
   order: 2
 ---
 
+import PluginApiBadge from '../../../../../components/PluginApiBadge.astro';
+import PluginApiRange from '../../../../../components/PluginApiRange.astro';
+
 :::caution[Beta - APIs may still change]
 The plugin system is in **beta**. The manifest format and APIs may still change before v5 is stable, so build with that in mind.
 :::
@@ -28,7 +31,7 @@ dependencies = ["slurp"] # optional, external tools/packages users must install
 
 `name` and `plugin_api` are required - a manifest without either is rejected. `plugin_api` is a positive integer and
 gates enable, the catalog badge, and update safety. API levels are cumulative: leave the value unchanged until the
-plugin adopts a capability introduced by a newer level. Noctalia v5 currently supports plugin APIs 3 through 9; see
+plugin adopts a capability introduced by a newer level. Noctalia v5 currently supports plugin APIs <PluginApiRange />; see
 [Plugin API Versions](/v5/plugins/development/plugin-api/) for the capability introduced by each level.
 
 `license` defaults to `MIT` when omitted. `deprecated = true` marks the plugin as deprecated in plugin listings; it is a
@@ -132,7 +135,7 @@ label = "Short"
 | `visible_when` | `{ key = "other_key", values = ["true"] }` - conditional visibility |
 | `advanced` | hide behind the "show advanced" toggle |
 
-`string_map` requires `plugin_api = 6`. It stores string keys associated with string values and is returned from
+`string_map` requires <PluginApiBadge feature="string-map-setting" />. It stores string keys associated with string values and is returned from
 `noctalia.getConfig()` as an associative Luau table. Its default is a TOML table:
 
 ```toml
