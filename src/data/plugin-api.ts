@@ -93,6 +93,12 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     feature: 'panel-capture-keys',
     introduced: 'The `capture_keys` panel entry option and the `onKey` callback.',
   },
+  {
+    level: 14,
+    noctaliaVersion: null,
+    feature: 'widget-gesture-actions',
+    introduced: 'The `[widget.actions]` entry table, declaring bar gesture defaults.',
+  },
 ];
 
 export const CURRENT_PLUGIN_API = Math.max(...PLUGIN_API_LEVELS.map((entry) => entry.level));
