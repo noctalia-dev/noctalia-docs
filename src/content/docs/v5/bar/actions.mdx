@@ -105,6 +105,22 @@ Every other gesture on those widgets is bindable as usual, and the settings edit
 reserved rows. A bar-wide binding skips them silently; binding one explicitly per widget is reported
 as a config error.
 
+## The dead zone
+
+The parts of the bar no widget covers take the same bindings, under the bar's `dead_zone` table:
+
+```toml
+[bar.default.dead_zone.actions]
+left = "panel-toggle launcher"
+scroll_up = "volume-up"
+back = "media previous"
+```
+
+Right click opens the control center at the pointer unless you bind it to something else. Panel
+actions here anchor at the pointer rather than at a widget, since there is no widget to anchor to.
+A monitor override may carry its own `dead_zone.actions` table, which replaces the bar's rather than
+merging with it.
+
 ## Settings that became actions
 
 Several per-widget settings were replaced by bindings. Your existing config keeps working, and
@@ -118,6 +134,7 @@ Noctalia reports each one so you can update it:
 | `cycle_command = "..."` (keyboard_layout) | `left = "exec ..."` |
 | `primary_click = "fullscreen"` (screenshot) | `left = "screenshot-fullscreen"` |
 | `command`, `right_command`, `middle_command`, `scroll_up_command`, `scroll_down_command` (custom_button) | the matching gesture, as `exec <command>` |
+| the same five keys under `[bar.<name>.dead_zone]` | the matching gesture under `dead_zone.actions` |
 
 `enable_scroll` still exists on plugin widgets, where it gates the plugin's own `onScroll` handler.
 

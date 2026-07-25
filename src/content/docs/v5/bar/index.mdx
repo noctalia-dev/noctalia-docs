@@ -88,20 +88,23 @@ are appended after the listed names.
 
 ### Dead zone actions
 
-The **dead zone** is the bar margin outside the start/center/end widget sections - typically the inset created by `margin_ends`. Configure shell commands under `[bar.<name>.dead_zone]`:
+The **dead zone** is the bar margin outside the start/center/end widget sections - typically the inset created by `margin_ends`. It takes the same bindings bar widgets do, under `[bar.<name>.dead_zone.actions]`:
 
 ```toml
-[bar.main.dead_zone]
-command = "noctalia msg launcher toggle"   # left click
-right_command = ""                         # empty = open Control Center (default)
-middle_command = "..."                     # middle click
-scroll_up_command = "..."
-scroll_down_command = "..."
+[bar.main.dead_zone.actions]
+left = "panel-toggle launcher"
+middle = "exec kitty"
+scroll_up = "volume-up"
+scroll_down = "volume-down"
+back = "media previous"
+forward = "media next"
 ```
 
-Right-click still opens Control Center when `right_command` is empty. Set `right_command` to override that on dead-zone clicks only. While an attached panel is open, right-click anywhere on the bar still toggles Control Center unless a dead-zone `right_command` is configured and the click lands in the dead zone.
+All nine gestures are available, and an action is an IPC command, `exec <command line>`, or `none` - see [Widget Actions](/v5/bar/actions/) for the full vocabulary. Panel actions anchor at the pointer, since there is no widget to anchor to.
 
-Per-monitor overrides can set any dead-zone command under `[bar.<name>.monitor.<match>.dead_zone]`; unset fields inherit from the bar defaults.
+Right-click opens Control Center unless you bind `right` to something else. While an attached panel is open, right-click anywhere on the bar still toggles Control Center unless the click lands in the dead zone and `right` is bound.
+
+Per-monitor overrides can carry their own `[bar.<name>.monitor.<match>.dead_zone.actions]` table, which replaces the bar's rather than merging with it.
 
 ---
 
