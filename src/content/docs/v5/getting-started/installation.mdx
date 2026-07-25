@@ -350,7 +350,7 @@ If you prefer to install Noctalia locally or want more control over the installa
   </TabItem>
   <TabItem label="Debian/Ubuntu">
     ```bash
-    sudo apt install just meson libwayland-dev
+    sudo apt install just meson libwayland-dev \
       wayland-protocols libfreetype-dev libfontconfig-dev \
       libcairo2-dev libpango1.0-dev librsvg2-dev libxkbcommon-dev \
       libepoxy-dev libgles-dev libwebp-dev libcurl4-gnutls-dev \
@@ -365,8 +365,6 @@ If you prefer to install Noctalia locally or want more control over the installa
 
 Vendored dependencies, with no system package needed: `Wuffs`, `nanosvg`,
 `Luau`, `dr_wav`, `fzy`, and Material Color Utilities.
-
-Dependencies that are vendored by default, with a meson option to instead use the system package: `tomlplusplus`
 
 System packages required beyond the Wayland/GL stack: `libwebp` handles WebP decoding and thumbnail encoding. Wuffs
 handles the other supported raster image formats.
