@@ -30,6 +30,20 @@ apply depends on the entry kind:
 
 The top level of the script runs once at load - set up state and register `noctalia.state.watch` handlers there.
 
+### Pointer callbacks are overridable
+
+On a bar widget, what a click or scroll does is user configuration. A binding in
+`[widget.<name>.actions]` takes precedence over your script, so a user who binds `right` stops
+`onRightClick` from firing for that instance. Gestures nobody has bound still reach your callbacks.
+
+You can declare your own defaults in the manifest - see
+[widget gesture defaults](/v5/plugins/development/manifest/#widget-gesture-defaults) - and
+[Widget Actions](/v5/bar/actions/) for the full gesture and action vocabulary.
+
+`onMiddleClick` is the exception worth planning for: every widget gets a built-in `middle` binding
+that opens its settings, so the callback does not fire unless a `middle = "none"` binding frees the
+button, either in your manifest or in the user's config.
+
 ### Reacting to scroll
 
 Define `onScroll(axis, steps)` on a bar widget to handle mouse-wheel and touchpad scrolling over it. `axis` is
@@ -51,7 +65,9 @@ end
 
 Scroll events the widget does not define `onScroll` for are left for the bar underneath to handle.
 Host setting `enable_scroll` (default `true`) on the bar widget instance gates wheel and touchpad delivery to
-`onScroll`; set it to `false` to disable scroll actions without removing the handler.
+`onScroll`; set it to `false` to disable scroll actions without removing the handler. It is independent of any
+scroll binding: a bound `scroll_up` runs its action instead of calling `onScroll`, while `enable_scroll = false`
+silences the callback outright.
 
 ### Cleaning up when an entry exits
 

@@ -11,7 +11,7 @@ sidebar:
 
 Widget definitions are optional. When a name in a widget list matches a `[widget.<name>]` entry, that entry's `type` and settings are used. When there is no match, the name itself is treated as the widget type with default settings.
 
-Middle-click a bar widget to open Settings directly to that widget's configuration. Disable `[shell].middle_click_opens_widget_settings` if you want middle-click to remain available to plugin widgets.
+Middle-click a bar widget to open Settings directly to that widget's configuration. Every click, scroll and thumb button on every widget can be rebound - see [Widget Actions](/v5/bar/actions/).
 
 ```toml
 [widget.<name>]
@@ -121,7 +121,6 @@ Pill styling and `capsule_radius` apply only when `style = "regular"`.
 | `focused_output_only` | bool | `false` | Only highlight the active workspace on the monitor that has keyboard or pointer focus; other monitors show their active workspace in the occupied color. |
 | `labels_only_when_occupied` | bool | `false` | Show id/name labels on workspaces with open windows and on the active workspace even when empty; other empty tags stay unlabeled. Requires `display = "id"` or `"name"`. |
 | `hide_when_empty` | bool | `false` | Hide workspace pills with no open windows. |
-| `enable_scroll` | bool | `true` | Allow mouse wheel and trackpad scrolling to switch to the adjacent workspace. |
 
 ```toml
 [widget.workspaces]
@@ -130,7 +129,6 @@ display = "id"          # none | id | name
 max_label_chars = 2     # truncate long workspace names (e.g. "VESKTOP" → "VE")
 labels_only_when_occupied = true  # (1) (2*) ( ) (4) - occupied tags and the active tag show labels (*active but empty)
 hide_when_empty = true
-enable_scroll = true
 pill_scale = 1.0
 active_pill_size = 2.2
 inactive_pill_size = 1.0
@@ -149,7 +147,7 @@ Icon-only running application list, with optional pinned apps on the flat strip.
 
 Application icons use global `[shell.app_icon_colorize]` when enabled (see [Shell → App icon colorization](/v5/shell/#app-icon-colorization)).
 
-Left-click an icon to focus that window (or launch a pinned app that is not running). Middle-click an icon to close that window (the active window when a grouped or pinned multi-window tile represents several). Middle-click in the gaps between icons still opens the taskbar widget settings when `[shell].middle_click_opens_widget_settings` is enabled. The active window shows a small primary dot under the icon.
+Left-click an icon to focus that window (or launch a pinned app that is not running). Middle-click an icon to close that window (the active window when a grouped or pinned multi-window tile represents several). Middle-click in the gaps between icons still opens the taskbar widget settings. The active window shows a small primary dot under the icon.
 When grouped app collapsing is enabled, multi-window app tiles also show compact right-edge dots over the icon. Pinned apps with multiple windows use the same dots and left-click cycles their windows.
 
 **Pinned apps** (`pinned`) keep desktop entries on the taskbar when they are not running. Matching uses the same desktop-entry rules as the [dock](/v5/dock/#pinned-matching). Pinned apps appear first (in list order), collapsed to one icon per app; other running windows follow as usual. Right-click an icon and choose **Pin** / **Unpin** to update the list. Non-running pins are dimmed by `pinned_opacity` (default `0.5`). Pins are only used on the flat strip — when `group_by_workspace` is on they are ignored (settings hide the list, and pin menu actions are unavailable).
@@ -185,7 +183,6 @@ With grouping, `workspace_group_content` chooses what each capsule shows for its
 | `empty_color` | string | `"secondary"` | Workspace disc fill when empty (shown at reduced opacity) |
 | `urgent_color` | string | `"error"` | Workspace disc fill when urgent |
 | `focused_output_only` | bool | `false` | Only use the focused color for the active workspace disc on the monitor that has keyboard or pointer focus; other monitors use the occupied color. Applies to the workspace label, so it is only meaningful with `show_workspace_label = true`. |
-| `enable_scroll` | bool | `true` | Allow mouse wheel and trackpad scrolling to switch to the adjacent window (or workspace when `group_by_workspace` is on). |
 
 ```toml
 [widget.taskbar]
@@ -208,7 +205,6 @@ occupied_color = "secondary"
 empty_color = "secondary"
 urgent_color = "error"
 focused_output_only = false  # true = only the focused monitor highlights its active workspace
-enable_scroll = true
 ```
 
 ---
@@ -326,8 +322,6 @@ Shows PipeWire output (speaker) or input (microphone) volume and mute state.
 | `mute_glyph` | string | `""` | Icon glyph used when muted or at 0% volume. Leave empty to use the built-in mute icon |
 | `custom_image` | string | `""` | Path to a custom image displayed instead of the active/mute glyphs. Leave empty to use the glyph |
 | `custom_image_colorize` | bool | `false` | When `true`, tint the custom image with the same color the glyph would use, including `mute_color` while muted |
-| `enable_scroll` | bool | `true` | Allow mouse wheel and trackpad scrolling to change volume |
-| `scroll_step` | int | `5` | Percentage change applied on each mouse wheel step (1–25) |
 | `show_label` | bool | `true` | Show the volume percentage next to the glyph (horizontal and vertical bars) |
 | `mute_color` | string | `"error"` | Color role or hex color for the icon and label when muted |
 
@@ -336,8 +330,6 @@ Shows PipeWire output (speaker) or input (microphone) volume and mute state.
 device = "output"   # output | input
 glyph = ""          # custom active glyph; empty = built-in dynamic icons
 mute_glyph = ""     # custom mute/0% glyph; empty = built-in mute icon
-enable_scroll = true
-scroll_step = 10
 show_label = false
 mute_color = "error"
 
@@ -420,14 +412,12 @@ Left-click opens the Media tab in the control center; right-click toggles play/p
 | `art_size` | number | `16` | Artwork size in pixels before scale |
 | `title_scroll` | string | `"none"` | Media title scrolling mode: `"none"`, `"always"`, or `"on_hover"` (hidden when `album_art_only` is enabled) |
 | `hide_when_no_media` | bool | `false` | Hide the widget when no MPRIS player is active |
-| `enable_scroll` | bool | `true` | Allow mouse wheel and trackpad scrolling to skip to the previous/next track |
 
 ```toml
 [widget.media]
 artist_first = true
 art_size     = 24
 hide_when_no_media = true
-enable_scroll = true
 ```
 
 ---
@@ -514,14 +504,10 @@ Shows the current monitor brightness level and adjusts it via scroll wheel. Hide
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `enable_scroll` | bool | `true` | Allow mouse wheel and trackpad scrolling to change brightness |
-| `scroll_step` | int | `5` | Percentage change applied on each mouse wheel step (1–25) |
 | `show_label` | bool | `true` | Show the brightness percentage next to the glyph (horizontal and vertical bars) |
 
 ```toml
 [widget.brightness]
-enable_scroll = true
-scroll_step = 10
 show_label = false
 ```
 
@@ -563,11 +549,10 @@ show_label = false
 
 Shows the current keyboard layout indicator from the active XKB state.
 
-Left-click cycles layouts using the compositor backend when supported. Override with `cycle_command` for a custom shell command.
+Left-click cycles layouts using the compositor backend when supported. Bind `left` to an `exec` action to run a custom command instead - see [Widget Actions](/v5/bar/actions/).
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `cycle_command` | string | `""` | Optional override command run on left click instead of compositor backend |
 | `hide_when_single_layout` | bool | `false` | Hide the widget unless more than one keyboard layout is configured |
 | `show_icon` | bool | `true` | Show the keyboard glyph |
 | `glyph` | string | `"keyboard"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint. Shown only when `show_icon = true` |
@@ -581,7 +566,6 @@ At least one of `show_icon` or `show_label` must be `true`.
 
 ```toml
 [widget.keyboard_layout]
-cycle_command = ""
 hide_when_single_layout = false
 show_icon = true
 show_label = true
@@ -639,7 +623,7 @@ custom_image_colorize = true
 
 ## `custom_button`
 
-Shows a custom glyph/image, optional label, and runs configured shell commands.
+Shows a custom glyph/image and an optional label. What it does on click and scroll is set with [widget actions](/v5/bar/actions/).
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
@@ -648,12 +632,6 @@ Shows a custom glyph/image, optional label, and runs configured shell commands.
 | `custom_image_colorize` | bool | `false` | When `true`, tint the custom image with the widget icon color |
 | `label` | string | `""` | Optional text label shown next to the glyph or image |
 | `tooltip` | string | `""` | Optional hover tooltip |
-| `command` | string | `""` | Shell command run on left click |
-| `right_command` | string | `""` | Shell command run on right click |
-| `middle_command` | string | `""` | Shell command run on middle click |
-| `enable_scroll` | bool | `true` | Allow mouse wheel and trackpad scrolling to run the scroll commands |
-| `scroll_up_command` | string | `""` | Shell command run on scroll up |
-| `scroll_down_command` | string | `""` | Shell command run on scroll down |
 
 ```toml
 [widget.quick-action]
@@ -661,8 +639,10 @@ type = "custom_button"
 custom_image = "/path/to/icon.png"
 custom_image_colorize = true
 label = "Action"
-command = "notify-send Noctalia"
-enable_scroll = true
+
+[widget.quick-action.actions]
+left = "exec notify-send Noctalia"
+right = "exec notify-send 'Other action'"
 ```
 
 ---
@@ -697,13 +677,12 @@ Captures the screen through the compositor's `wlr-screencopy` protocol (Niri, Hy
 | `glyph` | string | `"screenshot"` | Bar glyph name: Noctalia alias, Tabler icon name, or `U+` / `0x` codepoint |
 | `custom_image` | string | `""` | Path to a custom image displayed instead of the glyph. Leave empty to use the glyph |
 | `custom_image_colorize` | bool | `false` | When `true`, tint the custom image with the widget icon color |
-| `primary_click` | string | `"region"` | Left-click action: `"region"` (interactive drag selection) or `"fullscreen"` (see below) |
 
-The capture **output policy** (save to file, output directory, filename pattern, clipboard, freeze, pipe command) is global and lives under [`[shell.screenshot]`](/v5/shell/#shell-settings), shared by this widget and the IPC commands. The widget only sets its glyph and left-click action.
+The capture **output policy** (save to file, output directory, filename pattern, clipboard, freeze, pipe command) is global and lives under [`[shell.screenshot]`](/v5/shell/#shell-settings), shared by this widget and the IPC commands. The widget only sets its glyph; the left click is a [widget action](/v5/bar/actions/).
 
 **Click behavior:**
 
-- **Left-click**: runs `primary_click` (region or fullscreen) using the global output policy.
+- **Left-click**: runs `screenshot-region` by default, using the global output policy. Bind `left` to `screenshot-fullscreen` for fullscreen capture instead.
 - **Right-click**: opens a menu with fullscreen and region capture.
 
 **Fullscreen** on a **single monitor** captures that output immediately (focused monitor when using IPC with no argument). On **multiple monitors**, fullscreen opens a **display picker**: a top bar labeled “Choose display” with one button per connector (`DP-1`, `HDMI-A-1`, …). Click a button from **any** screen to capture that output - you do not need to move the pointer onto that monitor first. Clicking the dimmed desktop captures the monitor under the cursor (same as before). Press a **`[keybinds].cancel`** chord (default **Escape**) to dismiss the picker.
@@ -715,7 +694,9 @@ While dragging a region, a size badge (`1920x1080`) follows the pointer below th
 ```toml
 [widget.screenshot]
 glyph = "screenshot"
-primary_click = "region"
+
+[widget.screenshot.actions]
+left = "screenshot-fullscreen"   # default is "screenshot-region"
 ```
 
 ### IPC
@@ -816,15 +797,14 @@ Tip: right-click a tray item and use `Pin` / `Unpin` in the item menu to update 
 
 ## `power_profile`
 
-Shows the current power profile using a glyph and cycles to the next available profile on click.
+Shows the current power profile using a glyph. Left-click steps forward through the available profiles, right-click steps back, and scrolling does the same - all rebindable as [widget actions](/v5/bar/actions/).
 
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `enable_scroll` | bool | `true` | Allow mouse wheel and trackpad scrolling to cycle power profiles |
+This widget has no settings of its own beyond the shared ones (`scale`, `enabled`, capsule styling, actions).
 
 ```toml
-[widget.power_profile]
-enable_scroll = true
+[widget.power_profile.actions]
+scroll_up = "none"    # leave the wheel alone
+scroll_down = "none"
 ```
 
 ---

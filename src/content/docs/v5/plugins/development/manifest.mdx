@@ -73,6 +73,32 @@ id    = "ticker"
 entry = "ticker.luau"
 ```
 
+### Widget gesture defaults
+
+A `[[widget]]` entry can declare what its bar widget does on click and scroll, in a `[widget.actions]`
+table <PluginApiBadge feature="widget-gesture-actions" />. These are defaults: they show up in the
+settings editor as the widget's own, and the user overrides any of them per instance with
+`[widget.<name>.actions]`. See [Widget Actions](/v5/bar/actions/) for the gesture keys and the action
+grammar.
+
+```toml
+[[widget]]
+id    = "hello"
+entry = "widget.luau"
+
+  [widget.actions]
+  right = "media toggle"
+  scroll_up = "volume-up"
+```
+
+A binding takes precedence over the script: bind `right` and `onRightClick` stops firing. Gestures you
+do not declare, and the user does not bind, still reach your callbacks.
+
+Middle click is worth knowing about: every widget gets a built-in `middle` binding that opens its
+settings, so `onMiddleClick` does not fire out of the box. Declaring `middle = "none"` frees the button
+for your script - though a declared action is visible in the settings editor where a Luau callback is
+not.
+
 ## Settings schema
 
 A setting becomes a typed control in the settings GUI and is read back via `noctalia.getConfig(key)`. Only declared keys
