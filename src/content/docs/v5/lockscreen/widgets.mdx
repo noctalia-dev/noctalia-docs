@@ -62,21 +62,33 @@ Widget IDs generated in the editor use the `lockscreen-widget-` prefix. Login bo
 
 The login box uses the same inspector layout as other lockscreen widgets:
 
-- **Widget** - login button visibility, password field opacity, corner radius, and text alignment (`show_login_button`, `input_opacity`, `input_radius`, `center_password_text`)
+- **Widget** - layout mode, optional Regular extras, login controls, and password field styling
 - **Background** - outer bar color, opacity, and corner radius (`background_color`, `background_opacity`, `background_radius`)
+
+`layout` chooses the login panel shape:
+
+- `regular` (default) - v4-style panel with media, weather, and optional session action buttons around the password row
+- `compact` - slim password row (previous default look)
 
 | Setting | Default | Range | Description |
 | --- | --- | --- | --- |
+| `layout` | `regular` | `compact` \| `regular` | Login panel layout |
+| `show_session_buttons` | `true` | bool | Regular: show session actions from `[shell.session].actions` (lock actions omitted) |
 | `background_color` | `surface_variant` | color role | Outer login bar fill |
 | `background_opacity` | `0.88` | `0.0`–`1.0` | Outer login bar opacity |
 | `background_radius` | `12` | `0`–`32` | Outer login bar corner radius (logical px) |
 | `show_login_button` | `true` | bool | Show the check button beside the password field |
+| `show_password_hint` | `true` | bool | Show the idle password hint under the field |
+| `show_caps_lock` | `true` | bool | Show a Caps Lock warning in the status line |
+| `show_keyboard_layout` | `true` | bool | Show the keyboard layout chip (cycles when multiple layouts are available) |
 | `input_opacity` | `1.0` | `0.0`–`1.0` | Password field background opacity |
 | `input_radius` | `6` | `0`–`32` | Password field corner radius (logical px) |
 | `center_password_text` | `false` | bool | Center password dots and placeholder inside the field |
 
 ```toml
 [lockscreen_widgets.widget."lockscreen-login-box@DP-1".settings]
+layout = "regular"
+show_session_buttons = true
 background_color = "surface_variant"
 background_opacity = 0.75
 background_radius = 16.0
