@@ -18,7 +18,7 @@ apply depends on the entry kind:
 | `update()` | ✓ | | | ✓ | ✓ | ✓ | every update interval |
 | `onClick()` / `onRightClick()` | ✓ | ✓ | | | | | pointer press |
 | `onMiddleClick()` | ✓ | | | | | | middle press |
-| `onScroll(axis, steps)` | ✓ | | | | | | wheel or touchpad scroll over the widget (see below) |
+| `onScroll(axis, steps, startsGesture)` | ✓ | | | | | | wheel or touchpad scroll over the widget (see below) |
 | `onQuery(text)` | | | ✓ | | | | launcher text changed (behind the prefix) |
 | `onActivate(id)` | | | ✓ | | | | a launcher result was selected |
 | `onOpen(context)` / `onClose()` | | | | | ✓ | | the panel is opened / closed |
@@ -46,10 +46,10 @@ button, either in your manifest or in the user's config.
 
 ### Reacting to scroll
 
-Define `onScroll(axis, steps)` on a bar widget to handle mouse-wheel and touchpad scrolling over it. `axis` is
-`"vertical"` or `"horizontal"`, and `steps` is a number of whole wheel detents: negative scrolls up or left, positive
-scrolls down or right. A mouse wheel reports one step per notch; a touchpad accumulates its finer movement and reports a
-step once a full detent's worth has built up, so one gesture means the same thing on both devices.
+Define `onScroll(axis, steps, startsGesture)` on a bar widget to handle mouse-wheel and touchpad scrolling over it.
+`axis` is `"vertical"` or `"horizontal"`, and `steps` is a number of whole wheel detents: negative scrolls up or left,
+positive scrolls down or right. A mouse wheel reports one step per notch; a touchpad accumulates its finer movement and
+reports a step once a full detent's worth has built up, so one gesture means the same thing on both devices.
 
 ```lua
 local volume = 50
@@ -60,6 +60,24 @@ function onScroll(axis, steps)
   end
   volume = math.clamp(volume - steps * 5, 0, 100)
   barWidget.setText(tostring(volume) .. "%")
+end
+```
+
+`startsGesture` is `true` only on the first step of a scroll gesture in a given direction: the wheel or the finger had
+stopped, or the scroll just reversed. Ramping a value, as above, ignores it and takes every step. Stepping through a
+list wants the opposite - an eager wheel flick emits several notches that the user means as one move - so act on
+`startsGesture` and let the rest of the burst fall through:
+
+```lua
+local entries = { "one", "two", "three" }
+local index = 1
+
+function onScroll(axis, steps, startsGesture)
+  if axis ~= "vertical" or not startsGesture then
+    return
+  end
+  index = math.clamp(index + (steps > 0 and 1 or -1), 1, #entries)
+  barWidget.setText(entries[index])
 end
 ```
 
