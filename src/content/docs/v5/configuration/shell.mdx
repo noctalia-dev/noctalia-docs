@@ -6,6 +6,7 @@ sidebar:
 ---
 
 - [Shell settings](#shell-settings)
+- [Privacy capture filters](#privacy-capture-filters)
 - [Accessibility](#accessibility)
 - [OSD](#osd)
 - [Lock screen](#lock-screen)
@@ -30,7 +31,7 @@ popup_borders         = true            # draw outlines around popups and dropdo
 card_borders          = true            # draw outlines around section cards inside panels and settings
 popup_shadows         = true            # draw drop shadows behind popups and dropdowns
 font_family           = "sans-serif"    # Pango family string; Fontconfig handles fallback
-lang                  = "en"            # override language detection; BCP-47 or POSIX locale
+lang                  = ""              # empty = auto-detect; otherwise BCP-47 or POSIX locale
 time_format           = "{:%H:%M}"      # default time format for shell UI without its own setting
 date_format           = "%A, %x"        # default date format for shell UI without its own setting
 offline_mode          = false           # block all outgoing HTTP requests
@@ -42,7 +43,7 @@ niri_overview_type_to_launch_enabled = false # niri-only type-to-launch from ove
 polkit_agent          = false           # register Noctalia's native polkit authentication agent
 password_style        = "default"       # default | random
 avatar_path           = "~/Pictures/avatar.png"
-settings_show_advanced = false          # show advanced settings by default in Settings
+settings_show_advanced = true           # show advanced settings by default in Settings
 show_location         = true            # show weather location text in shell UI
 launch_apps_as_systemd_services = false # launch apps as transient systemd services (needs Noctalia to be a user unit)
 launch_apps_custom_command = ""         # wrap launched apps; $CMD is replaced with the app command
@@ -50,6 +51,7 @@ screen_time_enabled   = false           # track per-app usage time for the Contr
 app_icon_colorize     = false           # recolor application icons across the shell
 app_icon_color        = "on_surface"    # ColorSpec when colorize is enabled; see App icon colorization below
 clipboard_enabled     = true            # false disables clipboard history/panel (basic copy & paste still work)
+clipboard_keep_from_closed_apps = true  # keep the live selection after its source application closes
 clipboard_history_max_entries = 100     # unpinned history cap (10–10000); pinned entries are exempt
 clipboard_confirm_clear_history = true  # confirm before clear history / delete unpinned entries
 clipboard_auto_paste  = "auto"          # off | auto | ctrl_v | ctrl_shift_v | shift_insert
@@ -150,14 +152,19 @@ command = "swaylock -f"
 [shell.mpris]
 blacklist = []           # optional list of players to hide from media widgets/control-center
 
+[shell.privacy]
+mic_filter_regex    = "" # ignore matching microphone application names
+cam_filter_regex    = "" # ignore matching camera process names
+screen_filter_regex = "" # ignore matching screen-share application names
+
 [shell.screenshot]
 save_to_file      = true                       # write captures as PNG to the output directory
 directory         = ""                          # output folder; empty = ~/Pictures
-filename_pattern  = "screenshot_%Y%m%d_%H%M%S"  # strftime pattern, no extension (.png is added)
-copy_to_clipboard = false                       # also place the PNG on the clipboard
+filename_pattern  = ""                          # empty = screenshot_%Y%m%d_%H%M%S
+copy_to_clipboard = true                        # also place the PNG on the clipboard
 
 `avatar_path` controls the avatar Noctalia shows in shell UI such as the Control Center Home tab. When AccountsService is reachable, Noctalia also updates your user's `IconFile` there so other consumers such as Noctalia Greeter can reuse the same avatar. If **accountsservice** is missing or disabled, the shell still uses `avatar_path`, but login greeters that depend on AccountsService will not see that image.
-freeze_screen     = false                       # freeze the desktop before region selection
+freeze_screen     = true                        # freeze the desktop before region selection
 confirm_region    = false                       # confirm region captures with Enter or Space
 show_cursor       = false                       # include the mouse pointer in captures
 pipe_to_command   = false                       # pipe the PNG to a shell command on stdin
@@ -173,7 +180,7 @@ Notes:
 - `telemetry_enabled` sends a single anonymous POST to `api.noctalia.dev/ping` on each startup containing: a random instance ID, shell version, compositor name, OS name, RAM, monitor resolutions, and UI scale. No personal data is collected. The instance ID is a random UUID stored in `~/.local/state/noctalia/instance.id`.
 - `setup_wizard_enabled`: when `false`, Noctalia does not auto-open the setup wizard on startup even if `.setup-complete` is missing. Use this for declarative or preseeded deployments; the marker remains the normal completion state for interactive runs.
 - `niri_overview_type_to_launch_enabled` is opt-in. When `true` on niri, Noctalia keeps a tiny keyboard-focus layer surface while overview is open so typing a letter or number opens the launcher with that initial query. This gives up niri's exact native handling for some overview-only keyboard state, such as the app focus ring.
-- `polkit_agent` controls registration on `org.freedesktop.PolicyKit1`. Keep disabled if another desktop agent handles auth prompts. When enabled, `shell.panel.polkit_placement` and `polkit_position` control whether the auth prompt attaches to the bar or floats (default: centered on screen).
+- `polkit_agent` controls registration on `org.freedesktop.PolicyKit1`. Keep disabled if another desktop agent handles auth prompts. When enabled, `shell.panel.polkit_placement` and `polkit_position` control whether the auth prompt attaches to the bar or floats (default: `polkit_placement = "floating"` with `polkit_position = "center"`).
 - Notification daemon ownership moved out of `[shell]`: use `[notification].enable_daemon` in [Services](/v5/services/notifications/).
 - `password_style`: `default` uses `circle-filled`; `random` cycles through multiple filled glyph shapes on polkit and lock screen inputs.
 - `settings_show_advanced`: when `true`, Settings opens with advanced entries visible.
@@ -181,6 +188,9 @@ Notes:
 - `app_icon_colorize` and `app_icon_color`: global application icon tinting for the dock, system tray (bar and drawer), taskbar, active-window widget, and launcher panel results. See [App icon colorization](#app-icon-colorization). Bar `launcher` / `control-center` widgets can optionally tint `custom_image` via `custom_image_colorize` using the widget **Color** setting (Presentation group in the widget editor).
 - `lang`: empty follows `$LC_ALL`, `$LC_MESSAGES`, then `$LANG`. Values may be BCP-47 tags (`pt-BR`, `zh-Hans`) or POSIX locale names (`pt_BR.UTF-8`, `zh_CN.UTF-8`). Chinese region locales infer script before matching catalogs, so `zh_CN` and `zh_SG` match `zh-Hans`, while `zh_TW`, `zh_HK`, and `zh_MO` match `zh-Hant`.
 - `clipboard_enabled`: when `false`, disables clipboard **history** only - the history is no longer recorded or persisted, and the clipboard panel and bar/control-center shortcuts are unavailable. The live clipboard transport stays active, so basic copy/cut/paste in text fields and launcher math/emoji copy-to-clipboard actions keep working.
+- `clipboard_keep_from_closed_apps`: when `true` (default), Noctalia takes ownership of the live selection after the
+  application that supplied it closes, keeping the last copied value pasteable. This is independent of clipboard
+  history retention.
 - Clipboard history is encrypted at rest with a purpose-specific key derived from the Noctalia storage master key. The default `secret-service` source stores the master key through Secret Service. If the provider is unavailable or locked, history still works for the current session but is not read from or written to disk; unlock or start the provider and use **Settings → Shell → Clipboard → Retry**. Existing plaintext history is migrated only after the encrypted replacement is complete, and encrypted files are preserved if their key is missing.
 - `clipboard_history_max_entries`: caps how many **unpinned** clipboard history rows Noctalia keeps (default `100`, range `10`–`10000`). Pinned entries stay outside this limit. Lowering the value trims older unpinned rows on reload.
 - `clipboard_confirm_clear_history`: when `true` (default), the clipboard panel asks before **Clear history** and before deleting an **unpinned** entry (trash in the preview, or double-click a row). When `false`, those actions apply immediately: sidebar clear removes unpinned rows and keeps pins when any exist, or clears everything when nothing is pinned; unpinned single deletes are immediate. **Pinned** entries still require confirmation before delete. With confirmation enabled, the clear dialog only offers **Keep pinned** when both pinned and unpinned rows exist; if history is all pinned or all unpinned, the description matches that case. Toggle in **Settings → Shell → Clipboard**.
@@ -200,14 +210,14 @@ Notes:
 - `disable_mipmaps`: when `true`, Noctalia skips mipmap generation for textures. Startup-only - try it if downscaled application icons or wallpapers look blurry or show GPU mipmap artifacts.
 - `shell.animation.enabled` disables all animated transitions globally. `speed` scales durations globally.
 - `shell.shadow` defines the shared shadow style for shell surfaces and xdg-popup chrome such as panels, menus, pickers, and select dropdowns. `direction` controls which way the shadow is cast; blur is fixed at 12 px. Components such as panels, bars, and the dock only opt in/out with `shadow = true|false`; popups and dropdowns opt in/out with the global `popup_shadows` toggle above.
-- `shell.panel.transparency_mode` controls panel glass styling. `solid` keeps cards opaque and floating panels solid, `soft` makes floating panels lightly translucent and cards subtly translucent, and `glass` makes both visibly translucent while clamping card opacity high enough for readable text. Attached panels continue to use the effective panel background opacity inherited from the host bar.
+- `shell.panel.transparency_mode` controls panel glass styling. `solid` keeps cards opaque and floating panels solid, `soft` makes floating panels lightly translucent and cards subtly translucent, and `glass` makes both visibly translucent while clamping card opacity high enough for readable text. Attached panels keep their own layer surface and use the attached-placement panel styling.
 - `shell.panel.borders` draws an outline on floating panel surfaces. Attached panels stay borderless on the bar edge. Default is `true`; set to `false` for a flatter look. Section cards inside panels are controlled by `[shell].card_borders`.
 - `shell.panel.shadow` toggles the rendered drop shadow on attached and floating panels. Shadow direction and alpha come from `[shell.shadow]`.
 - `shell.panel.list_item_background` draws a filled rounded background behind each item in the launcher results (list and app-grid views) and the clipboard history list. The fill uses the same rounded shape as the hover highlight and follows the panel transparency mode; hover and keyboard-selection colors are unchanged. Default is `false`. Toggle in **Settings → Panels → Effects**.
-- `shell.panel.launcher_placement`, `clipboard_placement`, `control_center_placement`, `wallpaper_placement`, `session_placement`, and `polkit_placement` accept `attached` or `floating`. `attached` merges the panel with the host bar where the bar's position and placement allow it; `floating` keeps the panel detached. Defaults are floating for Launcher and Clipboard (with `*_position = "center"`), attached for Control Center, Wallpaper, and Session, and floating centered for the polkit auth prompt (`polkit_placement = "floating"`, `polkit_position = "center"`).
+- `shell.panel.launcher_placement`, `clipboard_placement`, `control_center_placement`, `wallpaper_placement`, `session_placement`, and `polkit_placement` accept only `attached` or `floating`. An attached panel keeps its own layer surface and anchors it to the host bar's inward edge; floating placement opens it detached. `center` is a floating `*_position`, not a third placement. Defaults are floating at the center position for Launcher, Clipboard, and the polkit auth prompt; Control Center, Wallpaper, and Session default to attached.
 - Per-panel `*_position` keys (`launcher_position`, `clipboard_position`, `control_center_position`, `wallpaper_position`, `session_position`, `polkit_position`) apply when placement is `floating`. `auto` keeps the panel bar-relative; `center` and the edge/corner tokens anchor on screen (same vocabulary as notification/OSD position).
 - `shell.panel.floating_offset` sets the gap in pixels a floating panel keeps from the bar edge, or from the screen edge when it is pinned with a `*_position` (default `8`). It also spaces panels using the reserved edge area when multiple bars share an edge. `attached` panels ignore it.
-- When multiple enabled bars resolve to the same edge on one monitor, exact source-bar attachment is ambiguous. In that case attached/floating panels use the compositor's reserved edge area and open outside the bar stack instead of trying to merge with one bar. Prefer setting `shell.panel_anchor_bar` when you have more than one bar and open panels via IPC or shortcuts.
+- When multiple enabled bars resolve to the same edge on one monitor, exact source-bar attachment is ambiguous. In that case attached/floating panels use the compositor's reserved edge area and open outside the bar stack instead of anchoring to one bar. Prefer setting `shell.panel_anchor_bar` when you have more than one bar and open panels via IPC or shortcuts.
 - `shell.panel.open_near_click_control_center`, `open_near_click_launcher`, `open_near_click_clipboard`, `open_near_click_wallpaper`, and `open_near_click_session` position attached or floating panels near the click location on the bar instead of centering them along the bar. They are ignored when a panel is `floating` with a `*_position` other than `auto`, since it is then pinned to a fixed screen position.
 - `shell.launcher.categories` shows compact category filters in the launcher for providers that expose categories, currently Applications and Emoji. **All** leaves results unfiltered. With a prefixed provider such as `/emo`, the filters come from that provider. Press `Tab` while the launcher is open to hide/show the filters; the left/right keybind actions move between filters.
 - `shell.launcher.show_icons` toggles application icons in launcher result rows. Prefixed-provider rows (for example emoji) still show their leading character when icons are hidden.
@@ -223,7 +233,8 @@ Notes:
 - `shell.launcher.dmenu.entry.<id>` defines a dmenu-style provider. Each entry runs `command` (a shell string via `/bin/sh -lc`) once per launcher session and presents its stdout lines as candidates; a tab in a line splits it into title and description. `prefix` sets the entry's trigger word, combined with `provider_prefix` like the built-in providers (e.g. `ssh` triggers on `/ssh`) — write it bare, without the prefix character. With no prefix, set `global = true` or the entry is unreachable. On activate, `exec` runs detached with `{selection}` substituted by the chosen line - when `exec` is omitted the line is copied to the clipboard instead. Entries hot-reload with the config.
 - `shell.launcher.providers."<pluginId>:<entry>"` overrides a plugin launcher provider's `prefix` and/or `global` without editing the plugin. Key the table by the plugin's fully-qualified entry id (e.g. `"author/my-plugin:search"`); the referenced plugin must be enabled. When unset, each field falls back to the value declared in the plugin's `[[launcher_provider]]` manifest entry. Unknown provider names, disabled plugins, and two providers resolving to the same prefix are reported as config warnings.
 - `shell.mpris.blacklist` excludes matching MPRIS players from Noctalia media UI and active-player selection. Entries are case-insensitive and match player bus name, identity, desktop entry, or a bus-name substring token (for example `"spotify"`).
-- `shell.screenshot` holds the global output policy for all screenshot captures (region, fullscreen), shared by the screenshot bar widget and the `screenshot-region` / `screenshot-fullscreen` IPC commands. At least one of `save_to_file`, `copy_to_clipboard`, or `pipe_to_command` must be enabled or the capture reports "No screenshot output enabled". `directory` accepts `~`; `filename_pattern` is a [strftime](/v5/configuration/date-format-tokens/) pattern (the `.png` extension is appended). `copy_to_clipboard` requires clipboard integration (`clipboard_enabled = true`). `pipe_command` runs via `/bin/sh -lc` with the PNG written to its stdin - use it for annotators or uploaders (`swappy -f -`, `satty -f -`); for plain clipboard copies use `copy_to_clipboard` instead. `confirm_region` keeps the region overlay open after selection until you press Enter or Space (Esc cancels; drag again to reselect). `show_cursor` includes the mouse pointer in captures (off by default). The bar widget itself only configures its `glyph` and `primary_click` (region vs fullscreen). On **multiple monitors**, fullscreen from the bar (or `screenshot-fullscreen pick`) opens a display picker with one button per connector; scripts can skip the picker with `noctalia msg screenshot-fullscreen DP-1` (connector name). Edit in **Settings → Shell → Screenshot**.
+- `shell.screenshot` holds the global output policy for all screenshot captures (region, fullscreen), shared by the screenshot bar widget and the `screenshot-region` / `screenshot-fullscreen` IPC commands. At least one of `save_to_file`, `copy_to_clipboard`, or `pipe_to_command` must be enabled or the capture reports "No screenshot output enabled". `directory` accepts `~`; `filename_pattern` is a [strftime](/v5/configuration/date-format-tokens/) pattern (the `.png` extension is appended). `copy_to_clipboard` requires clipboard integration (`clipboard_enabled = true`). `pipe_command` runs via `/bin/sh -lc` with the PNG written to its stdin - use it for annotators or uploaders (`swappy -f -`, `satty -f -`); for plain clipboard copies use `copy_to_clipboard` instead. `confirm_region` keeps the region overlay open after selection until you press Enter or Space (Esc cancels; drag again to reselect). `show_cursor` includes the mouse pointer in captures (off by default). The bar widget configures its glyph, while click behavior uses the common widget action bindings. On **multiple monitors**, fullscreen from the bar (or `screenshot-fullscreen pick`) opens a display picker with one button per connector; scripts can skip the picker with `noctalia msg screenshot-fullscreen DP-1` (connector name). Edit in **Settings → Shell → Screenshot**.
+
 - When `pipe_to_command` runs, `NOCTALIA_SCREENSHOT_PATH` is set to the generated PNG path for that capture. If `save_to_file = true`, Noctalia writes the original PNG there before launching the command; if it is false, the path is still available for commands that need an output target, such as `satty -f - -o "$NOCTALIA_SCREENSHOT_PATH"`.
 - **Window switcher** is an Alt+Tab-style overlay with no `[shell]` settings yet. Bind your compositor shortcut to `noctalia msg window-switcher` (see [Shell → Window switcher](/v5/ipc/shell/#window-switcher)). While open, windows appear in a centered grid (up to five columns) with application icons, titles, and a per-window close control. Tab / Shift+Tab cycle selection; arrow keys move within the grid; releasing Alt or Enter confirms; Escape cancels. The list updates live when windows open, close, or retitle while the overlay stays open.
 - **Hot corners** let you trigger actions by pushing your mouse pointer into one of the four screen corners. When `[hot_corners].enabled = true`, the shell places invisible hit areas in each corner. `delay_ms` (default `0`) is how long the pointer must stay in the corner before the action runs — raise it to reduce accidental triggers. Each corner (`top_left`, `top_right`, `bottom_left`, `bottom_right`) takes an `action`. If `action` is `"command"`, provide a shell `command` to execute. Configure under **Settings → Desktop → Hot Corners**.
@@ -273,6 +284,12 @@ Icons are desaturated on the CPU, contrast-normalized, then tinted. Changes appl
 
 Per-widget `colorize_icons` / `icon_colorization` keys on the dock or tray are no longer used - configure this only under `[shell]`.
 
+## Privacy capture filters
+
+`[shell.privacy]` filters apply globally to the privacy bar widget, OSD, and other capture indicators. Each value is a
+regular expression; matching capture clients are ignored for that capture type. Leave a value empty to report every
+capture. An invalid expression logs a warning and filters nothing.
+
 ---
 
 ## Accessibility
@@ -317,12 +334,14 @@ nightlight = true        # night light toggle
 dnd = true               # Do Not Disturb toggle
 lock_keys = true         # Caps/Num/Scroll Lock popups
 keyboard_layout = true   # input keyboard layout changes
+media = true             # MPRIS playback and track changes
 privacy = true           # microphone/camera/screen share capture changes
+keyboard_backlight = true # keyboard backlight level
 ```
 
 The OSD powers volume, brightness, DND, caffeine, lock-key, keyboard-layout, privacy, external/IPC Wi-Fi, external/IPC Bluetooth,
 and external/IPC power-profile popups, and defaults to `top_center` with a horizontal layout. Set
-`orientation = "vertical"` for a taller vertical gauge on volume and brightness sliders; text-only popups (media, lock
+`orientation = "vertical"` for a taller vertical gauge on volume, display brightness, and keyboard-backlight sliders; text-only popups (media, lock
 keys, keyboard layout, privacy, and similar) always use horizontal layout for readability. `position` controls placement
 for horizontal popups; `position_vertical` controls placement when slider orientation is vertical. `scale` multiplies the
 effective OSD size on top of
@@ -333,7 +352,9 @@ outputs until one reconnects. `background_opacity` sets popup background opacity
 `true`; set `false` for a borderless look), and `offset_x` / `offset_y` are the
 absolute margins from the screen edge for the chosen `position`.
 Each popup kind can be toggled independently under `[osd.kinds]`. The volume master toggle enables both output and input
-OSDs by default; set `volume_output` or `volume_input` to `false` to disable one side only. `lock_keys = false` disables Caps/Num/Scroll Lock popups; when no `lock_keys` bar widget is configured, this also stops
+OSDs by default; set `volume_output` or `volume_input` to `false` to disable one side only. `media = false` disables
+MPRIS playback and track-change popups, and `keyboard_backlight = false` disables keyboard-backlight level popups.
+`lock_keys = false` disables Caps/Num/Scroll Lock popups; when no `lock_keys` bar widget is configured, this also stops
 lock-key state polling. `keyboard_layout = false` disables layout-change popups. `privacy = false` disables popups shown
 when microphone, camera, or screen share capture starts or stops.
 

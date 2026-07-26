@@ -40,7 +40,7 @@ layer               = "top"      # top | overlay — overlay keeps the dock abov
 active_scale        = 1.0        # icon scale for the focused app (clamped 0.1–1.75)
 inactive_scale      = 0.85       # icon scale for non-focused apps (clamped 0.1–1.0)
 magnification       = true       # magnify icons near the pointer (macOS-style)
-magnification_scale = 1.35       # max scale multiplier at the pointer center (1.0–2.0; 1.0 = off)
+magnification_scale = 1.45       # max scale multiplier at the pointer center (1.0–2.0; 1.0 = off)
 active_opacity      = 1.0
 inactive_opacity    = 0.85
 show_instance_count = true       # badge with window count when an app has 2+ windows
@@ -96,7 +96,7 @@ Configure in **Settings → Appearance → Interface**, or under `[shell]` in th
 
 When `magnification = true` (default), icons grow as the pointer moves along the dock - similar to the macOS dock. Icons under the pointer grow the most; nearby entries scale down smoothly with distance.
 
-- `magnification_scale` sets the maximum multiplier at the pointer center (default `1.35`, range `1.0`–`2.0`). At `1.0`, magnification is disabled even when `magnification` is on.
+- `magnification_scale` sets the maximum multiplier at the pointer center (default `1.45`, range `1.0`–`2.0`). At `1.0`, magnification is disabled even when `magnification` is on.
 - Magnification applies on top of `active_scale` / `inactive_scale`.
 - Icons may extend past the dock capsule into a small cross-axis pad (macOS-style); the background slab stays fixed size.
 - The launcher button participates when shown.

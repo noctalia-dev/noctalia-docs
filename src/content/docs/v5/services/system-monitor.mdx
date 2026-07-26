@@ -10,7 +10,7 @@ sidebar:
 enabled = true                      # sample CPU, memory, network, load, temperature, GPU VRAM, and disk statistics
 cpu_temp_sensor_path = ""           # exact temp*_input path for CPU temperature override; empty = auto
 cpu_poll_seconds = 2.0              # CPU usage, CPU temperature, and load average
-gpu_poll_seconds = 0.0              # GPU temperature, usage, and VRAM (0 = disabled by default)
+gpu_poll_seconds = 5.0              # GPU temperature, usage, and VRAM; probes run only while displayed
 memory_poll_seconds = 2.0           # RAM usage
 network_poll_seconds = 3.0          # network throughput
 disk_poll_seconds = 10.0            # disk usage and swap usage
@@ -18,15 +18,15 @@ disk_poll_seconds = 10.0            # disk usage and swap usage
 
 When disabled, Noctalia keeps system-monitor UI available but stops the background sampling thread. Bar `sysmon` widgets, desktop `sysmon` widgets, and the Control Center System tab show unavailable values until the setting is enabled again.
 
-Poll intervals are configured globally under `[system.monitor]`, not per widget. Each value is the number of seconds between samples for that metric group. A non-zero value is clamped to `1` to `120` seconds; setting a value to `0` disables that metric group entirely - it is never sampled and schedules no wakeups. Disabling `gpu_poll_seconds` is useful on laptops to avoid waking a discrete GPU. You can also adjust them in whole-second steps (down to `0`) in **Settings → Services → Advanced** when the system monitor is enabled.
+Poll intervals are configured globally under `[system.monitor]`, not per widget. Each value is the number of seconds between samples for that metric group. A non-zero value is clamped to `1` to `120` seconds; setting a value to `0` disables that metric group entirely - it is never sampled and schedules no wakeups. GPU probes run only while UI displays a GPU stat, so the default interval does not wake an otherwise unused discrete GPU. Set `gpu_poll_seconds = 0` to disable probing entirely. You can also adjust intervals in whole-second steps (down to `0`) in **Settings → Services → Advanced** when the system monitor is enabled.
 
 | Key | Default | Metrics |
 |-----|---------|---------|
 | `cpu_poll_seconds` | `2.0` | CPU usage %, CPU temperature, and load average (`1` / `5` / `15` min) |
-| `gpu_poll_seconds` | `0.0` | GPU temperature, usage %, and VRAM used/total. Disabled by default so a discrete GPU is not woken on laptops; the Control Center GPU card stays hidden until you set a non-zero interval. If you enable it, `5` seconds is a good interval - GPU stats rarely need sub-second sampling, and a short interval keeps the GPU busy |
+| `gpu_poll_seconds` | `5.0` | GPU temperature, usage %, and VRAM used/total. Probes run only while something displays a GPU stat; `0` disables them entirely |
 | `memory_poll_seconds` | `2.0` | RAM usage % and used/total MB |
 | `network_poll_seconds` | `3.0` | Network download and upload throughput |
-| `disk_poll_seconds` | `10.0` | Disk usage % for paths used by bar `sysmon` widgets with `stat = "disk_pct"`, plus swap usage % and used/total MB |
+| `disk_poll_seconds` | `10.0` | Disk used/free values for paths used by bar `sysmon` widgets, plus swap usage % and used/total MB |
 
 CPU usage and CPU temperature share `cpu_poll_seconds` because both are tied to the same CPU sampling pass. GPU temperature, usage, and VRAM share `gpu_poll_seconds`. Swap and disk usage share `disk_poll_seconds`. Network Rx and Tx share `network_poll_seconds` because they come from the same `/proc/net/dev` read. The aggregate network values exclude loopback; bar and desktop `sysmon` widgets can set `interface` to an exact `/proc/net/dev` interface name to show only that interface.
 
@@ -70,13 +70,16 @@ Bar and desktop `sysmon` widgets and the Control Center System tab all draw from
 | `ram_used` | `4.2 GiB` | RAM used (binary, auto-scaled) | ✓ | — |
 | `ram_pct` | `26%` | RAM used % | ✓ | ✓ |
 | `swap_pct` | `12%` | Swap used % | ✓ | ✓ |
-| `disk_pct` | `45%` | Disk used % for the widget's `path` | ✓ | — |
+| `disk_used_pct` | `45%` | Disk used % for the widget's `path` | ✓ | — |
+| `disk_used` | `120 GiB` | Disk space used for the widget's `path` | ✓ | — |
+| `disk_free_pct` | `55%` | Disk free % for the widget's `path` | ✓ | — |
+| `disk_free` | `380 GiB` | Disk space available for the widget's `path` | ✓ | — |
 | `net_rx` | `1.2 MB/s` | Network download speed (decimal, auto-scaled) | ✓ | ✓ |
 | `net_tx` | `256 kB/s` | Network upload speed (decimal, auto-scaled) | ✓ | ✓ |
 
-A stat whose source is unavailable on the machine - GPU VRAM on an integrated GPU, for example - is shown as unavailable rather than as zero. The GPU stats are also disabled by default: they report nothing until `gpu_poll_seconds` is set to a non-zero value, and what each GPU vendor can report is covered under [GPU data sources](#gpu-data-sources).
+A stat whose source is unavailable on the machine - GPU VRAM on an integrated GPU, for example - is shown as unavailable rather than as zero. What each GPU vendor can report is covered under [GPU data sources](#gpu-data-sources).
 
-The stats are read once and shared, but a few *presentation* options stay per widget, because two widgets showing the same stat may want to show it differently: `path` selects which mount `disk_pct` measures, and `interface` selects which kernel interface `net_rx`/`net_tx` measures (an exact name from `/proc/net/dev` such as `wlan0` or `enp5s0`; empty means the total across all non-loopback interfaces). Both are documented with the widget settings.
+The stats are read once and shared, but a few *presentation* options stay per widget, because two widgets showing the same stat may want to show it differently: `path` selects which mount the four disk stats measure, and `interface` selects which kernel interface `net_rx`/`net_tx` measures (an exact name from `/proc/net/dev` such as `wlan0` or `enp5s0`; empty means the total across all non-loopback interfaces). Both are documented with the widget settings.
 
 ## GPU data sources
 
@@ -132,8 +135,14 @@ ram_pct_activity_threshold   = 60     # %
 ram_pct_critical_threshold   = 90     # %
 swap_pct_activity_threshold  = 20     # %
 swap_pct_critical_threshold  = 80     # %
-disk_pct_activity_threshold  = 80     # %
-disk_pct_critical_threshold  = 95     # %
+disk_used_pct_activity_threshold = 80 # %
+disk_used_pct_critical_threshold = 95 # %
+disk_used_activity_threshold     = 80 # %
+disk_used_critical_threshold     = 95 # %
+disk_free_pct_activity_threshold = 80 # %
+disk_free_pct_critical_threshold = 95 # %
+disk_free_activity_threshold     = 80 # %
+disk_free_critical_threshold     = 95 # %
 net_rx_activity_threshold    = 1      # MB/s
 net_rx_critical_threshold    = 50     # MB/s
 net_tx_activity_threshold    = 1      # MB/s
@@ -151,7 +160,10 @@ The value's color is interpolated between the widget's regular foreground color 
 | `gpu_vram_activity_threshold` / `gpu_vram_critical_threshold` | `50` / `90` | % | GPU VRAM usage |
 | `ram_pct_activity_threshold` / `ram_pct_critical_threshold` | `60` / `90` | % | RAM usage (also `ram_used`) |
 | `swap_pct_activity_threshold` / `swap_pct_critical_threshold` | `20` / `80` | % | Swap usage |
-| `disk_pct_activity_threshold` / `disk_pct_critical_threshold` | `80` / `95` | % | Disk usage |
+| `disk_used_pct_activity_threshold` / `disk_used_pct_critical_threshold` | `80` / `95` | % | Disk used % |
+| `disk_used_activity_threshold` / `disk_used_critical_threshold` | `80` / `95` | % | Disk used |
+| `disk_free_pct_activity_threshold` / `disk_free_pct_critical_threshold` | `80` / `95` | % | Disk free % |
+| `disk_free_activity_threshold` / `disk_free_critical_threshold` | `80` / `95` | % | Disk free |
 | `net_rx_activity_threshold` / `net_rx_critical_threshold` | `1` / `50` | MB/s | Network download |
 | `net_tx_activity_threshold` / `net_tx_critical_threshold` | `1` / `50` | MB/s | Network upload |
 
