@@ -35,6 +35,7 @@ boolean immediately to say whether the work was accepted, then deliver results t
 | `noctalia.setWallpaper(connector, path)` | nothing | Applies and persists a wallpaper image on one output. |
 | `noctalia.wallpaperDirectory()` | string or `nil` | Returns the resolved wallpaper folder for the current theme mode, or `nil` when unset. |
 | `noctalia.togglePanel("author/plugin:panel")` | nothing | Opens or closes a plugin panel by full entry id. |
+| `noctalia.openSettings()` | nothing | Opens the settings window at this plugin's own settings, closing any open panel. Requires <PluginApiBadge feature="open-settings" />. |
 
 `outputs()` uses the DRM connector name in `name`; that is the same connector string expected by compositor tools such
 as `mpvpaper`. A `[[service]]` may also define `onOutputsChanged()`, which Noctalia calls whenever the output set or
@@ -42,6 +43,10 @@ geometry changes.
 
 `setWallpaper(path)` behaves like the built-in wallpaper panel. Prefer it and `togglePanel(id)` over shelling out to the
 `noctalia` CLI from a plugin; the API path runs in-process and avoids an IPC round trip.
+
+`openSettings()` takes no id - the host uses the calling plugin's own id, so a plugin can only ever open its own page.
+It is the way to offer a "configure me" affordance from a panel or widget, since plugins read config but cannot write
+it. Nothing happens when the plugin declares no settings; the host logs a warning.
 
 ## Dialogs
 
