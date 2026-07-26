@@ -74,6 +74,8 @@ The login box uses the same inspector layout as other lockscreen widgets:
 | --- | --- | --- | --- |
 | `layout` | `regular` | `compact` \| `regular` | Login panel layout |
 | `show_session_buttons` | `true` | bool | Regular: show session actions from `[shell.session].actions` (lock actions omitted) |
+| `show_media` | `true` | bool | Regular: show media in the info row; at least one of `show_media` / `show_weather` must stay on. When one is off, its partner toggle is hidden in the editor |
+| `show_weather` | `true` | bool | Regular: show weather beside media. Alone, weather is centered and shows more forecast days; when unavailable while media is on, media fills the row |
 | `background_color` | `surface_variant` | color role | Outer login bar fill |
 | `background_opacity` | `0.88` | `0.0`–`1.0` | Outer login bar opacity |
 | `background_radius` | `12` | `0`–`32` | Outer login bar corner radius (logical px) |
@@ -89,6 +91,8 @@ The login box uses the same inspector layout as other lockscreen widgets:
 [lockscreen_widgets.widget."lockscreen-login-box@DP-1".settings]
 layout = "regular"
 show_session_buttons = true
+show_media = true
+show_weather = true
 background_color = "surface_variant"
 background_opacity = 0.75
 background_radius = 16.0
