@@ -162,10 +162,13 @@ right = "panel-toggle control-center weather"
 forward = "exec gnome-calendar"
 ```
 
-Turn a spacer into a hidden hot zone - widgets with nothing to click become clickable as soon as you
-bind them:
+Turn a spacer into a hidden hot zone. Spacers are non-interactive by default, so turn
+Interactive on and bind the gestures you want:
 
 ```toml
+[widget.spacer]
+interactive = true
+
 [widget.spacer.actions]
 left = "panel-toggle launcher"
 ```
