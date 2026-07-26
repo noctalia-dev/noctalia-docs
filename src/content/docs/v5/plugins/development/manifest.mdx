@@ -158,8 +158,12 @@ label = "Short"
 | `default` | seeded value (must match the type) |
 | `min` / `max` | for `int` / `double` |
 | `options` | for `select`: array of `{ value, label_key }`; both fields are required |
+| `extensions` | optional array of extensions for `file`, such as `[".toml", ".json"]`; empty allows any file |
 | `visible_when` | `{ key = "other_key", values = ["true"] }` - conditional visibility |
 | `advanced` | hide behind the "show advanced" toggle |
+
+`file` and `folder` store strings but render as a text input with a browse button in each settings editor. Use
+`extensions` to filter a `file` picker; users can still enter a path directly.
 
 `string_map` requires <PluginApiBadge feature="string-map-setting" />. It stores string keys associated with string values and is returned from
 `noctalia.getConfig()` as an associative Luau table. Its default is a TOML table:
