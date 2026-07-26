@@ -20,6 +20,10 @@ middle = "exec notify-send 'Media' 'Middle click'"
 Widgets ship with sensible defaults, so you only declare the gestures you want to change. Clearing a
 binding in the settings editor restores the default.
 
+The Actions section in Settings is shown only while the widget is `interactive`. With
+`interactive = false`, pointer gestures pass through and the section is hidden (bindings in config
+are left alone).
+
 ## Gestures
 
 The vocabulary is fixed. Any other key is a config error.
