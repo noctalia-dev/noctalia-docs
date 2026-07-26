@@ -101,9 +101,11 @@ example to phase an entry's updates onto a second boundary.
 |--------|---------|-------------|
 | `noctalia.systemStats()` | table or `nil` | Snapshot of the host's system monitor. `nil` when `[system.monitor]` is disabled. Requires <PluginApiBadge feature="system-stats" />. |
 | `noctalia.cpuCores()` | array or `nil` | Per-core CPU usage percentages. `nil` when the monitor is disabled or no sample is ready yet. Requires <PluginApiBadge feature="system-stats" />. |
+| `noctalia.diskMounts()` | array | Physical block-device-backed filesystems available to `diskStats()`. Requires <PluginApiBadge feature="extended-system-stats" />. |
+| `noctalia.diskStats(path)` | table or `nil` | Latest disk usage snapshot for an absolute or `~/` path. `nil` when the monitor or path is unavailable. Requires <PluginApiBadge feature="extended-system-stats" />. |
 
-`systemStats()` returns a copy of the host's most recent sample. It never enables a metric the host was not already
-collecting, so reading it costs nothing beyond the copy.
+`systemStats()` returns a copy of the host's most recent sample. Its first call opts the plugin into the optional CPU
+temperature and GPU probes represented in the snapshot; those probes are released when the plugin unloads.
 
 ```lua
 local stats = noctalia.systemStats()
@@ -114,19 +116,41 @@ end
 
 | Field | Type | Notes |
 |-------|------|-------|
+| `sampledAtMs` | number | Unix epoch milliseconds for the latest aggregate sample. Absent until the first sample. Requires <PluginApiBadge feature="extended-system-stats" />. |
 | `cpu.usagePercent` | number | Aggregate CPU busy percentage, 0-100. |
 | `cpu.tempC` | number | Absent when no CPU temperature sensor was found. |
 | `ram.usagePercent`, `ram.usedMb`, `ram.totalMb` | number | |
 | `swap.usedMb`, `swap.totalMb` | number | |
 | `gpu.tempC`, `gpu.usagePercent`, `gpu.vramUsedBytes`, `gpu.vramTotalBytes` | number | Each is absent when that GPU probe is unavailable. |
 | `net.rxBytesPerSec`, `net.txBytesPerSec` | number | Totalled across interfaces. |
+| `net.interfaces` | table | Receive/transmit rates keyed by interface name. Requires <PluginApiBadge feature="extended-system-stats" />. |
 | `loadAvg` | array | The 1, 5, and 15 minute load averages. |
 
 Absent sensors are `nil` rather than `0`, so a plugin can tell "no probe" from "idle". Test with
-`if stats.gpu.tempC ~= nil then` before using an optional field.
+`if stats.gpu.tempC ~= nil then` before using an optional field. A newly enabled probe may remain `nil` until its first
+configured poll.
 
 Values refresh on the poll intervals configured in [`[system.monitor]`](/v5/services/system-monitor/), CPU every 2
 seconds by default, not on every call. Calling `systemStats()` more often than that returns the same sample again.
+
+### Disk usage
+
+```lua
+for _, mount in ipairs(noctalia.diskMounts()) do
+  local disk = noctalia.diskStats(mount.path)
+  if disk ~= nil then
+    noctalia.log(string.format("%s %.0f%% used", mount.path, disk.usagePercent))
+  end
+end
+```
+
+`diskMounts()` returns `{ path, source, filesystem }` for physical block-device-backed filesystems,
+deduplicated by source and sorted by mount path. Pseudo filesystems, loop and squashfs mounts, and boot mounts are
+excluded.
+
+`diskStats()` accepts an absolute path or a path beginning with `~/`. The first call for each valid path opts that path
+into disk sampling until the plugin unloads. The result contains `usagePercent`, `totalBytes`, `freeBytes`, and
+`availableBytes`. It does not expose sample history.
 
 ### Per-core CPU usage
 
@@ -140,8 +164,8 @@ end
 ```
 
 The first call opts the plugin into per-core sampling, which costs one extra `/proc/stat` read per second for as long as
-the plugin stays loaded. `systemStats()` on its own does not, so only call `cpuCores()` if you actually draw per-core
-data. Sampling runs on a fixed 1 second cadence, independent of `cpu_poll_seconds`.
+the plugin stays loaded. `systemStats()` does not enable per-core sampling, so only call `cpuCores()` if you actually
+draw per-core data. Sampling runs on a fixed 1 second cadence, independent of `cpu_poll_seconds`.
 
 Two reads are needed to produce the first result, so expect `nil` for up to a second after the first call. Treat `nil`
 as "not ready yet" rather than "this machine has no cores".
