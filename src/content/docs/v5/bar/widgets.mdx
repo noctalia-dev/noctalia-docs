@@ -28,7 +28,7 @@ This allows multiple named widgets with the same widget type:
 type   = "clock"
 format = "{:%H:%M:%S}"
 
-[bar.main]
+[bar.default]
 end = ["clock", "clock-seconds"]   # two clock widgets, different formats
 ```
 
@@ -93,7 +93,7 @@ Fixed text on the bar. Requires a named `[widget.<name>]` entry.
 type = "text"
 text = "noctalia"
 
-[bar.main]
+[bar.default]
 start = ["hostname", "workspaces"]
 ```
 
