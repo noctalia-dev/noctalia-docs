@@ -40,7 +40,7 @@ play_sound      = true
 - When `monitors` is non-empty, toasts are only created on matching monitors.
 - If none of the configured monitors are currently connected (e.g. an external display was undocked), Noctalia falls back to showing toasts on all available monitors so notifications never disappear silently. Targeting is restored automatically when a configured monitor reconnects.
 - Selector matching follows monitor override rules: exact connector name (`eDP-1`) or a word-boundary token in the monitor description.
-- Internal Noctalia notifications are transient toasts and are not stored in notification history.
+- Internal Noctalia notifications (shell and plugins) are toast-only and are never stored in notification history.
 - `history_retention_hours` removes stored external notifications older than the configured number of hours. The default
   `0` retains history indefinitely; accepted values are `0`–`8760`.
 - `collapse_on_dismiss = true` (default) causes remaining toasts to slide into a compact stack when one is dismissed. Set to `false` for stable-slot behavior where toasts keep their original positions.
@@ -49,19 +49,29 @@ play_sound      = true
 
 ## Filtering
 
-External notifications (from `org.freedesktop.Notifications` clients) can be filtered before toasts, sounds, and control-center history:
+Notifications can be filtered before toasts and sounds. External Freedesktop notifications can also be kept out of control-center history. Internal shell/plugin toasts use the same toast/sound filters, but they are never written to history (the save-history flag does not apply to them).
 
 - `[notification.filter.<name>]` - per-sender rules evaluated in `filter_order` (first matching enabled filter wins). Each filter has:
  - `match` - one case-insensitive token matched against the app name (exact or substring), `desktop-entry`, or `category`.
  - `match_content` - optional regular expression matched against the notification summary or body.
  - `allowed_urgencies` - when non-empty, only listed urgency levels pass this filter. Values: `low`, `normal`, `critical`. Omit or list all three to allow every level.
  - `show_toast` - show a toast popup (default `true`).
- - `save_history` - keep the notification in control-center history (default `true`).
+ - `save_history` - keep the notification in control-center history (default `true`). External notifications only; internals are never stored.
  - `play_sound` - play the notification sound when a toast is shown (default `true`).
  - `allow_permanent` - allow this sender to create persistent (0-timeout) toasts (default `true`). When `false`, persistent toasts are forced to the standard expiration timeout.
  - `override_duration` - force a specific display duration in milliseconds, overriding both the default timeout and any timeout requested by the sender.
 
 When no filter matches, all flags default to allow. A fully suppressed notification (no toast and no history) still returns a valid D-Bus id; `CloseNotification` on that id succeeds without showing a toast.
+
+To hide a plugin toast such as Audio Switcher, match its summary or body and disable the toast:
+
+```toml
+[notification.filter.audio-switcher]
+enabled       = true
+match_content = "Audio Switcher|Output switched"
+show_toast    = false
+play_sound    = false
+```
 
 Legacy `blacklist` keys are migrated on read into filters with all actions disabled. Legacy top-level `allowed_urgencies` is migrated onto filters that do not already define their own list. Deprecated `allow_critical` / `blacklist_allow_critical` keys are ignored on read.
 
@@ -83,9 +93,10 @@ save_history  = false
 play_sound    = true
 ```
 
-The empty app match and `.*` content regex match every external notification. Because the first matching enabled filter
+The empty app match and `.*` content regex match every notification for toast/sound purposes. Because the first matching enabled filter
 wins, keep `no_history` first in `filter_order` if you add other filters. In Settings, leave **App** empty, enter `.*`
-for **Content Regex**, and disable **Save to history**.
+for **Content Regex**, and disable **Save to history**. Note that a catch-all with `show_toast = false` would also hide
+internal shell/plugin toasts.
 
 This affects new notifications only. Use `noctalia msg notification-clear-history` to remove entries already stored in
 history.
