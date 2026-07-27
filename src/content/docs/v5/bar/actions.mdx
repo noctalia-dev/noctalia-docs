@@ -40,8 +40,27 @@ The vocabulary is fixed. Any other key is a config error.
 | `scroll_left` | Wheel or touchpad, left |
 | `scroll_right` | Wheel or touchpad, right |
 
-Scrolling is quantized into whole wheel detents, so a mouse notch and a touchpad flick both count as
-one step and fire the action once.
+Scroll input is quantized into whole wheel-detent steps. The widget's `scroll_repeat` setting decides
+whether each step fires its action or one gesture fires it once.
+
+## Scroll repetition
+
+Set `scroll_repeat` under the widget itself:
+
+```toml
+[widget.workspaces]
+scroll_repeat = "steps"
+```
+
+| Value | Behavior |
+|---|---|
+| `auto` | Cycle commands such as workspace, taskbar, media, and power-profile navigation run once per gesture. Ramp commands such as volume and brightness run for every step. |
+| `gesture` | Run any bound scroll action once per gesture. |
+| `steps` | Run any bound scroll action for every quantized scroll step. |
+
+`auto` is the default. Use `steps` when one longer touchpad movement or several quick wheel detents
+should cross multiple workspaces or tasks. Use `gesture` when noisy hardware should never produce
+more than one action per movement. Reversing direction always starts a new gesture.
 
 There are no modifier combinations such as `ctrl+left`. The bar never takes keyboard focus, so it
 cannot know which modifiers are held.

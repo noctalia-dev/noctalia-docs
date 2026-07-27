@@ -230,7 +230,8 @@ Persistent panels trade away the features that only make sense for a transient p
 - `keyboard_focus = "exclusive"` is rejected: a surface that is never dismissed would hold the keyboard forever
 - no `ui.select` dropdowns or context menus inside the panel yet
 
-**Placement** matches built-in shell panels (`attached` merges with the bar, `floating` opens detached). The host
+**Placement** matches built-in shell panels (`attached` anchors the panel's own surface to the bar edge, while `floating`
+opens detached). The host
 injects three standard settings for every `[[panel]]` entry - you do **not** declare them as `[[panel.setting]]` unless
 you need a custom key. They appear in **Settings → Plugins** (gear on the plugin row) with the same controls as built-in
 panels: a segmented **Attached / Floating** toggle, a **Position** dropdown (only when floating), and **Open Near

@@ -63,8 +63,9 @@ noctalia msg plugins source add my-dev path ~/dev/my-plugins
 noctalia msg plugins source remove my-repo
 ```
 
-The built-in `official` and `community` sources can be updated and have their **Update on startup** toggle changed in
-Settings, but are protected from removal in Settings and IPC. Custom git/path sources are removable.
+The built-in `official` and `community` sources can be updated and enabled or disabled in Settings, but are protected
+from removal in Settings and IPC. Custom git/path sources are removable. **Update automatically** controls the global
+`[plugins].auto_update` setting for every enabled git source.
 
 Enabling a plugin makes its entries available. Its **bar widget** then shows up in the Add-widget picker - add a widget
 instance just like any built-in widget (or configure one by hand with `type = "<author>/<plugin>:<entry>"`). A
@@ -82,13 +83,14 @@ also writes runtime toggles to its state file, and both are merged.
 [plugins]
 # Fully-qualified ids ("<author>/<plugin>") that are active.
 enabled = ["noctalia/screen_recorder"]
+auto_update = true # update every enabled git source on startup and every 6 hours
 
 # A git source: cached and updated by Noctalia.
 [[plugins.source]]
-name        = "official"
-kind        = "git"
-location    = "https://github.com/noctalia-dev/official-plugins"
-auto_update = false   # opt-in background pull on startup (off by default)
+name     = "official"
+kind     = "git"
+location = "https://github.com/noctalia-dev/official-plugins"
+enabled  = true
 
 # A path source: an immutable local directory Noctalia treats read-only
 # (no git ops). Ideal for local development or Nix-managed plugins.
@@ -96,7 +98,10 @@ auto_update = false   # opt-in background pull on startup (off by default)
 name     = "my-dev"
 kind     = "path"
 location = "~/dev/my-plugins"
+enabled  = true
 ```
+
+`enabled = false` on a source prevents it from being scanned or updated while retaining its app-managed clone.
 
 Plugins placed by hand under `~/.local/share/noctalia/plugins/<plugin>/` are discovered as a built-in **local** source - 
 handy for development. Like every plugin, they must be enabled before they activate. See
@@ -113,8 +118,9 @@ needed.
 
 ## Updating
 
-`noctalia msg plugins update <source>` updates the source and hot-reloads its enabled plugins. Git sources can opt into
-`auto_update` for a background update on startup. Updates are safe per enabled plugin: if one enabled plugin's new
+`noctalia msg plugins update <source>` updates the source and hot-reloads its enabled plugins. When the global
+`[plugins].auto_update` setting is `true` (default), every enabled git source is updated on startup and every 6 hours.
+Updates are safe per enabled plugin: if one enabled plugin's new
 version targets an unsupported plugin API level, Noctalia keeps that plugin's previous exported copy, still updates
 compatible enabled plugins from the same source, and advances the source catalog. After Noctalia gains support for that
 API level, the held plugin can catch up from the already-updated source revision.

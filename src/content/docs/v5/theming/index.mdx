@@ -15,6 +15,7 @@ builtin           = "Noctalia"    # bundled palette name
 community_palette = "Oxocarbon"   # community palette name when source = "community"
 custom_palette    = "MyPalette"   # file name (without .json) when source = "custom"
 wallpaper_scheme  = "m3-content"  # generator used when source = "wallpaper"
+pure_black_dark   = false         # replace dark-mode backgrounds with pure black
 ```
 
 Palette changes apply live when the resolved config changes, whether through Settings or edits to `~/.config/noctalia/*.toml`. Wallpaper-derived themes re-resolve automatically when the default wallpaper changes. See [Palette](/v5/theming/palette/) for color roles, custom palette files, and terminal colors.
@@ -29,6 +30,11 @@ sunset computed from your coordinates, or your own `sunset` / `sunrise` times wh
 [`custom_schedule = true`](/v5/services/location/#custom-schedule). Night light does not need to be enabled for theme
 auto to follow the schedule. When the schedule cannot be resolved, `auto` uses the light (day) palette until a valid
 schedule is available.
+
+## `pure_black_dark`
+
+When `true`, replaces dark-mode background roles with pure black while preserving the palette's foreground and accent
+colors. It has no effect in light mode. Accessibility `high_contrast` also forces this behavior for dark themes.
 
 ### Related IPC
 

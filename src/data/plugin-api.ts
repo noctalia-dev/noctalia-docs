@@ -99,6 +99,18 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     feature: 'widget-gesture-actions',
     introduced: 'The `[widget.actions]` entry table, declaring bar gesture defaults.',
   },
+  {
+    level: 15,
+    noctaliaVersion: null,
+    feature: 'open-settings',
+    introduced: '`noctalia.openSettings()`, opening the settings window at the plugin\'s own settings.',
+  },
+  {
+    level: 16,
+    noctaliaVersion: null,
+    feature: 'extended-system-stats',
+    introduced: 'Per-interface network rates, sample timestamps, and disk mount/stat APIs.',
+  },
 ];
 
 export const CURRENT_PLUGIN_API = Math.max(...PLUGIN_API_LEVELS.map((entry) => entry.level));

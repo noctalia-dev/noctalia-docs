@@ -176,7 +176,7 @@ Set auto-hide to **Smart** in bar settings (or `smart_auto_hide = true` with `au
 
 `margin_opposite_edge` adds extra reserved space on the inward side of the bar (below a top bar, above a bottom bar, and so on for vertical bars). The bar itself does not move; the compositor exclusive zone grows so tiled and maximized windows stop further away. Use it when a compositor ignores or under-reserves struts - for example Labwc with a maximized window that still touches the bar. Requires `reserve_space = true`. The default is `0`.
 
-`layer = "overlay"` shows the bar above fullscreen apps. Attached panels (for example Control Center when it attaches to the bar) follow the bar's layer. Centered or floating panel placements keep each panel's own layer (typically overlay).
+`layer = "overlay"` shows the bar above fullscreen apps. Attached panels (for example Control Center when it attaches to the bar) follow the bar's layer. Floating panels keep their own layer (typically overlay), including when their screen position is `center`.
 
 The IPC `bar-layer-set <top|overlay> [bar-name] [monitor-selector]` switches the layer of matching bar instance(s) at runtime; omit `bar-name` to update every bar. The change is transient and resets to the configured `layer` on the next config reload. This is handy for peeking the bar above a fullscreen window on a keybind, for example in niri:
 
@@ -217,6 +217,9 @@ Set under `[widget.<name>]`:
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `scale` | number | `1.0` | Multiplies the owning bar's `scale` for this widget only (clamped 0.2–2.5). |
+| `anchor` | bool | `false` | Pin this widget as the center lane's alignment anchor. |
+| `font_family` | string | *(from bar)* | Typeface for this widget. Leave empty to inherit the owning bar's font. |
+| `font_weight` | integer | *(from bar)* | CSS font weight `100`–`1000`. Leave unset to inherit the owning bar's weight. |
 | `capsule` | bool | *(from bar)* | Omit to inherit bar flag; `false` disables; `true` forces on. |
 | `capsule_radius` | number | *(from bar)* | Per-widget corner radius (0–80). Omit to inherit; omit at every level for automatic pill radius. |
 | `capsule_fill` | string | *(from bar)* | Capsule background color role; fixed hex colors are also supported. |
@@ -227,6 +230,7 @@ Set under `[widget.<name>]`:
 | `color` | string | *(unset)* | Icon + label color role with or without capsule; fixed hex colors are also supported. Resolution order: `color` → `capsule_foreground` → built-in defaults. |
 | `icon_color` | string | *(unset)* | Overrides `color` for icons only. Resolution order for icons: `icon_color` → `color` → `capsule_foreground` → built-in defaults. Labels always use `color`. |
 | `interactive` | bool | `true` (spacers: `false`) | Set `false` to make the widget passive: hover highlight and tooltips are disabled, pointer events (clicks, scrolls) pass through to the bar underneath, and the **Actions** settings section is hidden. The widget is still drawn — use `enabled = false` to hide it entirely. Spacers default to non-interactive so they stay click-through layout gaps. |
+| `scroll_repeat` | string | `auto` | Scroll action repetition: `auto` uses once-per-gesture for cycle commands and every-step for ramp commands; `gesture` always runs once per gesture; `steps` always runs for every quantized step. |
 | `enabled` | bool | `true` | Show or hide this widget on the bar. Disabled widgets are not created and consume no resources. |
 
 Prefer color role names so widget styling follows the active palette. Role names use **snake_case** (e.g. `on_surface`, `surface_variant`, `secondary`). Use fixed hex colors only when you deliberately want a non-palette color; hex may use `#RGB`, `#RGBA`, `#RRGGBB`, or `#RRGGBBAA`. Invalid role names or malformed hex colors are treated as config errors.
