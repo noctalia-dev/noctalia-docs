@@ -7,7 +7,7 @@ sidebar:
 
 ```toml
 [notification]
-enable_daemon          = true        # when false, don't claim org.freedesktop.Notifications; internal toasts still work
+enable_daemon            = true        # when false, don't claim org.freedesktop.Notifications; internal toasts still work
 show_app_name            = true        # show the sending application name in toasts
 show_actions             = true        # show action buttons; when false, clicking a toast triggers its default action
 position                 = "top_right" # top_right | top_left | top_center | bottom_right | bottom_left | bottom_center
@@ -45,6 +45,7 @@ play_sound      = true
   `0` retains history indefinitely; accepted values are `0`–`8760`.
 - `collapse_on_dismiss = true` (default) causes remaining toasts to slide into a compact stack when one is dismissed. Set to `false` for stable-slot behavior where toasts keep their original positions.
 - `border = true` (default) draws an outline around toast cards. Set to `false` for a borderless look.
+- `history_retention_hours = 0` (default) keeps notification history entries forever. Set to a positive integer (1–8760) to automatically remove entries older than that many hours from control-center history. Active on-screen toasts are never removed. Configure in **Settings → Notifications → History**.
 
 ## Filtering
 
