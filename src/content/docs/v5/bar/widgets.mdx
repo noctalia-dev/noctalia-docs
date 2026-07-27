@@ -273,6 +273,7 @@ System resource monitor. Shows an icon and value for one configurable stat. Mult
 | `network_speed_compact` | bool | `false` | Use short unit suffixes such as `1.2M` instead of `1.2 MB/s` for `net_rx`/`net_tx` |
 | `display` | string | `"gauge"` | `"gauge"` = icon + vertical fill bar; `"graph"` = icon + sparkline; `"text"` = icon + value; `"none"` = only icon |
 | `highlight_color` | string | `"error"` | Color role (or fixed hex) the value tints toward as the stat rises past its activity/critical thresholds. See [System Monitor](/v5/services/system-monitor/). |
+| `show_icon` | bool | `true` | Show the icon |
 | `show_label` | bool | `true` | Show the text value next to the graph or gauge (always shown in `"text"` mode, never shown in `"none"` mode) |
 | `label_min_width` | float | `0` | Minimum label width in pixels to prevent resizing as values change. Only relevant when `show_label` is enabled. |
 | `label_show_units` | bool | `true` | Include units such as `%`, `GiB`, or `°C` in the value label. |
