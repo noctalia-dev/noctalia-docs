@@ -13,9 +13,11 @@ These commands are useful for media keys, compositor binds, scripts, and custom 
 
 | Action | Command | Description |
 |--------|---------|-------------|
+| Enable all OSD popups | <IpcCommand command="osd-enable" /> | Enable OSD popups for the running shell. |
+| Disable all OSD popups | <IpcCommand command="osd-disable" /> | Disable OSD popups and close any visible popup. |
 | Toggle all OSD popups | <IpcCommand command="osd-toggle" /> | Toggle OSD popups at runtime and print `on` or `off`. |
 
-`osd-toggle` applies only to the running shell and never changes the saved `[osd].enabled` setting. Turning OSDs off
+`osd-enable`, `osd-disable`, and `osd-toggle` apply only to the running shell and never change the saved `[osd].enabled` setting. Turning OSDs off
 immediately closes any visible popup. An explicit change to the saved OSD toggle cancels the runtime override.
 
 ## Volume
