@@ -1,6 +1,6 @@
 ---
 title: System Controls
-description: IPC commands for volume, microphone, brightness, night light, Wi-Fi, Bluetooth, caffeine, and power profile.
+description: IPC commands for OSDs, volume, microphone, brightness, night light, Wi-Fi, Bluetooth, caffeine, and power profile.
 sidebar:
   order: 5
 ---
@@ -8,6 +8,15 @@ sidebar:
 import IpcCommand from '../../../../components/IpcCommand.astro';
 
 These commands are useful for media keys, compositor binds, scripts, and custom widgets.
+
+## OSD
+
+| Action | Command | Description |
+|--------|---------|-------------|
+| Toggle all OSD popups | <IpcCommand command="osd-toggle" /> | Toggle OSD popups at runtime and print `on` or `off`. |
+
+`osd-toggle` applies only to the running shell and never changes the saved `[osd].enabled` setting. Turning OSDs off
+immediately closes any visible popup. An explicit change to the saved OSD toggle cancels the runtime override.
 
 ## Volume
 
