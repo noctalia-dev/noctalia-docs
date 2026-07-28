@@ -111,6 +111,19 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     feature: 'extended-system-stats',
     introduced: 'Per-interface network rates, sample timestamps, and disk mount/stat APIs.',
   },
+  {
+    level: 17,
+    noctaliaVersion: null,
+    feature: 'service-lifecycle',
+    introduced:
+      'Service entries start when the plugin is enabled instead of only at launch, and `onExit(signal, reason)` reports `reload`, `disable`, `uninstall`, or `shutdown`.',
+  },
+  {
+    level: 18,
+    noctaliaVersion: null,
+    feature: 'panel-frame-tick',
+    introduced: '`panel.setNeedsFrameTick(bool)`, delivering `onFrameTick(deltaMs)` to an open panel.',
+  },
 ];
 
 export const CURRENT_PLUGIN_API = Math.max(...PLUGIN_API_LEVELS.map((entry) => entry.level));

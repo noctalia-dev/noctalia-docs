@@ -190,7 +190,7 @@ A panel is a pop-up surface that describes its UI as a `ui.*` tree, exactly like
 `ui.slider`, `ui.toggle`, `ui.scroll`) because it takes keyboard focus while open. Render in `onOpen` (and again from
 any callback that changes state):
 
-`render(tree)` · `close()` · `setWantsSecondTicks(bool)`
+`render(tree)` · `close()` · `setWantsSecondTicks(bool)` · `setNeedsFrameTick(bool)`
 
 Panel **size is host-owned**: declare `width` and `height` on the `[[panel]]` entry, so the surface is the
 same size on every open. There is no `setSize` at runtime. Each axis takes a positive number (logical px) or the
@@ -202,6 +202,11 @@ full-available rather than a broken surface.
 Set `dismiss_on_outside_click = false` for auth-style prompts (password / API key) so a misclick does not discard
 the panel; the default is `true`. Requires <PluginApiBadge feature="dismiss-on-outside-click" />. Escape and an explicit Close / Cancel control still
 dismiss it.
+
+`setWantsSecondTicks(true)` runs `update()` on second boundaries; `setNeedsFrameTick(true)` additionally delivers
+`onFrameTick(deltaMs)` every frame while the panel is open, for animation the script drives itself. Ticks stop on
+close and resume on the next open, and frames are coalesced - a slow script only ever sees the latest one. Requires
+<PluginApiBadge feature="panel-frame-tick" />.
 
 ### Keyboard focus
 
