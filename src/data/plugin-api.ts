@@ -111,6 +111,12 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     feature: 'extended-system-stats',
     introduced: 'Per-interface network rates, sample timestamps, and disk mount/stat APIs.',
   },
+  {
+    level: 17,
+    noctaliaVersion: null,
+    feature: 'service-lifecycle',
+    introduced: 'Service `onEnable()` and lifecycle reasons in `onExit(signal, reason)`.',
+  },
 ];
 
 export const CURRENT_PLUGIN_API = Math.max(...PLUGIN_API_LEVELS.map((entry) => entry.level));
