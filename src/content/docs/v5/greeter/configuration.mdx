@@ -242,7 +242,7 @@ sudo systemctl restart greetd
 
 ## UI scale
 
-On high-DPI panels (for example 4K without fractional scaling), the compositor scales output from the monitor's physical size when EDID reports it, otherwise from resolution. Scale is capped at 2×. The greeter client lays out at logical size and renders HiDPI buffers via Wayland fractional scale.
+On high-DPI panels (for example 4K without fractional scaling), the compositor scales output from the monitor's physical size when EDID reports it, otherwise from resolution. Scale uses the **selected DRM mode** size (not the pre-modeset `wlr_output` size), so cold boot and post-logout match. Scale is capped at 2×. The greeter client lays out at logical size and renders HiDPI buffers via Wayland fractional scale.
 
 To override auto scaling, set `[output].scale`:
 
