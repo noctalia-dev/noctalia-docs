@@ -6,6 +6,8 @@ sidebar:
   order: 3
 ---
 
+import PluginApiBadge from '../../../../../components/PluginApiBadge.astro';
+
 :::caution[Beta - APIs may still change]
 The plugin system is in **beta**. The manifest format and APIs may still change before v5 is stable, so build with that in mind.
 :::
@@ -21,12 +23,13 @@ apply depends on the entry kind:
 | `onScroll(axis, steps, startsGesture)` | ✓ | | | | | | wheel or touchpad scroll over the widget (see below) |
 | `onQuery(text)` | | | ✓ | | | | launcher text changed (behind the prefix) |
 | `onActivate(id)` | | | ✓ | | | | a launcher result was selected |
+| `onEnable()` | | | | | | ✓ | the plugin was explicitly enabled successfully (see below) |
 | `onOpen(context)` / `onClose()` | | | | | ✓ | | the panel is opened / closed |
 | `onKey(chord, pressed)` | | | | | ✓ | | a `capture_keys` chord while the panel is focused ([details](/v5/plugins/development/declarative-ui/#handling-keys-directly)) |
 | `onFrameTick(deltaMs)` | | | | ✓ | ✓ | | every frame, after `desktopWidget.setNeedsFrameTick(true)` / `panel.setNeedsFrameTick(true)` |
 | `onIpc(event, payload)` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | `noctalia msg plugin …` |
 | `onConfigChanged()` | | | | | | ✓ | a plugin setting changed (see below) |
-| `onExit(signal)` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | the entry runtime is about to be destroyed (see below) |
+| `onExit(signal, reason)` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | the entry runtime is about to be destroyed (see below) |
 
 The top level of the script runs once at load - set up state and register `noctalia.state.watch` handlers there.
 
@@ -89,19 +92,65 @@ silences the callback outright.
 
 ### Cleaning up when an entry exits
 
-Define `onExit(signal)` to release resources owned by an entry before its Luau runtime is destroyed. It runs when
+Define `onExit(signal, reason)` to release resources owned by an entry before its Luau runtime is destroyed. It runs when
 Noctalia exits normally, when a plugin or entry is disabled or removed, and before a runtime is restarted or reloaded.
-The callback receives `2` for a graceful `SIGINT` shutdown, `15` for `SIGTERM`, and `0` for every other teardown. You
-may omit the parameter when the reason does not matter:
+The first argument remains the process signal: `2` for graceful `SIGINT`, `15` for `SIGTERM`, and `0` for every other
+teardown. The optional second argument requires <PluginApiBadge feature="service-lifecycle" /> and describes why the
+runtime is exiting:
+
+| Reason | Meaning |
+|--------|---------|
+| `"disable"` | The enabled plugin is being explicitly disabled. |
+| `"uninstall"` | The enabled plugin is being explicitly uninstalled. |
+| `"reload"` | The entry is being reloaded, restarted, or otherwise replaced without a process shutdown. |
+| `"shutdown"` | Noctalia is shutting down after `SIGINT` or `SIGTERM`. |
+
+Existing handlers that accept only `signal` remain compatible; Luau ignores the additional argument:
 
 ```lua
-function onExit(_signal)
-  noctalia.runAsync("pkill -TERM -x my-plugin-helper 2>/dev/null || true")
+function onExit(_signal, reason)
+  if reason == "disable" then
+    noctalia.runAsync("systemctl --user stop my-plugin.service")
+  elseif reason == "uninstall" then
+    noctalia.runAsync("systemctl --user disable --now my-plugin.service")
+  end
 end
 ```
 
 Keep cleanup short: `onExit` has the normal callback time budget. It cannot run after `SIGKILL`, a process crash, or
-another abrupt termination that prevents Noctalia from shutting down gracefully.
+another abrupt termination that prevents Noctalia from shutting down gracefully. If cleanup must continue after the
+entry VM is destroyed, call `noctalia.runAsync(command)` without a result callback; the detached command outlives the
+runtime. An uninstall command must use an installed helper or otherwise avoid plugin-directory files, which may be
+removed as soon as the hook returns. A detached command cannot report its eventual result back to the destroyed
+runtime, so make cleanup idempotent and expose a way for the user to retry it.
+
+### Reacting to plugin lifecycle changes in a service
+
+Every entry can use the extended `onExit(signal, reason)`, while service entries can additionally define `onEnable()`.
+Both capabilities require <PluginApiBadge feature="service-lifecycle" />. `onEnable()` runs after an explicit enable
+succeeds and after the service runtime has loaded; it also runs when the user re-enables a disabled plugin:
+
+```lua
+function onEnable()
+  noctalia.runAsync("systemctl --user start my-plugin.service")
+end
+
+function onExit(_signal, reason)
+  if reason == "disable" then
+    noctalia.runAsync("systemctl --user stop my-plugin.service")
+  elseif reason == "uninstall" then
+    noctalia.runAsync("systemctl --user disable --now my-plugin.service")
+  end
+end
+```
+
+`onEnable()` describes an explicit plugin-manager action, not every service start. It does not run during ordinary
+Noctalia startup, a source update, a script reload, or a settings-driven service restart. Use top-level initialization
+for normal service startup.
+
+Lifecycle hooks can only run while an entry runtime exists. Removing a plugin that was already disabled cannot invoke
+`onExit(0, "uninstall")` because none of its entries are loaded. Cleanup that must also cover that sequence should
+therefore be idempotent and available through the plugin's normal controls.
 
 ### Reacting to settings changes in a service
 
