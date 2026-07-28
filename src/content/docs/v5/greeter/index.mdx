@@ -66,6 +66,13 @@ noctalia-greeter sessions
 
 You can also set `[session].default` in [greeter.toml](/v5/greeter/configuration/) - that overrides the last session you picked unless `--session` is passed on the command line.
 
+When you pick a session, the greeter tells greetd to start it with environment from the `.desktop` file **before** PAM opens the session (required for logind session type):
+
+- `XDG_SESSION_TYPE=wayland` for entries under `wayland-sessions`
+- `XDG_CURRENT_DESKTOP` / `XDG_SESSION_DESKTOP` from `DesktopNames=` (`;`-list converted to `:`-separated)
+
+That helps desktop environments that expect those variables (including GNOME). Full GNOME support is still **best-effort** compared to GDM, if login still fails with systemd user-target errors, use GDM for GNOME or a custom session wrapper.
+
 ### Default user
 
 To skip the user list and open the password step for a specific account (similar to tuigreet's default user), set `[user].default` in [greeter.toml](/v5/greeter/configuration/) or pass `--user` on the command line:
@@ -177,6 +184,7 @@ The greeter works without a mouse.
 - **`WAYLAND_DISPLAY is not set`** - greetd must use `noctalia-greeter-session` (it starts `noctalia-greeter-compositor`). Fix `command` in `/etc/greetd/config.toml`.
 - **Black screen after reboot** - Same as blank screen: greetd/syslog first. Confirm the state dir and synced appearance files are present.
 - **Wrong session on startup** - If `[session].default` is set in `greeter.toml`, it wins over last-used `[session].last`. Run `noctalia-greeter sessions` for exact **Name** spelling.
+- **GNOME fails with `graphical-session-pre.target` / kicks back to greeter** - GNOME expects a systemd-managed user session. The greeter passes `XDG_SESSION_TYPE` and `DesktopNames`-derived desktop env via greetd; if that is not enough, use GDM for GNOME or a custom `wayland-sessions` wrapper. See [Default session](#default-session).
 - **Synced look missing** - Install Noctalia v5, the greeter, and the polkit policy; sync again from Settings; restart greetd or log out once.
 - **User avatars missing on the login screen** - Install and enable **accountsservice** / `accounts-daemon`. The greeter reads the avatar from the user's AccountsService `IconFile`; without it, the picker falls back to a placeholder.
 - **Sync fails with no privilege escalator** - Greeter sync needs `pkexec` or `run0` on `PATH` (for example when `pkexec` is disabled on NixOS, install `run0` from systemd ≥ 256). A polkit authentication agent must be running in your session.
