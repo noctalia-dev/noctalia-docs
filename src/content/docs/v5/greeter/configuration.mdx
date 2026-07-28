@@ -118,7 +118,7 @@ When `[output].name` is set, the compositor disables the other connectors at the
 
 On multiple monitors, cursor movement follows `[output].layout`. Without it, the greeter places outputs left-to-right by connector name, which often does not match your desk.
 
-**Sync from Noctalia:** When you use **Settings → Security → Noctalia Greeter → Sync Now**, Noctalia copies monitor positions from your desktop compositor (via xdg-output) into `[output].layout`. Sync skips layout when only one monitor is connected, xdg-output is unavailable, outputs are still enumerating, or all monitors report the same origin.
+**Sync from Noctalia:** When you use **Settings → Security → Noctalia Greeter → Sync Now**, Noctalia copies monitor positions from your desktop compositor (via xdg-output) into `[output].layout`, and copies each connector's output transform into `[output].transforms`. Sync skips layout when only one monitor is connected, xdg-output is unavailable, outputs are still enumerating, or all monitors report the same origin. Transforms sync whenever at least one ready output is available (including a single portrait panel).
 
 Set positions manually if needed:
 
@@ -192,7 +192,7 @@ transforms = "DP-1:normal; HDMI-A-1:90"
 Transform is independent of `[output].width` / `[output].height` (those select the physical DRM mode size before rotation) and of `[output].scale` (UI scale).
 :::
 
-Noctalia **Sync Now** does not write transforms yet — set them in `greeter.toml` by hand (or via your Nix module). Restart greetd after changes:
+Noctalia **Sync Now** also writes `[output].transforms` from your desktop compositor's reported output transforms (including `normal`). You can still set them by hand in `greeter.toml` (or via your Nix module). Restart greetd after changes:
 
 ```sh
 sudo systemctl restart greetd
