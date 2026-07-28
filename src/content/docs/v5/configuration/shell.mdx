@@ -525,7 +525,7 @@ privilege_command = "ghostty -e pkexec"
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| `auto_sync` | `bool` | `false` | Automatically sync the greeter whenever wallpaper, colors, or theme mode change. Ignored when the greeter is not installed. |
+| `auto_sync` | `bool` | `false` | Automatically sync the greeter whenever wallpaper, colors, theme mode, or shell font change. Ignored when the greeter is not installed. |
 | `privilege_command` | `string` | `""` | Replaces the default `pkexec` or `run0` prefix for **Sync Now**. Noctalia appends the `noctalia-greeter-apply-appearance` path and staging directory. Leave empty for the default escalator. |
 
 See [Noctalia Greeter](/v5/greeter/) for seatd and polkit notes.
