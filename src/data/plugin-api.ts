@@ -115,7 +115,8 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     level: 17,
     noctaliaVersion: null,
     feature: 'service-lifecycle',
-    introduced: 'Service `onEnable()` and lifecycle reasons in `onExit(signal, reason)`.',
+    introduced:
+      'Service `onEnable()` and the `shutdown`, `disable`, `uninstall`, and `reload` reasons passed to every entry\'s `onExit(signal, reason)`.',
   },
 ];
 

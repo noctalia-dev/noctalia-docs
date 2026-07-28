@@ -68,7 +68,7 @@ end
 
 `startsGesture` is `true` only on the first step of a scroll gesture in a given direction: the wheel or the finger had
 stopped, or the scroll just reversed. Ramping a value, as above, ignores it and takes every step. Stepping through a
-list wants the opposite - an eageonActivater wheel flick emits several notches that the user means as one move - so act on
+list wants the opposite - an eager wheel flick emits several notches that the user means as one move - so act on
 `startsGesture` and let the rest of the burst fall through:
 
 ```lua
@@ -100,8 +100,8 @@ runtime is exiting:
 
 | Reason | Meaning |
 |--------|---------|
-| `"disable"` | An enabled plugin is being explicitly disabled. Service entries only. |
-| `"uninstall"` | An enabled plugin is being explicitly uninstalled. Service entries only. |
+| `"disable"` | The enabled plugin is being explicitly disabled. |
+| `"uninstall"` | The enabled plugin is being explicitly uninstalled. |
 | `"reload"` | The entry is being reloaded, restarted, or otherwise replaced without a process shutdown. |
 | `"shutdown"` | Noctalia is shutting down after `SIGINT` or `SIGTERM`. |
 
@@ -120,13 +120,15 @@ end
 Keep cleanup short: `onExit` has the normal callback time budget. It cannot run after `SIGKILL`, a process crash, or
 another abrupt termination that prevents Noctalia from shutting down gracefully. If cleanup must continue after the
 entry VM is destroyed, call `noctalia.runAsync(command)` without a result callback; the detached command outlives the
-runtime.
+runtime. An uninstall command must use an installed helper or otherwise avoid plugin-directory files, which may be
+removed as soon as the hook returns. A detached command cannot report its eventual result back to the destroyed
+runtime, so make cleanup idempotent and expose a way for the user to retry it.
 
 ### Reacting to plugin lifecycle changes in a service
 
-Service entries can combine `onEnable()` with the extended `onExit(signal, reason)`. Both require
-<PluginApiBadge feature="service-lifecycle" />. `onEnable()` runs after an explicit enable succeeds and after the
-service runtime has loaded; it also runs when the user re-enables a disabled plugin:
+Every entry can use the extended `onExit(signal, reason)`, while service entries can additionally define `onEnable()`.
+Both capabilities require <PluginApiBadge feature="service-lifecycle" />. `onEnable()` runs after an explicit enable
+succeeds and after the service runtime has loaded; it also runs when the user re-enables a disabled plugin:
 
 ```lua
 function onEnable()
@@ -146,8 +148,8 @@ end
 Noctalia startup, a source update, a script reload, or a settings-driven service restart. Use top-level initialization
 for normal service startup.
 
-Lifecycle hooks can only run while a service runtime exists. Removing a plugin that was already disabled cannot invoke
-`onExit(0, "uninstall")` because its services are no longer loaded. Cleanup that must also cover that sequence should
+Lifecycle hooks can only run while an entry runtime exists. Removing a plugin that was already disabled cannot invoke
+`onExit(0, "uninstall")` because none of its entries are loaded. Cleanup that must also cover that sequence should
 therefore be idempotent and available through the plugin's normal controls.
 
 ### Reacting to settings changes in a service
