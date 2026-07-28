@@ -30,6 +30,29 @@ Your desktop sessions (niri, Hyprland, and so on) are separate - install those a
 
 If your distro does not package the greeter yet, see the [noctalia-greeter repository](https://github.com/noctalia-dev/noctalia-greeter) for build and install steps. After installing, run the included system setup script as root so `/var/lib/noctalia-greeter/` and `greeter.toml` are created for the greetd user.
 
+### NixOS
+
+A flake and NixOS module live in the [noctalia-greeter repository](https://github.com/noctalia-dev/noctalia-greeter). Import `inputs.noctalia-greeter.nixosModules.default` and enable:
+
+```nix
+programs.noctalia-greeter = {
+  enable = true;
+  # Optional: extra flags after `--` on noctalia-greeter-session
+  greeter-args = "";
+  # Written to /var/lib/noctalia-greeter/greeter.toml (attrset, TOML string, or path).
+  # Keys match greeter.toml tables, not greetd env injection.
+  settings = {
+    cursor = {
+      theme = "Bibata-Modern-Ice";
+      size = 24;
+      path = "${pkgs.bibata-cursors}/share/icons";
+    };
+  };
+};
+```
+
+The module enables greetd by default, enables `accounts-daemon` by default (for user avatars), and sets `default_session.command` to the package's `noctalia-greeter-session`. See [Configuration](/v5/greeter/configuration/) for the full `greeter.toml` key list.
+
 ---
 
 ## Setting up greetd
@@ -99,13 +122,23 @@ sudo sv restart greetd
 
 ## Matching your Noctalia desktop
 
-With Noctalia v5 and the greeter both installed, open **Settings → Security → Noctalia Greeter → Sync Now**. Noctalia copies your wallpaper, palette, shell font (`[shell] font_family`), enabled session actions (`shell.session` plus `[shell.session.power]` overrides), monitor orientation (`[output].transforms`), and (when you use multiple monitors) monitor layout to the greeter (you will be prompted for admin access via polkit, through `pkexec` or `run0`).
+With Noctalia v5 and the greeter both installed, open **Settings → Security → Noctalia Greeter → Sync Now**. Noctalia copies:
+
+- wallpaper (including per-output wallpapers when configured)
+- palette and theme mode
+- corner radius scale (`[shell] corner_radius_scale`)
+- shell font (`[shell] font_family`)
+- enabled session actions and power command overrides (`shell.session` / `[shell.session.power]`)
+- monitor orientation into `[output].transforms`
+- multi-monitor layout into `[output].layout` when more than one ready output reports distinct positions
+
+You will be prompted for admin access via polkit (`pkexec` or `run0`).
 
 User avatars are not part of greeter appearance sync. They come from AccountsService, so keep **accountsservice** running if you want the avatar you picked in Noctalia to appear on the greeter too.
 
 The synced font is a Fontconfig family name only. The greeter user must be able to resolve that family (system-installed fonts work; fonts that exist only in your home directory often will not).
 
-Enable **Settings → Security → Auto-Sync Greeter** to automatically sync whenever your wallpaper, colors, theme mode, or shell font change. Syncing triggers after a short debounce so rapid changes (like dragging a color picker) are batched into one sync.
+Enable **Settings → Security → Auto-Sync Greeter** to automatically sync whenever your wallpaper, colors/theme mode, or shell font change. Syncing triggers after a short debounce so rapid changes (like dragging a color picker) are batched into one sync. Session action edits and corner-radius-only changes still need Sync Now (or another auto-sync trigger) unless they arrive with one of those changes.
 
 Sync Now shows a notification while it waits for that approval. If **logind** or **elogind** is running, enable **Settings → Security → Polkit agent** to approve from the desktop.
 
@@ -124,7 +157,7 @@ privilege_command = "ghostty -e pkexec"
 
 Optional: install **elogind** if you want in-session polkit prompts without a terminal wrapper. seatd and elogind can coexist; elogind only provides session tracking for polkit, not power management.
 
-Synced data is installed to `/var/lib/noctalia-greeter/appearance.json` (root-owned, world-readable). `greeter.toml` in the same directory is separate greetd preferences.
+Synced data is installed under `/var/lib/noctalia-greeter/`: `appearance.json` (palette, wallpaper refs, font, corner radius, session actions), wallpaper image files, and (when staged) updates to `greeter.toml` for `[output].layout` / `[output].transforms`. `greeter.toml` is otherwise separate greetd preferences.
 
 After syncing, log out or restart greetd to see the changes on the login screen.
 
@@ -173,7 +206,7 @@ The greeter works without a mouse.
 | `Esc` | Close menu or leave password step |
 | `F3` | Session picker |
 | `F7` | Color scheme picker |
-| `Ctrl+Alt+F1`–`F12` | Switch to virtual terminal (TTY) |
+| `Ctrl+Alt+F1`-`F12` | Switch to virtual terminal (TTY) |
 
 ---
 
@@ -194,4 +227,4 @@ The greeter works without a mouse.
 - **Screen never blanks on the greeter** - Set `[idle].timeout` (seconds) in `greeter.toml`. Pointer motion alone does not count as activity. See [Idle blanking](/v5/greeter/configuration/#idle-blanking).
 - **Blanked greeter will not wake** - Use a key press, mouse button, or touch. If outputs stay off, check greeter compositor logs for idle/output commit errors.
 - **UI too small or too large on a high-DPI monitor** - Set `[output].scale` in `greeter.toml`. See [Configuration](/v5/greeter/configuration/#ui-scale).
-- **Wrong or default cursor theme** - Set `[cursor].theme` (and `[cursor].size`) in `greeter.toml`, or the `XCURSOR_*` variables in the greetd command. If the theme is not on the default search path, also set `[cursor].path` / `XCURSOR_PATH`. See [Cursor theme](/v5/greeter/configuration/#cursor-theme).
+- **Wrong or default cursor theme** - Set `[cursor].theme` (and `[cursor].size`) in `greeter.toml`, or the `XCURSOR_*` variables in the greetd command. If the theme is not on the default search path, also set `[cursor].path` / `XCURSOR_PATH`. On NixOS use `programs.noctalia-greeter.settings.cursor` (writes `greeter.toml`; use `path` for packaged themes, there is no `package` option). See [Cursor theme](/v5/greeter/configuration/#cursor-theme).
