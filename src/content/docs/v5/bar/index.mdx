@@ -13,7 +13,7 @@ Widget hover tooltips open on the side of the bar facing into the screen — bel
 [bar]
 order = ["main"]              # layer-shell creation order
 
-[bar.main]
+[bar.default]
 position           = "top"       # top | bottom | left | right
 enabled            = true
 auto_hide          = false       # slide out after pointer leaves; reveal from edge trigger strip
@@ -91,7 +91,7 @@ are appended after the listed names.
 The **dead zone** is the bar margin outside the start/center/end widget sections - typically the inset created by `margin_ends`. It takes the same bindings bar widgets do, under `[bar.<name>.dead_zone.actions]`:
 
 ```toml
-[bar.main.dead_zone.actions]
+[bar.default.dead_zone.actions]
 left = "panel-toggle launcher"
 middle = "exec kitty"
 scroll_up = "volume-up"
@@ -113,7 +113,7 @@ Per-monitor overrides can carry their own `[bar.<name>.monitor.<match>.dead_zone
 Inside a bar, add named monitor subtables under `[bar.<name>.monitor.*]`. **First match wins**, in file order.
 
 ```toml
-[bar.main.monitor.dp1]
+[bar.default.monitor.dp1]
 match              = "DP-1"    # connector name or description substring
 position           = "bottom"  # top | bottom | left | right
 enabled            = true
@@ -136,7 +136,7 @@ end                = ["volume", "clock"]
 1. Exact connector name (`eDP-1`, `DP-1`, `HDMI-A-1`, …)
 2. Any substring of the monitor description string (`"LG"`, `"4K"`, `"DELL"`, …)
 
-`match` defaults to the subtable key name when omitted, so `[bar.main.monitor."DP-1"]` without a `match` field works too.
+`match` defaults to the subtable key name when omitted, so `[bar.default.monitor."DP-1"]` without a `match` field works too.
 
 Only the fields you specify are overridden; everything else falls through to the `[bar.*]` defaults. Supported override fields: all bar fields including `position`, `dead_zone`, plus `auto_hide`, `smart_auto_hide`, `show_on_workspace_switch`, `reserve_space`, `layer`, `scale`, `background_opacity`, `color`, `font_family`, and all `capsule_*` keys.
 
@@ -241,7 +241,7 @@ The workspaces widget reuses its resolved `capsule_radius` for workspace pills. 
 capsule is disabled.
 
 ```toml
-[bar.main]
+[bar.default]
 capsule         = true
 capsule_fill    = "surface_variant"
 capsule_opacity = 0.9
@@ -289,10 +289,10 @@ shared style, and the lane references the group with a single `group:<id>` token
 by hand:
 
 ```toml
-[bar.main]
+[bar.default]
 end = ["clock", "group:g1", "session"]   # the group occupies one lane slot
 
-[[bar.main.capsule_group]]
+[[bar.default.capsule_group]]
 id      = "g1"
 members = ["network", "bluetooth", "volume"]
 fill    = "surface_variant"

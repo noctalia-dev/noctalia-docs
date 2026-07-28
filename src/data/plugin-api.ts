@@ -101,13 +101,13 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
   },
   {
     level: 15,
-    noctaliaVersion: null,
+    noctaliaVersion: 'v5.0.0-beta.6',
     feature: 'open-settings',
     introduced: '`noctalia.openSettings()`, opening the settings window at the plugin\'s own settings.',
   },
   {
     level: 16,
-    noctaliaVersion: null,
+    noctaliaVersion: 'v5.0.0-beta.6',
     feature: 'extended-system-stats',
     introduced: 'Per-interface network rates, sample timestamps, and disk mount/stat APIs.',
   },

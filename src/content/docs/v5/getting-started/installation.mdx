@@ -332,7 +332,7 @@ If you prefer to install Noctalia locally or want more control over the installa
       cairo pango \
       libxkbcommon glib2 \
       sdbus-cpp libpipewire wireplumber polkit \
-      pam curl libwebp librsvg libqalculate
+      pam curl libwebp libjxl librsvg libqalculate
     ```
   </TabItem>
   <TabItem label="Fedora">
@@ -344,7 +344,7 @@ If you prefer to install Noctalia locally or want more control over the installa
       cairo-devel pango-devel \
       libxkbcommon-devel glib2-devel \
       sdbus-cpp-devel pipewire-devel wireplumber-devel \
-      pam-devel polkit-devel libcurl-devel libwebp-devel librsvg2-devel \
+      pam-devel polkit-devel libcurl-devel libwebp-devel libjxl-devel librsvg2-devel \
       libqalculate-devel
     ```
   </TabItem>
@@ -353,7 +353,7 @@ If you prefer to install Noctalia locally or want more control over the installa
     sudo apt install just meson libwayland-dev \
       wayland-protocols libfreetype-dev libfontconfig-dev \
       libcairo2-dev libpango1.0-dev librsvg2-dev libxkbcommon-dev \
-      libepoxy-dev libgles-dev libwebp-dev libcurl4-gnutls-dev \
+      libepoxy-dev libgles-dev libwebp-dev libjxl-dev libcurl4-gnutls-dev \
       libmd4c-dev nlohmann-json3-dev libsdbus-c++-dev libsecret-1-dev \
       libsodium-dev libstb-dev libtomlplusplus-dev \
       libpipewire-0.3-dev libpam0g-dev libpolkit-agent-1-dev \
@@ -366,8 +366,8 @@ If you prefer to install Noctalia locally or want more control over the installa
 Vendored dependencies, with no system package needed: `Wuffs`, `nanosvg`,
 `Luau`, `dr_wav`, `fzy`, and Material Color Utilities.
 
-System packages required beyond the Wayland/GL stack: `libwebp` handles WebP decoding and thumbnail encoding. Wuffs
-handles the other supported raster image formats.
+System packages required beyond the Wayland/GL stack: `libwebp` handles WebP decoding and thumbnail encoding,
+`libjxl` handles JPEG XL decoding, and Wuffs handles the other supported raster image formats.
 
 Polkit agent support requires development files that provide the `polkit-agent-1` and `polkit-gobject-1` pkg-config
 modules. Some distros ship these in the runtime `polkit` package, while split-package distros use names such as
