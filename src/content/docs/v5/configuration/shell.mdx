@@ -72,6 +72,7 @@ transparency_mode     = "solid"  # solid | soft | glass; controls floating panel
 borders               = true   # outline on floating panel surfaces
 shadow                = true   # cast the global [shell.shadow] from panel surfaces
 list_item_background  = false  # filled rounded background behind launcher and clipboard list items
+floating_layer         = "overlay" # overlay | top; applies to floating interactive panels
 launcher_placement       = "floating" # attached | floating
 clipboard_placement      = "floating" # attached | floating
 control_center_placement = "attached" # attached | floating
@@ -191,7 +192,7 @@ Notes:
 - `clipboard_keep_from_closed_apps`: when `true` (default), Noctalia takes ownership of the live selection after the
   application that supplied it closes, keeping the last copied value pasteable. This is independent of clipboard
   history retention.
-- Clipboard history is encrypted at rest with a purpose-specific key derived from the Noctalia storage master key. The default `secret-service` source stores the master key through Secret Service. If the provider is unavailable or locked, history still works for the current session but is not read from or written to disk; unlock or start the provider and use **Settings → Shell → Clipboard → Retry**. Existing plaintext history is migrated only after the encrypted replacement is complete, and encrypted files are preserved if their key is missing.
+- Clipboard history is encrypted at rest with a purpose-specific key derived from the Noctalia storage master key. The default `secret-service` source stores the master key through Secret Service. If the provider is unavailable or locked, history still works for the current session but is not read from or written to disk; unlock or start the provider and use **Settings → Shell → Clipboard → Retry**. When a provider starts after Noctalia — a common race when the keyring is launched by the same session startup script — Noctalia notices it claiming `org.freedesktop.secrets` and reopens encrypted storage on its own, so no manual retry is needed for that case. Existing plaintext history is migrated only after the encrypted replacement is complete, and encrypted files are preserved if their key is missing.
 - `clipboard_history_max_entries`: caps how many **unpinned** clipboard history rows Noctalia keeps (default `100`, range `10`–`10000`). Pinned entries stay outside this limit. Lowering the value trims older unpinned rows on reload.
 - `clipboard_confirm_clear_history`: when `true` (default), the clipboard panel asks before **Clear history** and before deleting an **unpinned** entry (trash in the preview, or double-click a row). When `false`, those actions apply immediately: sidebar clear removes unpinned rows and keeps pins when any exist, or clears everything when nothing is pinned; unpinned single deletes are immediate. **Pinned** entries still require confirmation before delete. With confirmation enabled, the clear dialog only offers **Keep pinned** when both pinned and unpinned rows exist; if history is all pinned or all unpinned, the description matches that case. Toggle in **Settings → Shell → Clipboard**.
 - `clipboard_auto_paste`: `auto` = image entries use `Ctrl+V`, text entries use `Ctrl+Shift+V`; `off` = copy only, no automatic paste.
@@ -214,6 +215,7 @@ Notes:
 - `shell.panel.borders` draws an outline on floating panel surfaces. Attached panels stay borderless on the bar edge. Default is `true`; set to `false` for a flatter look. Section cards inside panels are controlled by `[shell].card_borders`.
 - `shell.panel.shadow` toggles the rendered drop shadow on attached and floating panels. Shadow direction and alpha come from `[shell.shadow]`.
 - `shell.panel.list_item_background` draws a filled rounded background behind each item in the launcher results (list and app-grid views) and the clipboard history list. The fill uses the same rounded shape as the hover highlight and follows the panel transparency mode; hover and keyboard-selection colors are unchanged. Default is `false`. Toggle in **Settings → Panels → Effects**.
+- `shell.panel.floating_layer` selects the layer-shell layer for floating Launcher, Clipboard, Control Center, Wallpaper, Session, and Setup Wizard panels. `overlay` is the default and keeps these panels above fullscreen content. Use `top` when a compositor places input-method candidate popups below the Overlay layer. Attached panels continue to use their bar's configured layer; system overlays such as the polkit prompt and plugin panels keep their own layer policy. Change it in **Settings → Panels → General**.
 - `shell.panel.launcher_placement`, `clipboard_placement`, `control_center_placement`, `wallpaper_placement`, `session_placement`, and `polkit_placement` accept only `attached` or `floating`. An attached panel keeps its own layer surface and anchors it to the host bar's inward edge; floating placement opens it detached. `center` is a floating `*_position`, not a third placement. Defaults are floating at the center position for Launcher, Clipboard, and the polkit auth prompt; Control Center, Wallpaper, and Session default to attached.
 - Per-panel `*_position` keys (`launcher_position`, `clipboard_position`, `control_center_position`, `wallpaper_position`, `session_position`, `polkit_position`) apply when placement is `floating`. `auto` keeps the panel bar-relative; `center` and the edge/corner tokens anchor on screen (same vocabulary as notification/OSD position).
 - `shell.panel.floating_offset` sets the gap in pixels a floating panel keeps from the bar edge, or from the screen edge when it is pinned with a `*_position` (default `8`). It also spaces panels using the reserved edge area when multiple bars share an edge. `attached` panels ignore it.
@@ -409,6 +411,7 @@ up       = ["up"]
 down     = ["down"]
 tab_next = ["tab"]
 tab_previous = ["shift+tab", "iso_left_tab"]
+delete   = ["del"]
 ```
 
 Each action accepts a single string chord or an array of chords.
@@ -419,7 +422,7 @@ Each action accepts a single string chord or an array of chords.
 
 **`super` bindings are rejected** (`super`, `win`, `windows`, `logo`, `meta`, `mod4`) and produce a config parse error.
 
-**Supported actions:** `validate`, `cancel`, `left`, `right`, `up`, `down`, `tab_next`, `tab_previous`
+**Supported actions:** `validate`, `cancel`, `left`, `right`, `up`, `down`, `tab_next`, `tab_previous`, `delete`
 
 | Action | Default role |
 |--------|----------------|
@@ -427,6 +430,7 @@ Each action accepts a single string chord or an array of chords.
 | `cancel` | Close a popup/panel or dismiss the current operation. |
 | `left` / `right` / `up` / `down` | Move within the focused region (list rows, launcher grid columns, slider nudge on left/right, and similar). |
 | `tab_next` / `tab_previous` | Move between major panes in split layouts (for example Settings sidebar ↔ content, or Control Center sidebar ↔ tab body). |
+| `delete` | Delete the selected item after confirmation (for example, a clipboard history entry). |
 
 On split-pane surfaces (**Settings** and **Control Center**), `tab_next` / `tab_previous` switch between the sidebar and the main content area. Arrow keys stay inside the active pane: the sidebar uses roving focus, and the content area moves between controls on up/down while leaving left/right to control-native behavior (such as slider nudge). The session panel uses arrow keys to move between actions once focus has entered the button list; it does not pre-select an action on open.
 

@@ -170,6 +170,6 @@ The account id is the last segment of the named table. For `[calendar.account.wo
 
 If a Google account later shows as disconnected (revoked or expired), edit the account and press **Save and Connect** again to reauthorize.
 
-If Settings reports that Secret Service is unavailable, confirm that a compatible provider is running in the same login session, then use the retry action. If access is locked or denied, unlock the provider and retry. A cancelled prompt is not treated as a missing credential; start the operation again when you are ready.
+If Settings reports that Secret Service is unavailable, confirm that a compatible provider is running in the same login session, then use the retry action. A provider that starts moments after Noctalia is handled automatically: Noctalia watches for it claiming `org.freedesktop.secrets` and reopens calendar credentials and encrypted storage without a manual retry. If access is locked or denied, unlock the provider and retry. A cancelled prompt is not treated as a missing credential; start the operation again when you are ready.
 
 `[shell].offline_mode = true` disables all calendar network traffic; the last successfully synced events remain available from the encrypted on-disk cache when the storage key is available.
