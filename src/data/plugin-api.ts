@@ -124,6 +124,13 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     feature: 'panel-frame-tick',
     introduced: '`panel.setNeedsFrameTick(bool)`, delivering `onFrameTick(deltaMs)` to an open panel.',
   },
+  {
+    level: 19,
+    noctaliaVersion: null,
+    feature: 'format-time-timezone',
+    introduced:
+      'Optional timezone argument on `noctalia.formatTime(pattern, unixSeconds?, timezone?)` and `noctalia.isValidTimezone(name)`.',
+  },
 ];
 
 export const CURRENT_PLUGIN_API = Math.max(...PLUGIN_API_LEVELS.map((entry) => entry.level));

@@ -152,3 +152,27 @@ Requires the external `mpvpaper` command (which pulls in `mpv`; `mpv` also rende
 | Command | Effect |
 |---------|--------|
 | <IpcCommand command="panel-toggle noctalia/mpvpaper:picker" /> | open or close the video picker |
+
+---
+
+## World Clock {#world_clock}
+
+<PluginMeta icon="world" id="noctalia/world_clock" />
+
+Track multiple IANA timezones in an attached **panel**. A headless **service** owns the zone list and publishes live
+times; a bar **widget** (`bar`) shows a world glyph and opens the panel on click. Zones persist under the plugin data
+directory across updates.
+
+On first run the list is seeded with `UTC`, `America/New_York`, `Europe/Berlin`, and `Asia/Tokyo`. Add further zones by
+IANA name (for example `Europe/London`); remove with the trash control (confirm with the check). Drag the grip on a row
+to reorder.
+
+Requires plugin API 19 (`noctalia.formatTime(..., timezone)` / `noctalia.isValidTimezone()`).
+
+| Command | Effect |
+|---------|--------|
+| <IpcCommand command="panel-toggle noctalia/world_clock:panel" /> | open or close the world-clock panel |
+| <IpcCommand command='plugin noctalia/world_clock:service all add "America/Los_Angeles"' /> | add a timezone |
+| <IpcCommand command='plugin noctalia/world_clock:service all remove "UTC"' /> | remove a timezone |
+| <IpcCommand command="plugin noctalia/world_clock:service all list" /> | notify with the configured zones |
+| <IpcCommand command="plugin noctalia/world_clock:service all clear" /> | remove every timezone |
