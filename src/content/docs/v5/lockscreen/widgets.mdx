@@ -70,7 +70,7 @@ The login box uses the same inspector layout as other lockscreen widgets:
 - `regular` (default) - v4-style panel with media, weather, and optional session action buttons around the password row
 - `compact` - slim password row (previous default look)
 
-The status line under the password field always shows the idle password hint (`lockscreen.ready`). Auth messages and Caps Lock (when enabled) override that text.
+Auth status is a separate fixed-size card outside the login panel (above it by default, flipping below when the panel is near the top of the screen). It does not change the login box size. With `show_unlock_hint = true` (default), the card shows the idle unlock hint and auth prompts (for example fingerprint or “Authenticating…”). With it off, the card stays hidden except for errors and Caps Lock warnings (when `show_caps_lock` is enabled). The editor preview shows a matching ghost for the unlock-hint card that follows the same above/below placement.
 
 | Setting | Default | Range | Description |
 | --- | --- | --- | --- |
@@ -82,7 +82,8 @@ The status line under the password field always shows the idle password hint (`l
 | `background_opacity` | `0.88` | `0.0`–`1.0` | Outer login bar opacity |
 | `background_radius` | `12` | `0`–`32` | Outer login bar corner radius (logical px) |
 | `show_login_button` | `true` | bool | Show the check button beside the password field |
-| `show_caps_lock` | `true` | bool | Show a Caps Lock warning in the status line (overrides the idle password hint) |
+| `show_unlock_hint` | `true` | bool | Show the status card for the idle unlock hint and auth prompts; errors and Caps Lock still appear when off |
+| `show_caps_lock` | `true` | bool | Show a Caps Lock warning in the status card |
 | `show_keyboard_layout` | `true` | bool | Show the keyboard layout chip (cycles when multiple layouts are available) |
 | `input_opacity` | `1.0` | `0.0`–`1.0` | Password field background opacity |
 | `input_radius` | `6` | `0`–`32` | Password field corner radius (logical px) |
@@ -94,6 +95,7 @@ layout = "regular"
 show_session_buttons = true
 show_media = true
 show_weather = true
+show_unlock_hint = true
 background_color = "surface_variant"
 background_opacity = 0.75
 background_radius = 16.0
