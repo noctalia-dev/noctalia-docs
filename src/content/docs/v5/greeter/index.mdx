@@ -74,19 +74,37 @@ Use the `user` value that matches your greetd config. The greeter setup script p
 
 ### Default session
 
-To open the greeter with a specific session already selected, pass `--session` on the command line. The name must match a session from the greeter picker exactly (for example `niri`):
+To open the greeter with a specific session already selected, pass `--session` (or set
+`[session].default` in [greeter.toml](/v5/greeter/configuration/)). The value is the session's
+desktop-entry **`Name=`** — the same string the greeter picker shows and that
+`noctalia-greeter sessions` prints. It is **not** the `.desktop` file basename
+(for example use `Hyprland (uwsm-managed)`, not `hyprland-uwsm`).
 
-```toml
-command = "/usr/bin/noctalia-greeter-session -- --session niri"
-```
-
-List valid session names:
+List the valid names on the machine that runs greetd:
 
 ```sh
 noctalia-greeter sessions
 ```
 
-You can also set `[session].default` in [greeter.toml](/v5/greeter/configuration/) - that overrides the last session you picked unless `--session` is passed on the command line.
+Copy a line from that output exactly. A simple name without spaces can go on the greetd command:
+
+```toml
+command = "/usr/bin/noctalia-greeter-session -- --session niri"
+```
+
+Prefer **`[session].default` in `greeter.toml`** when the name has spaces or punctuation — TOML
+quoting is reliable, and a broken greetd `command` line (for example an unquoted
+`Hyprland (uwsm-managed)`) can leave the VT unusable:
+
+```toml
+# /var/lib/noctalia-greeter/greeter.toml
+[session]
+default = "Hyprland (uwsm-managed)"
+```
+
+`[session].default` overrides the last session you picked (`[session].last` in `sync.toml`) unless
+`--session` is also passed on the command line. An unknown name is ignored and the greeter falls
+back to last-used or the first discovered session.
 
 When you pick a session, the greeter tells greetd to start it with environment from the `.desktop` file **before** PAM opens the session (required for logind session type):
 
@@ -215,7 +233,7 @@ The greeter works without a mouse.
 - **`Failed to spawn client` / wrong path in greetd config** - `command` must be the full path from `which noctalia-greeter-session` (often `/usr/bin/...` on packaged installs, not `/usr/local/bin/...`).
 - **`WAYLAND_DISPLAY is not set`** - greetd must use `noctalia-greeter-session` (it starts `noctalia-greeter-compositor`). Fix `command` in `/etc/greetd/config.toml`.
 - **Black screen after reboot** - Same as blank screen: greetd/syslog first. Confirm the state dir and synced appearance files are present.
-- **Wrong session on startup** - If `[session].default` is set in `greeter.toml`, it wins over last-used `[session].last` in `sync.toml`. Run `noctalia-greeter sessions` for exact **Name** spelling.
+- **Wrong session on startup** - Use the desktop-entry **`Name=`** from `noctalia-greeter sessions` (picker label), not the `.desktop` basename. `[session].default` in `greeter.toml` wins over last-used `[session].last` in `sync.toml`; `--session` on the greetd command wins over both. Put names with spaces in `greeter.toml` rather than unquoted on the greetd `command` line.
 - **GNOME fails with `graphical-session-pre.target` / kicks back to greeter** - GNOME expects a systemd-managed user session. The greeter passes `XDG_SESSION_TYPE` and `DesktopNames`-derived desktop env via greetd; if that is not enough, use GDM for GNOME or a custom `wayland-sessions` wrapper. See [Default session](#default-session).
 - **Synced look missing** - Install Noctalia v5, the greeter, and the polkit policy; sync again from Settings; restart greetd or log out once.
 - **User avatars missing on the login screen** - Install and enable **accountsservice** / `accounts-daemon`. The greeter reads the avatar from the user's AccountsService `IconFile`; without it, the picker falls back to a placeholder.

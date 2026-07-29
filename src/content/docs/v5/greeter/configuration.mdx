@@ -91,7 +91,8 @@ Copy to `/var/lib/noctalia-greeter/greeter.toml` and drop any lines you do not n
 # Docs: https://docs.noctalia.dev/v5/greeter/configuration/
 
 [session]
-# Session Name from `noctalia-greeter sessions` (picker label, not .desktop id).
+# Exact Name= from the session .desktop (same as `noctalia-greeter sessions` / the picker).
+# Not the .desktop basename — e.g. "Hyprland (uwsm-managed)", not "hyprland-uwsm".
 default = "niri"
 
 [user]
@@ -444,8 +445,8 @@ command = "env XKB_DEFAULT_LAYOUT=cz /usr/bin/noctalia-greeter-session"
 ## Helper commands
 
 ```sh
-noctalia-greeter sessions   # list valid session names for [session].default / --session
+noctalia-greeter sessions   # list Name= values for [session].default / --session (not .desktop basenames)
 noctalia-greeter outputs    # list Wayland connector names for [output].name
 ```
 
-Sessions come from `wayland-sessions` `.desktop` files under `/usr/share`, each path in `XDG_DATA_DIRS`, and on NixOS `/run/current-system/sw/share`.
+Sessions come from `wayland-sessions` `.desktop` files under `/usr/share`, each path in `XDG_DATA_DIRS`, and on NixOS `/run/current-system/sw/share`. Matching uses each entry's **`Name=`** field (case-insensitive), which is what the picker displays — not the file stem such as `hyprland-uwsm.desktop`.
