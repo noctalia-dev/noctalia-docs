@@ -85,7 +85,9 @@ cache results keyed by app id instead of resolving on every `update()`.
 | `noctalia.formatTime(pattern)` | string | Formats the current local time with the same tokens as Noctalia clock and filename settings. |
 | `noctalia.formatTime(pattern, unixSeconds)` | string | Formats a specific Unix timestamp in local time. |
 | `noctalia.formatTime(pattern, unixSeconds, timezone)` | string | Formats a Unix timestamp in an IANA timezone (for example `"Europe/Berlin"`). Omit or pass `nil` for `unixSeconds` to use now. Invalid zones fall back to local time. Requires <PluginApiBadge feature="format-time-timezone" />. |
-| `noctalia.isValidTimezone(name)` | bool | `true` when `name` is empty (system local) or names a zone in the active timezone database. Requires <PluginApiBadge feature="format-time-timezone" />. |
+| `noctalia.timeFormat()` | string | Current `[shell].time_format` (for example `"{:%H:%M}"`). Requires <PluginApiBadge feature="format-time-timezone" />. |
+| `noctalia.dateFormat()` | string | Current `[shell].date_format` (for example `"%A, %x"`). Requires <PluginApiBadge feature="format-time-timezone" />. |
+| `noctalia.isValidTimezone(name)` | bool | True when `name` is empty (system local) or a known IANA timezone. Requires <PluginApiBadge feature="format-time-timezone" />. |
 | `noctalia.nowMs()` | number | Wall-clock milliseconds since the Unix epoch. Requires <PluginApiBadge feature="system-stats" />. |
 | `noctalia.notify(title, body)` | nothing | Shows an informational notification. `body` is optional. |
 | `noctalia.notifyError(title, body)` | nothing | Shows an error notification. `body` is optional. |

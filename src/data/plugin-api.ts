@@ -129,7 +129,7 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     noctaliaVersion: null,
     feature: 'format-time-timezone',
     introduced:
-      'Optional timezone argument on `noctalia.formatTime(pattern, unixSeconds?, timezone?)` and `noctalia.isValidTimezone(name)`.',
+      'Timezone support on `noctalia.formatTime`, `noctalia.isValidTimezone(name)`, and `noctalia.timeFormat()` / `noctalia.dateFormat()` mirroring `[shell].time_format` / `date_format`.',
   },
 ];
 
