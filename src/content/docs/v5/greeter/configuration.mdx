@@ -1,16 +1,25 @@
 ---
 title: Configuration
-description: greeter.toml settings for sessions, color scheme, monitors, output mode, transforms, idle blanking, UI scale, cursor theme, and keyboard layout.
+description: Full greeter.toml declarative config, sync.toml for Sync/UI, appearance from greeter.toml or Sync.
 sidebar:
   order: 1
 ---
 
-The greeter stores its settings in `/var/lib/noctalia-greeter/greeter.toml` using grouped TOML tables (same style as Noctalia shell config).
+Configure **everything** in `/var/lib/noctalia-greeter/greeter.toml` (Nix: `programs.noctalia-greeter.settings`, overwritten with tmpfiles `C+`). Sync and the login UI never write that file.
 
-If the file is missing, the greeter uses built-in defaults (auto UI scale, all monitors, system keymap, and so on). Setup ensures `/var/lib/noctalia-greeter/` exists and is owned by the greetd session user from `/etc/greetd/config.toml`.
+| Path | Role |
+|------|------|
+| `/var/lib/noctalia-greeter/greeter.toml` | Full declarative config (scheme, palette, wallpaper, output, cursor, …). Wins over Sync when set |
+| `/var/lib/noctalia-greeter/sync.toml` | Sync + UI mutable (palette, wallpaper refs, session actions, last session/scheme, layout/transforms). Loses to greeter.toml |
+| `/var/lib/noctalia-greeter/wallpaper*` | Sync-installed wallpaper image files |
+
+The **Synced** scheme uses a complete `[appearance.palette]` from `greeter.toml` when present, otherwise the same keys from `sync.toml`. (Legacy live `appearance.json` is migrated into `sync.toml` once.)
+
+If `greeter.toml` is missing, the greeter uses built-in defaults. Setup ensures `/var/lib/noctalia-greeter/` exists and is owned by the greetd session user.
 
 - [Keys the greeter remembers](#keys-the-greeter-remembers)
-- [Admin-only keys](#admin-only-keys)
+- [Declarative greeter.toml keys](#declarative-greetertoml-keys)
+- [Full greeter.toml example](#full-greetertoml-example)
 - [Multi-monitor](#multi-monitor)
 - [Output mode](#output-mode)
 - [Output transform](#output-transform)
@@ -24,80 +33,150 @@ If the file is missing, the greeter uses built-in defaults (auto UI scale, all m
 
 ## Keys the greeter remembers
 
-When you change session or color scheme on the login screen, the greeter writes:
+When you change session or color scheme on the login screen, the greeter writes **`sync.toml`** (unless `greeter.toml` already pins `[appearance].scheme`):
 
 | Key | Purpose |
 |-----|---------|
 | `[session].last` | Last Wayland session you picked (by **Name** from the session picker) |
 | `[appearance].scheme` | Last color scheme you picked |
 
-These are updated automatically - you do not need to edit them by hand unless you want to reset them.
+Sync stages a `sync.toml` fragment (and optional layout/transforms files); apply merges that into live `sync.toml`.
 
 ---
 
-## Admin-only keys
+## Declarative greeter.toml keys
 
-Set these yourself. The greeter UI does not change them.
+Set these in **`greeter.toml`**. The greeter UI and Sync do not change them. When the same key exists in `sync.toml`, **greeter.toml wins**.
 
 | Key | Purpose |
 |-----|---------|
 | `[session].default` | Session selected when the greeter opens. Overrides last-used `[session].last` unless you pass `--session` on the greetd command line. |
-| `[user].default` | Username to select on startup. Opens the password step immediately. `--user` on the greetd command line wins. Press **Esc** or **Back** to pick another user. |
-| `[output].name` | Wayland connector name to show the greeter on (see [Multi-monitor](#multi-monitor)) |
-| `[output].layout` | Multi-monitor positions as `NAME:X,Y; ...` in logical pixels (see [Multi-monitor](#multi-monitor)) |
-| `[output].width` | Preferred DRM mode width in pixels (see [Output mode](#output-mode)) |
-| `[output].height` | Preferred DRM mode height in pixels (see [Output mode](#output-mode)) |
-| `[output].transforms` | Per-connector DRM transform (rotation / flip; see [Output transform](#output-transform)) |
-| `[output].scale` | Manual UI scale factor (see [UI scale](#ui-scale)) |
-| `[idle].timeout` | Seconds with no input before blanking outputs; `0` disables (see [Idle blanking](#idle-blanking)) |
-| `[cursor].theme` | Cursor theme name (e.g. `Adwaita`); missing → wlroots default cursor (see [Cursor theme](#cursor-theme)) |
-| `[cursor].size` | Cursor size in pixels (e.g. `24`); missing → `24` |
-| `[cursor].path` | Colon-separated theme search path (sets `XCURSOR_PATH`); needed when the theme is not on the default search path (`~/.icons:/usr/share/icons:/usr/share/pixmaps`) |
-| `[keyboard].layout` | XKB layout code(s), e.g. `cz`, `us`, `de,cz` (comma-separated for multiple layouts; see [Keyboard layout](#keyboard-layout)) |
-| `[keyboard].variant` | XKB variant(s), e.g. `qwertz` (optional; comma-separated when multiple layouts) |
-| `[keyboard].options` | XKB options string, e.g. `grp:alt_shift_toggle` (optional) |
-| `[keyboard].numlock` | Start with Num Lock locked: `true` (default) or `false` (see [Keyboard layout](#keyboard-layout)) |
-| `[appearance].password_style` | Password mask on the login field: `default` (filled circles) or `random` (cycles through multiple glyph shapes, same as Noctalia shell `password_style`) |
-| `[appearance].hide_logo` | Hide the Noctalia brand logo on the greeter screen: `true` or `false` (default: `false`, logo shown) |
-| `[auth].allow_empty_password` | Allow submitting with an empty password field. Needed for PAM modules like fprintd or smartcard that handle authentication without a password (PAM expects an empty response to the password prompt). `true` or `false` (default: `false`) |
+| `[user].default` | Username to select on startup. Opens the password step immediately. `--user` on the greetd command line wins. |
+| `[appearance].scheme` | Color scheme (`Synced`, builtin name such as `Noctalia`, …). Overrides last UI pick in `sync.toml`. |
+| `[appearance].password_style` | Password mask: `default` or `random` |
+| `[appearance].hide_logo` | Hide the Noctalia brand logo (`true` / `false`) |
+| `[appearance].theme_mode` | Theme mode string for Synced look (e.g. `dark`) |
+| `[appearance].corner_radius_scale` | Corner radius scale for Synced look |
+| `[appearance].font_family` | Font family for Synced look |
+| `[appearance.palette]` | Full palette (same keys Sync writes under `[appearance.palette]`). When complete, wins over Sync for the Synced scheme |
+| `[appearance.wallpaper]` | Default wallpaper `path` / `fill_mode` / `fill_color` |
+| `[appearance.wallpapers.<connector>]` | Per-output wallpaper override |
+| `[output].name` | Wayland connector to pin the greeter on |
+| `[output].layout` | Multi-monitor positions; overrides Sync layout in `sync.toml` |
+| `[output].width` / `.height` | Preferred DRM mode size |
+| `[output].transforms` | Per-connector DRM transform; overrides Sync transforms |
+| `[output].scale` | Manual UI scale factor |
+| `[idle].timeout` | Seconds before blanking outputs; `0` disables |
+| `[cursor].theme` / `.size` / `.path` | Cursor theme |
+| `[keyboard].layout` / `.variant` / `.options` / `.numlock` | XKB keymap |
+| `[auth].allow_empty_password` | Empty password submit for fprintd/smartcard PAM |
 
-Example:
+---
+
+## Full greeter.toml example
+
+Copy to `/var/lib/noctalia-greeter/greeter.toml` and drop any lines you do not need. Same file in the greeter repo: [`examples/greeter.toml`](https://github.com/noctalia-dev/noctalia-greeter/blob/main/examples/greeter.toml).
 
 ```toml
+# noctalia-greeter - full greeter.toml example (declarative / Nix-safe)
+#
+# Install as /var/lib/noctalia-greeter/greeter.toml (owned by the greetd user).
+# On NixOS: programs.noctalia-greeter.settings = { ... };  (tmpfiles C+ overwrite)
+#
+# This file is the full admin config. Sync and the login UI never write it.
+# Mutable Sync/UI data lives in sync.toml (lower priority when both set).
+# Sync merges palette/wallpaper/session into sync.toml; a complete [appearance.palette] here wins.
+#
+# Omit any key for the built-in default.
+# Docs: https://docs.noctalia.dev/v5/greeter/configuration/
+
 [session]
+# Session Name from `noctalia-greeter sessions` (picker label, not .desktop id).
 default = "niri"
-last = "niri"
 
 [user]
+# Opens the password step for this account on startup.
 default = "lysec"
 
 [appearance]
+# Color scheme name: "Synced" (palette below or Sync sync.toml), or a builtin
+# like "Noctalia", "Catppuccin", .... Overrides last UI pick in sync.toml when set.
 scheme = "Synced"
+# Password mask: "default" (filled circles) or "random" (cycled glyph shapes).
 password_style = "random"
+# Hide the Noctalia brand logo on the login screen.
 hide_logo = false
+theme_mode = "dark"
+corner_radius_scale = 1.0
+# Optional; empty / omit keeps the greeter default font.
+font_family = "Inter"
+
+# Required for a declarative Synced look (same keys Sync writes under [appearance.palette]).
+# When complete, this wins over Sync's sync.toml appearance.
+[appearance.palette]
+primary = "#fff59b"
+on_primary = "#0e0e43"
+secondary = "#a9aefe"
+on_secondary = "#0e0e43"
+tertiary = "#9BFECE"
+on_tertiary = "#0e0e43"
+error = "#FD4663"
+on_error = "#0e0e43"
+surface = "#070722"
+on_surface = "#f3edf7"
+surface_variant = "#11112d"
+on_surface_variant = "#7c80b4"
+outline = "#21215F"
+shadow = "#070722"
+hover = "#9BFECE"
+on_hover = "#0e0e43"
+
+[appearance.wallpaper]
+# Absolute path, or color:#RRGGBB. fill_mode: center | crop | fit | stretch | repeat
+path = "/var/lib/noctalia-greeter/wallpaper.webp"
+fill_mode = "crop"
+# fill_color = "#070722"
+
+# Optional per-connector wallpapers (overrides [appearance.wallpaper] for that output):
+# [appearance.wallpapers.DP-1]
+# path = "/var/lib/noctalia-greeter/wallpaper-DP-1.webp"
+# fill_mode = "crop"
 
 [output]
+# Pin the greeter to one connector; omit to mirror on every monitor.
+# List names with: noctalia-greeter outputs
 name = "DP-2"
+# Multi-monitor positions (logical pixels). Overrides Sync layout in sync.toml when set.
 layout = "DP-1:0,0; DP-2:2560,0"
+# Preferred DRM mode size in pixels (both required if set).
 width = 5120
 height = 2160
+# Per-connector DRM transform. Overrides Sync transforms in sync.toml when set.
+# Tokens: normal/0/none, 90, 180, 270, flipped, flipped-90, flipped-180, flipped-270
+transforms = "DP-1:normal; DP-2:normal"
+# Manual UI scale; omit or invalid -> auto from display geometry.
 scale = 1.5
 
 [idle]
+# Seconds with no input before blanking outputs; 0 disables (range 0-86400).
 timeout = 300
 
 [cursor]
 theme = "Adwaita"
 size = 24
+# Colon-separated search path when the theme is not under the default icon dirs.
 path = "/usr/share/icons"
 
 [keyboard]
+# Comma-separated for multiple layouts.
 layout = "us,cz"
-variant = "qwertz"
+variant = ",qwertz"
 options = "grp:alt_shift_toggle"
+# Start with Num Lock locked (default true if omitted).
 numlock = true
 
 [auth]
+# Allow empty password submit (fprintd / smartcard PAM). Default false.
 allow_empty_password = false
 ```
 
@@ -192,7 +271,7 @@ transforms = "DP-1:normal; HDMI-A-1:90"
 Transform is independent of `[output].width` / `[output].height` (those select the physical DRM mode size before rotation) and of `[output].scale` (UI scale).
 :::
 
-Noctalia **Sync Now** also writes `[output].transforms` from your desktop compositor's reported output transforms (including `normal`). You can still set them by hand in `greeter.toml` (or via your Nix module). Restart greetd after changes:
+Noctalia **Sync Now** also writes `[output].transforms` into `sync.toml` from your desktop compositor's reported output transforms (including `normal`). Setting `[output].transforms` in `greeter.toml` (or via your Nix module) overrides Sync. Restart greetd after changes:
 
 ```sh
 sudo systemctl restart greetd
