@@ -23,6 +23,7 @@ If `greeter.toml` is missing, the greeter uses built-in defaults. Setup ensures 
 - [Multi-monitor](#multi-monitor)
 - [Output mode](#output-mode)
 - [Output transform](#output-transform)
+- [Synced wallpapers](#synced-wallpapers)
 - [Idle blanking](#idle-blanking)
 - [UI scale](#ui-scale)
 - [Cursor theme](#cursor-theme)
@@ -283,6 +284,39 @@ List connector names from a running Wayland session:
 ```sh
 noctalia-greeter outputs
 ```
+
+---
+
+## Synced wallpapers
+
+**Settings → Security → Noctalia Greeter → Sync Now** installs wallpaper image files under `/var/lib/noctalia-greeter/` and merges wallpaper references into **`sync.toml`** (not into declarative `greeter.toml`).
+
+With a current Noctalia shell and greeter:
+
+| On disk / in config | Purpose |
+|---------------------|---------|
+| `wallpaper` / `wallpaper.<ext>` + `[appearance.wallpaper]` in `sync.toml` | Default **single** image (always written by Sync as a fallback) |
+| `wallpaper-<connector>.*` + `[appearance.wallpapers.<connector>]` in `sync.toml` | **Per-connector** map (`DP-2`, `HDMI-A-1`, …) |
+
+Each greeter view picks the image for its bound connector name. If that connector has no entry, it uses the single `[appearance.wallpaper]` fallback.
+
+If you pin the greeter with `[output].name = "DP-2"`, you see the DP-2 wallpaper when that map entry exists (and only that connector is shown).
+
+You do **not** need extra `greeter.toml` keys for Sync wallpapers — only Sync Now (and optional pin as above). To set wallpapers declaratively instead of (or on top of) Sync, use the same keys in `greeter.toml`:
+
+```toml
+[appearance.wallpaper]
+path = "/var/lib/noctalia-greeter/wallpaper.webp"
+fill_mode = "crop"
+
+[appearance.wallpapers.DP-2]
+path = "/var/lib/noctalia-greeter/wallpaper-DP-2.webp"
+fill_mode = "crop"
+```
+
+When `greeter.toml` provides a **complete** `[appearance.palette]` (declarative Synced look), that whole appearance — including wallpaper keys — is used and Sync's `sync.toml` appearance is not. Set wallpaper tables in `greeter.toml` in that case, or omit the complete palette so Sync's wallpapers apply.
+
+Legacy live `appearance.json` is migrated into `sync.toml` once if present; Sync no longer leaves a live `appearance.json` as the source of truth.
 
 ---
 
