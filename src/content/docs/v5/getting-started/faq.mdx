@@ -346,6 +346,12 @@ If you changed your PAM stack for fingerprint, security key, or other authentica
 
 </FaqItem>
 
+<FaqItem question="Does the lock screen engage before suspend?">
+
+Yes, when the lock screen is enabled. Noctalia holds a logind sleep delay inhibitor and locks the session on `PrepareForSleep` before allowing suspend or hibernate to proceed (including lid-close sleep). You do not need a separate idle daemon for lock-before-sleep.
+
+</FaqItem>
+
 <FaqItem question="Why can't NetworkManager communicate with wpa_supplicant?" id="wpa-supplicant">
 
 If your wireless management tools (like `NetworkManager` or desktop applets) fail to communicate with `wpa_supplicant`, it is often a matter of missing D-Bus permissions or incorrect service options. The steps below allow users in the `wheel` group to interact with the wpa_supplicant daemon.
