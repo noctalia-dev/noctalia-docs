@@ -54,8 +54,9 @@ to size it explicitly).
 | Constructor | Props |
 |-------------|-------|
 | `ui.column` / `ui.row` | `gap`, `padding`, `paddingH`, `paddingV`, `align` (`start`/`center`/`end`/`stretch`), `justify` (`start`/`center`/`end`/`space_between`), `fill`, `radius`, `border`, `borderWidth`, `minWidth`, `minHeight`, `onClick`, `onHover` |
-| `ui.scroll` | a vertically scrolling container; same layout props as a column plus `fill`, `radius`, `border`, `borderWidth` |
+| `ui.scroll` | a vertically scrolling container; same layout props as a column plus `fill`, `radius`, `border`, `borderWidth`, `stickToBottom` (bool), `onScroll`, `scrollToBottomRev` (number - see below) |
 | `ui.label` | `text`, `fontSize`, `color`, `fontWeight` (`thin`…`heavy`), `fontFamily` (a family name; load a file with `noctalia.loadFont`), `baseline` (`text`/`textFixedHeight`/`inkCentered`/`pictographic`), `maxWidth`, `maxLines`, `textAlign` |
+| `ui.markdown` | `text` (markdown source - see below), `width`, `height` |
 | `ui.glyph` | `name` (Tabler/Nerd-Font glyph), `size`, `color` |
 | `ui.image` | `path` (plugin-relative, `~`, or absolute), `width`, `height`, `radius`, `fit` (`contain`/`cover`/`stretch`), `border`, `borderWidth`, `onClick`, `onHover` |
 | `ui.box` | `fill`, `radius`, `border`, `borderWidth`, `softness`, `width`, `height`, `onClick`, `onHover` |
@@ -67,7 +68,7 @@ to size it explicitly).
 | `ui.toggle` | `checked` (bool), `enabled`, `onChange` |
 | `ui.slider` | `min`, `max`, `step`, `value`, `controlSize` (`sm`/`md`/`lg`), `enabled`, `onChange`, `onDragEnd` |
 | `ui.select` | `options` (array of strings), `selectedIndex`, `placeholder`, `controlSize` (`sm`/`md`/`lg`), `enabled`, `width`, `height`, `onChange` |
-| `ui.input` | `value` (initial text only - see below), `placeholder`, `fontSize`, `controlSize` (`sm`/`md`/`lg`), `password` (bool), `multiline` (bool), `focus` (bool), `enabled`, `onChange`, `onSubmit` |
+| `ui.input` | `value` (initial text only - see below), `placeholder`, `fontSize`, `controlSize` (`sm`/`md`/`lg`), `password` (bool), `multiline` (bool), `submitOnEnter` (bool - see below), `focus` (bool), `enabled`, `onChange`, `onSubmit` |
 
 Every control also accepts `width`, `height`, `flexGrow`, `opacity`, and `visible`. Colors are a palette role token
 (`primary`, `on_surface`, …), a role token with an alpha suffix (`primary/0.6`, the role at 60% alpha, resolved live
@@ -130,7 +131,17 @@ prop is logged and skipped - typos surface in the log instead of failing silentl
   drops the target instead of leaving a dead one behind.
 - **Multiline input**: `ui.input` with `multiline = true` becomes a wrapping text area with vertical scrolling, 
   Enter inserts a newline and `onSubmit` fires on **Ctrl+Enter** instead. Give it a `height` or `flexGrow` for the
-  editing area; `multiline` and `password` are mutually exclusive.
+  editing area; `multiline` and `password` are mutually exclusive. `submitOnEnter = true` flips the multiline
+  bindings for chat composers: Enter fires `onSubmit`, Shift+Enter inserts the newline, and Ctrl+Enter still
+  submits. Requires <PluginApiBadge feature="plugin-ui-props" />.
+- **Markdown**: `ui.markdown` renders its `text` prop (headings, lists, code blocks, tables) as a read-only block.
+  The host re-parses only when `text` or the surface scale changes, so re-rendering a streaming tree with unchanged
+  text is cheap. Requires <PluginApiBadge feature="plugin-ui-props" />.
+- **Follow-scroll**: `ui.scroll` with `stickToBottom = true` stays pinned to the bottom while content grows, until
+  the user scrolls away. `onScroll` receives `(offset, maxOffset)`, both delivered as strings. `scrollToBottomRev`
+  jumps to the bottom on the first render that sees it and again whenever the number changes; the jump lands after
+  the next layout pass, so it reaches content added in the same render. All three require
+  <PluginApiBadge feature="plugin-ui-props" />.
 - **Focus**: `ui.input` with `focus = true` grabs keyboard focus once, when the control is **created**, never on
   later re-renders, so it won't steal focus while the user interacts elsewhere. To focus again (e.g. a new document
   in the same editor slot), give the input a fresh `key`. The seeded `value` places the caret at the end.

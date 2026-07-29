@@ -131,6 +131,13 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     introduced:
       'Timezone support on `noctalia.formatTime`, `noctalia.isValidTimezone(name)`, and `noctalia.timeFormat()` / `noctalia.dateFormat()` mirroring `[shell].time_format` / `date_format`.',
   },
+  {
+    level: 20,
+    noctaliaVersion: null,
+    feature: 'plugin-ui-props',
+    introduced:
+      'The `ui.markdown` node, `submitOnEnter` on `ui.input`, and `stickToBottom` / `onScroll` / `scrollToBottomRev` on `ui.scroll`.',
+  },
 ];
 
 export const CURRENT_PLUGIN_API = Math.max(...PLUGIN_API_LEVELS.map((entry) => entry.level));
