@@ -699,7 +699,7 @@ The capture **output policy** (save to file, output directory, filename pattern,
 
 **Fullscreen** on a **single monitor** captures that output immediately (focused monitor when using IPC with no argument). On **multiple monitors**, fullscreen opens a **display picker**: a top bar labeled “Choose display” with one button per connector (`DP-1`, `HDMI-A-1`, …). Click a button from **any** screen to capture that output - you do not need to move the pointer onto that monitor first. Clicking the dimmed desktop captures the monitor under the cursor (same as before). Press a **`[keybinds].cancel`** chord (default **Escape**) to dismiss the picker.
 
-**Region** mode shows a dimmed overlay; drag to select, release to capture. Press **`[keybinds].cancel`** to cancel. With `freeze_screen = true`, the shell captures each output first, then shows the frozen frame under the dim overlay while you select; the final PNG is cropped from that snapshot.
+**Region** mode shows a dimmed overlay; drag to select, release to capture. Press **`[keybinds].cancel`** to cancel. With `freeze_screen = true`, the shell captures each output first, then shows the frozen frame under the dim overlay while you select; the final PNG is cropped from that snapshot. With `remember_last_region = true`, the last drawn region is restored on the next region capture (including after cancel); press Enter or Space to take it, or drag to reselect.
 
 While dragging a region, a size badge (`1920x1080`) follows the pointer below the cursor.
 
