@@ -192,7 +192,7 @@ Notes:
 - `clipboard_keep_from_closed_apps`: when `true` (default), Noctalia takes ownership of the live selection after the
   application that supplied it closes, keeping the last copied value pasteable. This is independent of clipboard
   history retention.
-- Clipboard history is encrypted at rest with a purpose-specific key derived from the Noctalia storage master key. The default `secret-service` source stores the master key through Secret Service. If the provider is unavailable or locked, history still works for the current session but is not read from or written to disk; unlock or start the provider and use **Settings → Shell → Clipboard → Retry**. Existing plaintext history is migrated only after the encrypted replacement is complete, and encrypted files are preserved if their key is missing.
+- Clipboard history is encrypted at rest with a purpose-specific key derived from the Noctalia storage master key. The default `secret-service` source stores the master key through Secret Service. If the provider is unavailable or locked, history still works for the current session but is not read from or written to disk; unlock or start the provider and use **Settings → Shell → Clipboard → Retry**. When a provider starts after Noctalia — a common race when the keyring is launched by the same session startup script — Noctalia notices it claiming `org.freedesktop.secrets` and reopens encrypted storage on its own, so no manual retry is needed for that case. Existing plaintext history is migrated only after the encrypted replacement is complete, and encrypted files are preserved if their key is missing.
 - `clipboard_history_max_entries`: caps how many **unpinned** clipboard history rows Noctalia keeps (default `100`, range `10`–`10000`). Pinned entries stay outside this limit. Lowering the value trims older unpinned rows on reload.
 - `clipboard_confirm_clear_history`: when `true` (default), the clipboard panel asks before **Clear history** and before deleting an **unpinned** entry (trash in the preview, or double-click a row). When `false`, those actions apply immediately: sidebar clear removes unpinned rows and keeps pins when any exist, or clears everything when nothing is pinned; unpinned single deletes are immediate. **Pinned** entries still require confirmation before delete. With confirmation enabled, the clear dialog only offers **Keep pinned** when both pinned and unpinned rows exist; if history is all pinned or all unpinned, the description matches that case. Toggle in **Settings → Shell → Clipboard**.
 - `clipboard_auto_paste`: `auto` = image entries use `Ctrl+V`, text entries use `Ctrl+Shift+V`; `off` = copy only, no automatic paste.
@@ -411,6 +411,7 @@ up       = ["up"]
 down     = ["down"]
 tab_next = ["tab"]
 tab_previous = ["shift+tab", "iso_left_tab"]
+delete   = ["del"]
 ```
 
 Each action accepts a single string chord or an array of chords.
@@ -421,7 +422,7 @@ Each action accepts a single string chord or an array of chords.
 
 **`super` bindings are rejected** (`super`, `win`, `windows`, `logo`, `meta`, `mod4`) and produce a config parse error.
 
-**Supported actions:** `validate`, `cancel`, `left`, `right`, `up`, `down`, `tab_next`, `tab_previous`
+**Supported actions:** `validate`, `cancel`, `left`, `right`, `up`, `down`, `tab_next`, `tab_previous`, `delete`
 
 | Action | Default role |
 |--------|----------------|
@@ -429,6 +430,7 @@ Each action accepts a single string chord or an array of chords.
 | `cancel` | Close a popup/panel or dismiss the current operation. |
 | `left` / `right` / `up` / `down` | Move within the focused region (list rows, launcher grid columns, slider nudge on left/right, and similar). |
 | `tab_next` / `tab_previous` | Move between major panes in split layouts (for example Settings sidebar ↔ content, or Control Center sidebar ↔ tab body). |
+| `delete` | Delete the selected item after confirmation (for example, a clipboard history entry). |
 
 On split-pane surfaces (**Settings** and **Control Center**), `tab_next` / `tab_previous` switch between the sidebar and the main content area. Arrow keys stay inside the active pane: the sidebar uses roving focus, and the content area moves between controls on up/down while leaving left/right to control-native behavior (such as slider nudge). The session panel uses arrow keys to move between actions once focus has entered the button list; it does not pre-select an action on open.
 
