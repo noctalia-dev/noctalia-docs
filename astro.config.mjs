@@ -98,7 +98,15 @@ export default defineConfig({
             },
             {
               label: "Bar",
-              items: [{ autogenerate: { directory: "v5/bar" } }],
+              items: [
+                { label: "Overview", link: "v5/bar/" },
+                {
+                  label: "Widgets",
+                  collapsed: true,
+                  items: [{ autogenerate: { directory: "v5/bar/widgets" } }],
+                },
+                { label: "Widget Actions", link: "v5/bar/actions/" },
+              ],
             },
             {
               label: "Dock",

@@ -149,7 +149,7 @@ net_tx_activity_threshold    = 1      # MB/s
 net_tx_critical_threshold    = 50     # MB/s
 ```
 
-The value's color is interpolated between the widget's regular foreground color (its `color` setting) and its `highlight_color` (set per widget - see the [`sysmon` widget](/v5/bar/widgets/#sysmon)). Below the activity threshold the value stays at its regular color; the moment it crosses the activity threshold it jumps to a small highlight tint, then ramps the rest of the way to the full `highlight_color`, reaching it at or above the critical threshold. Set the critical threshold to `0` to disable highlighting for that stat.
+The value's color is interpolated between the widget's regular foreground color (its `color` setting) and its `highlight_color` (set per widget - see the [`sysmon` widget](/v5/bar/widgets/sysmon/)). Below the activity threshold the value stays at its regular color; the moment it crosses the activity threshold it jumps to a small highlight tint, then ramps the rest of the way to the full `highlight_color`, reaching it at or above the critical threshold. Set the critical threshold to `0` to disable highlighting for that stat.
 
 | Key | Default | Unit | Stat |
 |-----|---------|------|------|

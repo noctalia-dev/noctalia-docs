@@ -1,0 +1,16 @@
+---
+title: power_profile
+description: Shows and changes the current system power profile.
+sidebar:
+  order: 18
+---
+
+Shows the current power profile using a glyph. Left-click steps forward through the available profiles, right-click steps back, and scrolling does the same - all rebindable as [widget actions](/v5/bar/actions/).
+
+This widget has no settings of its own beyond the shared ones (`scale`, `enabled`, capsule styling, actions).
+
+```toml
+[widget.power_profile.actions]
+scroll_up = "none"    # leave the wheel alone
+scroll_down = "none"
+```
