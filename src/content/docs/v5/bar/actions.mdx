@@ -5,7 +5,6 @@ sidebar:
   order: 5
 ---
 
-# Widget Actions
 
 What a bar widget does when you click or scroll it is configuration, not something baked into the
 widget. Every widget accepts an `actions` table that binds a gesture to a command:
@@ -144,27 +143,6 @@ actions here anchor at the pointer rather than at a widget, since there is no wi
 A monitor override may carry its own `dead_zone.actions` table, which replaces the bar's rather than
 merging with it.
 
-## Settings that became actions
-
-Several per-widget settings were replaced by bindings. Your existing config keeps working, and
-Noctalia reports each one so you can update it:
-
-| Old setting | Now |
-|---|---|
-| `[shell] middle_click_opens_widget_settings = false` | `[bar.<name>.actions] middle = "none"` |
-| `enable_scroll = false` | `scroll_up = "none"` and `scroll_down = "none"` |
-| `scroll_step = 10` (volume, brightness) | the step argument, e.g. `scroll_up = "volume-up 10%"` |
-| `cycle_command = "..."` (keyboard_layout) | `left = "exec ..."` |
-| `primary_click = "fullscreen"` (screenshot) | `left = "screenshot-fullscreen"` |
-| `command`, `right_command`, `middle_command`, `scroll_up_command`, `scroll_down_command` (custom_button) | the matching gesture, as `exec <command>` |
-| the same five keys under `[bar.<name>.dead_zone]` | the matching gesture under `dead_zone.actions` |
-
-`enable_scroll` still exists on plugin widgets, where it gates the plugin's own `onScroll` handler.
-
-:::note
-Settings you edited in the GUI are rewritten automatically. Hand-written config files are left
-alone - the old keys keep working and Noctalia notifies you which ones to update.
-:::
 
 ## Examples
 

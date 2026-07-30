@@ -100,12 +100,12 @@ export default defineConfig({
               label: "Bar",
               items: [
                 { label: "Overview", link: "v5/bar/" },
+                { label: "Widget Actions", link: "v5/bar/actions/" },
                 {
                   label: "Widgets",
                   collapsed: true,
                   items: [{ autogenerate: { directory: "v5/bar/widgets" } }],
                 },
-                { label: "Widget Actions", link: "v5/bar/actions/" },
               ],
             },
             {
