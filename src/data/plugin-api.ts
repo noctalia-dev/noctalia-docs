@@ -131,6 +131,12 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     introduced:
       'Timezone support on `noctalia.formatTime`, `noctalia.isValidTimezone(name)`, and `noctalia.timeFormat()` / `noctalia.dateFormat()` mirroring `[shell].time_format` / `date_format`.',
   },
+  {
+    level: 20,
+    noctaliaVersion: null,
+    feature: 'sound',
+    introduced: '`noctalia.sound.load()` and `noctalia.sound.play()` for plugin audio.',
+  },
 ];
 
 export const CURRENT_PLUGIN_API = Math.max(...PLUGIN_API_LEVELS.map((entry) => entry.level));

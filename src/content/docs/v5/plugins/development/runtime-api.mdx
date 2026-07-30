@@ -248,6 +248,39 @@ local raw = noctalia.readFile(path)
 if raw then myTable = noctalia.json.decode(raw) end
 ```
 
+## Sound
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `noctalia.sound.load(name: string, path: string, onLoaded: (ok: boolean, error: string?) -> ())` | boolean | Accepts an asynchronous sound load and calls `onLoaded` after decoding. Requires <PluginApiBadge feature="sound" />. |
+| `noctalia.sound.play(name: string)` | nothing | Plays a loaded sound from this runtime's sound bank. Requires <PluginApiBadge feature="sound" />. |
+
+Define the completion callback before requesting the load, and play only after it reports success:
+
+```lua
+local function onClickLoaded(ok, err)
+  if not ok then
+    noctalia.notifyError("Could not load click sound", err)
+    return
+  end
+  noctalia.sound.play("click")
+end
+
+local accepted = noctalia.sound.load("click", "sounds/click.ogg", onClickLoaded)
+if not accepted then
+  noctalia.notifyError("Could not queue click sound")
+end
+```
+
+Sound paths resolve like filesystem paths. Bundled relative assets such as `sounds/click.ogg` need no manifest
+declaration. A `true` return means the request was accepted, not that the file decoded; a decode failure calls the
+callback with `false` and a non-empty error. At most eight loads may be pending in one runtime, and requesting a name
+that already has a pending load returns `false`.
+
+Sound names are scoped to one runtime instance. Reloading or stopping it cancels pending callbacks and releases its
+cached names, while a sound already playing finishes safely. Playback honors `[audio].enable_sounds` and
+`[audio].sound_volume`. Triggering the same loaded sound while it is still playing is suppressed.
+
 ## HTTP and downloads
 
 | Method | Returns | Description |
