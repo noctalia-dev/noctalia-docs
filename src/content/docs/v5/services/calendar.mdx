@@ -72,8 +72,6 @@ File-backed credentials work with agenix, sops-nix, and systemd credentials. Con
 
 The two CalDAV modes are strict. `password_file` is rejected unless `credential_source = "file"`, and file mode is rejected without an absolute `password_file`. Noctalia does not try one source and then fall back to the other.
 
-When upgrading from a version that stored calendar credentials in `state.toml`, Noctalia moves Secret Service-backed CalDAV passwords and Google refresh tokens into Secret Service once. A file-backed account's old plaintext password is discarded because its configured file is authoritative. Old access tokens are also discarded. The plaintext owner table is removed only after every credential that requires migration is stored successfully. If the provider is unavailable, locked, or the prompt is cancelled, Settings shows **Calendar Credential Storage** with a retry action. Calendar sync does not read pending plaintext values.
-
 If Secret Service contains a matching credential but it remains locked after an unlock attempt, Settings reports the
 credential store as locked instead of treating the item as missing. If a configured Google account has no refresh token,
 its account row shows **Reconnect**. The encrypted event-cache master key is separate from account credentials, so a
@@ -98,9 +96,8 @@ key_file = "/run/agenix/noctalia-storage-key"
 
 The file format and generation instructions are documented under
 [Encrypted storage master key](/v5/configuration/shell/#encrypted-storage-master-key). When no storage key is available,
-live calendar sync continues but events are not read from or written to disk. A legacy plaintext `events.json` is
-deleted only after its contents have been parsed and an authenticated encrypted replacement has been written
-successfully. Missing or incorrect keys preserve existing files and surface a retry action in Settings.
+live calendar sync continues but events are not read from or written to disk. Missing or incorrect keys preserve the
+encrypted cache and surface a retry action in Settings.
 If the original key cannot be restored, or the cache is damaged, **Recover Private Storage** provides a confirmed
 reset. Because clipboard and calendar storage share one master key, this reset also removes saved clipboard history.
 A configured storage key file is never modified.
