@@ -23,6 +23,7 @@ Pill styling and `capsule_radius` apply only when `style = "regular"`.
 | `occupied_color` | string | `"secondary"` | Color role or hex color for occupied (non-focused) workspace pills |
 | `empty_color` | string | `"secondary"` | Color role or hex color for empty workspace pills |
 | `urgent_color` | string | `"error"` | Color role or hex color for urgent workspace pills |
+| `change_color_on_hover` | bool | `true` | Change a workspace's fill and label colors while the pointer hovers over it. Set to `false` to preserve each workspace's configured color while hovering. |
 | `focused_output_only` | bool | `false` | Only highlight the active workspace on the monitor that has keyboard or pointer focus; other monitors show their active workspace in the occupied color. |
 | `labels_only_when_occupied` | bool | `false` | Show id/name labels on workspaces with open windows and on the active workspace even when empty; other empty tags stay unlabeled. Requires `display = "id"` or `"name"`. |
 | `hide_when_empty` | bool | `false` | Hide workspace pills with no open windows. |
@@ -41,5 +42,6 @@ focused_color = "primary"
 occupied_color = "secondary"
 empty_color = "surface_variant"
 urgent_color = "error"
+change_color_on_hover = true  # false = keep configured workspace colors while hovering
 focused_output_only = false  # true = only the focused monitor highlights its active workspace
 ```
