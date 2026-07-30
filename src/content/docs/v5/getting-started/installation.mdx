@@ -329,10 +329,15 @@ If you prefer to install Noctalia locally or want more control over the installa
     sudo pacman -S meson gcc just \
       wayland wayland-protocols \
       libglvnd freetype2 fontconfig \
-      cairo pango \
+      cairo pango harfbuzz \
       libxkbcommon glib2 \
+      libsecret libsodium \
       sdbus-cpp libpipewire wireplumber polkit \
-      pam curl libwebp libjxl librsvg libqalculate
+      pam curl libwebp libjxl libsndfile librsvg \
+      libqalculate libxml2 \
+      md4c tomlplusplus \
+      nlohmann-json stb \
+      jemalloc
     ```
   </TabItem>
   <TabItem label="Fedora">
@@ -341,33 +346,43 @@ If you prefer to install Noctalia locally or want more control over the installa
       wayland-devel wayland-protocols-devel \
       libEGL-devel mesa-libGLES-devel \
       freetype-devel fontconfig-devel \
-      cairo-devel pango-devel \
+      cairo-devel pango-devel harfbuzz-devel \
       libxkbcommon-devel glib2-devel \
+      libsecret-devel libsodium-devel \
       sdbus-cpp-devel pipewire-devel wireplumber-devel \
-      pam-devel polkit-devel libcurl-devel libwebp-devel libjxl-devel librsvg2-devel \
-      libqalculate-devel
+      pam-devel polkit-devel libcurl-devel libwebp-devel libjxl-devel libsndfile-devel librsvg2-devel \
+      libqalculate-devel libxml2-devel \
+      md4c-devel tomlplusplus-devel \
+      json-devel stb_image_resize2-devel stb_image_write-devel \
+      jemalloc-devel
     ```
   </TabItem>
   <TabItem label="Debian/Ubuntu">
     ```bash
-    sudo apt install just meson libwayland-dev \
-      wayland-protocols libfreetype-dev libfontconfig-dev \
-      libcairo2-dev libpango1.0-dev librsvg2-dev libxkbcommon-dev \
-      libepoxy-dev libgles-dev libwebp-dev libjxl-dev libcurl4-gnutls-dev \
-      libmd4c-dev nlohmann-json3-dev libsdbus-c++-dev libsecret-1-dev \
-      libsodium-dev libstb-dev libtomlplusplus-dev \
-      libpipewire-0.3-dev libpam0g-dev libpolkit-agent-1-dev \
-      libpolkit-gobject-1-dev libqalculate-dev libwireplumber-0.5-dev \
-      libxml2-dev libjemalloc-dev git
+    sudo apt install meson g++ just \
+      libwayland-dev wayland-protocols \
+      libegl-dev libgles-dev \
+      libfreetype-dev libfontconfig-dev \
+      libcairo2-dev libpango1.0-dev libharfbuzz-dev \
+      libxkbcommon-dev libglib2.0-dev \
+      libsecret-1-dev libsodium-dev \
+      libsdbus-c++-dev libpipewire-0.3-dev libwireplumber-0.5-dev \
+      libpam0g-dev libpolkit-agent-1-dev libpolkit-gobject-1-dev \
+      libcurl4-openssl-dev libwebp-dev libjxl-dev libsndfile1-dev librsvg2-dev \
+      libqalculate-dev libxml2-dev \
+      libmd4c-dev libtomlplusplus-dev \
+      nlohmann-json3-dev libstb-dev \
+      libjemalloc-dev git
     ```
   </TabItem>
 </Tabs>
 
-Vendored dependencies, with no system package needed: `Wuffs`, `nanosvg`,
-`Luau`, `dr_wav`, `fzy`, and Material Color Utilities.
+Vendored dependencies, with no system package needed: `Wuffs`,
+`Luau`, `fzy`, and Material Color Utilities.
 
 System packages required beyond the Wayland/GL stack: `libwebp` handles WebP decoding and thumbnail encoding,
-`libjxl` handles JPEG XL decoding, and Wuffs handles the other supported raster image formats.
+`libjxl` handles JPEG XL decoding, `libsndfile` decodes shell sound effects (WAV, FLAC, Ogg/Vorbis, Opus, MP3, and
+AIFF), and Wuffs handles the other supported raster image formats.
 
 Polkit agent support requires development files that provide the `polkit-agent-1` and `polkit-gobject-1` pkg-config
 modules. Some distros ship these in the runtime `polkit` package, while split-package distros use names such as
