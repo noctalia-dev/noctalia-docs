@@ -27,7 +27,7 @@ key_file   = ""               # absolute path; required only when key_source = "
 corner_radius_scale   = 1.0             # 0 = square, 1 = default, 2 = extra rounded
 button_borders        = true            # draw outlines around buttons throughout the shell
 input_borders         = true            # draw outlines around text fields and other inputs
-popup_borders         = true            # draw outlines around popups and dropdowns
+popup_borders         = true            # draw outlines around popups and dropdowns (dialogs always have outlines)
 card_borders          = true            # draw outlines around section cards inside panels and settings
 popup_shadows         = true            # draw drop shadows behind popups and dropdowns
 font_family           = "sans-serif"    # Pango family string; Fontconfig handles fallback
@@ -200,7 +200,7 @@ Notes:
 - `corner_radius_scale` scales rounded corners across shell surfaces: `0` = square, `1` = default, `2` = extra rounded.
 - `button_borders`: when `true` (default), buttons use the outline defined by their built-in or custom style. Set it to `false` for borderless buttons throughout the shell. Other controls, cards, panels, and explicitly configured raw borders are unaffected. Toggle in **Settings → Appearance → Borders**.
 - `input_borders`: when `true` (default), text fields and select/dropdown triggers draw a resting outline. Set it to `false` to drop the resting border; the focus ring still appears while an input is focused. Toggle in **Settings → Appearance → Borders**.
-- `popup_borders`: when `true` (default), popups and dropdowns (context menus, select dropdowns, dialogs, and tray/dock menus) draw a subtle outline that separates them from the surface they float over. Set it to `false` for borderless popups. Toggle in **Settings → Appearance → Borders**.
+- `popup_borders`: when `true` (default), popups and dropdowns (context menus, select dropdowns, and tray/dock menus) draw a subtle outline that separates them from the surface they float over. Set it to `false` for borderless popups. Centered dialogs always retain their outline because they use the same background color as their parent surface. Toggle in **Settings → Appearance → Borders**.
 - `card_borders`: when `true` (default), section cards draw an outline wherever they render - control center tabs, launcher and clipboard preview panes, setup wizard steps, and the settings window. Set it to `false` for flat, borderless cards. A panel's own outline is controlled by `shell.panel.borders`. Toggle in **Settings → Appearance → Borders**.
 - `popup_shadows`: when `true` (default), popups and dropdowns cast the global `[shell.shadow]` drop shadow. Set it to `false` to disable popup shadows only; other surfaces keep their own `shadow` toggles. Toggle in **Settings → Appearance → Effects**.
 - `launch_apps_as_systemd_services`: when `true`, apps launched from the launcher, dock, and taskbar run as transient systemd services (`systemd-run --user`, unit `app-<desktop-id>@<uuid>.service`) so they survive a shell restart and get their own cgroup. This only applies when Noctalia itself runs under the systemd user manager - as a user unit, or started through uwsm. If it was started as a plain child of the compositor session, the option is ignored (apps launch directly, a warning is logged, and the toggle is disabled in **Settings → Shell → General**); launching apps into the user manager from a session-scoped shell would move them out of the login session and can break them.
