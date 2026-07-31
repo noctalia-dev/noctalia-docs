@@ -113,29 +113,36 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
   },
   {
     level: 17,
-    noctaliaVersion: null,
+    noctaliaVersion: 'v5.0.0-beta.7',
     feature: 'service-lifecycle',
     introduced:
       'Service entries start when the plugin is enabled instead of only at launch, and `onExit(signal, reason)` reports `reload`, `disable`, `uninstall`, or `shutdown`.',
   },
   {
     level: 18,
-    noctaliaVersion: null,
+    noctaliaVersion: 'v5.0.0-beta.7',
     feature: 'panel-frame-tick',
     introduced: '`panel.setNeedsFrameTick(bool)`, delivering `onFrameTick(deltaMs)` to an open panel.',
   },
   {
     level: 19,
-    noctaliaVersion: null,
+    noctaliaVersion: 'v5.0.0-beta.7',
     feature: 'format-time-timezone',
     introduced:
       'Timezone support on `noctalia.formatTime`, `noctalia.isValidTimezone(name)`, and `noctalia.timeFormat()` / `noctalia.dateFormat()` mirroring `[shell].time_format` / `date_format`.',
   },
   {
     level: 20,
-    noctaliaVersion: null,
+    noctaliaVersion: 'v5.0.0-beta.7',
     feature: 'sound',
     introduced: '`noctalia.sound.load()` and `noctalia.sound.play()` for plugin audio.',
+  },
+  {
+    level: 21,
+    noctaliaVersion: null,
+    feature: 'plugin-ui-props',
+    introduced:
+      'The `ui.markdown` node, `submitOnEnter` on `ui.input`, and `stickToBottom` / `onScroll` / `scrollToBottomRev` on `ui.scroll`.',
   },
 ];
 
