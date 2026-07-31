@@ -12,6 +12,7 @@ Shows the current network connection (Wi-Fi SSID and signal, or wired) via Netwo
 | `show_label` | bool | `true` | Show the SSID or interface name next to the glyph |
 | `vpn_status` | string | `"replace"` | VPN indicator mode: `"replace"` swaps the network glyph for a shield, `"both"` shows both glyphs, and `"hidden"` disables the indicator. |
 | `show_vpn_label` | bool | `false` | Show the VPN name when `vpn_status` is `"replace"` or `"both"` and labels are enabled. |
+| `show_signal_strength` | bool | `false` | Show Wi-Fi signal strength percentage in the network label when connected. |
 
 ```toml
 [widget.network]
