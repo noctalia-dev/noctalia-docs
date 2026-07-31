@@ -144,6 +144,13 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     introduced:
       'The `ui.markdown` node, `submitOnEnter` on `ui.input`, and `stickToBottom` / `onScroll` / `scrollToBottomRev` on `ui.scroll`.',
   },
+  {
+    level: 22,
+    noctaliaVersion: null,
+    feature: 'module-require',
+    introduced:
+      '`require("./path.luau")` loads relative `.luau` modules with entry-local caches and hot reload for loaded modules.',
+  },
 ];
 
 export const CURRENT_PLUGIN_API = Math.max(...PLUGIN_API_LEVELS.map((entry) => entry.level));

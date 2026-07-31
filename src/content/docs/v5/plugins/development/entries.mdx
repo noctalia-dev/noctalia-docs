@@ -33,6 +33,50 @@ apply depends on the entry kind:
 
 The top level of the script runs once at load - set up state and register `noctalia.state.watch` handlers there.
 
+### Modules
+
+Entry scripts can split shared logic into relative `.luau` modules with
+<PluginApiBadge feature="module-require" />:
+
+```lua
+local format = require("./lib/format.luau")
+```
+
+The argument must be a string starting with `./` or `../` and ending in `.luau`. Any other value fails with
+`require path must be relative and end in .luau`. Paths are lexical: each `require()` resolves relative to the file
+that contains the call, even if the call runs later from a function that module returned.
+
+```lua
+-- entry.luau
+local tools = require("./lib/tools.luau")
+tools.loadTheme()
+
+-- lib/tools.luau
+local M = {}
+
+function M.loadTheme()
+  -- Resolves from lib/, not from entry.luau.
+  return require("../shared/theme.luau")
+end
+
+return M
+```
+
+There are no package search paths, implicit extensions, `init.luau` alternatives, or path containment checks. `../`
+can leave the plugin directory, just like the rest of the trusted-plugin filesystem API.
+
+A module must return exactly one non-`nil` value. It runs in the entry's VM, but gets its own global environment:
+`noctalia.*`, `ui.*`, and the other sandboxed globals are visible, while globals assigned by the module stay private to
+that module. Inside a module, `_G` is the module environment, not the entry's `_G`.
+
+Each entry keeps its own module cache. Requiring the same canonical path returns the cached value without re-running the
+module; symlinks resolve to the same cache identity. A different widget, panel, or service entry gets a separate module
+instance. Circular imports fail with the full import chain.
+
+Editing a successfully loaded module hot-reloads the owning entry, including a module first required inside a callback.
+A module that failed to load is not cached or watched, so creating a previously missing module does not reload anything
+by itself. Touch the entry script, or another successfully loaded file, to retry it.
+
 ### Pointer callbacks are overridable
 
 On a bar widget, what a click or scroll does is user configuration. A binding in
