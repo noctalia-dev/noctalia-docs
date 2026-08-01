@@ -276,6 +276,8 @@ widget elsewhere can never split it. Grouping is managed entirely from the Setti
    Or tick the checkbox on two or more **adjacent** widgets and click **Group**. Either way they move into one
    group container and a style editor opens.
 3. Edit the group's background, border, foreground, padding, radius, and opacity - every member updates together.
+   Turning on **Accordion** collapses the group to its first widget until you hover it; **Reveal direction** picks
+   which side the remaining widgets unfold on.
 4. **Drag a widget onto the group** to add it; **drag a member out**, or use its eject button, to remove it.
    Reorder members by dragging them within the group. Drag the group's own handle to move the whole group along
    the lane or into another lane.
@@ -299,6 +301,8 @@ fill    = "surface_variant"
 padding = 6.0
 opacity = 0.9
 enabled = true
+accordion = true                         # optional: collapse to the first member, reveal on hover
+accordion_direction = "end"              # "end" (default) or "start"
 # border, foreground, radius, enabled are optional
 ```
 
@@ -313,6 +317,8 @@ enabled = true
 | `padding` | number | `6` | Inner padding between the capsule edge and its widgets, in logical pixels (clamped 0–48). |
 | `radius` | number | *(auto pill)* | Capsule corner radius in logical pixels (0–80). Omit for automatic pill radius. |
 | `opacity` | number | `1.0` | Capsule background opacity (0.0–1.0). |
+| `accordion` | bool | `false` | Collapse the group to its first widget; hovering the capsule expands it in place to reveal the rest. Needs at least two widgets in the group. |
+| `accordion_direction` | string | `end` | Where the hidden widgets unfold relative to the first one along the lane: `end` (after it) or `start` (before it). |
 
 A group's style can be overridden per monitor by declaring `[[bar.<name>.monitor.<match>.capsule_group]]` tables
 with matching `id` values. A reused widget name (e.g. several `spacer` instances) can appear in different groups
