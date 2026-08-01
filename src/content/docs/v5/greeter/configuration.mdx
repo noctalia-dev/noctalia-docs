@@ -10,7 +10,7 @@ Configure **everything** in `/var/lib/noctalia-greeter/greeter.toml` (Nix: `prog
 | Path | Role |
 |------|------|
 | `/var/lib/noctalia-greeter/greeter.toml` | Full declarative config (scheme, palette, wallpaper, output, cursor, …). Wins over Sync when set |
-| `/var/lib/noctalia-greeter/sync.toml` | Sync + UI mutable (palette, wallpaper refs, session actions, last session/scheme, layout/transforms). Loses to greeter.toml |
+| `/var/lib/noctalia-greeter/sync.toml` | Sync + UI mutable (palette, wallpaper refs, session actions, last session/scheme, layout/transforms/scales). Loses to greeter.toml |
 | `/var/lib/noctalia-greeter/wallpaper*` | Sync-installed wallpaper image files |
 
 The **Synced** scheme uses a complete `[appearance.palette]` from `greeter.toml` when present, otherwise the same keys from `sync.toml`. (Legacy live `appearance.json` is migrated into `sync.toml` once.)
@@ -41,7 +41,7 @@ When you change session or color scheme on the login screen, the greeter writes 
 | `[session].last` | Last Wayland session you picked (by **Name** from the session picker) |
 | `[appearance].scheme` | Last color scheme you picked |
 
-Sync stages a `sync.toml` fragment (and optional layout/transforms files); apply merges that into live `sync.toml`.
+Sync stages a `sync.toml` fragment (and optional layout/transforms/scales files); apply merges that into live `sync.toml`.
 
 ---
 
@@ -66,7 +66,8 @@ Set these in **`greeter.toml`**. The greeter UI and Sync do not change them. Whe
 | `[output].layout` | Multi-monitor positions; overrides Sync layout in `sync.toml` |
 | `[output].width` / `.height` | Preferred DRM mode size |
 | `[output].transforms` | Per-connector DRM transform; overrides Sync transforms |
-| `[output].scale` | Manual UI scale factor |
+| `[output].scales` | Per-connector scale matching the session; overrides Sync scales |
+| `[output].scale` | Manual UI scale for **all** outputs (overrides `scales` and auto) |
 | `[idle].timeout` | Seconds before blanking outputs; `0` disables |
 | `[cursor].theme` / `.size` / `.path` | Cursor theme |
 | `[keyboard].layout` / `.variant` / `.options` / `.numlock` | XKB keymap |
@@ -156,7 +157,9 @@ height = 2160
 # Per-connector DRM transform. Overrides Sync transforms in sync.toml when set.
 # Tokens: normal/0/none, 90, 180, 270, flipped, flipped-90, flipped-180, flipped-270
 transforms = "DP-1:normal; DP-2:normal"
-# Manual UI scale; omit or invalid -> auto from display geometry.
+# Per-connector scale matching the session (keeps layout coords valid). Overrides Sync scales when set.
+scales = "DP-1:1; DP-2:1"
+# Manual UI scale for all outputs; omit -> per-output scales, else auto from display geometry.
 scale = 1.5
 
 [idle]
@@ -199,16 +202,17 @@ When `[output].name` is set, the compositor disables the other connectors at the
 
 On multiple monitors, cursor movement follows `[output].layout`. Without it, the greeter places outputs left-to-right by connector name, which often does not match your desk.
 
-**Sync from Noctalia:** When you use **Settings → Security → Noctalia Greeter → Sync Now**, Noctalia copies monitor positions from your desktop compositor (via xdg-output) into `[output].layout`, and copies each connector's output transform into `[output].transforms`. Sync skips layout when only one monitor is connected, xdg-output is unavailable, outputs are still enumerating, or all monitors report the same origin. Transforms sync whenever at least one ready output is available (including a single portrait panel).
+**Sync from Noctalia:** When you use **Settings → Security → Noctalia Greeter → Sync Now**, Noctalia copies monitor positions from your desktop compositor (via xdg-output) into `[output].layout`, each connector's transform into `[output].transforms`, and each connector's effective scale into `[output].scales`. Sync skips layout when only one monitor is connected, xdg-output is unavailable, outputs are still enumerating, or all monitors report the same origin. Transforms and scales sync whenever at least one ready output is available.
 
 Set positions manually if needed:
 
 ```toml
 [output]
 layout = "DP-1:0,0; DP-2:2560,0"
+scales = "DP-1:1; DP-2:1"
 ```
 
-Coordinates are logical pixels from your desktop compositor. The greeter compositor uses them for **order and row grouping**, then places outputs edge-to-edge using its own output scale (so cursor movement stays continuous).
+Coordinates are **logical pixels** from your desktop compositor. The greeter applies matching `[output].scales` so those positions stay adjacent and the cursor can move between monitors. Without `scales`, a configured `layout` uses scale `1.0` (not auto DPI scale) so absolute positions do not open gaps. A global `[output].scale` overrides per-output scales.
 
 List connector names from a running Wayland session:
 
@@ -358,21 +362,34 @@ sudo systemctl restart greetd
 
 ## UI scale
 
-On high-DPI panels (for example 4K without fractional scaling), the compositor scales output from the monitor's physical size when EDID reports it, otherwise from resolution. Scale uses the **selected DRM mode** size (not the pre-modeset `wlr_output` size), so cold boot and post-logout match. Scale is capped at 2×. The greeter client lays out at logical size and renders HiDPI buffers via Wayland fractional scale.
+On high-DPI panels (for example 4K without fractional scaling), and when no layout/`scales`/`scale` override applies, the compositor scales output from the monitor's physical size when EDID reports it, otherwise from resolution. Auto scale uses the **selected DRM mode** size (not the pre-modeset `wlr_output` size), so cold boot and post-logout match. Auto scale is capped at 2×. The greeter client lays out at logical size and renders HiDPI buffers via Wayland fractional scale.
 
-To override auto scaling, set `[output].scale`:
+Resolution order per output:
+
+1. Global `[output].scale` in `greeter.toml` (forces one scale on every output)
+2. Per-connector `[output].scales` from `greeter.toml`, else Sync `sync.toml`
+3. If `[output].layout` is set but no matching scales → scale `1.0` (keeps session layout coords adjacent)
+4. Otherwise auto from display geometry
+
+Per-connector scales (synced from the desktop session):
+
+```toml
+[output]
+scales = "DP-1:1; DP-2:1.25"
+```
+
+Force one scale on every output:
 
 ```toml
 [output]
 scale = 1.5
 ```
 
-If `[output].scale` is missing or invalid (not a positive number), the compositor falls back to auto scaling.
+If `[output].scale` is set but invalid (not a positive number), it is ignored and the next step in the order above applies.
 
 :::note
-Manual `[output].scale` is separate from compositor or desktop scaling. It only affects the greeter session's output scaling.
+Manual `[output].scale` and Sync `[output].scales` only affect the greeter session. They are separate from your desktop compositor's scaling, except that **Sync Now** copies the session's effective per-output scale into `scales` so multi-monitor layout stays valid.
 :::
-
 ---
 
 ## Cursor theme

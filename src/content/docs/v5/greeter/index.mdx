@@ -147,6 +147,7 @@ With Noctalia v5 and the greeter both installed, open **Settings â†’ Security â†
 - shell font (`[shell] font_family`)
 - enabled session actions and power command overrides (`shell.session` / `[shell.session.power]`)
 - monitor orientation into `[output].transforms`
+- per-output scale into `[output].scales` (so layout coordinates stay valid on the greeter)
 - multi-monitor layout into `[output].layout` when more than one ready output reports distinct positions
 
 You will be prompted for admin access via polkit (`pkexec` or `run0`).
@@ -174,7 +175,7 @@ privilege_command = "ghostty -e pkexec"
 
 Optional: install **elogind** if you want in-session polkit prompts without a terminal wrapper. seatd and elogind can coexist; elogind only provides session tracking for polkit, not power management.
 
-Synced data is installed under `/var/lib/noctalia-greeter/`: wallpaper image files, and a merge into `sync.toml` from a staged `sync.toml` fragment (palette, wallpaper refs, font, corner radius, session actions, scheme, layout/transforms). Declarative `greeter.toml` is never overwritten by Sync; values set there win over Sync (including `[appearance.palette]` for the Synced scheme). See [Configuration](/v5/greeter/configuration/).
+Synced data is installed under `/var/lib/noctalia-greeter/`: wallpaper image files, and a merge into `sync.toml` from a staged `sync.toml` fragment (palette, wallpaper refs, font, corner radius, session actions, scheme, layout/transforms/scales). Declarative `greeter.toml` is never overwritten by Sync; values set there win over Sync (including `[appearance.palette]` for the Synced scheme). See [Configuration](/v5/greeter/configuration/).
 
 After syncing, log out or restart greetd to see the changes on the login screen.
 
