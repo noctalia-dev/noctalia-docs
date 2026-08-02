@@ -223,7 +223,7 @@ noctalia config validate ./config.toml
 
 It reports two severities:
 
-- **Errors** - problems that stop the configuration from loading correctly: TOML syntax errors (with file, line, and column), values that fail to parse such as an invalid color, an `[include]` whose `files` entry points at a path that does not exist, or a malformed `[include]` table (`autoload` that is not a boolean, `files` that is not a list of strings). These exit with status `1`.
+- **Errors** - problems that stop the configuration from loading correctly: TOML syntax errors (with file, line, and column), values that fail to parse such as an invalid color, invalid cross-field combinations such as a keyboard layout with both its glyph and label hidden, an `[include]` whose `files` entry points at a path that does not exist, or a malformed `[include]` table (`autoload` that is not a boolean, `files` that is not a list of strings). These exit with status `1`.
 - **Warnings** - things the shell loads fine but ignores, adjusts, or migrates in memory: unknown/obsolete sections and settings (misspelled or left over from an older version), values with a canonical replacement, values outside the allowed range (clamped), and invalid enum choices. Warnings are advisory and do **not** fail the check. Unknown widget and desktop-widget settings are checked against each widget type's known options.
 
 A config with only warnings still prints `✓ Config is valid` and exits `0` (with the warnings listed), so unknown keys won't break a pre-commit hook or CI step - they're surfaced as cleanup hints. Only genuine errors exit `1`.
