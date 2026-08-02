@@ -5,6 +5,8 @@ sidebar:
   order: 1
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 This guide covers theming applications built with GTK, Qt, and KDE Plasma toolkits.
 
 ## GTK 3/4 Applications
@@ -110,18 +112,18 @@ Qt applications include KDE apps and many cross-platform applications. KDE apps 
    }
    ```
    
-   **For Hyprland (`hyprland.conf`):**
+   **For Hyprland:**
   <Tabs>
-	  <TabItem label="Conf ( 0.54.* and earlier)">
+    <TabItem label="hyprland.conf ( 0.54.* and earlier)">
      ```ini
      env = QT_QPA_PLATFORMTHEME,qt6ct
      ```
-	  </TabItem>
-	  <TabItem label="Lua ( 0.55.* and later)">
+   </TabItem>
+     <TabItem label="hyprland.lua ( 0.55.* and later)">
      ```lua
      hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
      ```
-	  </TabItem>
+     </TabItem>
   </Tabs>
    
    **For Sway (`config`):**
