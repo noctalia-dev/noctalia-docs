@@ -213,6 +213,7 @@ entry is removed, or Noctalia stops the plugin.
 | Method | Returns | Description |
 |--------|---------|-------------|
 | `noctalia.readFile(path)` | string, or `nil, err` | Reads a file as bytes. |
+| `noctalia.readFileAsync(path, cb)` | bool | Queues a read and calls `cb(contents, nil)` or `cb(nil, err)`. Returns `false` if the bounded queue is full. Requires plugin API 23. |
 | `noctalia.writeFile(path, content)` | bool, optional error | Writes a file, replacing existing contents. |
 | `noctalia.mkdirAll(path)` | bool, optional error | Creates a directory and any missing parents (an existing directory is success). |
 | `noctalia.removeFile(path)` | bool, optional error | Deletes a file. Refuses directories. |
@@ -226,6 +227,11 @@ entry is removed, or Noctalia stops the plugin.
 
 Filesystem paths resolve as follows: `~` expands to `$HOME`, absolute paths are used as-is, and relative paths resolve
 against the plugin's own directory. Plugins are trusted code, so these helpers are not sandboxed.
+
+`readFileAsync()` is intended for sysfs, procfs, and small local files that should not consume a plugin VM worker while
+the kernel supplies their contents. Reads are limited to 4 MiB, with at most four outstanding reads per plugin runtime.
+Reloaded or stopped runtimes discard late completions. Use synchronous `readFile()` only when the file is known to be
+immediately available.
 
 ### Persisting data across restarts
 

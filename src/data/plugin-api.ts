@@ -151,6 +151,13 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     introduced:
       '`require("./path.luau")` loads relative `.luau` modules with entry-local caches and hot reload for loaded modules.',
   },
+  {
+    level: 23,
+    noctaliaVersion: null,
+    feature: 'async-file-read',
+    introduced:
+      '`noctalia.readFileAsync(path, callback)` for bounded filesystem reads outside plugin VM workers.',
+  },
 ];
 
 export const CURRENT_PLUGIN_API = Math.max(...PLUGIN_API_LEVELS.map((entry) => entry.level));
