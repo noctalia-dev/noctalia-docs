@@ -100,6 +100,8 @@ System monitor sampling is configured globally under `[system.monitor]`; see [Sy
 
 The Network tab uses the configured network backend to show wireless state and connection details. It is the destination for Wi-Fi shortcuts and network-related right-click actions.
 
+The current connection line lists the IPv4 address, signal strength, radio band, and external IP. The band (`2.4 GHz`, `5 GHz`, `6 GHz`, or `60 GHz`) is shown only when the backend reports the connection frequency — NetworkManager and wpa_supplicant do, iwd does not.
+
 ## Bluetooth
 
 The Bluetooth tab shows adapter power state, paired devices, and connection controls. It is backed by Noctalia's Bluetooth service and agent.
