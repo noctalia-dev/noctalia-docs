@@ -97,57 +97,8 @@ Installing noctalia-shell from Terra will automatically install all runtime depe
 
 ## Debian {#debian}
 
-Noctalia provides an APT repository for Debian-based distributions. Two builds are available depending on your distro's Qt6 version:
-
-| Build | Qt6 | Distros |
-|-------|-----|---------|
-| `trixie` | 6.8 | Debian Trixie |
-| `sid` | 6.10 | Debian Sid, PikaOS |
-| `plucky` | 6.8 | Ubuntu 25.04 |
-| `questing` | 6.9 | Ubuntu 25.10 |
-
-**Step 1**: Import the repository signing key
-
-```bash
-curl -fsSL https://pkg.noctalia.dev/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/noctalia.gpg
-```
-
-**Step 2**: Add the repository
-
-<Tabs>
-  <TabItem label="Debian Trixie">
-    ```bash
-    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt trixie main" | sudo tee /etc/apt/sources.list.d/noctalia.list
-    ```
-  </TabItem>
-  <TabItem label="Debian Sid">
-    ```bash
-    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt sid main" | sudo tee /etc/apt/sources.list.d/noctalia.list
-    ```
-  </TabItem>
-  <TabItem label="Ubuntu 25.04">
-    ```bash
-    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt plucky main" | sudo tee /etc/apt/sources.list.d/noctalia.list
-    ```
-  </TabItem>
-  <TabItem label="Ubuntu 25.10">
-    ```bash
-    echo "deb [signed-by=/etc/apt/keyrings/noctalia.gpg] https://pkg.noctalia.dev/apt questing main" | sudo tee /etc/apt/sources.list.d/noctalia.list
-    ```
-  </TabItem>
-</Tabs>
-
-**Step 3**: Install noctalia-shell
-
-```bash
-sudo apt update
-sudo apt install noctalia-shell
-```
-
-This will automatically pull in `noctalia-qs` (the Quickshell runtime) as a dependency.
-
-:::note
-The APT repository currently only provides `amd64` packages. Debian Bookworm (12), Ubuntu 24.04 and older are not supported as they ship Qt6 6.4 which is too old (minimum required: Qt6 6.6).
+:::caution[v4 APT repository deprecated]
+The Noctalia APT repository no longer serves v4 packages for Debian-based distributions. v4 is no longer maintained; use the [v5 installation guide](/v5/getting-started/installation/#debian) instead.
 :::
 
 ---
