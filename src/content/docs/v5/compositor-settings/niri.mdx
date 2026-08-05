@@ -234,7 +234,10 @@ layer-rule {
 
 ## Laptop
 
-To lock the screen when you close your laptop lid, add this to your Niri config file:
+With the lock screen enabled, Noctalia locks before sleep by default (`[lockscreen].lock_before_suspend = true`), including lid-close suspend handled by logind. Set `lock_before_suspend = false` if you want lid close / `systemctl suspend` without locking.
+
+To lock and suspend yourself from Niri (for example when logind lid handling is ignored), add:
+
 ``` kdl
 switch-events {
     lid-close { spawn "noctalia" "msg" "session" "lock-and-suspend"; }
