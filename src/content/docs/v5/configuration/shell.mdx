@@ -44,6 +44,7 @@ polkit_agent          = false           # register Noctalia's native polkit auth
 password_style        = "default"       # default | random
 avatar_path           = "~/Pictures/avatar.png"
 settings_show_advanced = true           # show advanced settings by default in Settings
+settings_window_translucent = false     # translucent Settings window background
 show_location         = true            # show weather location text in shell UI
 launch_apps_as_systemd_services = false # launch apps as transient systemd services (needs Noctalia to be a user unit)
 launch_apps_custom_command = ""         # wrap launched apps; $CMD is replaced with the app command
@@ -190,6 +191,7 @@ Notes:
 - Notification daemon ownership moved out of `[shell]`: use `[notification].enable_daemon` in [Services](/v5/services/notifications/).
 - `password_style`: `default` uses `circle-filled`; `random` cycles through multiple filled glyph shapes on polkit and lock screen inputs.
 - `settings_show_advanced`: when `true`, Settings opens with advanced entries visible.
+- `settings_window_translucent`: when `true`, the Settings window background is drawn translucent. Compositor blur or other effects can be applied via compositor window rules.
 - `show_location`: when `false`, weather location text/coordinates are hidden in shell surfaces.
 - `app_icon_colorize` and `app_icon_color`: global application icon tinting for the dock, system tray (bar and drawer), taskbar, active-window widget, and launcher panel results. See [App icon colorization](#app-icon-colorization). Bar `launcher` / `control-center` widgets can optionally tint `custom_image` via `custom_image_colorize` using the widget **Color** setting (Presentation group in the widget editor).
 - `lang`: empty follows `$LC_ALL`, `$LC_MESSAGES`, then `$LANG`. Values may be BCP-47 tags (`pt-BR`, `zh-Hans`) or POSIX locale names (`pt_BR.UTF-8`, `zh_CN.UTF-8`). Chinese region locales infer script before matching catalogs, so `zh_CN` and `zh_SG` match `zh-Hans`, while `zh_TW`, `zh_HK`, and `zh_MO` match `zh-Hant`.
