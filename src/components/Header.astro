@@ -41,7 +41,7 @@ const faqHref = /^\/v5(?:\/|$)/.test(pathname)
   </div>
 </div>
 
-<div class:list={['version-alert-banner', isV5 ? 'is-beta' : 'is-stable']} role="alert">
+<div class:list={['version-alert-banner', isV5 ? 'is-beta' : 'is-legacy']} role="alert">
   {isV5 ? (
     <>
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -54,9 +54,16 @@ const faqHref = /^\/v5(?:\/|$)/.test(pathname)
       </span>
     </>
   ) : (
-    <span>
-      You are viewing the <strong>v4 (Quickshell)</strong> docs. <a href="/v5/">Check out v5 (beta) →</a>
-    </span>
+    <>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+        <line x1="12" y1="9" x2="12" y2="13"></line>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </svg>
+      <span>
+        <strong>v4 (Quickshell) is no longer maintained.</strong> Please use <a href="/v5/">Noctalia v5 →</a>
+      </span>
+    </>
   )}
 </div>
 
@@ -82,7 +89,7 @@ const faqHref = /^\/v5(?:\/|$)/.test(pathname)
     if (!banner) return;
     const isV5 = /^\/v5(?:\/|$)/.test(window.location.pathname);
     banner.classList.toggle('is-beta', isV5);
-    banner.classList.toggle('is-stable', !isV5);
+    banner.classList.toggle('is-legacy', !isV5);
 
     if (isV5) {
       banner.innerHTML = `
@@ -96,8 +103,13 @@ const faqHref = /^\/v5(?:\/|$)/.test(pathname)
         </span>`;
     } else {
       banner.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
         <span>
-          You are viewing the <strong>v4 (Quickshell)</strong> docs. <a href="/v5/">Check out v5 (beta) →</a>
+          <strong>v4 (Quickshell) is no longer maintained.</strong> Please use <a href="/v5/">Noctalia v5 →</a>
         </span>`;
     }
   }
@@ -247,18 +259,20 @@ const faqHref = /^\/v5(?:\/|$)/.test(pathname)
     text-decoration-thickness: 2px;
   }
 
-  .version-alert-banner.is-stable {
-    color: var(--sl-color-text);
-    background-color: color-mix(in srgb, var(--sl-color-accent) 8%, var(--sl-color-bg));
-    border-bottom-color: color-mix(in srgb, var(--sl-color-accent) 30%, transparent);
+  .version-alert-banner.is-legacy {
+    color: color-mix(in srgb, var(--sl-color-orange) 90%, black);
+    background-color: color-mix(in srgb, var(--sl-color-orange) 12%, var(--sl-color-bg));
+    border-bottom-color: color-mix(in srgb, var(--sl-color-orange) 40%, transparent);
   }
 
-  .version-alert-banner.is-stable strong {
-    color: var(--sl-color-text-accent, var(--sl-color-accent));
+  [data-theme='dark'] .version-alert-banner.is-legacy {
+    color: color-mix(in srgb, var(--sl-color-orange) 90%, white);
   }
 
-  .version-alert-banner.is-stable a {
-    color: var(--sl-color-text-accent, var(--sl-color-accent));
+  .version-alert-banner.is-legacy svg,
+  .version-alert-banner.is-legacy strong,
+  .version-alert-banner.is-legacy a {
+    color: var(--sl-color-orange);
   }
 
   .version-alert-banner a {
