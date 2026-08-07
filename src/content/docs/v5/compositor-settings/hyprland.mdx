@@ -59,11 +59,11 @@ For the best workspace indicator behavior, make your regular Hyprland workspaces
 Update the monitor name and workspace list to match your setup. You can find more syntax and examples in the official [Workspace Rules](https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/) documentation.
 
 ```lua
-hl.workspace_rule({ workspace = "1", monitor = "DP-1", persistent = true })
-hl.workspace_rule({ workspace = "2", monitor = "DP-1", persistent = true })
-hl.workspace_rule({ workspace = "3", monitor = "DP-1", persistent = true })
-hl.workspace_rule({ workspace = "4", monitor = "DP-1", persistent = true })
-hl.workspace_rule({ workspace = "5", monitor = "DP-1", persistent = true })
+hl.workspace_rule({ workspace = "1", monitor = "DP-1", persistent = true, default_name = "web" })
+hl.workspace_rule({ workspace = "2", monitor = "DP-1", persistent = true, default_name = "code" })
+hl.workspace_rule({ workspace = "3", monitor = "DP-1", persistent = true, default_name = "chat" })
+hl.workspace_rule({ workspace = "4", monitor = "DP-1", persistent = true, default_name = "game" })
+hl.workspace_rule({ workspace = "5", monitor = "DP-1", persistent = true, default_name = "design" })
 ```
 
 ## IPC Keybinds
