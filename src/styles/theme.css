@@ -402,4 +402,21 @@ html {
 	scroll-padding-top: calc(1.5rem + var(--sl-nav-height) + var(--sl-mobile-toc-height) + var(--sl-banner-height)) !important;
 }
 
-/* Global script to update logo link - injected via style tag */
+/* Splash hero without an image: collapse the reserved image column and shrink
+   the vertical band Starlight reserves for a right-side image (Hero.astro
+   defaults to 7fr/4fr and ~100px block padding, both sized for an image). */
+.hero:not(:has(> img)):not(:has(> .hero-html)) {
+	grid-template-columns: 100%;
+	padding-block: 2rem;
+}
+
+.hero:not(:has(> img)):not(:has(> .hero-html)) .stack {
+	text-align: center;
+}
+
+.hero:not(:has(> img)):not(:has(> .hero-html)) .copy,
+.hero:not(:has(> img)):not(:has(> .hero-html)) .actions {
+	align-items: center;
+	justify-content: center;
+}
+

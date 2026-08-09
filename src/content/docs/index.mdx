@@ -1,9 +1,9 @@
 ---
 title: Noctalia
-description: A native Wayland desktop shell — bar, launcher, control center, lockscreen, and theming, configured in one place.
+description: A native Wayland desktop shell with a bar, launcher, control center, lockscreen, and theming, configured in one place.
 template: splash
 hero:
-  tagline: A native Wayland desktop shell — bar, launcher, control center, lockscreen, and theming, configured in one place.
+  tagline: A native Wayland desktop shell with a bar, launcher, control center, lockscreen, and theming, configured in one place.
   actions:
     - text: Install Noctalia
       link: /noctalia/getting-started/installation/
@@ -25,49 +25,39 @@ import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 <CardGrid>
   <Card title="Bar & widgets" icon="bars">
-    Top, bottom, left, and right bars with per-monitor overrides. Clock, tray, workspaces, media, and more. [Explore →](/noctalia/bar/)
+    Top, bottom, left, and right bars with per-monitor overrides. Clock, tray, workspaces, media, and more. [Explore](/noctalia/bar/)
   </Card>
   <Card title="Launcher" icon="rocket">
-    App search, calculator, emoji picker, and wallpaper browser in one keystroke. [Explore →](/noctalia/launcher/)
+    App search, calculator, emoji picker, and wallpaper browser in one keystroke. [Explore](/noctalia/launcher/)
   </Card>
   <Card title="Control Center" icon="setting">
-    Quick settings, shortcuts, and screen time from a single panel. [Explore →](/noctalia/control-center/)
+    Quick settings, shortcuts, and screen time from a single panel. [Explore](/noctalia/control-center/)
   </Card>
-  <Card title="Theming & palette" icon="seti:pipeline">
-    Wallpaper-driven colors, dark/light, and generated themes for terminals, editors, and browsers. [Explore →](/noctalia/theming/)
+  <Card title="Theming & palette" icon="sun">
+    Wallpaper-driven colors, dark/light, and generated themes for terminals, editors, and browsers. [Explore](/noctalia/theming/)
   </Card>
   <Card title="Plugins in Luau" icon="puzzle">
-    Custom bar widgets, shortcuts, and services without recompiling the shell. [Explore →](/noctalia/plugins/)
+    Custom bar widgets, shortcuts, and services without recompiling the shell. [Explore](/noctalia/plugins/)
   </Card>
-  <Card title="IPC & hooks" icon="seti:powershell">
-    Drive Noctalia from keybinds, scripts, and event-driven automation. [Explore →](/noctalia/ipc/)
+  <Card title="IPC & hooks" icon="code-branch">
+    Drive Noctalia from keybinds, scripts, and event-driven automation. [Explore](/noctalia/ipc/)
   </Card>
 </CardGrid>
 
 ## Runs on your compositor
 
-Niri, Hyprland, KDE, Sway, Labwc, and Mango — see [compositor setup](/noctalia/compositor-settings/niri/) for the specifics.
-
-:::caution[Moving from v4?]
-v5 installs alongside v4 and does not migrate its settings. Both can coexist on most distributions — update your compositor keybinds to launch the new commands.
-:::
+Works across major Wayland compositors. See [compositor setup](/noctalia/compositor-settings/niri/) for the specifics of your setup.
 
 ## The Noctalia family {#projects}
 
 <CardGrid>
-  <LinkCard
-    title="Noctalia"
-    description="The native desktop shell. Actively developed — start here."
-    href="/noctalia/"
-  />
-  <LinkCard
-    title="Noctalia Greeter"
-    description="A greetd greeter that shares Noctalia's look and palette on the login screen."
-    href="/greeter/"
-  />
-  <LinkCard
-    title="Noctalia Shell (v4)"
-    description="Archived Quickshell-based implementation. Kept for reference; not receiving updates."
-    href="/noctalia-shell/"
-  />
+  <Card title="Noctalia" icon="moon">
+    The native desktop shell. Actively developed. [Open docs](/noctalia/)
+  </Card>
+  <Card title="Noctalia Greeter" icon="padlock">
+    A greetd greeter that shares Noctalia's look and palette on the login screen. [Open docs](/greeter/)
+  </Card>
+  <Card title="Noctalia Shell (v4)" icon="document">
+    Archived Quickshell-based implementation. Kept for reference; not receiving updates. [Open docs](/noctalia-shell/)
+  </Card>
 </CardGrid>
