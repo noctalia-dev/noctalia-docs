@@ -9,7 +9,7 @@ sidebar:
 [system.monitor]
 enabled = true                      # sample CPU, memory, network, load, temperature, GPU VRAM, and disk statistics
 cpu_temp_sensor_path = ""           # exact temp*_input path for CPU temperature override; empty = auto
-cpu_poll_seconds = 2.0              # CPU usage, CPU temperature, and load average
+cpu_poll_seconds = 2.0              # CPU usage, frequency, temperature, and load average
 gpu_poll_seconds = 5.0              # GPU temperature, usage, and VRAM; probes run only while displayed
 memory_poll_seconds = 2.0           # RAM usage
 network_poll_seconds = 3.0          # network throughput
@@ -22,13 +22,13 @@ Poll intervals are configured globally under `[system.monitor]`, not per widget.
 
 | Key | Default | Metrics |
 |-----|---------|---------|
-| `cpu_poll_seconds` | `2.0` | CPU usage %, CPU temperature, and load average (`1` / `5` / `15` min) |
+| `cpu_poll_seconds` | `2.0` | CPU usage %, CPU frequency, CPU temperature, and load average (`1` / `5` / `15` min) |
 | `gpu_poll_seconds` | `5.0` | GPU temperature, usage %, and VRAM used/total. Probes run only while something displays a GPU stat; `0` disables them entirely |
 | `memory_poll_seconds` | `2.0` | RAM usage % and used/total MB |
 | `network_poll_seconds` | `3.0` | Network download and upload throughput |
 | `disk_poll_seconds` | `10.0` | Disk used/free values for paths used by bar `sysmon` widgets, plus swap usage % and used/total MB |
 
-CPU usage and CPU temperature share `cpu_poll_seconds` because both are tied to the same CPU sampling pass. GPU temperature, usage, and VRAM share `gpu_poll_seconds`. Swap and disk usage share `disk_poll_seconds`. Network Rx and Tx share `network_poll_seconds` because they come from the same `/proc/net/dev` read. The aggregate network values exclude loopback; bar and desktop `sysmon` widgets can set `interface` to an exact `/proc/net/dev` interface name to show only that interface.
+CPU usage, frequency, and temperature share `cpu_poll_seconds` because they are tied to the same CPU sampling pass. GPU temperature, usage, and VRAM share `gpu_poll_seconds`. Swap and disk usage share `disk_poll_seconds`. Network Rx and Tx share `network_poll_seconds` because they come from the same `/proc/net/dev` read. The aggregate network values exclude loopback; bar and desktop `sysmon` widgets can set `interface` to an exact `/proc/net/dev` interface name to show only that interface.
 
 Bar and desktop `sysmon` widgets in **graph** mode, plus the Control Center System graphs, scroll using the same cadence as the fastest poll interval above (the minimum of the enabled, non-zero intervals). There is no separate graph-only setting. If every metric is set to `0`, no history is recorded and the graphs stop updating.
 
@@ -64,6 +64,7 @@ Bar and desktop `sysmon` widgets and the Control Center System tab all draw from
 |-------|---------|-------------|-----|---------|
 | `cpu_usage` | `75%` | CPU utilisation (all cores) | ✓ | ✓ |
 | `cpu_temp` | `65°C` | CPU package temperature | ✓ | ✓ |
+| `cpu_freq` | `3.8 GHz` | Average current CPU frequency | ✓ | ✓ |
 | `gpu_temp` | `72°C` | GPU temperature | ✓ | ✓ |
 | `gpu_usage` | `48%` | GPU utilisation | ✓ | ✓ |
 | `gpu_vram` | `42%` | GPU VRAM usage | ✓ | ✓ |
@@ -125,6 +126,8 @@ cpu_usage_activity_threshold = 50     # %
 cpu_usage_critical_threshold = 90     # %
 cpu_temp_activity_threshold  = 60     # °C
 cpu_temp_critical_threshold  = 85     # °C
+cpu_freq_activity_threshold  = 2.5    # GHz
+cpu_freq_critical_threshold  = 4.5    # GHz
 gpu_temp_activity_threshold  = 60     # °C
 gpu_temp_critical_threshold  = 85     # °C
 gpu_usage_activity_threshold = 50     # %
@@ -155,6 +158,7 @@ The value's color is interpolated between the widget's regular foreground color 
 |-----|---------|------|------|
 | `cpu_usage_activity_threshold` / `cpu_usage_critical_threshold` | `50` / `90` | % | CPU usage |
 | `cpu_temp_activity_threshold` / `cpu_temp_critical_threshold` | `60` / `85` | °C | CPU temperature |
+| `cpu_freq_activity_threshold` / `cpu_freq_critical_threshold` | `2.5` / `4.5` | GHz | CPU frequency |
 | `gpu_temp_activity_threshold` / `gpu_temp_critical_threshold` | `60` / `85` | °C | GPU temperature |
 | `gpu_usage_activity_threshold` / `gpu_usage_critical_threshold` | `50` / `95` | % | GPU usage |
 | `gpu_vram_activity_threshold` / `gpu_vram_critical_threshold` | `50` / `90` | % | GPU VRAM usage |

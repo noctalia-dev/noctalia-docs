@@ -32,7 +32,7 @@ flip_y   = false
 format = "{:%H:%M}"
 ```
 
-When enabled, Noctalia renders each desktop widget as its own tightly-sized layer-shell surface on the `Bottom` layer. The current implementation ships `button`, `clock`, `label`, `audio_visualizer`, `fancy_audio_visualizer`, `sticker`, `weather`, `media_player`, `volume`, and `sysmon` widget types plus an interactive edit mode.
+When enabled, Noctalia renders each desktop widget as its own tightly-sized layer-shell surface on the `Bottom` layer. The current implementation ships `button`, `calendar`, `clock`, `label`, `audio_visualizer`, `fancy_audio_visualizer`, `sticker`, `weather`, `media_player`, `volume`, and `sysmon` widget types plus an interactive edit mode.
 
 ---
 
@@ -47,6 +47,8 @@ noctalia msg desktop-widgets-toggle-edit
 ```
 
 You can also turn edit mode on from **Settings → Desktop → Toggle Editor**. Noctalia shows a short internal notification and you should switch to an **empty workspace** (no windows covering the desktop) so the editor overlay is visible.
+
+Widget previews are non-interactive in edit mode. Clicking anywhere within a widget selects or moves it instead of activating its buttons or other controls; normal widget interaction resumes after you exit the editor.
 
 ### Controls
 
@@ -194,6 +196,35 @@ circle = true
 | `center_text` | bool | `false` | Digital only. Center-aligns the formatted time inside the clock box. When `false`, the clock keeps the leading edge stable as digits change width. |
 | `circle` | bool | `true` | Analog only. Shows the outer ring and minute tick marks around the dial. When disabled, only the hands are drawn. |
 | `timezone` | string | `""` | Optional timezone identifier (e.g. `Europe/Berlin`, `UTC`) to use for this clock. If empty, uses the system's local time. |
+
+---
+
+### calendar
+
+The calendar widget uses the configured [calendar service](/v5/services/calendar/) accounts. It shows event indicators
+in the month grid and can show the selected day's events beside the grid.
+
+```toml
+[desktop_widgets.widget.calendar_main]
+type   = "calendar"
+output = "DP-1"
+cx     = 480.0
+cy     = 360.0
+
+[desktop_widgets.widget.calendar_main.settings]
+show_events       = true
+show_week_numbers = false
+font_family       = ""
+```
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `show_events` | bool | `true` | Show the selected day's event list beside the month grid |
+| `show_week_numbers` | bool | `false` | Show ISO week numbers beside the month grid |
+| `font_family` | string | `""` | Typeface for calendar text; empty inherits the global shell font |
+
+Use the arrow buttons or vertical scrolling to change months. Select a day to update the event list; selecting a day
+from the preceding or following month also navigates to that month. Select the date or month heading to return to today.
 
 ---
 
@@ -508,4 +539,4 @@ background     = true
 | `show_label` | bool | `true` | Show the current value as text |
 | `label_min_width` | int | `0` | Gauge mode only. Minimum width for the value label in logical pixels (`0` = auto) |
 
-The stats a `sysmon` widget can show, what each one displays, and where the values come from are listed under [Available stats](/v5/services/system-monitor/#available-stats). Desktop widgets support every stat except `ram_used` and the four disk stats.
+The stats a `sysmon` widget can show, what each one displays, and where the values come from are listed under [Available stats](/v5/services/system-monitor/#available-stats). Desktop widgets support CPU frequency and every other stat except `ram_used` and the four disk stats.

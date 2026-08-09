@@ -123,6 +123,8 @@ end
 | `sampledAtMs` | number | Unix epoch milliseconds for the latest aggregate sample. Absent until the first sample. Requires <PluginApiBadge feature="extended-system-stats" />. |
 | `cpu.usagePercent` | number | Aggregate CPU busy percentage, 0-100. |
 | `cpu.tempC` | number | Absent when no CPU temperature sensor was found. |
+| `cpu.freqMhz` | number | Average current CPU frequency in MHz. Absent when CPU frequency data is unavailable. |
+| `cpu.maxFreqMhz` | number | Highest detected CPU frequency ceiling in MHz. Absent when unavailable. |
 | `ram.usagePercent`, `ram.usedMb`, `ram.totalMb` | number | |
 | `swap.usedMb`, `swap.totalMb` | number | |
 | `gpu.tempC`, `gpu.usagePercent`, `gpu.vramUsedBytes`, `gpu.vramTotalBytes` | number | Each is absent when that GPU probe is unavailable. |
