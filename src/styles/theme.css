@@ -368,9 +368,16 @@ snake-toc a[data-visible="true"] {
 
 	/* Offset the content area to clear the shifted sidebar. The leftover space
 	   then falls naturally on the far right, mirroring the left gap. */
-	.main-frame {
+	html[data-has-sidebar] .main-frame {
 		padding-inline-start: calc(var(--sl-sidebar-width) + var(--layout-outer-gap));
 		padding-inline-end: var(--layout-outer-gap);
+	}
+
+	/* Splash (no sidebar): mirror the outer gap on both sides so the hero and
+	   content centre within the layout frame instead of sitting off to the
+	   right by a sidebar's width. */
+	html:not([data-has-sidebar]) .main-frame {
+		padding-inline: var(--layout-outer-gap);
 	}
 
 	/* Only pad the outer PageFrame header. Targeting `.header` also catches the
