@@ -33,6 +33,7 @@ sidebar = "compact"
 # sidebar_section = "compact"  # optional; defaults to the same as sidebar
 # width = 700  # full-sidebar width in pixels (600–1200)
 # show_shortcut_labels = true  # text under Home shortcut icons
+# show_session_button = true   # session-actions button in the Home header
 # hidden_tabs = ["monitor", "weather"]  # hide tabs you never use
 ```
 
@@ -42,6 +43,7 @@ sidebar = "compact"
 | `sidebar_section` | string | `"compact"` | Sidebar when opening straight to a tab: `"full"`, `"compact"`, or `"none"` |
 | `width` | int | `700` | Control Center width in pixels (`600`–`1200`). This is the full-sidebar width; the compact and no-sidebar modes scale down from it. |
 | `show_shortcut_labels` | bool | `true` | Show text labels under Home shortcut icons. When `false`, shortcuts are icon-only and glyphs scale with cell size. |
+| `show_session_button` | bool | `true` | Show the session-actions button in the Home tab header. |
 | `hidden_tabs` | array | `[]` | Tab [context IDs](#sidebar-tabs) to hide from the Control Center. Empty shows every available tab. Editable from **Settings → Control Center**. The Home tab cannot be hidden. |
 
 ### Sidebar Tabs
@@ -77,6 +79,8 @@ Click the avatar in the user card to pick a custom image. Noctalia saves the sel
 When AccountsService is available, Noctalia also writes the selected avatar to `org.freedesktop.Accounts` as your user's `IconFile`. That is what Noctalia Greeter reads for the login user list. On distros where this is not enabled by default, install and enable **accountsservice** (usually the `accounts-daemon` service) if you want the same avatar in both the shell and the greeter.
 
 The shortcut buttons are configured separately; see [Control Center shortcuts](/v5/control-center/shortcuts/).
+
+Set `show_session_button = false` under `[control_center]` to hide the session-actions button in the Home tab header. This does not affect Home shortcuts configured with `type = "session"` or session widgets on the bar.
 
 ## Media
 
