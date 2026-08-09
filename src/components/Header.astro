@@ -5,16 +5,19 @@ import Search from 'virtual:starlight/components/Search';
 import SiteTitle from 'virtual:starlight/components/SiteTitle';
 import SocialIcons from 'virtual:starlight/components/SocialIcons';
 import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
-import { isV5Path } from '../lib/versioning';
+import { projectFromPath } from '../lib/projects';
 
 const pathname = Astro.url.pathname;
-const isV5 = isV5Path(pathname);
+const project = projectFromPath(pathname);
 const shouldRenderSearch =
   config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
-
-const faqHref = /^\/v5(?:\/|$)/.test(pathname)
-  ? '/v5/getting-started/faq/'
-  : '/v4/getting-started/faq/';
+const faqHref =
+  project?.id === 'noctalia'
+    ? '/noctalia/getting-started/faq/'
+    : project?.id === 'noctalia-shell'
+      ? '/noctalia-shell/getting-started/faq/'
+      : undefined;
+const isLegacy = project?.id === 'noctalia-shell';
 ---
 
 <div class="header-inner">
@@ -23,7 +26,7 @@ const faqHref = /^\/v5(?:\/|$)/.test(pathname)
   </div>
   <div class="header-search sl-flex print:hidden">
     {shouldRenderSearch && <Search />}
-    <a href={faqHref} class="faq-button">
+    <a href={faqHref ?? '#'} class="faq-button" hidden={!faqHref}>
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"></circle>
         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -41,89 +44,68 @@ const faqHref = /^\/v5(?:\/|$)/.test(pathname)
   </div>
 </div>
 
-<div class:list={['version-alert-banner', isV5 ? 'is-beta' : 'is-legacy']} role="alert">
-  {isV5 ? (
-    <>
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-        <line x1="12" y1="9" x2="12" y2="13"></line>
-        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-      </svg>
-      <span>
-        You are viewing the <strong>v5 (beta)</strong> docs. <a href="/v4/">Looking for v4 (Quickshell)? →</a>
-      </span>
-    </>
-  ) : (
-    <>
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-        <line x1="12" y1="9" x2="12" y2="13"></line>
-        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-      </svg>
-      <span>
-        <strong>v4 (Quickshell) is no longer maintained.</strong> Please use <a href="/v5/">Noctalia v5 →</a>
-      </span>
-    </>
-  )}
+<div
+  class="version-alert-banner is-legacy"
+  role="alert"
+  hidden={!isLegacy}
+>
+  <span class="banner-legacy">
+    <strong>v4 (Quickshell) is no longer maintained.</strong> Please use <a href="/noctalia/">Noctalia v5 →</a>
+  </span>
 </div>
 
 <script>
-  function updateFaqHref() {
+  function contextForPath(pathname: string) {
+    const isCurrent = pathname === '/noctalia' || pathname.startsWith('/noctalia/');
+    const isLegacy =
+      pathname === '/noctalia-shell' || pathname.startsWith('/noctalia-shell/');
+    return {
+      isCurrent,
+      isLegacy,
+      faqHref: isCurrent
+        ? '/noctalia/getting-started/faq/'
+        : isLegacy
+          ? '/noctalia-shell/getting-started/faq/'
+          : undefined,
+    };
+  }
+
+  function updateHeaderContext() {
+    const context = contextForPath(window.location.pathname);
     const faqButton = document.querySelector<HTMLAnchorElement>('.faq-button');
-    if (!faqButton) return;
-    faqButton.href = /^\/v5(?:\/|$)/.test(window.location.pathname)
-      ? '/v5/getting-started/faq/'
-      : '/v4/getting-started/faq/';
+    if (faqButton) {
+      faqButton.hidden = !context.faqHref;
+      if (context.faqHref) faqButton.href = context.faqHref;
+    }
+
+    const banner = document.querySelector<HTMLElement>('.version-alert-banner');
+    if (!banner) return;
+    banner.hidden = !context.isLegacy;
+
+    const legacyMessage = banner.querySelector<HTMLElement>('.banner-legacy');
+    if (legacyMessage) legacyMessage.hidden = !context.isLegacy;
   }
 
   function positionBanner() {
     const banner = document.querySelector('.version-alert-banner');
     const header = document.querySelector('.header');
-    if (banner && header) {
-      header.after(banner);
-    }
+    if (banner && header) header.after(banner);
   }
 
-  function updateBannerVersion() {
-    const banner = document.querySelector('.version-alert-banner');
-    if (!banner) return;
-    const isV5 = /^\/v5(?:\/|$)/.test(window.location.pathname);
-    banner.classList.toggle('is-beta', isV5);
-    banner.classList.toggle('is-legacy', !isV5);
-
-    if (isV5) {
-      banner.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-          <line x1="12" y1="9" x2="12" y2="13"></line>
-          <line x1="12" y1="17" x2="12.01" y2="17"></line>
-        </svg>
-        <span>
-          You are viewing the <strong>v5 (beta)</strong> docs. <a href="/v4/">Looking for v4 (Quickshell)? →</a>
-        </span>`;
-    } else {
-      banner.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-          <line x1="12" y1="9" x2="12" y2="13"></line>
-          <line x1="12" y1="17" x2="12.01" y2="17"></line>
-        </svg>
-        <span>
-          <strong>v4 (Quickshell) is no longer maintained.</strong> Please use <a href="/v5/">Noctalia v5 →</a>
-        </span>`;
-    }
-  }
-
-  updateFaqHref();
+  updateHeaderContext();
   positionBanner();
   document.addEventListener('astro:page-load', () => {
-    updateFaqHref();
+    updateHeaderContext();
     positionBanner();
-    updateBannerVersion();
   });
 </script>
 
 <style>
+  .faq-button[hidden],
+  .version-alert-banner[hidden] {
+    display: none;
+  }
+
   .header-inner {
     display: flex;
     align-items: center;
@@ -232,32 +214,6 @@ const faqHref = /^\/v5(?:\/|$)/.test(pathname)
     z-index: var(--sl-z-index-navbar);
   }
 
-  .version-alert-banner.is-beta {
-    color: color-mix(in srgb, var(--sl-color-orange) 90%, black);
-    background-color: color-mix(in srgb, var(--sl-color-orange) 12%, var(--sl-color-bg));
-    border-bottom-color: color-mix(in srgb, var(--sl-color-orange) 40%, transparent);
-  }
-
-  [data-theme='dark'] .version-alert-banner.is-beta {
-    color: color-mix(in srgb, var(--sl-color-orange) 90%, white);
-  }
-
-  .version-alert-banner.is-beta svg {
-    flex-shrink: 0;
-    color: var(--sl-color-orange);
-  }
-
-  .version-alert-banner.is-beta strong {
-    color: var(--sl-color-orange);
-  }
-
-  .version-alert-banner.is-beta a {
-    color: var(--sl-color-orange);
-  }
-
-  .version-alert-banner.is-beta a:hover {
-    text-decoration-thickness: 2px;
-  }
 
   .version-alert-banner.is-legacy {
     color: color-mix(in srgb, var(--sl-color-orange) 90%, black);

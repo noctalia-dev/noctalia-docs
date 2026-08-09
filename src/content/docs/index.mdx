@@ -1,0 +1,38 @@
+---
+title: Noctalia Project Documentation
+description: Documentation for Noctalia, Noctalia Greeter, and the legacy Quickshell-based Noctalia Shell.
+template: splash
+hero:
+  tagline: Guides and reference documentation for the Noctalia project family.
+  actions:
+    - text: Noctalia documentation
+      link: /noctalia/
+      icon: right-arrow
+      variant: primary
+    - text: Choose a project
+      link: '#projects'
+      icon: down-arrow
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+## Projects
+
+<CardGrid>
+  <LinkCard
+    title="Noctalia"
+    description="The current native desktop shell. Documentation evolves with Noctalia v5 and later."
+    href="/noctalia/"
+  />
+  <LinkCard
+    title="Noctalia Greeter"
+    description="Install and configure the greetd greeter, including appearance synchronization with Noctalia."
+    href="/greeter/"
+  />
+  <LinkCard
+    title="Noctalia Shell"
+    description="Archived documentation for the legacy Quickshell-based v4 implementation."
+    href="/noctalia-shell/"
+  />
+</CardGrid>

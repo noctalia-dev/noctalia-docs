@@ -1,6 +1,7 @@
 ---
 import { Icon } from '@astrojs/starlight/components';
 import project from 'virtual:starlight/project-context';
+import { projectFromPath } from '../lib/projects';
 
 const pagefindTranslations = {
 	placeholder: Astro.locals.t('search.label'),
@@ -14,8 +15,8 @@ const pagefindTranslations = {
 const dataAttributes: DOMStringMap = { 'data-translations': JSON.stringify(pagefindTranslations) };
 if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash'] = '';
 
-const pathname = Astro.url.pathname;
-dataAttributes['data-doc-version'] = pathname.startsWith('/v4/') || pathname === '/v4' ? 'v4' : 'v5';
+const activeProject = projectFromPath(Astro.url.pathname);
+if (activeProject) dataAttributes['data-doc-project'] = activeProject.id;
 ---
 
 <site-search class={Astro.props.class} {...dataAttributes}>
@@ -157,10 +158,8 @@ dataAttributes['data-doc-version'] = pathname.startsWith('/v4/') || pathname ===
 							});
 						},
 					});
-					const docVersion = this.dataset.docVersion;
-					if (docVersion === 'v4' || docVersion === 'v5') {
-						ui.triggerFilters({ version: docVersion });
-					}
+					const docProject = this.dataset.docProject;
+					if (docProject) ui.triggerFilters({ project: docProject });
 				});
 			});
 		}

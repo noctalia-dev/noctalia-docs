@@ -4,7 +4,7 @@
  */
 import { createHash } from 'node:crypto';
 import { existsSync } from 'node:fs';
-import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Resvg } from '@resvg/resvg-js';
@@ -70,9 +70,12 @@ function ogImagePathForRoute(pathname) {
 	return `/og/docs/${withoutTrailingSlash.replace(/^\/+/, '')}.webp`;
 }
 
-function versionFromRoute(route) {
-	const match = route.match(/^\/(v[0-9]+)(?:\/|$)/);
-	return match ? match[1] : 'docs';
+function projectLabelFromRoute(route) {
+	const project = route.replace(/^\/+/, '').split('/', 1)[0];
+	if (project === 'noctalia') return 'noctalia · v5+';
+	if (project === 'greeter') return 'noctalia greeter';
+	if (project === 'noctalia-shell') return 'noctalia shell · v4';
+	return 'docs';
 }
 
 function sectionFromRoute(route) {
@@ -101,6 +104,33 @@ async function walk(dir) {
 		}
 	}
 	return files;
+}
+
+async function walkGeneratedImages(dir) {
+	const entries = await readdir(dir, { withFileTypes: true });
+	const files = [];
+	for (const entry of entries) {
+		const path = join(dir, entry.name);
+		if (entry.isDirectory()) {
+			files.push(...(await walkGeneratedImages(path)));
+		} else if (entry.isFile() && entry.name.endsWith('.webp')) {
+			files.push(path);
+		}
+	}
+	return files;
+}
+
+async function pruneStaleOgImages(nextCache) {
+	const docsOutputDir = join(publicDir, 'og/docs');
+	if (!existsSync(docsOutputDir)) return;
+
+	const expected = new Set(Object.keys(nextCache));
+	for (const file of await walkGeneratedImages(docsOutputDir)) {
+		const outputPath = relative(publicDir, file).split(sep).join('/');
+		if (expected.has(outputPath)) continue;
+		await rm(file);
+		console.log(`Removed stale public/${outputPath}`);
+	}
 }
 
 async function loadInputCache() {
@@ -383,7 +413,7 @@ async function main() {
 		await writeOg(
 			{
 				route,
-				version: versionFromRoute(route),
+				version: projectLabelFromRoute(route),
 				section: sectionFromRoute(route),
 				title: frontmatter.title || 'Documentation',
 				description: frontmatter.description || 'Noctalia documentation and guides.',
@@ -395,6 +425,8 @@ async function main() {
 			nextCache
 		);
 	}
+
+	await pruneStaleOgImages(nextCache);
 
 	await saveInputCache(nextCache);
 }
