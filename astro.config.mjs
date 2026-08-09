@@ -34,13 +34,6 @@ export default defineConfig({
         {
           tag: "script",
           attrs: {
-            src: "/logo-link.js",
-            defer: true,
-          },
-        },
-        {
-          tag: "script",
-          attrs: {
             src: "/search-breadcrumb.js",
             defer: true,
           },

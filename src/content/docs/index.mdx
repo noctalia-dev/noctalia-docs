@@ -1,38 +1,73 @@
 ---
-title: Noctalia Project Documentation
-description: Documentation for Noctalia, Noctalia Greeter, and the legacy Quickshell-based Noctalia Shell.
+title: Noctalia
+description: A native Wayland desktop shell — bar, launcher, control center, lockscreen, and theming, configured in one place.
 template: splash
 hero:
-  tagline: Guides and reference documentation for the Noctalia project family.
+  tagline: A native Wayland desktop shell — bar, launcher, control center, lockscreen, and theming, configured in one place.
   actions:
-    - text: Noctalia documentation
-      link: /noctalia/
+    - text: Install Noctalia
+      link: /noctalia/getting-started/installation/
       icon: right-arrow
       variant: primary
-    - text: Choose a project
-      link: '#projects'
-      icon: down-arrow
+    - text: Browse the docs
+      link: /noctalia/
+      icon: open-book
+      variant: secondary
+    - text: GitHub
+      link: https://github.com/noctalia-dev
+      icon: external
       variant: minimal
 ---
 
-import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-## Projects
+## What you get
+
+<CardGrid>
+  <Card title="Bar & widgets" icon="bars">
+    Top, bottom, left, and right bars with per-monitor overrides. Clock, tray, workspaces, media, and more. [Explore →](/noctalia/bar/)
+  </Card>
+  <Card title="Launcher" icon="rocket">
+    App search, calculator, emoji picker, and wallpaper browser in one keystroke. [Explore →](/noctalia/launcher/)
+  </Card>
+  <Card title="Control Center" icon="setting">
+    Quick settings, shortcuts, and screen time from a single panel. [Explore →](/noctalia/control-center/)
+  </Card>
+  <Card title="Theming & palette" icon="seti:pipeline">
+    Wallpaper-driven colors, dark/light, and generated themes for terminals, editors, and browsers. [Explore →](/noctalia/theming/)
+  </Card>
+  <Card title="Plugins in Luau" icon="puzzle">
+    Custom bar widgets, shortcuts, and services without recompiling the shell. [Explore →](/noctalia/plugins/)
+  </Card>
+  <Card title="IPC & hooks" icon="seti:powershell">
+    Drive Noctalia from keybinds, scripts, and event-driven automation. [Explore →](/noctalia/ipc/)
+  </Card>
+</CardGrid>
+
+## Runs on your compositor
+
+Niri, Hyprland, KDE, Sway, Labwc, and Mango — see [compositor setup](/noctalia/compositor-settings/niri/) for the specifics.
+
+:::caution[Moving from v4?]
+v5 installs alongside v4 and does not migrate its settings. Both can coexist on most distributions — update your compositor keybinds to launch the new commands.
+:::
+
+## The Noctalia family {#projects}
 
 <CardGrid>
   <LinkCard
     title="Noctalia"
-    description="The current native desktop shell. Documentation evolves with Noctalia v5 and later."
+    description="The native desktop shell. Actively developed — start here."
     href="/noctalia/"
   />
   <LinkCard
     title="Noctalia Greeter"
-    description="Install and configure the greetd greeter, including appearance synchronization with Noctalia."
+    description="A greetd greeter that shares Noctalia's look and palette on the login screen."
     href="/greeter/"
   />
   <LinkCard
-    title="Noctalia Shell"
-    description="Archived documentation for the legacy Quickshell-based v4 implementation."
+    title="Noctalia Shell (v4)"
+    description="Archived Quickshell-based implementation. Kept for reference; not receiving updates."
     href="/noctalia-shell/"
   />
 </CardGrid>
