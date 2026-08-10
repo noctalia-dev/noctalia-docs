@@ -21,7 +21,7 @@ Noctalia is available on the following distributions. Choose your platform below
 You can also [install manually](#manual-install) on any other Linux distribution.
 
 :::note[Package ownership]
-The Noctalia team maintains the **Arch Linux/AUR packages** and the **manual installation method**. Official distribution packages are maintained through their distributions' own packaging processes; other repositories listed here are community-maintained. Review a third-party repository before installing from it.
+The Noctalia team maintains the **manual installation method**. Official distribution packages are maintained through their distributions' own packaging processes; other repositories listed here are community-maintained. Review a third-party repository before installing from it.
 :::
 
 <details>
@@ -34,25 +34,11 @@ The Noctalia team maintains the **Arch Linux/AUR packages** and the **manual ins
 
 ## Arch Linux {#arch}
 
-### Using AUR (Recommended)
+Noctalia is available in the [extra] repository.
 
-The simplest way to install Noctalia on Arch Linux is through the Arch User Repository (AUR). This method installs the shell system-wide and handles dependencies automatically.
-
-<Tabs>
-  <TabItem label="AUR Helper">
-    Please replace with your AUR helper of choice.
-    ```bash
-    paru -S noctalia
-    ```
-  </TabItem>
-  <TabItem label="Non-AUR Helper">
-    ```bash
-    git clone https://aur.archlinux.org/noctalia-git
-    cd noctalia-git
-    makepkg -is
-    ```
-  </TabItem>
-</Tabs>
+```bash
+sudo pacman -S noctalia
+```
 ---
 
 ## Fedora {#fedora}
