@@ -34,6 +34,16 @@ const isLegacy = project?.id === 'noctalia-shell';
       </svg>
       <span>FAQ</span>
     </a>
+    <a href="https://noctalia.dev" class="site-button" target="_blank" rel="noopener">
+      <svg class="site-button-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79Z"></path>
+      </svg>
+      <span>noctalia.dev</span>
+      <svg class="site-button-arrow" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M7 17 17 7"></path>
+        <path d="M8 7h9v9"></path>
+      </svg>
+    </a>
   </div>
   <div class="sl-hidden md:sl-flex print:hidden right-group">
     <div class="sl-flex social-icons">
@@ -172,24 +182,67 @@ const isLegacy = project?.id === 'noctalia-shell';
     border: 1px solid var(--sl-color-accent);
     border-radius: var(--sl-border-radius, 0.5rem);
     text-decoration: none;
-    transition: all 0.15s ease;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
   }
 
   .faq-button:hover {
     background-color: transparent;
     color: var(--sl-color-accent);
-    border-color: var(--sl-color-accent);
   }
 
   .faq-button svg {
     flex-shrink: 0;
   }
 
+  .site-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--sl-color-text-accent);
+    background:
+      linear-gradient(var(--sl-color-bg-soft), var(--sl-color-bg-soft)) padding-box,
+      linear-gradient(135deg, var(--sl-color-accent), var(--sl-color-link-hover, var(--sl-color-accent))) border-box;
+    border: 1px solid transparent;
+    border-radius: var(--sl-border-radius, 0.5rem);
+    text-decoration: none;
+    box-shadow: 0 0 0 0 transparent;
+    transition: transform 0.15s ease, box-shadow 0.2s ease, color 0.15s ease;
+  }
+
+  .site-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px -8px var(--sl-color-accent);
+    color: var(--sl-color-text);
+  }
+
+  .site-button-icon,
+  .site-button-arrow {
+    flex-shrink: 0;
+  }
+
+  .site-button-arrow {
+    opacity: 0.7;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  .site-button:hover .site-button-arrow {
+    opacity: 1;
+    transform: translate(1px, -1px);
+  }
+
   @media (max-width: 50rem) {
-    .faq-button span {
+    .faq-button span,
+    .site-button span,
+    .site-button-arrow {
       display: none;
     }
-    .faq-button {
+    .faq-button,
+    .site-button {
       padding: 0.4rem;
     }
   }
