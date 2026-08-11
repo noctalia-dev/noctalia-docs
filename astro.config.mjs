@@ -1,6 +1,4 @@
 // @ts-check
-// noinspection SpellCheckingInspection
-
 import { defineConfig } from "astro/config";
 import { unified } from "@astrojs/markdown-remark";
 import starlight from "@astrojs/starlight";
