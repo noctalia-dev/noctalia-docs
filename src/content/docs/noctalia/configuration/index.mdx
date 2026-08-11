@@ -122,11 +122,12 @@ When a release changes the shape of a setting, Noctalia migrates old values befo
 keeps the intended behavior. The app-owned `settings.toml` is upgraded once and stamped with an internal
 `config_version`; Noctalia manages that marker and excludes it from exported user config.
 
-Files under `~/.config/noctalia/` are never rewritten. Values that need migration are normalized in memory on every
-load, and Settings keeps a warning visible until you update the source TOML. Noctalia also sends a notification when
-it first finds an affected path, when a new affected path appears, and every three days while affected values remain.
+Files under `~/.config/noctalia/` are never rewritten. Values that need migration are normalized temporarily on every
+load, and Settings keeps a warning visible until you update the source TOML. The warning and notification identify the
+source file, line, column, and exact legacy key to edit. Noctalia sends the notification when it first finds an affected
+key, when a new affected key appears, and every three days while affected values remain.
 
-Run the validator for every affected path and its canonical replacement:
+Run the validator to list every affected key, its source location, and its canonical replacement:
 
 ```sh
 noctalia config validate
