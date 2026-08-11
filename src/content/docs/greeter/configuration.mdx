@@ -34,7 +34,7 @@ If `greeter.toml` is missing, the greeter uses built-in defaults. Setup ensures 
 
 ## Keys the greeter remembers
 
-When you change session or color scheme on the login screen, the greeter writes **`sync.toml`** (unless `greeter.toml` already pins `[appearance].scheme`):
+When you change the session or color scheme on the login screen, the greeter writes **`sync.toml`** (unless `greeter.toml` already pins `[appearance].scheme`):
 
 | Key | Purpose |
 |-----|---------|
@@ -189,7 +189,7 @@ allow_empty_password = false
 
 ## Multi-monitor
 
-The greeter runs inside the bundled wlroots compositor (`noctalia-greeter-compositor`). By default it shows the **same login UI on every connected monitor**, with each display sized to its own resolution and scale.
+The greeter runs inside the bundled wlroots compositor (`noctalia-greeter-compositor`). By default, it shows the **same login UI on every connected monitor**, with each display sized to its own resolution and scale.
 
 To pin the greeter to a single connector:
 
@@ -200,7 +200,7 @@ name = "DP-2"
 
 When `[output].name` is set, the compositor disables the other connectors at the KMS level. If it is missing, empty, or names a disconnected connector, the greeter falls back to showing on all outputs.
 
-On multiple monitors, cursor movement follows `[output].layout`. Without it, the greeter places outputs left-to-right by connector name, which often does not match your desk.
+On multiple monitors, the cursor movement follows `[output].layout`. Without it, the greeter places outputs left-to-right by connector name, which often does not match your desk.
 
 **Sync from Noctalia:** When you use **Settings → Security → Noctalia Greeter → Sync Now**, Noctalia copies monitor positions from your desktop compositor (via xdg-output) into `[output].layout`, each connector's transform into `[output].transforms`, and each connector's effective scale into `[output].scales`. Sync skips layout when only one monitor is connected, xdg-output is unavailable, outputs are still enumerating, or all monitors report the same origin. Transforms and scales sync whenever at least one ready output is available.
 
@@ -230,7 +230,7 @@ sudo systemctl restart greetd
 
 ## Output mode
 
-By default the greeter compositor modesets each connector using the EDID preferred resolution, then the **highest refresh rate** available at that size. On some setups that mode differs from your desktop session (resolution and/or refresh), so login flashes or modesets when the session starts.
+By default, the greeter compositor modesets each connector using the EDID preferred resolution, then the **highest refresh rate** available at that size. On some setups that mode differs from your desktop session (resolution and/or refresh), so login flashes or modesets when the session starts.
 
 To pin the greeter to a specific resolution, set both `[output].width` and `[output].height`:
 
@@ -326,7 +326,7 @@ Legacy live `appearance.json` is migrated into `sync.toml` once if present; Sync
 
 ## Idle blanking
 
-By default the greeter never blanks the screen. To turn off active DRM outputs after a period with no input, set `[idle].timeout` in seconds:
+By default, the greeter never blanks the screen. To turn off active DRM outputs after a period with no input, set `[idle].timeout` in seconds:
 
 ```toml
 [idle]
@@ -335,7 +335,7 @@ timeout = 300
 
 `0` or omitting the key disables blanking. Valid values are `0`-`86400` (24 hours).
 
-While blanked, the greeter client stays running. Any **key press**, **mouse button press**, or **touch** wakes the displays and restarts the idle timer. Pointer motion and scroll only wake a blanked screen - they do not reset the timer while the screen is on (wireless mice often emit motion noise that would otherwise prevent blanking).
+While blanked, the greeter client stays running. Any **key press**, **mouse button press**, or **touch** wakes the displays and restarts the idle timer. Pointer motion and scroll only wake a blanked screen – they do not reset the timer while the screen is on (wireless mice often emit motion noise that would otherwise prevent blanking).
 
 Optional environment override (wins when set), useful because greetd starts greeters with an empty environment. Put it on the greetd session **command** (not only as a bare shell assignment):
 
@@ -362,14 +362,14 @@ sudo systemctl restart greetd
 
 ## UI scale
 
-On high-DPI panels (for example 4K without fractional scaling), and when no layout/`scales`/`scale` override applies, the compositor scales output from the monitor's physical size when EDID reports it, otherwise from resolution. Auto scale uses the **selected DRM mode** size (not the pre-modeset `wlr_output` size), so cold boot and post-logout match. Auto scale is capped at 2×. The greeter client lays out at logical size and renders HiDPI buffers via Wayland fractional scale.
+On high-DPI panels (for example, 4K without fractional scaling), and when no layout/`scales`/`scale` override applies, the compositor scales output from the monitor's physical size when EDID reports it, otherwise from resolution. Auto-scale uses the **selected DRM mode** size (not the pre-modeset `wlr_output` size), so cold boot and post-logout match. Auto-scale is capped at 2×. The greeter client lays out at logical size and renders HiDPI buffers via a Wayland fractional scale.
 
 Resolution order per output:
 
 1. Global `[output].scale` in `greeter.toml` (forces one scale on every output)
 2. Per-connector `[output].scales` from `greeter.toml`, else Sync `sync.toml`
 3. If `[output].layout` is set but no matching scales → scale `1.0` (keeps session layout coords adjacent)
-4. Otherwise auto from display geometry
+4. Otherwise, auto from display geometry
 
 Per-connector scales (synced from the desktop session):
 
@@ -385,10 +385,10 @@ Force one scale on every output:
 scale = 1.5
 ```
 
-If `[output].scale` is set but invalid (not a positive number), it is ignored and the next step in the order above applies.
+If `[output].scale` is set but invalid (not a positive number), it is ignored, and the next step in the order above applies.
 
 :::note
-Manual `[output].scale` and Sync `[output].scales` only affect the greeter session. They are separate from your desktop compositor's scaling, except that **Sync Now** copies the session's effective per-output scale into `scales` so multi-monitor layout stays valid.
+Manual `[output].scale` and Sync `[output].scales` only affect the greeter session. They are separate from your desktop compositor's scaling, except that **Sync Now** copies the session's effective per-output scale into `scales` so the multi-monitor layout stays valid.
 :::
 ---
 
@@ -417,7 +417,7 @@ path = "/usr/share/icons"
 
 ### Using environment variables
 
-greetd starts greeters with an empty environment, so the `XCURSOR_*` variables must be set in the greetd session **command** rather than the service environment, for example in `/etc/greetd/config.toml`:
+greetd starts greeters with an empty environment, so the `XCURSOR_*` variables must be set in the greetd session **command** rather than the service environment, for example, in `/etc/greetd/config.toml`:
 
 ```toml
 [default_session]
@@ -426,7 +426,7 @@ command = "env XCURSOR_THEME=Adwaita XCURSOR_SIZE=24 /usr/bin/noctalia-greeter-s
 
 ### On NixOS
 
-The module option `programs.noctalia-greeter.settings` writes `/var/lib/noctalia-greeter/greeter.toml` (Nix attrset, TOML string, or path). Cursor keys become `[cursor]` in that file. The module does **not** inject `XCURSOR_*` into the greetd session command and there is no `package` option. Point `path` at the theme package's `share/icons` instead:
+The module option `programs.noctalia-greeter.settings` writes `/var/lib/noctalia-greeter/greeter.toml` (Nix attrset, TOML string, or path). Cursor keys become `[cursor]` in that file. The module does **not** inject `XCURSOR_*` into the greetd session command, and there is no `package` option. Point `path` at the theme package's `share/icons` instead:
 
 ```nix
 programs.noctalia-greeter.settings = {
@@ -475,7 +475,7 @@ Use standard [XKB layout codes](https://www.freedesktop.org/wiki/Software/XKeybo
 
 ### Num Lock
 
-The compositor locks Num Lock on startup so numeric keypads work without extra setup. If your keyboard misbehaves with Num Lock enabled (for example, the `0` digit key producing incorrect characters), disable it:
+The compositor locks Num Lock on startup, so numeric keypads work without extra setup. If your keyboard misbehaves with Num Lock enabled (for example, the `0` digit key producing incorrect characters), disable it:
 
 ```toml
 [keyboard]

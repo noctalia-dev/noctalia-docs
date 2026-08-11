@@ -173,7 +173,7 @@ Call `widgetSettings.save()` whenever a value changes.
 
 ## `settingsChanged` signal
 
-As an alternative to calling `widgetSettings.save()`, your component can emit a `settingsChanged` signal. The settings dialog listens for this signal (debounced at 150ms) and handles persistence automatically. You can also emit `settingsSaved` for immediate (non-debounced) persistence:
+As an alternative to calling `widgetSettings.save()`, your component can emit a `settingsChanged` signal. The settings dialog listens to this signal (debounced at 150ms) and handles persistence automatically. You can also emit `settingsSaved` for immediate (non-debounced) persistence:
 
 ```qml
 ColumnLayout {
@@ -402,7 +402,7 @@ ColumnLayout {
 ```
 
 ## Best Practices
-1. **Use for per-instance options only**: Desktop widget settings should control appearance and behavior of a specific widget instance (background, colors, layout). Plugin-wide settings (API keys, global toggles) belong in the general `settings` entry point.
+1. **Use for per-instance options only**: Desktop widget settings should control the appearance and behavior of a specific widget instance (background, colors, layout). Plugin-wide settings (API keys, global toggles) belong in the general `settings` entry point.
 2. **Provide metadata fallbacks**: Always fall back to `widgetSettings.metadata` values so widgets have sensible defaults before the user configures them.
 3. **Save on change**: Use the live-save pattern, call `widgetSettings.save()` immediately when values change. The system debounces writes automatically.
 4. **Use Noctalia widgets**: Use `NToggle`, `NDropdown`, `NTextInput`, and other Noctalia components for a consistent look.

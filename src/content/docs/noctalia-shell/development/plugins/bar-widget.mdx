@@ -110,14 +110,14 @@ property string widgetId: ""
 ```
 
 ### `section`
-The bar section this widget is in: `"left"`, `"center"`, or `"right"`.
+The bar section of this widget is in: `"left"`, `"center"`, or `"right"`.
 
 ```qml
 property string section: ""
 ```
 
 ### `sectionWidgetIndex`
-The zero-based index of this widget within its bar section. Used to access per-instance settings and to build unique identifiers for service registration.
+The zero-based index of this widget is within its bar section. Used to access per-instance settings and to build unique identifiers for service registration.
 
 ```qml
 property int sectionWidgetIndex: -1
@@ -691,7 +691,7 @@ Item {
 }
 ```
 
-### Interactive Counter Widget
+### Interactive Counter-Widget
 ```qml
 import QtQuick
 import QtQuick.Layouts
@@ -956,7 +956,7 @@ Item {
 3. **Use consistent styling**: Stick to Noctalia's design system
 4. **Use per-screen properties**: Always use `Style.getCapsuleHeightForScreen(screenName)` and `Style.getBarFontSizeForScreen(screenName)` instead of global values
 5. **Handle missing data**: Always provide fallbacks for settings and data
-6. **Respect dark mode**: Use `Color.m*` colors that adapt to theme
+6. **Respect dark mode**: Use `Color.m*` colors that adapt to the theme
 7. **Use binding for hover effects**: `color: mouseArea.containsMouse ? Color.mHover : Style.capsuleColor`
 8. **Log important events**: Use Logger for debugging
 9. **Test on vertical bars**: Ensure your widget works in all bar positions

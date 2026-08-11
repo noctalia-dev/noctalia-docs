@@ -73,10 +73,10 @@ end)
 The lookup matches `appId` against desktop entries (entry id, then `StartupWMClass`) to find the icon name, then
 resolves it through the host's XDG icon-theme resolver. Input that matches no desktop entry is treated as a raw icon
 name, so themed icons such as `"folder-music"` resolve directly. `sizePx` is the intended on-screen pixel size and
-selects the best-fitting theme size; without it the largest available icon wins.
+selects the best-fitting theme size; without it, the largest available icon wins.
 
 The returned path plugs straight into a `ui.image` `path` prop. Resolution scans the filesystem on a cache miss, so
-cache results keyed by app id instead of resolving on every `update()`.
+cache results are keyed by app id instead of resolving on every `update()`.
 
 ## Time, notifications, and clipboard
 
@@ -97,7 +97,7 @@ cache results keyed by app id instead of resolving on every `update()`.
 `%s` in `formatTime()` expands to Unix epoch seconds.
 
 `formatTime()` and Luau's own `os.time()` are both whole-second. `nowMs()` is the only way to see sub-second time, for
-example to phase an entry's updates onto a second boundary.
+example, to phase an entry's updates onto a second boundary.
 
 ## System stats
 
@@ -171,7 +171,7 @@ end
 
 The first call opts the plugin into per-core sampling, which costs one extra `/proc/stat` read per second for as long as
 the plugin stays loaded. `systemStats()` does not enable per-core sampling, so only call `cpuCores()` if you actually
-draw per-core data. Sampling runs on a fixed 1 second cadence, independent of `cpu_poll_seconds`.
+draw per-core data. Sampling runs on a fixed 1-second cadence, independent of `cpu_poll_seconds`.
 
 Two reads are needed to produce the first result, so expect `nil` for up to a second after the first call. Treat `nil`
 as "not ready yet" rather than "this machine has no cores".
@@ -242,7 +242,7 @@ it to a file. Do **not** persist inside `noctalia.pluginDir()`: for git-installe
 that Noctalia rewrites on update, so anything you save there is lost.
 
 Use `noctalia.pluginDataDir()` instead. It returns a per-plugin folder that survives updates, is scoped to your plugin id,
-follows Noctalia's `NOCTALIA_STATE_HOME` override, and is created for you on first call.
+follows Noctalia's `NOCTALIA_STATE_HOME` override, and is created for you on the first call.
 
 ```lua
 local dir = noctalia.pluginDataDir()
@@ -263,7 +263,7 @@ if raw then myTable = noctalia.json.decode(raw) end
 | `noctalia.sound.load(name: string, path: string, onLoaded: (ok: boolean, error: string?) -> ())` | boolean | Accepts an asynchronous sound load and calls `onLoaded` after decoding. Requires <PluginApiBadge feature="sound" />. |
 | `noctalia.sound.play(name: string)` | nothing | Plays a loaded sound from this runtime's sound bank. Requires <PluginApiBadge feature="sound" />. |
 
-Define the completion callback before requesting the load, and play only after it reports success:
+Define the completion callback before requesting the load and play only after it reports success:
 
 ```lua
 local function onClickLoaded(ok, err)
@@ -281,7 +281,7 @@ end
 ```
 
 Sound paths resolve like filesystem paths. Bundled relative assets such as `sounds/click.ogg` need no manifest
-declaration. A `true` return means the request was accepted, not that the file decoded; a decode failure calls the
+declaration. A `true` return means the request was accepted, not that the file decoded; a decoded failure calls the
 callback with `false` and a non-empty error. At most eight loads may be pending in one runtime, and requesting a name
 that already has a pending load returns `false`.
 
@@ -378,7 +378,7 @@ plugin. With `[shell] offline_mode = true` the stream never connects and `onClos
 
 ## Sharing state across entries
 
-Entries are isolated VMs - they don't share Lua memory. Instead they exchange **plain values** through a per-plugin
+Entries are isolated VMs - they don't share Lua memory. Instead, they exchange **plain values** through a per-plugin
 state channel:
 
 | Method | Returns | Description |

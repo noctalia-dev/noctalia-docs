@@ -16,7 +16,7 @@ network_poll_seconds = 3.0          # network throughput
 disk_poll_seconds = 10.0            # disk usage and swap usage
 ```
 
-When disabled, Noctalia keeps system-monitor UI available but stops the background sampling thread. Bar `sysmon` widgets, desktop `sysmon` widgets, and the Control Center System tab show unavailable values until the setting is enabled again.
+When disabled, Noctalia keeps the system-monitor UI available but stops the background sampling thread. Bar `sysmon` widgets, desktop `sysmon` widgets, and the Control Center System tab show unavailable values until the setting is enabled again.
 
 Poll intervals are configured globally under `[system.monitor]`, not per widget. Each value is the number of seconds between samples for that metric group. A non-zero value is clamped to `1` to `120` seconds; setting a value to `0` disables that metric group entirely - it is never sampled and schedules no wakeups. GPU probes run only while UI displays a GPU stat, so the default interval does not wake an otherwise unused discrete GPU. Set `gpu_poll_seconds = 0` to disable probing entirely. You can also adjust intervals in whole-second steps (down to `0`) in **Settings → Services → Advanced** when the system monitor is enabled.
 
@@ -152,7 +152,7 @@ net_tx_activity_threshold    = 1      # MB/s
 net_tx_critical_threshold    = 50     # MB/s
 ```
 
-The value's color is interpolated between the widget's regular foreground color (its `color` setting) and its `highlight_color` (set per widget - see the [`sysmon` widget](/noctalia/bar/widgets/sysmon/)). Below the activity threshold the value stays at its regular color; the moment it crosses the activity threshold it jumps to a small highlight tint, then ramps the rest of the way to the full `highlight_color`, reaching it at or above the critical threshold. Set the critical threshold to `0` to disable highlighting for that stat.
+The value's color is interpolated between the widget's regular foreground color (its `color` setting) and its `highlight_color` (set per widget - see the [`sysmon` widget](/noctalia/bar/widgets/sysmon/)). Below the activity threshold the value stays at its regular color; the moment it crosses the activity threshold, it jumps to a small highlight tint, then ramps the rest of the way to the full `highlight_color`, reaching it at or above the critical threshold. Set the critical threshold to `0` to disable highlighting for that stat.
 
 | Key | Default | Unit | Stat |
 |-----|---------|------|------|

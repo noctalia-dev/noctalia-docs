@@ -100,7 +100,7 @@ Find and focus any currently open window.
 
 ## Dmenu mode
 
-`noctalia dmenu` is a stdin/stdout picker for scripts that already produce newline-separated choices:
+`noctalia dmenu` is an stdin/stdout picker for scripts that already produce newline-separated choices:
 
 ```sh
 printf 'alpha\nbeta\ngamma\n' | noctalia dmenu -p "Pick"
@@ -197,7 +197,7 @@ Every prefixed provider — built-in, dmenu, or plugin — is triggered the same
 - `shell.launcher.provider_prefix` sets the common character (default `/`).
 - Each provider supplies a bare trigger word, which is concatenated onto `provider_prefix`.
 
-So `provider_prefix = "/"` with a trigger word of `emo` gives `/emo`. Changing `provider_prefix` to `.` makes every provider trigger on `.emo`, `.ssh`, and so on. An empty trigger word leaves a provider reachable only through the un-prefixed (global) search. Trigger words are always bare — write `ssh`, not `/ssh`.
+So `provider_prefix = "/"` with a trigger word of `emo` gives `/emo`. Changing `provider_prefix` to `.` makes every provider trigger on `.emo`, `.ssh`, and so on. An empty trigger word leaves a provider reachable only through the unprefixed (global) search. Trigger words are always bare — write `ssh`, not `/ssh`.
 
 Each provider type gets its trigger word from a different place:
 
@@ -213,6 +213,6 @@ The built-in providers can be configured without editing your config, under **Se
 
 - **Common Prefix Character** — the shared `provider_prefix` (defaults to `/`).
 - **&lt;Provider&gt; Prefix** — the trigger word for each built-in provider (Calculator, Emoji, Session, Wallpaper, Windows). Leave blank to fall back to the built-in default.
-- **&lt;Provider&gt; in Global Search** — toggles whether that provider also contributes results to the un-prefixed search.
+- **&lt;Provider&gt; in Global Search** — toggles whether that provider also contributes results to the unprefixed search.
 
 Dmenu and plugin provider prefixes are configured only through their config tables (see the reference linked above); they do not appear in the Settings UI.

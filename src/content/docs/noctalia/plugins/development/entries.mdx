@@ -12,7 +12,7 @@ import PluginApiBadge from '../../../../../components/PluginApiBadge.astro';
 The plugin system is in **beta**. The manifest format and APIs may still change before v5 is stable, so build with that in mind.
 :::
 
-A script defines **global functions** that Noctalia calls, and drives the UI through the API namespaces. Which globals
+A script defines **global functions** that Noctalia calls and drives the UI through the API namespaces. Which globals
 apply depends on the entry kind:
 
 | Function | Widget | Shortcut | Launcher | Desktop | Panel | Service | When |
@@ -31,7 +31,7 @@ apply depends on the entry kind:
 | `onConfigChanged()` | | | | | | ✓ | a plugin setting changed (see below) |
 | `onExit(signal, reason)` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | the entry runtime is about to be destroyed (see below) |
 
-The top level of the script runs once at load - set up state and register `noctalia.state.watch` handlers there.
+The top level of the script runs once at load - set-up state and register `noctalia.state.watch` handlers there.
 
 ### Modules
 
@@ -164,7 +164,7 @@ end
 Keep cleanup short: `onExit` has the normal callback time budget. It cannot run after `SIGKILL`, a process crash, or
 another abrupt termination that prevents Noctalia from shutting down gracefully. If cleanup must continue after the
 entry VM is destroyed, call `noctalia.runAsync(command)` without a result callback; the detached command outlives the
-runtime. An uninstall command must use an installed helper or otherwise avoid plugin-directory files, which may be
+runtime. An uninstallation command must use an installed helper or otherwise avoid plugin-directory files, which may be
 removed as soon as the hook returns. A detached command cannot report its eventual result back to the destroyed
 runtime, so make cleanup idempotent and expose a way for the user to retry it.
 
@@ -208,7 +208,7 @@ When a user edits a plugin setting, the change reaches each entry differently:
   service runtime** (the top-level chunk re-runs with the new settings).
 
 Either way, `noctalia.state` is **process-lifetime** and survives a service restart, so any cache you store there must be
-keyed by the config it depends on , otherwise a service will keep serving data fetched for the old settings. For example,
+keyed by the config it depends on, otherwise a service will keep serving data fetched for the old settings. For example,
 store the location alongside cached results and re-fetch when it differs:
 
 ```lua
@@ -229,7 +229,7 @@ for their rendering APIs and controls.
 `setText` · `setGlyph` · `setImage` · `setTooltip` · `clearTooltip` · `setFont` · `setColor` · `setGlyphColor` ·
 `setVisible` · `isVertical` · `outputName` · `render`
 
-A bar widget can either patch the built-in glyph/text row with the imperative setters below, or describe composite
+A bar widget can either patch the built-in glyph/text row with the imperative setters below or describe composite
 content as a `ui.*` tree with `barWidget.render(tree)` - see
 [Declarative UI](/noctalia/plugins/development/declarative-ui/#barwidgetrender--declarative-bar-widget-ui).
 
@@ -319,7 +319,7 @@ before running `onQuery` - set it for network-backed providers so you aren't cal
   secondary text.
 - `setQuery(query)` replaces the open launcher's raw input text. Call it from `onActivate` to treat a result as a
   drill-in step: the launcher rewrites the input and **stays open** instead of closing, then re-runs `onQuery` with the
-  new text. A result-level `query` field does the same declaratively - when that result is selected the launcher
+  new text. A result-level `query` field does the same declaratively - when that result is selected, the launcher
   replaces the input with it and stays open, no `onActivate` needed. Either way, include your prefix to stay routed to
   the same provider, e.g. `"/tr french "`. (An `onActivate` that does *not* call `setQuery` closes the launcher as
   usual.)

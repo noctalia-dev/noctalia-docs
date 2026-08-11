@@ -5,7 +5,7 @@ sidebar:
   order: 3
 ---
 
-The Control Center is Noctalia's panel for session controls, system status, media, notifications, weather, and service-specific tools. Open it from the control-center bar widget, by right-clicking empty space on a bar, or with IPC:
+The Control Center is Noctalia's panel for session controls, system status, media, notifications, weather, and service-specific tools. Open it from the control-center bar widget, by right-clicking the empty space on a bar, or with IPC:
 
 ```sh
 noctalia msg panel-toggle control-center
@@ -66,7 +66,7 @@ Use these context IDs with `noctalia msg panel-toggle control-center <context>` 
 | `screen-time` | Screen Time | Foreground app usage totals and charts for today, three days, or fourteen days |
 | `power` | Power | Battery charge and status, power profiles, battery health, and connected-device battery levels |
 
-`weather`, `system`, and `screen-time` open only when their corresponding services are enabled; `power` opens only when UPower or `power-profiles-daemon` is available. Otherwise Noctalia falls back to the first visible tab.
+`weather`, `system`, and `screen-time` open only when their corresponding services are enabled; `power` opens only when UPower or `power-profiles-daemon` is available. Otherwise, Noctalia falls back to the first visible tab.
 
 Any tab except Home can also be hidden manually with [`hidden_tabs`](#sidebar) (use the context ID, e.g. `"monitor"` for the brightness tab). Hidden tabs drop from both the sidebar and keyboard navigation.
 
@@ -92,7 +92,7 @@ The Audio tab groups PipeWire output, input, device, and stream controls. Use it
 
 ## Monitor
 
-The Monitor tab exposes brightness controls when Noctalia has a controllable backlight for the display. If no writable brightness device is available, the tab remains available but has no write controls to expose.
+The Monitor tab exposes brightness controls when Noctalia has a controllable backlight for the display. If no writable brightness device is available, the tab remains available but has no writing controls to expose.
 
 ## System
 
@@ -137,7 +137,7 @@ event_time_format = "%H:%M"     # per-event start time
 | `event_date_format` | string | `"%A %e %B"` | strftime format for the date heading above the event list. |
 | `event_time_format` | string | `"%H:%M"` | strftime format for each event's start time. All-day events show an "All day" label instead. |
 
-Week numbers are a decoration of the month grid, so they work with `[calendar].enabled = false` and no accounts configured. The other three options only have visible effect once events are syncing.
+Week numbers are a decoration of the month grid, so they work with `[calendar].enabled = false` and no accounts configured. The other three options only have a visible effect once events are syncing.
 
 ## Notifications
 
@@ -149,7 +149,7 @@ The Screen Time tab shows how long each application was in the foreground today.
 
 - **Range** toggle: today (hourly chart), last 3 days, or last 14 days (daily bars)
 - **Total** time for the selected range, with a stacked bar chart (hourly or per-day)
-- **Chart legend** as a horizontal row under the chart (chart colors only; app list uses neutral bars)
+- **Chart legend** as a horizontal row under the chart (chart colors only; an app list uses neutral bars)
 - **Most used** apps with icons, usage bars, and duration for the selected range
 
 Open it from the control center sidebar (`screen-time` context) or add a Home shortcut with `type = "screen_time"`.

@@ -31,7 +31,7 @@ noctalia msg notification-show "Build finished"
 noctalia msg notification-show "Build finished" "All tests passed"
 ```
 
-When a body argument is passed, the CLI forwards it as structured payload (`summary` + `body`) to the IPC handler.
+When a body argument is passed, the CLI forwards it as a structured payload (`summary` + `body`) to the IPC handler.
 
 For full control, pass a JSON payload object:
 
@@ -120,4 +120,4 @@ Requires compositor support for `wlr-screencopy-unstable-v1`. Uses the global `[
 | Fullscreen (specific output) | <IpcCommand command="screenshot-fullscreen DP-2" /> | Capture one output without the picker. Pass the Wayland connector name (e.g. `DP-1`, `HDMI-A-1`) or a word-boundary match in the output description. |
 | Fullscreen (all monitors) | <IpcCommand command="screenshot-fullscreen all" /> | One combined desktop PNG spanning every monitor. |
 
-In picker mode, choose a connector from the top bar on any screen, or click the desktop to capture the monitor under the cursor. Errors list available connector names when the selector is unknown.
+In picker mode, choose a connector from the top bar on any screen or click the desktop to capture the monitor under the cursor. Errors list available connector names when the selector is unknown.

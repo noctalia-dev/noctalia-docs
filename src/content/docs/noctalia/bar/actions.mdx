@@ -20,7 +20,7 @@ Widgets ship with sensible defaults, so you only declare the gestures you want t
 binding in the settings editor restores the default.
 
 The Actions section in Settings is shown only while the widget is `interactive`. With
-`interactive = false`, pointer gestures pass through and the section is hidden (bindings in config
+`interactive = false`, pointer gestures pass through, and the section is hidden (bindings in config
 are left alone).
 
 ## Gestures
@@ -138,7 +138,7 @@ scroll_up = "volume-up"
 back = "media previous"
 ```
 
-Right click opens the control center at the pointer unless you bind it to something else. Panel
+Right-click opens the control center at the pointer unless you bind it to something else. Panel
 actions here anchor at the pointer rather than at a widget, since there is no widget to anchor to.
 A monitor override may carry its own `dead_zone.actions` table, which replaces the bar's rather than
 merging with it.
@@ -146,7 +146,7 @@ merging with it.
 
 ## Examples
 
-Make the volume widget mute on middle click instead of opening settings, and adjust in bigger steps:
+Make the volume widget mute on the middle click instead of opening settings and adjust in bigger steps:
 
 ```toml
 [widget.volume.actions]

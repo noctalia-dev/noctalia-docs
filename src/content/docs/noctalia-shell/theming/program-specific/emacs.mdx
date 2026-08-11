@@ -53,7 +53,7 @@ You can also add it conditionally or after other configurations:
 
 ## Troubleshooting
 
-- **Theme not found:** Ensure that Emacs theming is enabled in Noctalia settings and that the theme files are being generated correctly. If the files exist but aren't found, add `(add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")` before `(load-theme 'noctalia t)`.
+- **Theme is not found:** Ensure that Emacs theming is enabled in Noctalia settings and that the theme files are being generated correctly. If the files exist but aren't found, add `(add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")` before `(load-theme 'noctalia t)`.
 - **Theme not applying:** Make sure you've added `(load-theme 'noctalia t)` to your Emacs configuration file
 - **Colors not updating:** Restart Emacs or reload your configuration after changing color schemes in Noctalia
 - **Theme conflicts:** The `t` argument in `load-theme` disables other themes. If you want to keep other themes, you may need to adjust your configuration

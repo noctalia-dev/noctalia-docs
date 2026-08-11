@@ -102,7 +102,7 @@ forward = "media next"
 
 All nine gestures are available, and an action is an IPC command, `exec <command line>`, or `none` - see [Widget Actions](/noctalia/bar/actions/) for the full vocabulary. Panel actions anchor at the pointer, since there is no widget to anchor to.
 
-Right-click opens Control Center unless you bind `right` to something else. While an attached panel is open, right-click anywhere on the bar still toggles Control Center unless the click lands in the dead zone and `right` is bound.
+Right-click opens the Control Center unless you bind `right` to something else. While an attached panel is open, right-click anywhere on the bar still toggles Control Center unless the click lands in the dead zone and `right` is bound.
 
 Per-monitor overrides can carry their own `[bar.<name>.monitor.<match>.dead_zone.actions]` table, which replaces the bar's rather than merging with it.
 
@@ -159,7 +159,7 @@ Shadow blur, offset, and alpha are global under `[shell.shadow]`. Bars only expo
 When `auto_hide = true`, the bar:
 - Slides out once the pointer leaves the bar.
 - Slides back in when the pointer reaches the matching screen edge. With `margin_edge > 0`, the float gap is included in the layer surface so reveal works from the physical screen edge. With `margin_edge = 0`, the bar stays flush to the edge; pointer hit-testing still uses the full layer surface so reveal does not immediately cancel.
-- While auto-hide is active, pointer hit-testing uses the full bar layer surface so entering from the edge strip does not immediately leave again.
+- While auto-hide is active, pointer hit-testing uses the full bar layer surface, so entering from the edge strip does not immediately leave again.
 - With `show_on_workspace_switch = true` (default), briefly reveals when the active workspace changes on that monitor, then hides again if the pointer is not over the bar.
 - IPC `bar-show`, `bar-hide`, `bar-toggle`, and `bar-reserve-toggle` accept optional `[bar-name] [monitor-selector]` arguments; omit both to affect every bar instance. `bar-show`/`hide`/`toggle` use the same hide/reveal animation instead of tearing down surfaces. With `auto_hide`, they retract or reveal the bar like pointer auto-hide; edge reveal still works after `bar-hide`. With `auto_hide` off, `bar-hide` hides the bar and always frees the compositor gap until `bar-show` (or `bar-toggle` while showing), regardless of `reserve_space`. `bar-reserve-toggle` toggles the exclusive zone reservation on or off for the matched instances.
 
@@ -171,14 +171,14 @@ Set auto-hide to **Smart** in bar settings (or `smart_auto_hide = true` with `au
 
 - Mutually exclusive with pointer auto-hide (`auto_hide = true`); if both are set in config, smart auto-hide takes precedence.
 - Uses the same slide animation and edge reveal strip while hidden.
-- On compositors that report overview state (Niri, Triad), the bar is kept visible while overview is open.
+- On compositors that report overview state (Niri, Triad), the bar is kept visible while the overview is open.
 - Re-evaluates on workspace changes, window open/close, and overview toggles.
 
-`margin_opposite_edge` adds extra reserved space on the inward side of the bar (below a top bar, above a bottom bar, and so on for vertical bars). The bar itself does not move; the compositor exclusive zone grows so tiled and maximized windows stop further away. Use it when a compositor ignores or under-reserves struts - for example Labwc with a maximized window that still touches the bar. Requires `reserve_space = true`. The default is `0`.
+`margin_opposite_edge` adds extra reserved space on the inward side of the bar (below a top bar, above a bottom bar, and so on for vertical bars). The bar itself does not move; the compositor exclusive zone grows, so tiled and maximized windows stop further away. Use it when a compositor ignores or under-reserves struts - for example, Labwc with a maximized window that still touches the bar. Requires `reserve_space = true`. The default is `0`.
 
-`layer = "overlay"` shows the bar above fullscreen apps. Attached panels (for example Control Center when it attaches to the bar) follow the bar's layer. Floating panels keep their own layer (typically overlay), including when their screen position is `center`.
+`layer = "overlay"` shows the bar above fullscreen apps. Attached panels (for example, Control Center when it attaches to the bar) follow the bar's layer. Floating panels keep their own layer (typically overlay), including when their screen position is `center`.
 
-The IPC `bar-layer-set <top|overlay> [bar-name] [monitor-selector]` switches the layer of matching bar instance(s) at runtime; omit `bar-name` to update every bar. The change is transient and resets to the configured `layer` on the next config reload. This is handy for peeking the bar above a fullscreen window on a keybind, for example in niri:
+The IPC `bar-layer-set <top|overlay> [bar-name] [monitor-selector]` switches the layer of matching bar instance(s) at runtime; omit `bar-name` to update every bar. The change is transient and resets to the configured `layer` on the next config reload. This is handy for peeking the bar above a fullscreen window on a keybind, for example, in niri:
 
 ```kdl
 binds {
@@ -280,7 +280,7 @@ widget elsewhere can never split it. Grouping is managed entirely from the Setti
    together.
    Turning on **Accordion** collapses the group to its first widget until you hover it; **Reveal direction** picks
    which side the remaining widgets unfold on.
-4. **Drag a widget onto the group** to add it; **drag a member out**, or use its eject button, to remove it.
+4. **Drag a widget onto the group** to add it; **drag a member out**, or use its eject button to remove it.
    Reorder members by dragging them within the group. Drag the group's own handle to move the whole group along
    the lane or into another lane.
 5. To dissolve a group, open its style editor and click **Ungroup** (its members return to the lane in place).

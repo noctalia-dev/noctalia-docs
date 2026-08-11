@@ -256,7 +256,7 @@ ColumnLayout {
 
 ## Background Control
 
-The `DraggableDesktopWidget` provides a default styled background with shadow. You can control it this way but it's preferred to keep as `true` if you don't add your own custom background so users have the ability to disable/enable it via the settings:
+The `DraggableDesktopWidget` provides a default styled background with shadow. You can control it this way, but it's preferred to keep as `true` if you don't add your own custom background, so users can disable/enable it via the settings:
 
 ```qml
 DraggableDesktopWidget {
@@ -507,7 +507,7 @@ DraggableDesktopWidget {
 
 ## Implementing Scaling
 
-Desktop widgets support user-controlled scaling from 0.5x to 5x. **You must implement dimension-based scaling** rather than using Qt's transform-based `scale` property. Transform-based scaling usually cause jagged edges and overall poor rendering quality.
+Desktop widgets support user-controlled scaling from 0.5x to 5x. **You must implement dimension-based scaling** rather than using Qt's transform-based `scale` property. Transform-based scaling usually causes jagged edges and overall poor rendering quality.
 
 ### The `widgetScale` Property
 
@@ -695,9 +695,9 @@ DraggableDesktopWidget {
 
 Users can add plugin desktop widgets through the Noctalia settings:
 
-1. Open Settings panel
+1. Open the Settings panel
 2. Navigate to Desktop Widgets
-3. Add new widget from the widget picker
+3. Add a new widget from the widget picker
 4. Enable edit mode
 5. Position and scale as desired
 6. Exit edit mode

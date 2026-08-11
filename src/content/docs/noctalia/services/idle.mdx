@@ -22,7 +22,7 @@ pre_action_fade_seconds = 2.0
 `behavior_order` controls the order named behaviors are evaluated and emitted by Settings. Names not listed are appended
 after the listed entries; unknown names are ignored.
 
-While a fade is in progress, the overlay is click-through so pointer/keyboard activity still reaches the compositor; if the session becomes active again during that window, the pending command is cancelled. The dim is a layer-shell **overlay** that covers the full monitor (including the bar).
+While a fade is in progress, the overlay is click-through, so pointer/keyboard activity still reaches the compositor; if the session becomes active again during that window, the pending command is cancelled. The dim is a layer-shell **overlay** that covers the full monitor (including the bar).
 
 Each behavior picks an **`action`**. The built-in actions are native - they need no `command`. Use `action = "command"` only when you want to run something Noctalia doesn't have a native action for. Command fields are normal shell commands; use `noctalia msg ...` when a shell command needs to call Noctalia IPC.
 

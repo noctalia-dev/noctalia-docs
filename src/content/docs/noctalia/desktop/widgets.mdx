@@ -32,7 +32,7 @@ flip_y   = false
 format = "{:%H:%M}"
 ```
 
-When enabled, Noctalia renders each desktop widget as its own tightly-sized layer-shell surface on the `Bottom` layer. The current implementation ships `button`, `calendar`, `clock`, `label`, `audio_visualizer`, `fancy_audio_visualizer`, `sticker`, `weather`, `media_player`, `volume`, and `sysmon` widget types plus an interactive edit mode.
+When enabled, Noctalia renders each desktop widget as its own tightly sized layer-shell surface on the `Bottom` layer. The current implementation ships `button`, `calendar`, `clock`, `label`, `audio_visualizer`, `fancy_audio_visualizer`, `sticker`, `weather`, `media_player`, `volume`, and `sysmon` widget types plus an interactive edit mode.
 
 ---
 
@@ -46,7 +46,7 @@ noctalia msg desktop-widgets-exit
 noctalia msg desktop-widgets-toggle-edit
 ```
 
-You can also turn edit mode on from **Settings → Desktop → Toggle Editor**. Noctalia shows a short internal notification and you should switch to an **empty workspace** (no windows covering the desktop) so the editor overlay is visible.
+You can also turn the edit mode on from **Settings → Desktop → Toggle Editor**. Noctalia shows a short internal notification, and you should switch to an **empty workspace** (no windows covering the desktop) so the editor overlay is visible.
 
 Widget previews are non-interactive in edit mode. Clicking anywhere within a widget selects or moves it instead of activating its buttons or other controls; normal widget interaction resumes after you exit the editor.
 
@@ -70,7 +70,7 @@ Widget previews are non-interactive in edit mode. Clicking anywhere within a wid
 
 When the snap grid is active, moving a widget snaps the nearest outer edge or center line to the grid, screen edges, and
 nearby widgets. Resizing keeps the opposite edge anchored and snaps the dragged edge to the same guides, with a horizontal
-bias for corner drags so matching widget widths is easier.
+bias for corner drags, so matching widget widths is easier.
 
 Primary-colored center guides are always shown in edit mode. Dragging a widget snaps its center to the monitor center
 when nearby, even if the snap grid is hidden or temporarily disabled with `Shift`.
@@ -230,7 +230,7 @@ from the preceding or following month also navigates to that month. Select the d
 
 ### audio_visualizer
 
-Desktop audio visualizers fill their widget box: the spectrum spans the full box width and the bars use the full box height. `box_width` and `box_height` set the box size - resize the box to change the visualizer's shape; leave both `0.0` to start from the default footprint. They also accept optional `mirrored`, `centered`, `show_when_idle`, `color_1`, and `color_2` settings; both colors default to `primary`.
+Desktop audio visualizers fill their widget box: the spectrum spans the full box width, and the bars use the full box height. `box_width` and `box_height` set the box size - resize the box to change the visualizer's shape; leave both `0.0` to start from the default footprint. They also accept optional `mirrored`, `centered`, `show_when_idle`, `color_1`, and `color_2` settings; both colors default to `primary`.
 
 ```toml
 [desktop_widgets.widget.audio_main]
@@ -264,7 +264,7 @@ color_2      = "secondary"
 
 ### fancy_audio_visualizer
 
-Fancy audio visualizers render circular bars, waves, and rings. `box_width` and `box_height` control the fitted widget box size; leave both `0.0` to auto-fit the content. `fade_when_idle` is enabled by default so the widget fades out completely when no audio is active and fades back in when sound returns.
+Fancy audio visualizers render circular bars, waves, and rings. `box_width` and `box_height` control the fitted widget box size; leave both `0.0` to auto-fit the content. `fade_when_idle` is enabled by default, so the widget fades out completely when no audio is active and fades back in when sound returns.
 
 ```toml
 [desktop_widgets.widget.fancy_audio_main]
@@ -363,7 +363,7 @@ hide_when_no_media = true
 
 ### button
 
-Clickable button with an optional glyph and label. Runs a shell command on left click. Size auto-fits the content when `box_width` and `box_height` are `0.0`; when a box is set, the button stretches to fill it and scales its text and glyph to match.
+Clickable button with an optional glyph and label. Runs a shell command on the left click. Size auto-fits the content when `box_width` and `box_height` are `0.0`; when a box is set, the button stretches to fill it and scales its text and glyph to match.
 
 ```toml
 [desktop_widgets.widget.launcher_main]
@@ -457,7 +457,7 @@ background  = true
 
 ### volume
 
-Default-sink or default-source volume tile with a large glyph that fills bottom-up by volume percent. Left side shows the percentage, a Volume/Mic/Muted status line, and optionally the device name. Click the glyph to toggle mute; scroll anywhere on the widget to change volume (respects `[audio].enable_overdrive`). Requires PipeWire.
+Default-sink or default-source volume tile with a large glyph that fills bottom-up by volume percent. The left side shows the percentage, a Volume/Mic/Muted status line, and optionally the device name. Click the glyph to toggle mute; scroll anywhere on the widget to change volume (respects `[audio].enable_overdrive`). Requires PipeWire.
 
 ```toml
 [desktop_widgets.widget.volume_main]

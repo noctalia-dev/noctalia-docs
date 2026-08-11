@@ -248,7 +248,7 @@ function openPanel(screen: ShellScreen, buttonItem?: Item): bool
 - `screen` - The ShellScreen to open the panel on
 - `buttonItem` - (Optional) The button/widget that triggered the panel. If provided, the panel will position itself near this button.
 
-**Returns**: `true` if panel opened successfully, `false` otherwise
+**Returns**: `true` if the panel opened successfully, `false` otherwise
 
 **Usage**:
 ```qml
@@ -297,7 +297,7 @@ function closePanel(screen: ShellScreen): bool
 **Parameters**:
 - `screen` - The ShellScreen to close the panel on
 
-**Returns**: `true` if panel closed successfully, `false` otherwise
+**Returns**: `true` if the panel closed successfully, `false` otherwise
 
 **Usage**:
 ```qml
@@ -430,7 +430,7 @@ function tr(key: string, interpolations: object = {}): string
 - `key` - Translation key (supports dot notation for nested keys)
 - `interpolations` - Object with placeholder values (optional)
 
-**Returns**: Translated string, or `## key ##` if translation not found
+**Returns**: Translated string, or `## key ##` if translation is not found
 
 **Usage**:
 ```qml
@@ -606,7 +606,7 @@ IpcHandler {
 ```
 
 :::tip
-This is the preferred way to get a screen reference in IPC handlers, as it automatically selects the appropriate screen based on cursor position.
+This is the preferred way to get a screen reference in IPC handlers, as it automatically selects the appropriate screen based on the cursor position.
 :::
 
 ## Accessing Noctalia Services

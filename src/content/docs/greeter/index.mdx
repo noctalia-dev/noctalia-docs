@@ -5,7 +5,7 @@ sidebar:
   order: 0
 ---
 
-[Noctalia Greeter](https://github.com/noctalia-dev/noctalia-greeter) is the screen you see before your desktop session starts. It lets you pick a user, enter your password, choose a Wayland session, and pick a color scheme - with the same visual language as Noctalia.
+[Noctalia Greeter](https://github.com/noctalia-dev/noctalia-greeter) is the screen you see before your desktop session starts. It lets you pick a user, enter your password, choose a Wayland session, and pick a color scheme – with the same visual language as Noctalia.
 
 It is built for **[greetd](https://github.com/kennylevinsen/greetd)**: greetd starts the bundled wlroots compositor (`noctalia-greeter-compositor`), and the greeter runs inside that session. It is a login UI only, not a desktop shell or compositor replacement.
 
@@ -62,7 +62,7 @@ Point greetd at the installed session wrapper. Use the path on your system - do 
 which noctalia-greeter-session
 ```
 
-Example for a manual install to `/usr/local` (replace the path if `which` shows something else, e.g. `/usr/bin/noctalia-greeter-session`):
+Example for a manual installation to `/usr/local` (replace the path if `which` shows something else, e.g. `/usr/bin/noctalia-greeter-session`):
 
 ```toml
 [default_session]
@@ -78,7 +78,7 @@ To open the greeter with a specific session already selected, pass `--session` (
 `[session].default` in [greeter.toml](/greeter/configuration/)). The value is the session's
 desktop-entry **`Name=`** — the same string the greeter picker shows and that
 `noctalia-greeter sessions` prints. It is **not** the `.desktop` file basename
-(for example use `Hyprland (uwsm-managed)`, not `hyprland-uwsm`).
+(for example, use `Hyprland (uwsm-managed)`, not `hyprland-uwsm`).
 
 List the valid names on the machine that runs greetd:
 
@@ -93,7 +93,7 @@ command = "/usr/bin/noctalia-greeter-session -- --session niri"
 ```
 
 Prefer **`[session].default` in `greeter.toml`** when the name has spaces or punctuation — TOML
-quoting is reliable, and a broken greetd `command` line (for example an unquoted
+quoting is reliable, and a broken greetd `command` line (for example, an unquoted
 `Hyprland (uwsm-managed)`) can leave the VT unusable:
 
 ```toml
@@ -103,8 +103,8 @@ default = "Hyprland (uwsm-managed)"
 ```
 
 `[session].default` overrides the last session you picked (`[session].last` in `sync.toml`) unless
-`--session` is also passed on the command line. An unknown name is ignored and the greeter falls
-back to last-used or the first discovered session.
+`--session` is also passed on the command line. An unknown name is ignored, and the greeter falls
+back to the last-used or the first-discovered session.
 
 When you pick a session, the greeter tells greetd to start it with environment from the `.desktop` file **before** PAM opens the session (required for logind session type):
 
@@ -148,7 +148,7 @@ With Noctalia v5 and the greeter both installed, open **Settings → Security �
 - enabled session actions and power command overrides (`shell.session` / `[shell.session.power]`)
 - monitor orientation into `[output].transforms`
 - per-output scale into `[output].scales` (so layout coordinates stay valid on the greeter)
-- multi-monitor layout into `[output].layout` when more than one ready output reports distinct positions
+- a multi-monitor layout into `[output].layout` when more than one ready output reports distinct positions
 
 You will be prompted for admin access via polkit (`pkexec` or `run0`).
 
@@ -156,17 +156,17 @@ User avatars are not part of greeter appearance sync. They come from AccountsSer
 
 The synced font is a Fontconfig family name only. The greeter user must be able to resolve that family (system-installed fonts work; fonts that exist only in your home directory often will not).
 
-Enable **Settings → Security → Auto-Sync Greeter** to automatically sync whenever your wallpaper, colors/theme mode, or shell font change. Syncing triggers after a short debounce so rapid changes (like dragging a color picker) are batched into one sync. Session action edits and corner-radius-only changes still need Sync Now (or another auto-sync trigger) unless they arrive with one of those changes.
+Enable **Settings → Security → Auto-Sync Greeter** to automatically sync whenever your wallpaper, colors/theme mode, or shell font change. Syncing triggers after a short debounce, so rapid changes (like dragging a color picker) are batched into one sync. Session action edits and corner-radius-only changes still need Sync Now (or another auto-sync trigger) unless they arrive with one of those changes.
 
 Sync Now shows a notification while it waits for that approval. If **logind** or **elogind** is running, enable **Settings → Security → Polkit agent** to approve from the desktop.
 
-**seatd without logind:** polkit has no graphical session to attach to, so Noctalia's polkit agent cannot register (`No session for pid` in the log). Sync Now stages files and shows the install command. Run it from a terminal:
+**seatd without logind:** polkit has no graphical session to attach to, so Noctalia's polkit agent cannot register (`No session for pid` in the log). Sync Now stages files and shows the installation command. Run it from a terminal:
 
 ```sh
 pkexec noctalia-greeter-apply-appearance "$XDG_RUNTIME_DIR/noctalia-greeter-sync"
 ```
 
-To run Sync Now from the desktop on seatd, set a custom privilege prefix (the apply helper path and staging directory are appended automatically):
+To run Sync Now from the desktop on seatd, set a custom privilege prefix (the applied helper path and staging directory are appended automatically):
 
 ```toml
 [shell.greeter_sync]
@@ -179,7 +179,7 @@ Synced data is installed under `/var/lib/noctalia-greeter/`: wallpaper image fil
 
 After syncing, log out or restart greetd to see the changes on the login screen.
 
-The greeter adds a **Synced** color scheme when `greeter.toml` or `sync.toml` has a complete palette. Session and scheme choices you make on the login screen are remembered in `/var/lib/noctalia-greeter/sync.toml` (unless scheme is pinned in `greeter.toml`).
+The greeter adds a **Synced** color scheme when `greeter.toml` or `sync.toml` has a complete palette. Session and scheme choices you make on the login screen are remembered in `/var/lib/noctalia-greeter/sync.toml` (unless the scheme is pinned in `greeter.toml`).
 
 For monitor selection, output mode, idle blanking, UI scale, cursor theme, and other settings, see [Configuration](/greeter/configuration/).
 
@@ -197,11 +197,11 @@ journalctl -u greetd -b | grep noctalia-greeter
 
 Overrides (optional):
 
-| Value | Effect |
-|-------|--------|
-| unset (default) | syslog; stdout/stderr parked |
-| `NOCTALIA_GREETER_LOG=stderr` | console debug (`INF`/`DBG` → stdout, `WRN`/`ERR` → stderr) |
-| `NOCTALIA_GREETER_LOG=/path/to/file` | append to that file (plus syslog) |
+| Value                                | Effect                                                     |
+|--------------------------------------|------------------------------------------------------------|
+| unset (default)                      | syslog; stdout/stderr parked                               |
+| `NOCTALIA_GREETER_LOG=stderr`        | console debug (`INF`/`DBG` → stdout, `WRN`/`ERR` → stderr) |
+| `NOCTALIA_GREETER_LOG=/path/to/file` | append to that file (plus syslog)                          |
 
 Example console debug:
 
@@ -215,16 +215,16 @@ command = "env NOCTALIA_GREETER_LOG=stderr WLR_LOG=info /usr/bin/noctalia-greete
 
 The greeter works without a mouse.
 
-| Key | Action |
-|-----|--------|
-| `Tab` / `Shift+Tab` | Move focus |
-| `↑` / `↓` | Move focus, or move in an open menu |
-| `Enter` | Submit password / activate / confirm menu |
-| `Space` | Activate focused control |
-| `Esc` | Close menu or leave password step |
-| `F3` | Session picker |
-| `F7` | Color scheme picker |
-| `Ctrl+Alt+F1`-`F12` | Switch to virtual terminal (TTY) |
+| Key                 | Action                                    |
+|---------------------|-------------------------------------------|
+| `Tab` / `Shift+Tab` | Move focus                                |
+| `↑` / `↓`           | Move focus, or move in an open menu       |
+| `Enter`             | Submit password / activate / confirm menu |
+| `Space`             | Activate focused control                  |
+| `Esc`               | Close menu or leave password step         |
+| `F3`                | Session picker                            |
+| `F7`                | Color scheme picker                       |
+| `Ctrl+Alt+F1`-`F12` | Switch to virtual terminal (TTY)          |
 
 ---
 
@@ -238,9 +238,9 @@ The greeter works without a mouse.
 - **GNOME fails with `graphical-session-pre.target` / kicks back to greeter** - GNOME expects a systemd-managed user session. The greeter passes `XDG_SESSION_TYPE` and `DesktopNames`-derived desktop env via greetd; if that is not enough, use GDM for GNOME or a custom `wayland-sessions` wrapper. See [Default session](#default-session).
 - **Synced look missing** - Install Noctalia v5, the greeter, and the polkit policy; sync again from Settings; restart greetd or log out once.
 - **User avatars missing on the login screen** - Install and enable **accountsservice** / `accounts-daemon`. The greeter reads the avatar from the user's AccountsService `IconFile`; without it, the picker falls back to a placeholder.
-- **Sync fails with no privilege escalator** - Greeter sync needs `pkexec` or `run0` on `PATH` (for example when `pkexec` is disabled on NixOS, install `run0` from systemd ≥ 256). A polkit authentication agent must be running in your session.
+- **Sync fails with no privilege escalator** - Greeter sync needs `pkexec` or `run0` on `PATH` (for example, when `pkexec` is disabled on NixOS, install `run0` from systemd ≥ 256). A polkit authentication agent must be running in your session.
 - **Sync Now does nothing / greeter look unchanged** - Sync stages `sync.toml` + wallpapers first, then waits for polkit to authorize `noctalia-greeter-apply-appearance` (merges into live `sync.toml`, installs wallpapers). On **seatd without logind**, Noctalia's polkit agent cannot register; run the `pkexec` command from the Sync Now notification in a terminal. Sync Now warns after 90 seconds if approval is still pending.
-- **Polkit agent: `No session for pid`** - Expected on seatd-only setups. Install elogind for in-session prompts, or use terminal/console `pkexec` for greeter sync.
+- **Polkit agent: `No session for pid`** - Expected on seatd-only setups. Install elogind for in-session prompts or use terminal/console `pkexec` for greeter sync.
 - **Blank flash or modeset at login** - The greeter may be using a different DRM mode than your desktop session. Set matching `[output].width` and `[output].height` in `greeter.toml`. See [Output mode](/greeter/configuration/#output-mode).
 - **Screen never blanks on the greeter** - Set `[idle].timeout` (seconds) in `greeter.toml`. Pointer motion alone does not count as activity. See [Idle blanking](/greeter/configuration/#idle-blanking).
 - **Blanked greeter will not wake** - Use a key press, mouse button, or touch. If outputs stay off, check greeter compositor logs for idle/output commit errors.

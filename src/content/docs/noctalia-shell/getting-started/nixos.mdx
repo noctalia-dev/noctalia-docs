@@ -13,7 +13,7 @@ For NixOS users, a [Nix package](https://search.nixos.org/packages?channel=unsta
 You can also get the Git version, NixOS module and Home Manager module via flakes.
 
 :::caution
-To make Noctalia's wifi, bluetooth, power-profile, and battery feature available, please ensure the following NixOS options are enabled:
+To make Noctalia's Wi-Fi, bluetooth, power-profile, and battery feature available, please ensure the following NixOS options are enabled:
 - `networking.networkmanager.enable`
 - `hardware.bluetooth.enable`
 - `services.power-profiles-daemon.enable` or `services.tuned.enable`
@@ -334,7 +334,7 @@ As an attribute set:
 
 ### Plugins
 
-You can configure plugins in a declarative way. If an enabled plugin isn’t installed in the plugin directory, Noctalia will automatically install it when starts up.
+You can configure plugins declaratively. If an enabled plugin isn’t installed in the plugin directory, Noctalia will automatically install it when it starts up.
 
 ```nix
 # noctalia.nix

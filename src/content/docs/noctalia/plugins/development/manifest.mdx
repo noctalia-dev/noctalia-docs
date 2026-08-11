@@ -94,7 +94,7 @@ entry = "widget.luau"
 A binding takes precedence over the script: bind `right` and `onRightClick` stops firing. Gestures you
 do not declare, and the user does not bind, still reach your callbacks.
 
-Middle click is worth knowing about: every widget gets a built-in `middle` binding that opens its
+The middle click is worth knowing about: every widget gets a built-in `middle` binding that opens its
 settings, so `onMiddleClick` does not fire out of the box. Declaring `middle = "none"` frees the button
 for your script - though a declared action is visible in the settings editor where a Luau callback is
 not.

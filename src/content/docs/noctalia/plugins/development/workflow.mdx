@@ -64,7 +64,7 @@ Catalog rows require `id`, `name`, and a positive integer `plugin_api`; rows wit
 ### Keeping older Noctalia versions supported
 
 When you raise a plugin's `plugin_api`, every Noctalia below that level loses the plugin - unless the catalog names an
-older revision they can still run. Add a `[[plugin.release]]` row for each API level your history supports, newest
+older revision, they can still run. Add a `[[plugin.release]]` row for each API level your history supports, newest
 first:
 
 ```toml

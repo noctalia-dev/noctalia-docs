@@ -51,7 +51,7 @@ directory_dark  = "/home/user/Wallpapers/Vertical/Dark"
 - **center** - the image at its native size, centered; `fill_color` shows around it.
 - **crop** - scaled to cover the whole output, cropping any overflow (default).
 - **fit** - scaled to fit entirely within the output; `fill_color` fills the letterbox.
-- **stretch** - scaled to the output's exact dimensions, ignoring aspect ratio.
+- **stretch** - scaled to the output's exact dimensions, ignoring the aspect ratio.
 - **repeat** - tiled at native size across the output.
 - **span** - a single image stretched across the whole multi-monitor desktop, so each output shows the slice that matches its position in the compositor layout. The monitors are treated as one continuous canvas, honoring each output's logical position and the offset between them, so a wide wallpaper flows across screens instead of repeating the same framing on each. Single-monitor setups behave like `crop`, and the slices refresh automatically when a monitor is moved, added, or removed.
 
@@ -66,7 +66,7 @@ When `per_monitor_directories` is **true**, each connected monitor can define it
 
 Selecting a monitor in the panel toolbar switches to that monitor's resolved directory (falling back to the global browse folder). Clicking a tile writes the path to `settings.toml` and applies it immediately. Picking a wallpaper while **ALL** is selected applies it to every connected monitor. Picking a solid color stores it as a wallpaper source path such as `color:#FF00FF`, so it uses the same transition shader pipeline as image wallpapers.
 
-The launcher's wallpaper provider and **automatic rotation** use the same browse-folder resolution so they stay aligned with the picker. When automation runs with `per_monitor_directories = true`, each monitor picks independently from its own resolved folder.
+The launcher's wallpaper provider and **automatic rotation** use the same browse-folder resolution so they stay aligned with the picker. When automation runs with `per_monitor_directories = true`, each monitor picks independently of its own resolved folder.
 
 Prefer a color role such as `surface` or `primary` for `fill_color` so wallpaper fallback colors follow the active palette. Fixed hex colors (`#RGB`, `#RGBA`, `#RRGGBB`, `#RRGGBBAA`) are supported when a non-palette fill is intentional. It is used behind image wallpapers and in uncovered areas for `center`/`fit`. Invalid role names or malformed hex colors are treated as config errors.
 
@@ -100,7 +100,7 @@ palette_source = "builtin"
 builtin_palette = "Noctalia"
 ```
 
-The **Theme** and **Colors** row is always available under the toolbar. When no favorited image is selected, those controls persist a live global theme override, the same as changing theme mode or palette source in Settings. When the selected image is already a favorite, adjusting the controls also saves the favorite preset and re-applies that wallpaper with the updated settings.
+The **Theme** and **Colors** row is always available under the toolbar. When no favorite image is selected, those controls persist a live global theme override, the same as changing theme mode or palette source in Settings. When the selected image is already a favorite, adjusting the controls also saves the favorite preset and re-applies that wallpaper with the updated settings.
 
 Starring an image wallpaper bookmarks the path only, except when that image is the wallpaper currently applied to the selected monitor: the favorite is saved with the active `theme_mode`, `palette_source`, and palette selection so re-applying it restores the look you already have. Declarative `color:#RRGGBB` favorites use the same stored theme fields when present. Clicking a favorite applies the wallpaper together with its stored theme settings.
 

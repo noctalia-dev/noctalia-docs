@@ -509,7 +509,7 @@ output_path = [
 ]
 ```
 
-`output_path_dynamic` is optional. It is a shell command string (same templating as hooks: `{{ config_dir }}`, `{{ mode }}`, etc.). After rendering, the shell runs it; on exit status `0`, each non-empty line of stdout is appended as an output path (after `resolveConfigPath`). Lines starting with `#` are ignored. Use this when destinations depend on the machine (for example Emacs config layout) without hard-coding app-specific logic in the engine. Static `output_path` entries, if any, are kept; dynamic lines are added after them.
+`output_path_dynamic` is optional. It is a shell command string (same templating as hooks: `{{ config_dir }}`, `{{ mode }}`, etc.). After rendering, the shell runs it; on exit status `0`, each non-empty line of stdout is appended as an output path (after `resolveConfigPath`). Lines starting with `#` are ignored. Use this when destinations depend on the machine (for example, Emacs config layout) without hard-coding app-specific logic in the engine. Static `output_path` entries, if any, are kept; dynamic lines are added after them.
 
 `input_path_modes` selects a different template input for dark and light mode:
 
@@ -529,9 +529,9 @@ place when a config/data/cache home is relocated. A leading `~` still expands to
 
 `index` controls processing order and defaults to `0`.
 
-`requires_path` is optional. When set, the entry is skipped unless that path already exists on disk. Use it for explicit install checks (for example a Flatpak data directory).
+`requires_path` is optional. When set, the entry is skipped unless that path already exists on disk. Use it for explicit install checks (for example, a Flatpak data directory).
 
-When several entries share the same `input_path` but write to different client config roots (for example Discord forks or VS Code vs VSCodium), the engine infers each output's client root and skips outputs whose root is missing. Single-app templates (one entry per input) still create missing directories as before.
+When several entries share the same `input_path` but write to different client config roots (for example, Discord forks or VS Code vs VSCodium), the engine infers each output's client root and skips outputs whose root is missing. Single-app templates (one entry per input) still create missing directories as before.
 
 ### Closest Color
 

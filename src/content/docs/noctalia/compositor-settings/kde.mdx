@@ -40,7 +40,7 @@ Selecting a history entry can auto-send a paste key chord (`Ctrl+V` / `Ctrl+Shif
 
 ### Screenshots
 
-The screenshot bar widget and `screenshot-region` / `screenshot-fullscreen` IPC need `zwlr-screencopy-unstable-v1`. That protocol is usually absent on KWin, so the widget is omitted and IPC reports capture unavailable. Use Plasma’s own screenshot tools instead.
+The screenshot bar widget and `screenshot-region` / `screenshot-fullscreen` IPC need `zwlr-screencopy-unstable-v1`. That protocol is usually absent on KWin, so the widget is omitted, and IPC reports capture unavailable. Use Plasma’s own screenshot tools instead.
 
 ### Lock screen desktop capture
 
@@ -78,9 +78,9 @@ Overview-aware smart auto-hide and the Niri-style wallpaper overview backdrop ar
 
 Session exit on Plasma falls through to a generic `loginctl` terminate path rather than Plasma’s native logout / `ksmserver` flow. Prefer Plasma’s own Leave / Logout UI when you need a full session shutdown.
 
-## Tray icons disappearing
+## Tray icons are disappearing
 
-If you run Plasma apps (for example Dolphin) under another compositor while KDE packages are installed, `kded6` can steal the StatusNotifier watcher. See the [FAQ tray note](/noctalia/getting-started/faq/).
+If you run Plasma apps (for example, Dolphin) under another compositor while KDE packages are installed, `kded6` can steal the StatusNotifier watcher. See the [FAQ tray note](/noctalia/getting-started/faq/).
 
 ## Summary
 

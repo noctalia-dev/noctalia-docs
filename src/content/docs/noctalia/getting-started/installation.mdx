@@ -118,7 +118,7 @@ v5 will only be available for **Tumbleweed** and **Slowroll**. **Leap 16.0** is 
 Noctalia is available in the [GURU](https://wiki.gentoo.org/wiki/Project:GURU) overlay.
 
 :::note[Gentoo exception]
-Gentoo packaging does not provide [SLOTs](https://wiki.gentoo.org/wiki/SLOT) for v4 and v5 as v4 will be dropped eventually, therefore they cannot be installed simultaneously.
+Gentoo packaging does not provide [SLOTs](https://wiki.gentoo.org/wiki/SLOT) for v4 and v5 as v4 will be dropped eventually, therefore, they cannot be installed simultaneously.
 
 Snapshots have been dropped in favor of official releases, so`=gui-apps/noctalia-5.0.0_pre99999999` is now superseded by `=gui-apps/noctalia-9999`.
 
@@ -214,7 +214,7 @@ To use this channel, add it into your `~/.config/guix/channels.scm`.  For exampl
 
 After updating channels via [`guix pull`](https://guix.gnu.org/manual/devel/en/html_node/Invoking-guix-pull.html), Noctalia will be available to your Guix installation.  Then you're free to do what you want with the `noctalia-git` package ;-)
 
-For example, spawn one-off software environment via [`guix shell`](https://guix.gnu.org/manual/devel/en/html_node/Invoking-guix-shell.html):
+For example, spawn a one-off software environment via [`guix shell`](https://guix.gnu.org/manual/devel/en/html_node/Invoking-guix-shell.html):
 
 ```bash
 guix shell noctalia-git
@@ -378,7 +378,7 @@ detected. Use Meson's `-Djemalloc=enabled` or `-Djemalloc=disabled` option to re
 
 Sanitizer runtime packages are only needed for ASan/UBSan builds configured with `just configure asan`.
 
-**Step 2**: Prepare directory
+**Step 2**: Prepare a directory
 
 ```bash
 git clone https://github.com/noctalia-dev/noctalia --branch main

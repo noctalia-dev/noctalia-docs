@@ -57,7 +57,7 @@ pinned = ["firefox", "code", "kitty"]
 
 `radius` sets all four corners at once. Any `radius_*` key overrides just that corner.
 
-`concave_edge_corners = true` inverts the two corners on the side that touches the screen edge, so the dock flares outward and blends into it. The corner radii still control the curve size. Only applies when the dock actually touches the edge (`margin_edge = 0`).
+`concave_edge_corners = true` inverts the two corners on the side that touch the screen edge, so the dock flares outward and blends into it. The corner radii still control the curve size. Only applies when the dock actually touches the edge (`margin_edge = 0`).
 
 `border_width` draws an inside outline using `border`.
 
@@ -74,7 +74,7 @@ Each entry in `pinned` is matched against desktop entries using these rules in o
 3. App `Name` field (case-insensitive)
 4. Full desktop entry path
 
-If no match is found, a placeholder slot is reserved so the dock position is preserved.
+If no match is found, a placeholder slot is reserved, so the dock position is preserved.
 
 ---
 
@@ -118,13 +118,13 @@ Leaving the dock surface while dragging cancels the reorder. Tooltips are hidden
 
 ## Auto-hide
 
-Dock settings expose **Off**, **On**, and **Smart** as one control. In config they map to `auto_hide` and `smart_auto_hide`:
+Dock settings expose **Off**, **On**, and **Smart** as one control. In config, they map to `auto_hide` and `smart_auto_hide`:
 
 - **Off** — `auto_hide = false`, `smart_auto_hide = false`
 - **On** — pointer auto-hide (`auto_hide = true`)
 - **Smart** — workspace-based hide (`smart_auto_hide = true`, `auto_hide = false`)
 
-When `auto_hide = true`, the dock slides out after the pointer leaves and slides back in when the pointer reaches the matching screen edge trigger strip.
+When `auto_hide = true`, the dock slides out after the pointer leaves and slides back in when the pointer reaches the matching screen-edge trigger strip.
 
 ### Smart auto-hide
 
@@ -132,11 +132,11 @@ Set auto-hide to **Smart** in dock settings (or `smart_auto_hide = true` with `a
 
 - Mutually exclusive with pointer auto-hide; if both are set in config, smart auto-hide takes precedence.
 - Uses the same slide animation and edge reveal strip while hidden.
-- On compositors that report overview state (Niri, Triad), the dock is kept visible while overview is open.
+- On compositors that report overview state (Niri, Triad), the dock is kept visible while the overview is open.
 
-`reserve_space` controls whether the dock keeps a compositor exclusive zone. With both auto-hide modes off, `reserve_space = true` keeps windows pushed away; `reserve_space = false` overlays the dock on top of full-screen clients. With pointer or smart auto-hide active, `reserve_space = false` retracts the dock as an overlay (no gap); `reserve_space = true` keeps the gap while the dock slides out of view.
+`reserve_space` controls whether the dock keeps a compositor exclusive zone. With both auto-hide modes off, `reserve_space = true` keeps windows pushed away; `reserve_space = false` overlays the dock on top of full-screen clients. With a pointer or smart auto-hide active, `reserve_space = false` retracts the dock as an overlay (no gap); `reserve_space = true` keeps the gap while the dock slides out of view.
 
-`layer` selects the Wayland layer-shell stacking layer (`top` or `overlay`). Use `overlay` so the dock stays reachable above fullscreen apps — same idea as the bar's Wayland Layer setting.
+`layer` selects the Wayland layer-shell stacking layer (`top` or `overlay`). Use `overlay` so the dock stays reachable above fullscreen apps — the same idea as the bar's Wayland Layer setting.
 
 ---
 

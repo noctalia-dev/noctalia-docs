@@ -1,6 +1,6 @@
 ---
 title: Official plugins
-description: The plugins shipped by the official source, and the IPC commands each one accepts.
+description: The plugins are shipped by the official source, and the IPC commands each one accepts.
 sidebar:
   label: Official plugins
   order: 3
@@ -95,7 +95,7 @@ word isn't a language, the whole query is translated to the **default target lan
 <PluginMeta icon="clock" id="noctalia/timer" />
 
 A countdown timer **desktop widget** with start/pause and reset buttons and a progress bar. Add it from the
-desktop-widgets editor (it appears in the type picker once the plugin is enabled). Also the reference implementation
+desktop-widgets editor (it appears in the type picker once the plugin is enabled). Also, the reference implementation
 for the declarative `ui.*` desktop-widget API - see
 [Declarative UI](/noctalia/plugins/development/declarative-ui/#desktopwidget--declarative-desktop-widget-ui).
 
@@ -143,7 +143,7 @@ Requires network access (`[shell].offline_mode` must be off). NSFW results requi
 Animated and video wallpapers via [mpvpaper](https://github.com/GhostNaN/mpvpaper). A headless **service**
 supervises one `mpvpaper` instance per output; a **panel** (`picker`) browses your video directory as a thumbnail
 grid and applies a video per output (or to all); a bar **widget** (`mpvpaper`) toggles the panel. When a video is
-assigned to an output, Noctalia drops its own wallpaper surface there so the video shows through - the bar and dock
+assigned to an output, Noctalia drops its own wallpaper surface there, so the video shows through - the bar and dock
 still draw above it. Assignments persist across restarts.
 
 Requires the external `mpvpaper` command (which pulls in `mpv`; `mpv` also renders the picker thumbnails). Works on
@@ -163,7 +163,7 @@ Track multiple IANA timezones in an attached **panel**. A headless **service** o
 times; a bar **widget** (`bar`) shows a world glyph and opens the panel on click. Zones persist under the plugin data
 directory across updates.
 
-On first run the list is seeded with `UTC`, `America/New_York`, `Europe/Berlin`, and `Asia/Tokyo`. Add further zones by
+On the first run the list is seeded with `UTC`, `America/New_York`, `Europe/Berlin`, and `Asia/Tokyo`. Add further zones by
 IANA name (for example `Europe/London`); remove with the trash control (confirm with the check). Drag the grip on a row
 to reorder.
 

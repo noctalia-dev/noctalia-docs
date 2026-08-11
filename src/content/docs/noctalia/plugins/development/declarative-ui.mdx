@@ -18,7 +18,7 @@ as a retained `ui.*` tree; Noctalia diffs each render against the previous tree 
 ## `desktopWidget.*` - declarative desktop widget UI {#desktopwidget--declarative-desktop-widget-ui}
 
 A desktop widget hands its tree to `desktopWidget.render(tree)`. Build trees with the `ui.*` constructors (available in
-every desktop-widget script); each takes a props table and an optional children array:
+every desktop-widget script); each takes a prop table and an optional children array:
 
 `render(tree)` · `setWantsSecondTicks(bool)` · `setNeedsFrameTick(bool)`
 
@@ -73,16 +73,16 @@ to size it explicitly).
 Every control also accepts `width`, `height`, `flexGrow`, `opacity`, and `visible`. Colors are a palette role token
 (`primary`, `on_surface`, …), a role token with an alpha suffix (`primary/0.6`, the role at 60% alpha, resolved live
 against the palette so it still tracks the theme), or a hex value (`#rrggbb` / `#rrggbbaa`). An unknown control type or
-prop is logged and skipped - typos surface in the log instead of failing silently.
+prop is logged, and skipped - typos surface in the log instead of failing silently.
 
 - **Translucent background, opaque content**: `opacity` is a *group* opacity, it fades a container **and all its
   children** (text included), like CSS `opacity` on a parent. To make only the background semi-transparent, leave
   `opacity` alone and give the container a translucent `fill` instead: `ui.column({ fill = "surface_variant/0.6" }, …)`
   keeps the text fully opaque.
 
-- **Layout default**: `ui.column` / `ui.row` / `ui.scroll` **stretch** their children across the cross axis (a column
+- **Layout default**: `ui.column` / `ui.row` / `ui.scroll` **stretch** their children across the cross-axis (a column
   fills its width, a row fills its height), like CSS flexbox. Override per node with `align` - e.g. a row of
-  vertically-centered items uses `align = "center"`.
+  vertically centered items uses `align = "center"`.
 - **Control height**: `controlSize` picks a named height tier - `sm` (32px), `md` (38px, the default), `lg` (44px) -
   scaled with the surface, so a row of small buttons, selects and inputs lines up without hardcoded pixels. Use it to
   fit more into a dense panel. For an exact height, use `height` instead; it wins when both are set. (Not to be confused
@@ -135,12 +135,12 @@ prop is logged and skipped - typos surface in the log instead of failing silentl
   bindings for chat composers: Enter fires `onSubmit`, Shift+Enter inserts the newline, and Ctrl+Enter still
   submits. Requires <PluginApiBadge feature="plugin-ui-props" />.
 - **Markdown**: `ui.markdown` renders its `text` prop (headings, lists, code blocks, tables) as a read-only block.
-  The host re-parses only when `text` or the surface scale changes, so re-rendering a streaming tree with unchanged
+  The host reparses only when `text` or the surface scale changes, so re-rendering a streaming tree with unchanged
   text is cheap. Requires <PluginApiBadge feature="plugin-ui-props" />.
 - **Follow-scroll**: `ui.scroll` with `stickToBottom = true` stays pinned to the bottom while content grows, until
   the user scrolls away. `onScroll` receives `(offset, maxOffset)`, both delivered as strings. `scrollToBottomRev`
   jumps to the bottom on the first render that sees it and again whenever the number changes; the jump lands after
-  the next layout pass, so it reaches content added in the same render. All three require
+  the next layout passes, so it reaches content added in the same render. All three require
   <PluginApiBadge feature="plugin-ui-props" />.
 - **Focus**: `ui.input` with `focus = true` grabs keyboard focus once, when the control is **created**, never on
   later re-renders, so it won't steal focus while the user interacts elsewhere. To focus again (e.g. a new document
@@ -185,7 +185,7 @@ end
 Bar-specific constraints:
 
 - **Cross-axis is the bar thickness**: the widget capsule clips to it, so keep the tree one control tall (row on a
-  horizontal bar, column on a side bar - branch on `barWidget.isVertical()`). Only the main axis grows with content.
+  horizontal bar, column on a sidebar - branch on `barWidget.isVertical()`). Only the main axis grows with content.
 - **No keyboard**: the bar never takes keyboard focus, so `ui.input`, `ui.select`, and `ui.scroll` are skipped with a
   warning. Pointer controls (`ui.button`, `ui.toggle`, `ui.slider`, `ui.progress`, `ui.graph`, …) work.
 - **Clicks compose**: an inline control consumes its own clicks; the widget-level `onClick`/`onRightClick` still fire
@@ -221,9 +221,9 @@ close and resume on the next open, and frames are coalesced - a slow script only
 
 ### Keyboard focus
 
-By default a panel takes keyboard focus when the user clicks it (`keyboard_focus = "on_demand"`), and
+By default, a panel takes keyboard focus when the user clicks it (`keyboard_focus = "on_demand"`), and
 `"exclusive"` takes it as soon as the panel opens - what a search or password field needs. Both only decide the
-*initial* focus, and only on compositors without focus-grab support; on the others the panel settles on
+*initial* focus and only on compositors without focus-grab support; on the others the panel settles on
 on-demand focus shortly after opening either way.
 
 `keyboard_focus = "none"` is different in kind: the panel **never** takes keyboard focus, not even when clicked,
@@ -299,7 +299,7 @@ invented. Chord syntax is the same as elsewhere in Noctalia (`space`, `ctrl+r`, 
 Constraints worth knowing before designing around it:
 
 - **Declared chords only.** The panel never receives keys it did not list. This keeps a panel from observing everything
-  a user types into its own fields, and keeps the event rate down.
+  a user types into its own fields and keeps the event rate down.
 - **A focused text input wins first.** If a `ui.input` has focus, plain printable keys type into it and never reach
   `onKey`, so a `capture_keys = ["space"]` panel with a text field still gets spaces typed normally.
 - **Escape always dismisses.** The panel-close action stays with the host and cannot be captured, so a panel can never

@@ -300,7 +300,7 @@ Translation files (`i18n/*.json`) are also watched for changes:
 2. **Save frequently** - Each save triggers a reload so you see changes immediately
 3. **Check for errors** - Syntax errors in QML will appear in the console
 4. **State is reset** - Plugin state resets on reload (settings persist to disk)
-5. **Translations preserve state** - Translation reloads don't reset plugin state
+5. **Translations preserve state** - Translation reloads don't reset the plugin state
 
 :::caution
 Hot reload is for development only. Disable debug mode in production as it adds overhead from file watching.
@@ -342,7 +342,7 @@ cat ~/.config/noctalia/plugins/my-plugin/settings.json
 - Verify the plugin ID matches the directory name and the key in `plugins.json`
 - Restart Noctalia
 
-**Widget doesn't show in bar:**
+**Widget doesn't show in the bar:**
 - Make sure you enabled the plugin in Settings > Plugins
 - Check that you added the widget in Settings > Bar
 - Look for errors in the terminal output
