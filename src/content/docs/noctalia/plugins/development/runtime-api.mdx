@@ -183,8 +183,8 @@ and an entry's position is not necessarily its core id.
 
 | Method | Returns | Description |
 |--------|---------|-------------|
-| `noctalia.runAsync(cmd)` | bool | Starts a detached shell command and returns whether it launched. No output is captured. |
-| `noctalia.runAsync(cmd, cb)` | bool | Runs a shell command with output capture, then calls `cb(result)`. |
+| `noctalia.runAsync(cmdOrArgv)` | bool | Starts a detached process and returns whether it launched. No output is captured. |
+| `noctalia.runAsync(cmdOrArgv, cb)` | bool | Runs a process with output capture, then calls `cb(result)`. |
 | `noctalia.runStream(cmd, onLine)` | bool | Runs a long-lived shell command and calls `onLine(line)` for each stdout line. |
 | `noctalia.runInTerminal(cmd)` | bool | Starts a shell command in a terminal. Uses `$TERMINAL` when set (no `-e` in the value), otherwise discovers a terminal on `PATH`. See [Shell settings](/noctalia/configuration/shell/#shell-settings). |
 | `noctalia.commandExists(name)` | bool | Checks whether an executable is available on `PATH`. |
@@ -194,7 +194,24 @@ and an entry's position is not necessarily its core id.
 | `noctalia.getenv(name)` | string or `nil` | Reads an environment variable. |
 | `noctalia.expandPath(path)` | string | Expands a path such as `~/Pictures` to an absolute user path. |
 
-`runAsync(cmd, cb)` calls `cb(result)` once with:
+`runAsync()` accepts either a shell command string or an argument array. The argument-array form requires
+<PluginApiBadge feature="direct-argv" />. A string runs
+through `/bin/sh -c`. An argument array executes the program directly and passes every later value as one argument,
+without shell parsing. Use the argument-array form whenever settings, user input, paths, URLs, or other dynamic values
+are involved:
+
+```lua
+noctalia.runAsync({ "git", "-C", checkoutDir, "fetch", "origin", branch }, function(result)
+  if result.exitCode ~= 0 then
+    noctalia.log(result.stderr)
+  end
+end)
+```
+
+Shell operators such as pipes, redirections, variable expansion, and command substitution work only in the string form.
+Values concatenated into a shell command must be shell-quoted; an argument array avoids that requirement.
+
+`runAsync(cmdOrArgv, cb)` calls `cb(result)` once with:
 
 ```lua
 {

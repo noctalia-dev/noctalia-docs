@@ -158,6 +158,12 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     introduced:
       '`noctalia.readFileAsync(path, callback)` for bounded filesystem reads outside plugin VM workers.',
   },
+  {
+    level: 24,
+    noctaliaVersion: null,
+    feature: 'direct-argv',
+    introduced: 'Argument-array form of `noctalia.runAsync()` for direct process execution without shell parsing.',
+  },
 ];
 
 export const CURRENT_PLUGIN_API = Math.max(...PLUGIN_API_LEVELS.map((entry) => entry.level));
