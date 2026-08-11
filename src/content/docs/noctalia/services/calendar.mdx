@@ -1,6 +1,6 @@
 ---
 title: Calendar
-description: Calendar account setup for CalDAV, iCloud, and Google Calendar.
+description: Calendar account setup for CalDAV, iCloud, Google Calendar, and ICS.
 sidebar:
   order: 4
 ---
@@ -16,6 +16,7 @@ The simplest path is **Settings → Services → Calendar → Add Account**.
 - **iCloud**: choose iCloud, enter a local account id such as `personal_icloud`, your Apple Account email, and an Apple app-specific password.
 - **CalDAV**: choose CalDAV, enter a local account id such as `home_nextcloud`, the provider's CalDAV discovery root, your username, and a provider app password.
 - **Google**: choose Google, enter a local account id such as `work_google`, then press **Save and Connect**. A browser opens for Google authorization.
+- **ICS**: choose ICS URL, enter a local account id such as `subscription`, then press **Save**.
 
 Saving an account enables `[calendar]` automatically. The GUI writes account config to `settings.toml` using named tables like `[calendar.account.personal_icloud]`. CalDAV passwords use the account's explicit credential source: Secret Service by default, or one configured password file. Google refresh tokens are stored in Secret Service. Short-lived Google access tokens remain in memory only.
 
@@ -57,6 +58,13 @@ password_file = "/run/agenix/noctalia-caldav"
 [calendar.account.work_google]
 type = "google"
 name = "Work"
+
+# Example ICS configuration
+[calendar.account.holidays]
+name = "Canadian Holidays"
+server_url = "https://canada-holidays.ca/ics?cd=true"
+type = "ics"
+color = "#FF0000"
 ```
 
 **Credentials are never stored in your config.** The `password_file` setting contains only a path; the file contents hold the CalDAV password.
@@ -170,3 +178,12 @@ If a Google account later shows as disconnected (revoked or expired), edit the a
 If Settings reports that Secret Service is unavailable, confirm that a compatible provider is running in the same login session, then use the retry action. A provider that starts moments after Noctalia is handled automatically: Noctalia watches for it claiming `org.freedesktop.secrets` and reopens calendar credentials and encrypted storage without a manual retry. If access is locked or denied, unlock the provider and retry. A cancelled prompt is not treated as a missing credential; start the operation again when you are ready.
 
 `[shell].offline_mode = true` disables all calendar network traffic; the last successfully synced events remain available from the encrypted on-disk cache when the storage key is available.
+
+## ICS setup
+
+In Settings, choose **ICS URL**, paste in a URL that leads to a file in the [iCalendar format](https://en.wikipedia.org/wiki/ICalendar). For manual TOML, add a named account table with `type = ics` and set `server_url` to the URL. You do not need to set any other fields.
+
+For the URL, `webcal://` and `webcals://` are supported as aliases to `https://`; Noctalia normalizes all three schemes before fetching data, so using any of them in `server_url` produces identical behavior.
+
+However you must make sure that it is a public URL, and does not lead to some login page, 404 error, etc. Noctalia should not need any credentials to fetch the data. If the URL does not return iCalendar data once, Noctalia will temporarily fall back to the event cache until it does.
+
