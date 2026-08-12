@@ -139,21 +139,21 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
   },
   {
     level: 21,
-    noctaliaVersion: null,
+    noctaliaVersion: 'v5.0.0-beta.8',
     feature: 'plugin-ui-props',
     introduced:
       'The `ui.markdown` node, `submitOnEnter` on `ui.input`, and `stickToBottom` / `onScroll` / `scrollToBottomRev` on `ui.scroll`.',
   },
   {
     level: 22,
-    noctaliaVersion: null,
+    noctaliaVersion: 'v5.0.0-beta.8',
     feature: 'module-require',
     introduced:
       '`require("./path.luau")` loads relative `.luau` modules with entry-local caches and hot reload for loaded modules.',
   },
   {
     level: 23,
-    noctaliaVersion: null,
+    noctaliaVersion: 'v5.0.0-beta.8',
     feature: 'async-file-read',
     introduced:
       '`noctalia.readFileAsync(path, callback)` for bounded filesystem reads outside plugin VM workers.',
