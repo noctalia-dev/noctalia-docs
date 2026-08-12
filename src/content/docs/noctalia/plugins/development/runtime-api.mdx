@@ -22,7 +22,7 @@ boolean immediately to say whether the work was accepted, then deliver results t
 | `noctalia.setUpdateInterval(ms)` | nothing | Sets how often this entry's `update()` function runs. Values below 16 ms are clamped. |
 | `noctalia.log(msg)` | nothing | Writes a message to Noctalia's log with this plugin's script context. |
 | `noctalia.isDarkMode()` | bool | Returns whether the active theme mode is dark. |
-| `noctalia.offlineMode()` | bool | Returns `[shell].offline_mode`; plugins must not start network traffic while it is `true`. |
+| `noctalia.offlineMode()` | bool | Returns `[shell].offline_mode`; plugins must not start network traffic while it is `true`. Requires <PluginApiBadge feature="wallpaper-mask" />. |
 | `noctalia.focusedOutputName()` | string or `nil` | Returns the focused output's connector name, falling back to the preferred interactive output when needed. |
 | `noctalia.getConfig(key)` | setting value or `nil` | Reads a declared plugin or entry setting. Undeclared keys log a warning and return `nil`. |
 
@@ -35,9 +35,9 @@ boolean immediately to say whether the work was accepted, then deliver results t
 | `noctalia.setWallpaper(path)` | nothing | Applies and persists a wallpaper image on every output. |
 | `noctalia.setWallpaper(connector, path)` | nothing | Applies and persists a wallpaper image on one output. |
 | `noctalia.wallpaperDirectory()` | string or `nil` | Returns the resolved wallpaper folder for the current theme mode, or `nil` when unset. |
-| `noctalia.wallpaperPath(connector)` | string or `nil` | Returns the exact wallpaper source configured for an output, or `nil` for an unknown output. |
-| `noctalia.setWallpaperMask(connector, { path, wallpaperPath })` | nothing | Applies a source-aligned grayscale occlusion mask to every desktop-widget surface on the output. Requires plugin API 25. |
-| `noctalia.setWallpaperMask(connector, nil)` | nothing | Clears this plugin runtime's mask from the output. Requires plugin API 25. |
+| `noctalia.wallpaperPath(connector)` | string or `nil` | Returns the exact wallpaper source configured for an output, or `nil` for an unknown output. Requires <PluginApiBadge feature="wallpaper-mask" />. |
+| `noctalia.setWallpaperMask(connector, { path, wallpaperPath })` | nothing | Applies a source-aligned grayscale occlusion mask to every desktop-widget surface on the output. Requires <PluginApiBadge feature="wallpaper-mask" />. |
+| `noctalia.setWallpaperMask(connector, nil)` | nothing | Clears this plugin runtime's mask from the output. Requires <PluginApiBadge feature="wallpaper-mask" />. |
 | `noctalia.togglePanel("author/plugin:panel")` | nothing | Opens or closes a plugin panel by full entry id. |
 | `noctalia.openSettings()` | nothing | Opens the settings window at this plugin's own settings, closing any open panel. Requires <PluginApiBadge feature="open-settings" />. |
 

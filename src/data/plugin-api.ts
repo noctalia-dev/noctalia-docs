@@ -164,6 +164,13 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     feature: 'direct-argv',
     introduced: 'Argument-array form of `noctalia.runAsync()` for direct process execution without shell parsing.',
   },
+  {
+    level: 25,
+    noctaliaVersion: null,
+    feature: 'wallpaper-mask',
+    introduced:
+      '`noctalia.offlineMode()`, plus `noctalia.wallpaperPath(connector)` and `noctalia.setWallpaperMask(connector, mask)` for source-aligned desktop-widget occlusion masks.',
+  },
 ];
 
 export const CURRENT_PLUGIN_API = Math.max(...PLUGIN_API_LEVELS.map((entry) => entry.level));
