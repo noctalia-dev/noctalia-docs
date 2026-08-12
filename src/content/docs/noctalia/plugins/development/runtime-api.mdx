@@ -22,6 +22,7 @@ boolean immediately to say whether the work was accepted, then deliver results t
 | `noctalia.setUpdateInterval(ms)` | nothing | Sets how often this entry's `update()` function runs. Values below 16 ms are clamped. |
 | `noctalia.log(msg)` | nothing | Writes a message to Noctalia's log with this plugin's script context. |
 | `noctalia.isDarkMode()` | bool | Returns whether the active theme mode is dark. |
+| `noctalia.offlineMode()` | bool | Returns `[shell].offline_mode`; plugins must not start network traffic while it is `true`. |
 | `noctalia.focusedOutputName()` | string or `nil` | Returns the focused output's connector name, falling back to the preferred interactive output when needed. |
 | `noctalia.getConfig(key)` | setting value or `nil` | Reads a declared plugin or entry setting. Undeclared keys log a warning and return `nil`. |
 
@@ -34,6 +35,9 @@ boolean immediately to say whether the work was accepted, then deliver results t
 | `noctalia.setWallpaper(path)` | nothing | Applies and persists a wallpaper image on every output. |
 | `noctalia.setWallpaper(connector, path)` | nothing | Applies and persists a wallpaper image on one output. |
 | `noctalia.wallpaperDirectory()` | string or `nil` | Returns the resolved wallpaper folder for the current theme mode, or `nil` when unset. |
+| `noctalia.wallpaperPath(connector)` | string or `nil` | Returns the exact wallpaper source configured for an output, or `nil` for an unknown output. |
+| `noctalia.setWallpaperMask(connector, { path, wallpaperPath })` | nothing | Applies a source-aligned grayscale occlusion mask to every desktop-widget surface on the output. Requires plugin API 25. |
+| `noctalia.setWallpaperMask(connector, nil)` | nothing | Clears this plugin runtime's mask from the output. Requires plugin API 25. |
 | `noctalia.togglePanel("author/plugin:panel")` | nothing | Opens or closes a plugin panel by full entry id. |
 | `noctalia.openSettings()` | nothing | Opens the settings window at this plugin's own settings, closing any open panel. Requires <PluginApiBadge feature="open-settings" />. |
 
@@ -43,6 +47,12 @@ geometry changes.
 
 `setWallpaper(path)` behaves like the built-in wallpaper panel. Prefer it and `togglePanel(id)` over shelling out to the
 `noctalia` CLI from a plugin; the API path runs in-process and avoids an IPC round trip.
+
+Wallpaper masks use the wallpaper source's intrinsic pixel dimensions and Noctalia's configured fill mode, so plugins
+must not pre-crop or project them to output geometry. Pixel value `0` leaves widgets visible, `255` erases them, and
+intermediate values feather the boundary. `wallpaperPath` must exactly match `noctalia.wallpaperPath(connector)`;
+stale, malformed, unreadable, and dimension-mismatched masks are rejected. One plugin runtime owns an output mask at a
+time. The owner may replace or clear it, and Noctalia clears all of that runtime's masks when it unloads.
 
 `openSettings()` takes no id - the host uses the calling plugin's own id, so a plugin can only ever open its own page.
 It is the way to offer a "configure me" affordance from a panel or widget, since plugins read config but cannot write

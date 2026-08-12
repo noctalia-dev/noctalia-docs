@@ -136,6 +136,32 @@ Requires network access (`[shell].offline_mode` must be off). NSFW results requi
 |---------|--------|
 | <IpcCommand command="panel-toggle noctalia/wallhaven:browser" /> | open or close the Wallhaven browser |
 
+---
+
+## Wallpaper Depth {#wallpaper_depth}
+
+<PluginMeta icon="layers-subtract" id="noctalia/wallpaper_depth" />
+
+Place desktop widgets behind foreground scenery in a static wallpaper. A headless **service** runs
+[Depth Anything V2 Small](https://github.com/DepthAnything/Depth-Anything-V2) locally, caches one normalized depth map
+per wallpaper, and generates source-aligned grayscale masks for every output. Threshold or feather changes reuse the
+cached depth map; wallpaper changes clear the old mask before new inference starts.
+
+The first setup is explicit: open the **manager panel** and choose **Install model**. This creates a private Python 3.13
+environment and downloads the 99 MB Apache-2.0
+[ONNX model](https://huggingface.co/onnx-community/depth-anything-v2-small) from Hugging Face. Setup requires `python3`,
+`uv`, network access, and `[shell].offline_mode = false`. Wallpapers stay local. The panel reports setup, generation,
+cache, and per-output state; threshold, feather, and automatic generation are plugin settings.
+
+| Command | Effect |
+|---------|--------|
+| <IpcCommand command="panel-toggle noctalia/wallpaper_depth:manager" /> | open or close the manager panel |
+| <IpcCommand command="plugin noctalia/wallpaper_depth:service all setup" /> | install and verify the runtime and model |
+| <IpcCommand command="plugin noctalia/wallpaper_depth:service all generate" /> | regenerate every connected output mask |
+| <IpcCommand command="plugin noctalia/wallpaper_depth:service all clear-cache" /> | clear cached depth maps and masks |
+
+---
+
 ## Video Wallpaper {#mpvpaper}
 
 <PluginMeta icon="movie" id="noctalia/mpvpaper" />
