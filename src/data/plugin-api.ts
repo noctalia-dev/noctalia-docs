@@ -169,7 +169,13 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     noctaliaVersion: null,
     feature: 'wallpaper-mask',
     introduced:
-      '`noctalia.offlineMode()`, plus `noctalia.wallpaperPath(connector)` and `noctalia.setWallpaperMask(connector, mask)` for source-aligned desktop-widget occlusion masks.',
+      '`noctalia.wallpaperPath(connector)` and `noctalia.setWallpaperMask(connector, mask)` for source-aligned desktop-widget occlusion masks.',
+  },
+  {
+    level: 26,
+    noctaliaVersion: null,
+    feature: 'get-setting',
+    introduced: '`noctalia.getSetting(path)` for reading any effective shell config value by TOML dotted path.',
   },
 ];
 
