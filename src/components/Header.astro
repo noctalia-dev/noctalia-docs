@@ -24,8 +24,10 @@ const isLegacy = project?.id === 'noctalia-shell';
   <div class="title-wrapper sl-flex">
     <SiteTitle />
   </div>
-  <div class="header-search sl-flex print:hidden">
-    {shouldRenderSearch && <Search />}
+  <div class:list={['header-search sl-flex print:hidden', { 'no-project': !project }]}>
+    <div class="site-search" hidden={!project}>
+      {shouldRenderSearch && <Search />}
+    </div>
     <a href={faqHref ?? '#'} class="faq-button" hidden={!faqHref}>
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"></circle>
@@ -72,6 +74,7 @@ const isLegacy = project?.id === 'noctalia-shell';
     return {
       isCurrent,
       isLegacy,
+      hasProject: isCurrent || isLegacy || pathname === '/greeter' || pathname.startsWith('/greeter/'),
       faqHref: isCurrent
         ? '/noctalia/getting-started/faq/'
         : isLegacy
@@ -82,6 +85,12 @@ const isLegacy = project?.id === 'noctalia-shell';
 
   function updateHeaderContext() {
     const context = contextForPath(window.location.pathname);
+    const headerSearch = document.querySelector<HTMLElement>('.header-search');
+    headerSearch?.classList.toggle('no-project', !context.hasProject);
+
+    const search = document.querySelector<HTMLElement>('.site-search');
+    if (search) search.hidden = !context.hasProject;
+
     const faqButton = document.querySelector<HTMLAnchorElement>('.faq-button');
     if (faqButton) {
       faqButton.hidden = !context.faqHref;
@@ -111,6 +120,7 @@ const isLegacy = project?.id === 'noctalia-shell';
 </script>
 
 <style>
+  .site-search[hidden],
   .faq-button[hidden],
   .version-alert-banner[hidden] {
     display: none;
@@ -141,6 +151,10 @@ const isLegacy = project?.id === 'noctalia-shell';
     gap: 1rem;
   }
 
+  .header-search.no-project {
+    justify-content: center;
+  }
+
   .right-group,
   .social-icons {
     align-items: center;
@@ -163,6 +177,12 @@ const isLegacy = project?.id === 'noctalia-shell';
     .header-search {
       justify-content: flex-start;
       padding-inline: var(--sl-content-pad-x);
+    }
+
+    .site-search {
+      flex: 0 1 28rem;
+      width: 100%;
+      min-width: 0;
     }
 
     .right-group {
