@@ -8,7 +8,7 @@ sidebar:
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 :::caution[Choose your package source carefully]
-The Noctalia team maintains only the **Arch Linux/AUR packages** and the **manual installation method**. Packages shipped in a distribution's official repositories are built and reviewed under that distribution's own packaging process.
+The v4 `noctalia-shell` and `noctalia-shell-git` packages are no longer available in the AUR. To use v4 on Arch Linux, you will need to build and install it manually. Packages shipped in a distribution's official repositories are built and reviewed under that distribution's own packaging process.
 
 All other packages and third-party repositories listed here are maintained independently by community members in good faith. The Noctalia team does not build, audit, or control those packaged binaries and cannot guarantee their integrity. Before installing one, review its source, maintainer, and repository, and decide whether you trust it. A listing on this page is not an endorsement or a security guarantee.
 :::
@@ -27,27 +27,11 @@ You can also [install manually](#manual-install) on any other Linux distribution
 
 ## Arch Linux {#arch}
 
-### Using AUR (Recommended)
+### Manual build and installation
 
-The simplest way to install Noctalia on Arch Linux is through the Arch User Repository (AUR). This method installs the shell system-wide and handles dependencies automatically.
+The v4 `noctalia-shell` and `noctalia-shell-git` packages have been removed from the Arch User Repository (AUR). They can no longer be installed with an AUR helper such as `paru`.
 
-Please replace with your AUR helper of choice.
-
-```bash
-paru -S noctalia-shell
-```
-
-### Development Version
-
-For the latest features and fixes, you can install the development version directly from the Git repository:
-
-```bash
-paru -S noctalia-shell-git
-```
-
-:::caution
-The development version may be less stable than the official release. Use this version if you want to test the latest features or contribute to development.
-:::
+If you need to use this archived version, build and install it manually by following the [manual installation instructions](#manual-install). For a maintained release, use the [v5 installation guide](/noctalia/getting-started/installation/) instead.
 ---
 
 ## Gentoo {#gentoo}
