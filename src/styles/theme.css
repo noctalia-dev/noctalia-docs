@@ -428,9 +428,15 @@ html {
 }
 
 /* Homepage actions and feature cards. */
+.homepage-install,
 .homepage-browse-docs,
 .homepage-github {
-	transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+	transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.homepage-install:hover {
+	box-shadow: 0 6px 20px -8px var(--sl-color-text-accent);
+	transform: translateY(-1px);
 }
 
 .homepage-browse-docs:hover {
