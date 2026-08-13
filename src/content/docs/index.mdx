@@ -13,35 +13,27 @@ hero:
       link: /noctalia/
       icon: open-book
       variant: secondary
+      attrs:
+        class: homepage-browse-docs
     - text: GitHub
       link: https://github.com/noctalia-dev
       icon: external
       variant: minimal
+      attrs:
+        class: homepage-github
 ---
 
-import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## What you get
 
 <CardGrid>
-  <Card title="Bar & widgets" icon="bars">
-    Top, bottom, left, and right bars with per-monitor overrides. Clock, tray, workspaces, media, and more. [Explore](/noctalia/bar/)
-  </Card>
-  <Card title="Launcher" icon="rocket">
-    App search, calculator, emoji picker, and wallpaper browser in one keystroke. [Explore](/noctalia/launcher/)
-  </Card>
-  <Card title="Control Center" icon="setting">
-    Quick settings, shortcuts, and screen time from a single panel. [Explore](/noctalia/control-center/)
-  </Card>
-  <Card title="Theming & palette" icon="sun">
-    Wallpaper-driven colors, dark/light, and generated themes for terminals, editors, and browsers. [Explore](/noctalia/theming/)
-  </Card>
-  <Card title="Plugins in Luau" icon="puzzle">
-    Custom bar widgets, shortcuts, and services without recompiling the shell. [Explore](/noctalia/plugins/)
-  </Card>
-  <Card title="IPC & hooks" icon="code-branch">
-    Drive Noctalia from keybinds, scripts, and event-driven automation. [Explore](/noctalia/ipc/)
-  </Card>
+  <a class="homepage-card-link" href="/noctalia/bar/"><Card title="Bar & widgets" icon="bars">Top, bottom, left, and right bars with per-monitor overrides. Clock, tray, workspaces, media, and more.</Card></a>
+  <a class="homepage-card-link" href="/noctalia/launcher/"><Card title="Launcher" icon="rocket">App search, calculator, emoji picker, and wallpaper browser in one keystroke.</Card></a>
+  <a class="homepage-card-link" href="/noctalia/control-center/"><Card title="Control Center" icon="setting">Quick settings, shortcuts, and screen time from a single panel.</Card></a>
+  <a class="homepage-card-link" href="/noctalia/theming/"><Card title="Theming & palette" icon="sun">Wallpaper-driven colors, dark/light, and generated themes for terminals, editors, and browsers.</Card></a>
+  <a class="homepage-card-link" href="/noctalia/plugins/"><Card title="Plugins in Luau" icon="puzzle">Custom bar widgets, shortcuts, and services without recompiling the shell.</Card></a>
+  <a class="homepage-card-link" href="/noctalia/ipc/"><Card title="IPC & hooks" icon="code-branch">Drive Noctalia from keybinds, scripts, and event-driven automation.</Card></a>
 </CardGrid>
 
 ## Runs on your compositor
@@ -51,13 +43,7 @@ Works across major Wayland compositors. See [compositor setup](/noctalia/composi
 ## The Noctalia family {#projects}
 
 <CardGrid>
-  <Card title="Noctalia" icon="moon">
-    The native desktop shell. Actively developed. [Open docs](/noctalia/)
-  </Card>
-  <Card title="Noctalia Greeter" icon="padlock">
-    A greetd greeter that shares Noctalia's look and palette on the login screen. [Open docs](/greeter/)
-  </Card>
-  <Card title="Noctalia Shell (v4)" icon="document">
-    Archived Quickshell-based implementation. Kept for reference; not receiving updates. [Open docs](/noctalia-shell/)
-  </Card>
+  <a class="homepage-card-link" href="/noctalia/"><Card title="Noctalia" icon="moon">The native desktop shell. Actively developed.</Card></a>
+  <a class="homepage-card-link" href="/greeter/"><Card title="Noctalia Greeter" icon="padlock">A greetd greeter that shares Noctalia's look and palette on the login screen.</Card></a>
+  <a class="homepage-card-link" href="/noctalia-shell/"><Card title="Noctalia Shell (v4)" icon="document">Archived Quickshell-based implementation. Kept for reference; not receiving updates.</Card></a>
 </CardGrid>
