@@ -47,6 +47,7 @@ The primary provider for finding and launching your installed apps.
 When `shell.launcher.app_grid` is enabled and every visible result is an application, results switch from the default list to a multi-column icon grid with the app name underneath. Mixed searches (calculator hits, emoji, session actions, prefixed providers, and so on) keep the list layout. Left/right keybinds move between columns in grid mode; up/down move by row.
 
 - **Source**: Reads `.desktop` entries from standard XDG directories (e.g., `/usr/share/applications`, `~/.local/share/applications`).
+- **Package origins**: Results identify Flatpak, Snap, Nix, and AppImage applications when their desktop entries or executable metadata provide that information. AppImages are recognized from their AppImage desktop-entry metadata or executable signature, including extensionless files managed by AppImageLauncher.
 - **Search**: Matches against the application name, generic name, keywords, and categories.
 - **Scoring**: Uses fuzzy matching with weights. Activation count boosts the score.
 - **Pinned apps**: Drag a pinned app onto another pinned app to reorder them. Pin markers appear in both the list and app-grid views.
