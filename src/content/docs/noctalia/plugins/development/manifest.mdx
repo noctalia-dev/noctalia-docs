@@ -29,9 +29,13 @@ tags         = ["demo"]  # optional, for catalog search
 dependencies = ["slurp"] # optional, external tools/packages users must install
 ```
 
-`name` and `plugin_api` are required - a manifest without either is rejected. `plugin_api` is a positive integer and
-gates enable, the catalog badge, and update safety. API levels are cumulative: leave the value unchanged until the
-plugin adopts a capability introduced by a newer level. Noctalia v5 currently supports plugin APIs <PluginApiRange />; see
+`id`, `name`, `version`, and `plugin_api` are required - a manifest without any of them is rejected. `version` must use
+exactly `MAJOR.MINOR.PATCH`, with non-negative decimal components and no leading zeros (except `0` itself). Prerelease
+and build suffixes are not accepted.
+
+`plugin_api` is a positive integer and gates enable, the catalog badge, and update safety. API levels are cumulative:
+leave the value unchanged until the plugin adopts a capability introduced by a newer level. Noctalia v5 currently
+supports plugin APIs <PluginApiRange />; see
 [Plugin API Versions](/noctalia/plugins/development/plugin-api/) for the capability introduced by each level.
 
 `license` defaults to `MIT` when omitted. `deprecated = true` marks the plugin as deprecated in plugin listings; it is a
