@@ -49,6 +49,7 @@ When `shell.launcher.app_grid` is enabled and every visible result is an applica
 - **Source**: Reads `.desktop` entries from standard XDG directories (e.g., `/usr/share/applications`, `~/.local/share/applications`).
 - **Package origins**: Results identify Flatpak, Snap, Nix, and AppImage applications when their desktop entries or executable metadata provide that information. AppImages are recognized from their AppImage desktop-entry metadata or executable signature, including extensionless files managed by AppImageLauncher.
 - **Search**: Matches against the application name, generic name, keywords, and categories.
+- **Desktop actions**: Set `shell.launcher.show_app_actions = true` to search and launch `.desktop` actions directly alongside applications. This is disabled by default; actions remain available from an application's right-click menu.
 - **Scoring**: Uses fuzzy matching with weights. Activation count boosts the score.
 - **Pinned apps**: Drag a pinned app onto another pinned app to reorder them. Pin markers appear in both the list and app-grid views.
 - **Terminal apps**: Entries with `Terminal=true` run inside a terminal. Prefer `export TERMINAL=wezterm` (or another emulator on `PATH`); do not put `-e` in `$TERMINAL`. See [Shell: launching apps](/noctalia/configuration/shell/#shell-settings) for discovery order and how this differs from `launch_apps_custom_command`.
@@ -192,7 +193,7 @@ results.
 The launcher itself is mostly automatic, but its behavior is influenced by other sections of your config:
 
 - **[Keybinds](/noctalia/shell/#keybinds)**: Customize navigation (`up`, `down`) and activation (`validate`, `cancel`).
-- **[Shell](/noctalia/shell/#shell-settings)**: `ui_scale` and `font_family` affect the launcher's appearance. `shell.launcher.categories` controls the category filters. `show_icons`, `compact`, `app_grid`, `sort_by_usage`, `pinned`, `fetch_exchange_rates`, and `auto_paste` adjust result layout, ordering, pinning, currency rate refresh, and paste-after-copy (Settings → Launcher). `[shell.launcher.dmenu.entry.<id>]` adds custom dmenu-style providers backed by a shell command.
+- **[Shell](/noctalia/shell/#shell-settings)**: `ui_scale` and `font_family` affect the launcher's appearance. `shell.launcher.categories` controls the category filters. `show_icons`, `compact`, `app_grid`, `show_app_actions`, `sort_by_usage`, `pinned`, `fetch_exchange_rates`, and `auto_paste` adjust result layout, action search, ordering, pinning, currency rate refresh, and paste-after-copy (Settings → Launcher). `[shell.launcher.dmenu.entry.<id>]` adds custom dmenu-style providers backed by a shell command.
 - **[Wallpaper](/noctalia/desktop/wallpaper/)**: Defines the search paths for the Wallpaper provider.
 - **[Session actions](/noctalia/shell/#session-panel)**: Defines the actions shown by the Session provider.
 
