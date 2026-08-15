@@ -148,7 +148,7 @@ The Notifications tab shows notification history and notification actions, inclu
 
 ## Screen Time
 
-The Screen Time tab shows how long each application was in the foreground today. Noctalia tracks focus using the active `zwlr_foreign_toplevel` window and stores daily totals under `$XDG_STATE_HOME/noctalia/screen_time.json` (about 14 days retained).
+The Screen Time tab shows how long each application was in the foreground today. Noctalia tracks focus using the active `zwlr_foreign_toplevel` window, pauses tracking while its session lock is active, and stores daily totals under `$XDG_STATE_HOME/noctalia/screen_time.json` (about 14 days retained).
 
 - **Range** toggle: today (hourly chart), last 3 days, or last 14 days (daily bars)
 - **Total** time for the selected range, with a stacked bar chart (hourly or per-day)
