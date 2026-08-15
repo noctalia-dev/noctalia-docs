@@ -177,6 +177,12 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     feature: 'get-setting',
     introduced: '`noctalia.getSetting(path)` for reading any effective shell config value by TOML dotted path.',
   },
+  {
+    level: 27,
+    noctaliaVersion: null,
+    feature: 'input-frame-visibility',
+    introduced: '`frameVisible` on `ui.input` for hiding the native input background and border.',
+  },
 ];
 
 export const CURRENT_PLUGIN_API = Math.max(...PLUGIN_API_LEVELS.map((entry) => entry.level));

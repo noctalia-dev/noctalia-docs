@@ -68,7 +68,7 @@ to size it explicitly).
 | `ui.toggle` | `checked` (bool), `enabled`, `onChange` |
 | `ui.slider` | `min`, `max`, `step`, `value`, `controlSize` (`sm`/`md`/`lg`), `enabled`, `onChange`, `onDragEnd` |
 | `ui.select` | `options` (array of strings), `selectedIndex`, `placeholder`, `controlSize` (`sm`/`md`/`lg`), `enabled`, `width`, `height`, `onChange` |
-| `ui.input` | `value` (initial text only - see below), `placeholder`, `fontSize`, `controlSize` (`sm`/`md`/`lg`), `password` (bool), `multiline` (bool), `submitOnEnter` (bool - see below), `focus` (bool), `enabled`, `onChange`, `onSubmit` |
+| `ui.input` | `value` (initial text only - see below), `placeholder`, `fontSize`, `controlSize` (`sm`/`md`/`lg`), `password` (bool), `multiline` (bool), `submitOnEnter` (bool - see below), `frameVisible` (bool - see below), `focus` (bool), `enabled`, `onChange`, `onSubmit` |
 
 Every control also accepts `width`, `height`, `flexGrow`, `opacity`, and `visible`. Colors are a palette role token
 (`primary`, `on_surface`, …), a role token with an alpha suffix (`primary/0.6`, the role at 60% alpha, resolved live
@@ -134,6 +134,10 @@ prop is logged and skipped - typos surface in the log instead of failing silentl
   editing area; `multiline` and `password` are mutually exclusive. `submitOnEnter = true` flips the multiline
   bindings for chat composers: Enter fires `onSubmit`, Shift+Enter inserts the newline, and Ctrl+Enter still
   submits. Requires <PluginApiBadge feature="plugin-ui-props" />.
+- **Input frame**: `frameVisible = false` hides the input's native background and border while preserving text editing,
+  selection, cursor, scrolling, and focus behavior. Use it when a parent surface provides the visual frame. The frame
+  is visible by default; set `frameVisible = true` explicitly to restore it on a retained keyed input. Requires
+  <PluginApiBadge feature="input-frame-visibility" />.
 - **Markdown**: `ui.markdown` renders its `text` prop (headings, lists, code blocks, tables) as a read-only block.
   The host re-parses only when `text` or the surface scale changes, so re-rendering a streaming tree with unchanged
   text is cheap. Requires <PluginApiBadge feature="plugin-ui-props" />.
