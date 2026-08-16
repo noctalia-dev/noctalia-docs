@@ -25,6 +25,20 @@ All settings are organized into intuitive categories, allowing you to customize:
 
 Changes take effect immediately, and all settings are automatically saved.
 
+### Taskbar spacing
+
+The taskbar leaves **4 logical pixels** between window items by default. Change **Item Spacing** in the taskbar widget
+settings, or set `item_spacing` on the named widget:
+
+```toml
+[widget.taskbar]
+type = "taskbar"
+item_spacing = 4
+```
+
+This spacing is separate from the taskbar capsule's outer padding. **Capsule Padding** inherits the bar default of
+**6 logical pixels** and can also be overridden per widget.
+
 :::tip[NixOS Users]
 If you're using NixOS with the Noctalia Home Manager or NixOS module, refer to the [NixOS Configuration Reference](/noctalia-shell/getting-started/nixos/#config-ref) for declarative configuration options.
 :::

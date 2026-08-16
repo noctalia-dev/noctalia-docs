@@ -31,6 +31,8 @@ With grouping, `workspace_group_content` chooses what each capsule shows for its
 | `group_by_workspace` | bool | `false` | Group icons into workspace capsules when per-window workspace assignment is available. |
 | `show_all_outputs` | bool | `false` | Include windows from all monitors. With `group_by_workspace`, workspaces from every monitor are merged; capsule badges use `tag·n` (workspace tag, middle dot, monitor index in bar monitor order) when there is more than one monitor. |
 | `only_active_workspace` | bool | `false` | Show only windows on the active workspace for each relevant monitor. Depends on compositor workspace data; if a window’s workspace cannot be resolved, it is still shown. |
+| `icon_scale` | float | `1.0` | Scale taskbar application icons relative to their default size. Values from `0.1` to `2.0` are accepted; larger icons remain constrained by the bar thickness. |
+| `item_spacing` | int | `4` | Space between taskbar items in logical pixels when workspace grouping is off. Values from `0` to `48` are accepted. |
 | `show_window_title` | bool | `false` | Show each window title next to its icon on horizontal bars. Available only when workspace grouping is off. |
 | `window_title_max_width` | int | `100` | Maximum width of each window title in pixels when titles are enabled. |
 | `taskbar_max_width` | int | `8192` | Total taskbar width budget in pixels; titles shrink to fit and disappear when space is too narrow. |
@@ -55,6 +57,8 @@ With grouping, `workspace_group_content` chooses what each capsule shows for its
 [widget.taskbar]
 pinned = ["firefox", "code", "kitty"]
 pinned_opacity = 0.5
+icon_scale = 1.0
+item_spacing = 4  # Flat taskbar only; ignored when workspace grouping is enabled
 group_by_workspace = true
 show_all_outputs = true
 only_active_workspace = true
