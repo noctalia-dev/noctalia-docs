@@ -29,6 +29,7 @@ match           = "rhythmbox"
 show_toast      = true
 save_history    = false
 play_sound      = true
+# bypass_dnd      = false                     # bypass DND; play_sound still controls whether sound plays
 # allow_permanent = true                      # allow this sender to create persistent (0-timeout) toasts
 # override_duration = 5000                    # override the timeout (in ms) for all toasts from this sender
 # allowed_urgencies = ["normal", "critical"]  # omit or list all three to allow every level
@@ -60,6 +61,7 @@ Notifications can be filtered before toasts and sounds. External Freedesktop not
  - `show_toast` - show a toast popup (default `true`).
  - `save_history` - keep the notification in control-center history (default `true`). External notifications only; internals are never stored.
  - `play_sound` - play the notification sound when a toast is shown (default `true`).
+ - `bypass_dnd` - allow matching notifications to show while Do Not Disturb is enabled (default `false`). Their sound also bypasses Do Not Disturb when `play_sound = true`.
  - `allow_permanent` - allow this sender to create persistent (0-timeout) toasts (default `true`). When `false`, persistent toasts are forced to the standard expiration timeout.
  - `override_duration` - force a specific display duration in milliseconds, overriding both the default timeout and any timeout requested by the sender.
 
