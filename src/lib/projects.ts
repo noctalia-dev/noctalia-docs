@@ -4,7 +4,7 @@ export const PROJECTS = [
   {
     id: 'noctalia',
     label: 'Noctalia',
-    description: 'Native shell · v5+',
+    description: 'Current release · v5+',
     href: '/noctalia/',
     sidebarLabel: 'Noctalia',
   },
