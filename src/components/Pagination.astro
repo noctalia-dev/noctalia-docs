@@ -1,25 +1,22 @@
 ---
 import { Icon } from '@astrojs/starlight/components';
-import { isV5Path } from '../lib/versioning';
+import { projectFromPath } from '../lib/projects';
 
 const { dir, pagination } = Astro.locals.starlightRoute;
-const pathname = Astro.url.pathname;
-const onV5 = isV5Path(pathname);
+const activeProject = projectFromPath(Astro.url.pathname);
 
-function sameDocVersion(href: string): boolean {
+function sameProject(href: string): boolean {
   try {
-    const u = new URL(href, Astro.url);
-    const p = u.pathname;
-    if (onV5) return p === '/' || p === '/v5' || p.startsWith('/v5/');
-    return p === '/v4' || p.startsWith('/v4/');
+    const target = new URL(href, Astro.url);
+    return projectFromPath(target.pathname)?.id === activeProject?.id;
   } catch {
     return true;
   }
 }
 
 let { prev, next } = pagination;
-if (prev && !sameDocVersion(prev.href)) prev = undefined;
-if (next && !sameDocVersion(next.href)) next = undefined;
+if (prev && !sameProject(prev.href)) prev = undefined;
+if (next && !sameProject(next.href)) next = undefined;
 const isRtl = dir === 'rtl';
 ---
 
@@ -67,7 +64,7 @@ const isRtl = dir === 'rtl';
       flex-basis: calc(50% - 0.5rem);
       flex-grow: 1;
       border: 1px solid var(--sl-color-gray-5);
-      border-radius: 0.5rem;
+      border-radius: var(--sl-border-radius);
       padding: 1rem;
       text-decoration: none;
       color: var(--sl-color-gray-2);

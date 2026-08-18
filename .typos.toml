@@ -3,5 +3,5 @@ ACI = "ACI"
 [files]
 extend-exclude = [
     # This file has a lot of non-English words that trigger false positives
-    "/src/content/docs/v4/development/plugins/translations.mdx",
+    "/src/content/docs/noctalia-shell/development/plugins/translations.mdx",
 ]

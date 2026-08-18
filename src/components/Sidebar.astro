@@ -2,17 +2,164 @@
 import MobileMenuFooter from 'virtual:starlight/components/MobileMenuFooter';
 import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro';
 import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro';
-import { pickVersionSidebarEntries } from '../lib/versioning';
+import { PROJECTS, pickProjectSidebarEntries, projectFromPath } from '../lib/projects';
 
 const { sidebar } = Astro.locals.starlightRoute;
 const pathname = Astro.url.pathname;
-const sublist = pickVersionSidebarEntries(sidebar, pathname);
+const activeProject = projectFromPath(pathname);
+const sublist = pickProjectSidebarEntries(sidebar, pathname);
 ---
 
-<SidebarPersister>
-  <SidebarSublist sublist={sublist} />
-</SidebarPersister>
+<nav class="project-navigation" aria-label="Documentation projects">
+  <span class="project-navigation-label">Project</span>
+  <details class="project-switcher">
+    <summary>
+      <span>
+        <strong>{activeProject?.label ?? 'Noctalia Docs'}</strong>
+        <small>{activeProject?.description ?? 'Choose a project'}</small>
+      </span>
+    </summary>
+    <ul>
+      {PROJECTS.map((project) => (
+        <li>
+          <a
+            href={project.href}
+            aria-current={project.id === activeProject?.id ? 'page' : undefined}
+          >
+            <strong>{project.label}</strong>
+            <small>{project.description}</small>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </details>
+</nav>
+
+{sublist.length > 0 && (
+  <SidebarPersister>
+    <SidebarSublist sublist={sublist} />
+  </SidebarPersister>
+)}
 
 <div class="md:sl-hidden">
   <MobileMenuFooter />
 </div>
+
+<style>
+  .project-navigation {
+    margin-block-end: 1rem;
+    padding-block-end: 1rem;
+    border-block-end: 1px solid var(--sl-color-gray-5);
+  }
+
+  .project-navigation-label {
+    display: block;
+    margin-block-end: 0.35rem;
+    color: var(--sl-color-gray-3);
+    font-size: var(--sl-text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .project-switcher {
+    position: relative;
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.65rem 0.75rem;
+    color: var(--sl-color-white);
+    background: var(--sl-color-bg);
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: var(--sl-border-radius);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::after {
+    content: '';
+    width: 0.45rem;
+    height: 0.45rem;
+    flex: 0 0 auto;
+    border-inline-end: 2px solid currentColor;
+    border-block-end: 2px solid currentColor;
+    transform: rotate(45deg) translateY(-0.15rem);
+    transition: transform 0.15s ease;
+  }
+
+  details[open] summary::after {
+    transform: rotate(225deg) translate(-0.1rem, -0.1rem);
+  }
+
+  summary:hover,
+  details[open] summary {
+    border-color: var(--sl-color-accent);
+  }
+
+  summary span,
+  a {
+    display: grid;
+    min-width: 0;
+  }
+
+  summary strong {
+    font-size: var(--sl-text-base);
+    line-height: 1.3;
+  }
+
+  a strong {
+    font-size: var(--sl-text-sm);
+    line-height: 1.3;
+  }
+
+  small {
+    color: var(--sl-color-gray-3);
+    font-size: var(--sl-text-xs);
+    line-height: 1.35;
+  }
+
+  ul {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0.4rem 0 0;
+    padding: 0.35rem;
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: var(--sl-border-radius);
+    list-style: none;
+  }
+
+  li {
+    margin: 0;
+  }
+
+  a {
+    gap: 0.1rem;
+    padding: 0.55rem 0.6rem;
+    color: var(--sl-color-white);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+  }
+
+  a:hover {
+    background: var(--sl-color-gray-6);
+  }
+
+  a[aria-current='page'] {
+    color: var(--sl-color-accent-high);
+    background: var(--sl-color-accent-low);
+  }
+
+  a[aria-current='page'] small {
+    color: currentColor;
+    opacity: 0.8;
+  }
+</style>

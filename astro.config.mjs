@@ -11,12 +11,13 @@ export default defineConfig({
     logLevel: "error",
   },
   redirects: {
-    /** Default landing (v5 = current production shell docs) */
-    "/": "/v5/",
-    /** Shell docs live under configuration/, but are linked as the short /v5/shell/ */
-    "/v5/shell/": "/v5/configuration/shell/",
-    /** wpa_supplicant troubleshooting moved into the v5 FAQ */
-    "/v5/system/network/wpa_supplicant/": "/v5/getting-started/faq/#wpa-supplicant",
+    "/v5/greeter/": "/greeter/",
+    "/v5/shell/": "/noctalia/configuration/shell/",
+    "/v5/system/network/wpa_supplicant/": "/noctalia/getting-started/faq/#wpa-supplicant",
+    "/v5/": "/noctalia/",
+    "/v4/": "/noctalia-shell/",
+    "/noctalia/shell/": "/noctalia/configuration/shell/",
+    "/noctalia/system/network/wpa_supplicant/": "/noctalia/getting-started/faq/#wpa-supplicant",
   },
   integrations: [
     starlight({
@@ -30,13 +31,6 @@ export default defineConfig({
         Pagination: "./src/components/Pagination.astro",
       },
       head: [
-        {
-          tag: "script",
-          attrs: {
-            src: "/logo-link.js",
-            defer: true,
-          },
-        },
         {
           tag: "script",
           attrs: {
@@ -73,131 +67,132 @@ export default defineConfig({
       tableOfContents: true,
       sidebar: [
         {
-          label: "Noctalia v5",
+          label: "Noctalia",
           items: [
-            { label: "Overview", link: "v5/" },
+            { label: "Overview", link: "noctalia/" },
             {
               label: "Getting started",
               items: [
-                { label: "Installation", link: "v5/getting-started/installation/" },
-                { label: "NixOS", link: "v5/getting-started/nixos/" },
-                { label: "Running Noctalia", link: "v5/getting-started/running-the-shell/" },
-                { label: "FAQ", link: "v5/getting-started/faq/" },
-                { label: "Uninstall", link: "v5/getting-started/uninstall/" },
-                { label: "Compositor Settings", items: [{ autogenerate: { directory: "v5/compositor-settings" } }] },
-                { label: "Keybinds & IPC", items: [{ autogenerate: { directory: "v5/ipc" } }] },
+                { label: "Installation", link: "noctalia/getting-started/installation/" },
+                { label: "NixOS", link: "noctalia/getting-started/nixos/" },
+                { label: "Running Noctalia", link: "noctalia/getting-started/running-the-shell/" },
+                { label: "FAQ", link: "noctalia/getting-started/faq/" },
+                { label: "Uninstall", link: "noctalia/getting-started/uninstall/" },
+                { label: "Compositor Settings", items: [{ autogenerate: { directory: "noctalia/compositor-settings" } }] },
+                { label: "Keybinds & IPC", items: [{ autogenerate: { directory: "noctalia/ipc" } }] },
               ],
             },
             {
               label: "Configuration",
               items: [
-                { label: "How configuration works", link: "v5/configuration/" },
-                { label: "Shell", link: "v5/configuration/shell/" },
-                { label: "Date format tokens", link: "v5/configuration/date-format-tokens/" },
+                { label: "How configuration works", link: "noctalia/configuration/" },
+                { label: "Shell", link: "noctalia/configuration/shell/" },
+                { label: "Date format tokens", link: "noctalia/configuration/date-format-tokens/" },
               ],
             },
             {
               label: "Bar",
               items: [
-                { label: "Overview", link: "v5/bar/" },
-                { label: "Widget Actions", link: "v5/bar/actions/" },
+                { label: "Overview", link: "noctalia/bar/" },
+                { label: "Widget Actions", link: "noctalia/bar/actions/" },
                 {
                   label: "Widgets",
                   collapsed: true,
-                  items: [{ autogenerate: { directory: "v5/bar/widgets" } }],
+                  items: [{ autogenerate: { directory: "noctalia/bar/widgets" } }],
                 },
               ],
             },
             {
               label: "Dock",
-              items: [{ autogenerate: { directory: "v5/dock" } }],
+              items: [{ autogenerate: { directory: "noctalia/dock" } }],
             },
             {
               label: "Launcher",
-              items: [{ autogenerate: { directory: "v5/launcher" } }],
+              items: [{ autogenerate: { directory: "noctalia/launcher" } }],
             },
             {
               label: "Control Center",
-              items: [{ autogenerate: { directory: "v5/control-center" } }],
+              items: [{ autogenerate: { directory: "noctalia/control-center" } }],
             },
             {
               label: "Desktop",
-              items: [{ autogenerate: { directory: "v5/desktop" } }],
+              items: [{ autogenerate: { directory: "noctalia/desktop" } }],
             },
             {
               label: "Theming",
-              items: [{ autogenerate: { directory: "v5/theming" } }],
+              items: [{ autogenerate: { directory: "noctalia/theming" } }],
             },
             {
               label: "Services",
-              items: [{ autogenerate: { directory: "v5/services" } }],
+              items: [{ autogenerate: { directory: "noctalia/services" } }],
             },
             {
               label: "Automation",
-              items: [{ autogenerate: { directory: "v5/automation" } }],
+              items: [{ autogenerate: { directory: "noctalia/automation" } }],
             },
             {
               label: "Plugins",
               items: [
-                { label: "Using Plugins", link: "v5/plugins/" },
-                { label: "Official Plugins", link: "v5/plugins/official-plugins/" },
-                { label: "Plugin Development", items: [{ autogenerate: { directory: "v5/plugins/development" } }] },
+                { label: "Using Plugins", link: "noctalia/plugins/" },
+                { label: "Official Plugins", link: "noctalia/plugins/official-plugins/" },
+                { label: "Plugin Development", items: [{ autogenerate: { directory: "noctalia/plugins/development" } }] },
               ],
-            },
-            {
-              label: "Greeter",
-              items: [{ autogenerate: { directory: "v5/greeter" } }],
             },
             {
               label: "Templates",
               items: [
-                { label: "Official Templates", items: [{ autogenerate: { directory: "v5/templates/official" } }] },
-                { label: "Community Templates", items: [{ autogenerate: { directory: "v5/templates/community" } }] },
+                { label: "Official Templates", items: [{ autogenerate: { directory: "noctalia/templates/official" } }] },
+                { label: "Community Templates", items: [{ autogenerate: { directory: "noctalia/templates/community" } }] },
               ],
             },
           ],
         },
         {
-          label: "Noctalia v4",
+          label: "Noctalia Greeter",
+          items: [{ autogenerate: { directory: "greeter" } }],
+        },
+        {
+          label: "Noctalia Shell",
           items: [
+            { label: "Overview", link: "noctalia-shell/" },
             {
               label: "Getting started",
               items: [
-                { label: "Installation", link: "v4/getting-started/installation/" },
-                { label: "NixOS", link: "v4/getting-started/nixos/" },
-                { label: "Running the Shell", link: "v4/getting-started/running-the-shell/" },
-                { label: "Compositor Settings", items: [{ autogenerate: { directory: "v4/getting-started/compositor-settings" } }] },
-                { label: "Keybinds", items: [{ autogenerate: { directory: "v4/getting-started/keybinds" } }] },
-                { label: "FAQ", link: "v4/getting-started/faq/" },
-                { label: "Uninstall", link: "v4/getting-started/uninstall/" },
+                { label: "Installation", link: "noctalia-shell/getting-started/installation/" },
+                { label: "NixOS", link: "noctalia-shell/getting-started/nixos/" },
+                { label: "Running the Shell", link: "noctalia-shell/getting-started/running-the-shell/" },
+                { label: "Compositor Settings", items: [{ autogenerate: { directory: "noctalia-shell/getting-started/compositor-settings" } }] },
+                { label: "Keybinds", items: [{ autogenerate: { directory: "noctalia-shell/getting-started/keybinds" } }] },
+                { label: "FAQ", link: "noctalia-shell/getting-started/faq/" },
+                { label: "Uninstall", link: "noctalia-shell/getting-started/uninstall/" },
               ],
             },
             {
               label: "Configuration",
-              items: [{ autogenerate: { directory: "v4/configuration" } }],
+              items: [{ autogenerate: { directory: "noctalia-shell/configuration" } }],
             },
             {
               label: "Theming",
               items: [
-                { label: "Basic App Theming", link: "v4/theming/basic-app-theming/" },
-                { label: "Program Specific", items: [{ autogenerate: { directory: "v4/theming/program-specific" } }] },
-                { label: "User Templates", link: "v4/theming/user-templates/" },
-                { label: "User Color Schemes", link: "v4/theming/color-schemes/" },
+                { label: "Basic App Theming", link: "noctalia-shell/theming/basic-app-theming/" },
+                { label: "Program Specific", items: [{ autogenerate: { directory: "noctalia-shell/theming/program-specific" } }] },
+                { label: "User Templates", link: "noctalia-shell/theming/user-templates/" },
+                { label: "User Color Schemes", link: "noctalia-shell/theming/color-schemes/" },
               ],
             },
             {
               label: "Development",
               items: [
-                { label: "Guidelines", link: "v4/development/guidelines/" },
-                { label: "IPC", link: "v4/development/ipc/" },
-                { label: "Widgets", link: "v4/development/widgets/" },
-                { label: "Templates", link: "v4/development/templates/" },
-                { label: "Plugins", items: [{ autogenerate: { directory: "v4/development/plugins" } }] },
+                { label: "Guidelines", link: "noctalia-shell/development/guidelines/" },
+                { label: "IPC", link: "noctalia-shell/development/ipc/" },
+                { label: "Widgets", link: "noctalia-shell/development/widgets/" },
+                { label: "Templates", link: "noctalia-shell/development/templates/" },
+                { label: "Plugins", items: [{ autogenerate: { directory: "noctalia-shell/development/plugins" } }] },
               ],
             },
             {
               label: "Deprecated",
-              items: [{ autogenerate: { directory: "v4/deprecated" } }],
+              items: [{ autogenerate: { directory: "noctalia-shell/deprecated" } }],
             },
           ],
         },

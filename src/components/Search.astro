@@ -1,6 +1,7 @@
 ---
 import { Icon } from '@astrojs/starlight/components';
 import project from 'virtual:starlight/project-context';
+import { projectFromPath } from '../lib/projects';
 
 const pagefindTranslations = {
 	placeholder: Astro.locals.t('search.label'),
@@ -14,8 +15,8 @@ const pagefindTranslations = {
 const dataAttributes: DOMStringMap = { 'data-translations': JSON.stringify(pagefindTranslations) };
 if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash'] = '';
 
-const pathname = Astro.url.pathname;
-dataAttributes['data-doc-version'] = pathname.startsWith('/v4/') || pathname === '/v4' ? 'v4' : 'v5';
+const activeProject = projectFromPath(Astro.url.pathname);
+if (activeProject) dataAttributes['data-doc-project'] = activeProject.id;
 ---
 
 <site-search class={Astro.props.class} {...dataAttributes}>
@@ -157,10 +158,8 @@ dataAttributes['data-doc-version'] = pathname.startsWith('/v4/') || pathname ===
 							});
 						},
 					});
-					const docVersion = this.dataset.docVersion;
-					if (docVersion === 'v4' || docVersion === 'v5') {
-						ui.triggerFilters({ version: docVersion });
-					}
+					const docProject = this.dataset.docProject;
+					if (docProject) ui.triggerFilters({ project: docProject });
 				});
 			});
 		}
@@ -188,7 +187,7 @@ dataAttributes['data-doc-version'] = pathname.startsWith('/v4/') || pathname ===
 		@media (min-width: 50rem) {
 			button[data-open-modal] {
 				border: 1px solid var(--sl-color-gray-5);
-				border-radius: 0.5rem;
+				border-radius: var(--sl-border-radius);
 				padding-inline-start: 0.75rem;
 				padding-inline-end: 0.5rem;
 				background-color: var(--sl-color-black);
@@ -208,7 +207,7 @@ dataAttributes['data-doc-version'] = pathname.startsWith('/v4/') || pathname ===
 		}
 
 		button > kbd {
-			border-radius: 0.25rem;
+			border-radius: var(--radius-sm);
 			font-size: var(--sl-text-2xs);
 			gap: 0.25em;
 			padding-inline: 0.375rem;
@@ -283,7 +282,7 @@ dataAttributes['data-doc-version'] = pathname.startsWith('/v4/') || pathname ===
 
 			dialog {
 				margin: 4rem auto auto;
-				border-radius: 0.5rem;
+				border-radius: var(--sl-border-radius);
 				width: 90%;
 				max-width: 40rem;
 				height: max-content;

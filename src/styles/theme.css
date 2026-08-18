@@ -4,6 +4,10 @@
 	/* Typography */
 	--sl-font: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	--sl-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+	/* Shared with noctalia.dev. */
+	--radius-sm: 0.25rem;
+	--radius-md: 0.375rem;
+	--sl-border-radius: var(--radius-md);
 }
 
 /* Dark Theme */
@@ -12,7 +16,6 @@
 	--sl-color-accent: #fff59b;
 	/* Primary */
 	--sl-color-text-accent: #fff59b;
-	--sl-border-radius: 10px;
 
 	/* Surfaces & text */
 	--sl-color-bg: #070722;
@@ -49,7 +52,6 @@
 	--sl-color-accent: #5d65f5;
 	/* Primary */
 	--sl-color-text-accent: #5d65f5;
-	--sl-border-radius: 10px;
 
 
 	/* Surfaces & text */
@@ -368,9 +370,16 @@ snake-toc a[data-visible="true"] {
 
 	/* Offset the content area to clear the shifted sidebar. The leftover space
 	   then falls naturally on the far right, mirroring the left gap. */
-	.main-frame {
+	html[data-has-sidebar] .main-frame {
 		padding-inline-start: calc(var(--sl-sidebar-width) + var(--layout-outer-gap));
 		padding-inline-end: var(--layout-outer-gap);
+	}
+
+	/* Splash (no sidebar): mirror the outer gap on both sides so the hero and
+	   content centre within the layout frame instead of sitting off to the
+	   right by a sidebar's width. */
+	html:not([data-has-sidebar]) .main-frame {
+		padding-inline: var(--layout-outer-gap);
 	}
 
 	/* Only pad the outer PageFrame header. Targeting `.header` also catches the
@@ -402,4 +411,95 @@ html {
 	scroll-padding-top: calc(1.5rem + var(--sl-nav-height) + var(--sl-mobile-toc-height) + var(--sl-banner-height)) !important;
 }
 
-/* Global script to update logo link - injected via style tag */
+/* Splash hero without an image: collapse the reserved image column and shrink
+   the vertical band Starlight reserves for a right-side image (Hero.astro
+   defaults to 7fr/4fr and ~100px block padding, both sized for an image). */
+.hero:not(:has(> img)):not(:has(> .hero-html)) {
+	grid-template-columns: 100%;
+	padding-block: 2rem;
+}
+
+.hero:not(:has(> img)):not(:has(> .hero-html)) .stack {
+	text-align: center;
+}
+
+.hero:not(:has(> img)):not(:has(> .hero-html)) .copy,
+.hero:not(:has(> img)):not(:has(> .hero-html)) .actions {
+	align-items: center;
+	justify-content: center;
+}
+
+/* Homepage actions and feature cards. */
+.homepage-install,
+.homepage-browse-docs,
+.homepage-github {
+	transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.homepage-install:hover {
+	box-shadow: 0 6px 20px -8px var(--sl-color-text-accent);
+	transform: translateY(-1px);
+}
+
+.homepage-browse-docs:hover {
+	background-color: var(--sl-color-gray-6);
+	border-color: var(--sl-color-white);
+	color: var(--sl-color-white);
+	transform: translateY(-1px);
+}
+
+.homepage-github:hover {
+	color: var(--sl-color-text-accent);
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+	transform: translateY(-1px);
+}
+
+.homepage-card-link {
+	display: block;
+	color: inherit;
+	text-decoration: none;
+	outline-offset: 0.35rem;
+}
+
+.homepage-card-link .card {
+	--sl-card-border: var(--sl-color-purple);
+	--sl-card-bg: var(--sl-color-purple-low);
+	border-radius: var(--radius-md);
+	height: 100%;
+	transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.homepage-card-link:nth-child(4n + 1) .card {
+	--sl-card-border: var(--sl-color-orange);
+	--sl-card-bg: var(--sl-color-orange-low);
+}
+
+.homepage-card-link:nth-child(4n + 3) .card {
+	--sl-card-border: var(--sl-color-green);
+	--sl-card-bg: var(--sl-color-green-low);
+}
+
+.homepage-card-link:nth-child(4n + 4) .card {
+	--sl-card-border: var(--sl-color-red);
+	--sl-card-bg: var(--sl-color-red-low);
+}
+
+.homepage-card-link:nth-child(4n + 5) .card {
+	--sl-card-border: var(--sl-color-blue);
+	--sl-card-bg: var(--sl-color-blue-low);
+}
+
+.homepage-card-link:hover .card {
+	background-color: color-mix(in srgb, var(--sl-card-bg) 12%, var(--sl-color-black));
+	border-color: var(--sl-color-gray-3);
+	box-shadow: var(--sl-shadow-md);
+	transform: translateY(-2px);
+}
+
+/* Align Starlight's default surfaces and hero actions with the website radius scale. */
+.card,
+.sl-link-card,
+.sl-link-button {
+	border-radius: var(--radius-md);
+}
