@@ -205,7 +205,7 @@ A panel is a pop-up surface that describes its UI as a `ui.*` tree, exactly like
 `ui.slider`, `ui.toggle`, `ui.scroll`) because it takes keyboard focus while open. Render in `onOpen` (and again from
 any callback that changes state):
 
-`render(tree)` · `close()` · `setWantsSecondTicks(bool)` · `setNeedsFrameTick(bool)`
+`render(tree)` · `close()` · `openContextMenu(request)` · `setWantsSecondTicks(bool)` · `setNeedsFrameTick(bool)`
 
 Panel **size is host-owned**: declare `width` and `height` on the `[[panel]]` entry, so the surface is the
 same size on every open. There is no `setSize` at runtime. Each axis takes a positive number (logical px) or the
@@ -222,6 +222,64 @@ dismiss it.
 `onFrameTick(deltaMs)` every frame while the panel is open, for animation the script drives itself. Ticks stop on
 close and resume on the next open, and frames are coalesced - a slow script only ever sees the latest one. Requires
 <PluginApiBadge feature="panel-frame-tick" />.
+
+### Context menus
+
+`panel.openContextMenu(request)` opens a native, theme-aware menu at the pointer position that triggered a
+`ui.button`'s `onRightClick` callback. Call it directly from that callback: the host deliberately keeps the Wayland
+coordinates and input serial private, and the function returns `false` when no live direct pointer callback is active.
+Requires <PluginApiBadge feature="panel-context-menu" />.
+
+```lua
+local selectedEntryId = "clip-42"
+
+function openEntryMenu()
+  panel.openContextMenu({
+    items = {
+      { kind = "header", label = "Clipboard" },
+      { id = "copy", label = "Copy" }, -- kind = "item" may be explicit
+      { kind = "item", id = "pin", label = "Pin" },
+      { kind = "separator" },
+      { id = "delete", label = "Delete", enabled = selectedEntryId ~= "" },
+    },
+    onActivate = "onEntryMenuAction",
+    context = selectedEntryId,
+    maxVisible = 12,
+  })
+end
+
+function onEntryMenuAction(actionId, entryId)
+  if actionId == "copy" then
+    copyEntry(entryId)
+  elseif actionId == "pin" then
+    pinEntry(entryId)
+  elseif actionId == "delete" then
+    deleteEntry(entryId)
+  end
+end
+
+panel.render(ui.button({
+  text = "Clipboard entry",
+  onRightClick = "openEntryMenu",
+}))
+```
+
+The request accepts these item shapes:
+
+- an action: `{ id = "copy", label = "Copy", enabled = true }`; `kind = "item"` is optional and `enabled` defaults
+  to `true`
+- a non-interactive heading: `{ kind = "header", label = "Clipboard" }`
+- a separator: `{ kind = "separator" }`
+
+`onActivate` names a global panel callback. It receives the selected action ID and, when supplied, the request's
+optional scalar `context` (`string`, `number`, or `boolean`). Action IDs must be unique. A request must contain at
+least one enabled action and may contain up to 64 items. `maxVisible` defaults to 12 and accepts 1-30; longer menus
+scroll. IDs and callback names are limited to 128 bytes and labels to 512 bytes. Invalid requests raise a descriptive
+Luau argument error.
+
+The menu closes on activation, outside click, Escape, panel close/reload, or plugin disable. Calling `panel.close()`
+and opening a menu in the same callback closes the panel and discards the menu request. Context menus work in both
+regular and persistent plugin panels.
 
 ### Keyboard focus
 
@@ -248,7 +306,7 @@ Persistent panels trade away the features that only make sense for a transient p
 - always floating, so `placement` is neither read nor offered as a setting (`position` still applies)
 - no outside-click dismissal, so `dismiss_on_outside_click = false` is required
 - `keyboard_focus = "exclusive"` is rejected: a surface that is never dismissed would hold the keyboard forever
-- no `ui.select` dropdowns or context menus inside the panel yet
+- no `ui.select` dropdowns inside the panel yet
 
 **Placement** matches built-in shell panels (`attached` anchors the panel's own surface to the bar edge, while `floating`
 opens detached). The host
