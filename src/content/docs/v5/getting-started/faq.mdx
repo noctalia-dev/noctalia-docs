@@ -19,6 +19,14 @@ See the [Installation guide](/v5/getting-started/installation/) for distro-speci
 
 </FaqItem>
 
+<FaqItem question="Does Noctalia support touchscreen scrolling?">
+
+Yes. Tap controls normally. In a scrollable view, drag vertically over rows, buttons, or other controls to scroll; a fast release continues with a fling. On a vertical page, a horizontal drag remains with an axis-specific control such as a slider.
+
+Touch dragging requires the compositor to send `wl_touch.motion` events. If taps work but dragging never moves content, run `wev` and drag inside its window. A trace containing only `wl_touch.down` and `wl_touch.up` means the compositor or input stack is not forwarding touch motion to clients.
+
+</FaqItem>
+
 <FaqItem question="Will Noctalia v4 automatically upgrade to v5, and can I keep both installed?">
 
 No. Noctalia v5 is a fresh install, not an automatic upgrade from the Quickshell-based v4 line. It ships as a separate package, your package manager will not replace v4 with v5, and v4 settings are not migrated into v5.
