@@ -64,8 +64,8 @@ noctalia msg plugins source remove my-repo
 ```
 
 The built-in `official` and `community` sources can be updated and enabled or disabled in Settings, but are protected
-from removal in Settings and IPC. Custom git/path sources are removable. **Update automatically** controls the global
-`[plugins].auto_update` setting for every enabled git source.
+from removal in Settings and IPC. Custom git/path sources are removable. **Auto-update plugins** is a dropdown that
+controls the global `[plugins].auto_update` mode: **All sources** (default), **Official only**, or **None**.
 
 Enabling a plugin makes its entries available. Its **bar widget** then shows up in the Add-widget picker - add a widget
 instance just like any built-in widget (or configure one by hand with `type = "<author>/<plugin>:<entry>"`). A
@@ -83,7 +83,7 @@ also writes runtime toggles to its state file, and both are merged.
 [plugins]
 # Fully-qualified ids ("<author>/<plugin>") that are active.
 enabled = ["noctalia/screen_recorder"]
-auto_update = true # update every enabled git source on startup and every 6 hours
+auto_update = "all" # "all" | "official" | "none"; background git updates on startup and every 6 hours
 
 # A git source: cached and updated by Noctalia.
 [[plugins.source]]
@@ -101,6 +101,13 @@ location = "~/dev/my-plugins"
 enabled  = true
 ```
 
+`auto_update` accepts one of:
+
+- `"all"` (default) - update every enabled git source on startup and every 6 hours
+- `"official"` - update only the built-in `official` source if enabled (matched by name **and** location, so a custom source reusing the name isn't trusted)
+- `"none"` - never auto-update
+
+The boolean form (`auto_update = true` / `false`) from earlier builds is no longer accepted - use `"all"` or `"none"`.
 `enabled = false` on a source prevents it from being scanned or updated while retaining its app-managed clone.
 
 Plugins placed by hand under `~/.local/share/noctalia/plugins/<plugin>/` are discovered as a built-in **local** source - 
@@ -112,14 +119,16 @@ SSH agent, or SSH config; otherwise clone/update fails and Noctalia continues wi
 Git source runtime files are exported caches, not editable plugin state. Use a `path` source or
 `~/.local/share/noctalia/plugins/` for local plugin development.
 
-A source `name` is its identity. Replacing a git source with the same name but a different `location` deletes
-Noctalia's app-managed repo cache and exported runtime files for that source, then re-fetches from the new location when
-needed.
+A source `name` is its identity, so duplicate names in `[[plugins.source]]` are rejected with a config error. Replacing
+a git source with the same name but a different `location` deletes Noctalia's app-managed repo cache and exported
+runtime files for that source, then re-fetches from the new location when needed.
 
 ## Updating
 
-`noctalia msg plugins update <source>` updates the source and hot-reloads its enabled plugins. When the global
-`[plugins].auto_update` setting is `true` (default), every enabled git source is updated on startup and every 6 hours.
+`noctalia msg plugins update <source>` updates the source and hot-reloads its enabled plugins. The global
+`[plugins].auto_update` mode decides what the background tick (startup + every 6 hours) updates: `"all"` (default)
+pulls every enabled git source, `"official"` pulls only the built-in `official` source, and `"none"` disables
+background updates.
 Updates are safe per enabled plugin: if one enabled plugin's new
 version targets an unsupported plugin API level, Noctalia keeps that plugin's previous exported copy, still updates
 compatible enabled plugins from the same source, and advances the source catalog. After Noctalia gains support for that
