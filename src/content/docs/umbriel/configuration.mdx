@@ -44,6 +44,7 @@ files = [
 ```toml
 [general]
 autostart = ["noctalia", "kitty"]
+mod_key = "Super"
 xwayland = true
 show_cheatsheet = true
 focus_on_activate = false
@@ -52,6 +53,7 @@ focus_on_activate = false
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | `autostart` | string array | `[]` | Shell commands run once after startup. Never re-run on config reload. |
+| `mod_key` | string | Super (Alt when nested) | Modifier represented by `Mod` in keybinds. Accepts `Super`, `Alt`, `Ctrl`, or `Shift`; aliases `Logo`, `Win`, and `Control` are also accepted. Applies on reload. |
 | `xwayland` | bool | `true` | Spawn `xwayland-satellite` for X11 app support. The binary must be installed. Changing this requires a restart. |
 | `show_cheatsheet` | bool | `true` | Show the keybinds cheatsheet overlay on startup. If an included file is still missing, Umbriel waits for it to load before showing the overlay. Press any key or mouse button to dismiss, or toggle at runtime via `cheatsheet-toggle`. |
 | `focus_on_activate` | bool | `false` | Focus and reveal windows that request activation. When false, activation marks the window and its workspace urgent without changing workspaces. Window rules can override this per application. |
@@ -337,9 +339,23 @@ preserve each device's defaults.
 ```toml
 [input.mouse]
 natural_scroll = false
+accel_profile = "flat"  # "flat", "adaptive", or a custom curve
+sensitivity = 0.0       # -1.0 to 1.0
 scroll_wheel_step = 60  # 1-1000, pixels per step for layout-scroll-left/right
 ```
 
+Mouse acceleration is disabled by default by selecting libinput's `flat`
+profile. Set `accel_profile = "adaptive"` to enable acceleration. `sensitivity`
+controls pointer speed independently of the selected profile. A custom curve can
+be supplied with this syntax:
+
+```toml
+accel_profile = "custom 0.2 0.0 0.5 1.0 2.0"
+```
+
+The first number is the positive input-speed step, followed by at least two
+non-negative output-speed points. Libinput interpolates between them.
+`sensitivity` has no effect when a custom profile is selected.
 Omit `natural_scroll` to preserve each device's default. `layout-scroll-left`
 and `layout-scroll-right` clamp to the strip bounds, so the columns never park
 past either edge. Wheel-triggered scrolling uses twice `scroll_wheel_step`
@@ -363,12 +379,18 @@ repeat_delay = 250
 name = "Acme Precision Touchpad"
 tap = true
 natural_scroll = false
+
+[[input.device]]
+name = "Acme Gaming Mouse"
+accel_profile = "flat"
+sensitivity = 0.0
 ```
 
 Each rule inherits the matching class settings and overrides only the keys it
 contains. `layout`, `variant`, `options`, `repeat_rate`, and `repeat_delay`
 apply to keyboards. `tap` applies to touchpads. `natural_scroll` applies to
-touchpads and mice. Unsupported libinput settings are reported in the log.
+touchpads and mice. `accel_profile` and `sensitivity` apply to mice.
+Unsupported libinput settings are reported in the log.
 
 Rules match every attached device with the exact name. Device overrides also
 apply when a device is connected after startup and when the configuration is

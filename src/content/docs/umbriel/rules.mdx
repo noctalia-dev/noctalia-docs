@@ -45,6 +45,7 @@ opening settings do not overwrite user changes made in the meantime.
 | `default_output` | string | Open on a specific output (e.g. `"DP-1"`). |
 | `default_floating` | bool | Force floating (`true`) or force tiling (`false`). |
 | `default_size` | `[w, h]` | Initial size in pixels, clamped to the client's min/max hints. Floats use both, then own their size and honor client resizes; tiled windows ignore height. |
+| `default_position` | table | Initial position for floating windows: `{ x = int, y = int, anchor = string }`. Ignored for tiled windows. |
 | `default_width` | float | Scrolling only. Column width fraction (0.1-1.0). Gap-aware: fractions that sum to 1 tile exactly. Overrides `layout.scrolling.default_width_fraction`. Dragging the column within or between scrolling workspaces retains its current width. Ignored in dwindle. |
 | `default_workspace` | int | Place on workspace N from 1 to 64. On dynamic outputs, values beyond the current count clamp to the last workspace. |
 | `default_fullscreen` | bool | Open in fullscreen. |
@@ -56,6 +57,36 @@ configured workspace, `default_workspace = 4` opens there even when the window
 was launched from another output. If several fixed outputs contain that
 position, Umbriel keeps the launch output. An explicit `default_output` always
 scopes the workspace lookup to that output.
+
+#### Floating position
+
+`default_position` only affects floating windows. Coordinates are logical pixels
+within the output's usable area, so panels and other exclusive zones are taken
+into account.
+
+For example, this opens a window 32 pixels right and 24 pixels up from the
+bottom-left corner:
+
+```toml
+[[window_rule]]
+match.app_id = "^org[.]example[.]Utility$"
+default_floating = true
+default_size = [800, 600]
+default_position = { x = 32, y = 24, anchor = "bottom_left" }
+```
+
+`anchor` defaults to `"center"`, so this centers a floating window exactly:
+
+```toml
+default_position = { x = 0, y = 0 }
+```
+
+Available anchors are `"center"`, `"top_left"`, `"top_right"`,
+`"bottom_left"`, `"bottom_right"`, `"top"`, `"bottom"`, `"left"`, and
+`"right"`. Right anchors measure `x` leftward from the right edge; bottom
+anchors measure `y` upward from the bottom edge. The single-edge anchors center
+the window on the other axis. Umbriel keeps part of the window visible if an
+offset would otherwise place it completely off-screen.
 
 ### Settings updated while a window is open
 
@@ -121,6 +152,7 @@ blur_popups = false
 match.app_id = "^dev.noctalia.UmbrielSharePicker$"
 default_floating = true
 default_size = [800, 600]
+default_position = { x = 32, y = 32, anchor = "bottom_right" }
 
 # Swash
 [[window_rule]]
