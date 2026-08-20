@@ -294,6 +294,20 @@ Layout fields can be overridden per-workspace; see
 
 ## Input
 
+```toml
+[input]
+middle_click_paste = false
+```
+
+`middle_click_paste` controls the primary-selection clipboard. It defaults to
+`true`. Set it to `false` to disable pasting selected text with a middle click
+from either a mouse or touchpad. This also disables other primary-selection
+paste methods such as Shift+Insert, while the regular clipboard used by Ctrl+C
+and Ctrl+V remains available.
+
+Umbriel omits the primary-selection Wayland protocol when this option is
+disabled. Changing it requires restarting Umbriel.
+
 ### Keyboard
 
 ```toml
