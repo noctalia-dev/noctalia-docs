@@ -63,6 +63,49 @@ time. The owner may replace or clear it, and Noctalia clears all of that runtime
 It is the way to offer a "configure me" affordance from a panel or widget, since plugins read config but cannot write
 it. Nothing happens when the plugin declares no settings; the host logs a warning.
 
+### Service context menus
+
+A `[[service]]` entry can open the same native context menu as a panel without first rendering a full-screen surface.
+`service.openContextMenu(request)` places the menu at the current cursor and is intended for IPC-triggered workflows,
+such as acting on the primary selection from a compositor shortcut. The host uses portable Wayland surfaces to find
+the cursor and dismiss the menu, so the service does not query compositor-specific coordinates. Requires
+<PluginApiBadge feature="service-context-menu" />.
+
+```lua
+function onIpc(event, payload)
+  if event ~= "selection-menu" then return end
+
+  service.openContextMenu({
+    items = {
+      { kind = "header", label = "Selected text" },
+      { id = "new", label = "Create a new note" },
+      { id = "append", label = "Add to Daily notes" },
+    },
+    onActivate = "onSelectionAction",
+    context = payload,
+    maxVisible = 12,
+  })
+end
+
+function onSelectionAction(actionId, selection)
+  if actionId == "new" then
+    createNote(selection)
+  elseif actionId == "append" then
+    appendToDailyNotes(selection)
+  end
+end
+```
+
+The request and item fields are identical to
+[`panel.openContextMenu(request)`](/noctalia/plugins/development/declarative-ui/#context-menus): 1-64 items, unique
+action IDs, an `onActivate` callback name, optional scalar `context`, and optional `maxVisible` from 1-30. The callback
+runs in the service and receives `(actionId, context)` when context is present. The method returns immediately; `true`
+means the runtime accepted the request, not that the user selected an action.
+
+Only service entries should call this method. Opening the menu closes an existing regular panel or tray menu first;
+the request is refused while the lock screen is active. Activation, an outside click, or Escape closes the transient
+menu.
+
 ## Dialogs
 
 | Method | Returns | Description |

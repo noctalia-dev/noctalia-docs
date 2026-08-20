@@ -20,6 +20,8 @@ export interface PluginApiLevel {
    * k<Feature>PluginApiVersion constant in plugin_api.h where one exists.
    */
   feature: string;
+  /** Additional feature constants introduced by the same cumulative API level. */
+  aliases?: string[];
   /** What the level introduced, for the ledger table. Backticks render as inline code. */
   introduced: string;
 }
@@ -189,6 +191,14 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     feature: 'panel-context-menu',
     introduced: '`panel.openContextMenu(request)` for native context menus in regular and persistent plugin panels.',
   },
+  {
+    level: 29,
+    noctaliaVersion: null,
+    feature: 'freeform-canvas',
+    aliases: ['service-context-menu'],
+    introduced:
+      '`service.openContextMenu(request)` plus free-form panel canvases with absolute positioning, stacking, clipping, input press callbacks, drop coordinates, and undecorated surfaces.',
+  },
 ];
 
 export const CURRENT_PLUGIN_API = Math.max(...PLUGIN_API_LEVELS.map((entry) => entry.level));
@@ -198,9 +208,11 @@ export const CURRENT_PLUGIN_API = Math.max(...PLUGIN_API_LEVELS.map((entry) => e
  * of rendering a silently wrong or empty version marker.
  */
 export function pluginApiLevelFor(feature: string): PluginApiLevel {
-  const match = PLUGIN_API_LEVELS.find((entry) => entry.feature === feature);
+  const match = PLUGIN_API_LEVELS.find(
+    (entry) => entry.feature === feature || entry.aliases?.includes(feature) === true,
+  );
   if (match === undefined) {
-    const known = PLUGIN_API_LEVELS.map((entry) => entry.feature).join(', ');
+    const known = PLUGIN_API_LEVELS.flatMap((entry) => [entry.feature, ...(entry.aliases ?? [])]).join(', ');
     throw new Error(`Unknown plugin API feature key "${feature}". Known keys: ${known}.`);
   }
   return match;

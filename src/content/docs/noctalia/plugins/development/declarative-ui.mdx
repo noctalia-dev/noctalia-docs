@@ -68,7 +68,7 @@ to size it explicitly).
 | `ui.toggle` | `checked` (bool), `enabled`, `onChange` |
 | `ui.slider` | `min`, `max`, `step`, `value`, `controlSize` (`sm`/`md`/`lg`), `enabled`, `onChange`, `onDragEnd` |
 | `ui.select` | `options` (array of strings), `selectedIndex`, `placeholder`, `controlSize` (`sm`/`md`/`lg`), `enabled`, `width`, `height`, `onChange` |
-| `ui.input` | `value` (initial text only - see below), `placeholder`, `fontSize`, `controlSize` (`sm`/`md`/`lg`), `password` (bool), `multiline` (bool), `submitOnEnter` (bool - see below), `frameVisible` (bool - see below), `focus` (bool), `enabled`, `onChange`, `onSubmit` |
+| `ui.input` | `value` (initial text only - see below), `placeholder`, `fontSize`, `controlSize` (`sm`/`md`/`lg`), `password` (bool), `multiline` (bool), `submitOnEnter` (bool - see below), `frameVisible` (bool - see below), `focus` (bool), `enabled`, `onChange`, `onSubmit`, `onPress` (see below) |
 
 Every control also accepts `width`, `height`, `flexGrow`, `opacity`, and `visible`. Colors are a palette role token
 (`primary`, `on_surface`, …), a role token with an alpha suffix (`primary/0.6`, the role at 60% alpha, resolved live
@@ -92,7 +92,8 @@ prop is logged and skipped - typos surface in the log instead of failing silentl
 - **Callbacks**: a callback prop takes either a **function** (requires <PluginApiBadge feature="ui-callback-closures" />) or the **name of a global
   function in your script**. `onClick` fires on a button click; `onChange` fires when a toggle/slider/select/input value
   changes (the value is passed as a string - `"true"`/`"false"` for a toggle, a number for a slider, the text for an
-  input, the index for a select); `onSubmit` fires when the user presses Enter in an input.
+  input, the index for a select); `onSubmit` fires when the user presses Enter in an input; `onPress` fires when the
+  user presses an input without replacing its normal focus and caret placement.
 - **Closures**: a function callback captures the surrounding scope, which is the simplest way to tell rows of a list
   apart - each row's handler already knows which row it belongs to:
   ```lua
@@ -138,6 +139,9 @@ prop is logged and skipped - typos surface in the log instead of failing silentl
   selection, cursor, scrolling, and focus behavior. Use it when a parent surface provides the visual frame. The frame
   is visible by default; set `frameVisible = true` explicitly to restore it on a retained keyed input. Requires
   <PluginApiBadge feature="input-frame-visibility" />.
+- **Input press**: `onPress` runs on every pointer press before the input moves its caret. It is useful for bringing an
+  overlapping editor card to the front while keeping native text selection and editing intact. Requires
+  <PluginApiBadge feature="freeform-canvas" />.
 - **Markdown**: `ui.markdown` renders its `text` prop (headings, lists, code blocks, tables) as a read-only block.
   The host re-parses only when `text` or the surface scale changes, so re-rendering a streaming tree with unchanged
   text is cheap. Requires <PluginApiBadge feature="plugin-ui-props" />.
@@ -324,6 +328,7 @@ Click**.
 | `keyboard_focus` | _(none, manifest only)_ | `on_demand` (default), `exclusive`, or `none` (requires <PluginApiBadge feature="keyboard-focus" />) |
 | `persistent` | _(none, manifest only)_ | Keep open when another panel opens (requires <PluginApiBadge feature="persistent-panel" />) |
 | `capture_keys` | _(none, manifest only)_ | Key chords the panel handles itself while focused (requires <PluginApiBadge feature="panel-capture-keys" />) |
+| `decorated` | _(none, manifest only)_ | `true` by default; `false` removes the host background, border, shadow, radius, and content padding so the plugin owns every visible surface (requires <PluginApiBadge feature="freeform-canvas" />) |
 
 Declare defaults on the `[[panel]]` table; users override through the plugin settings GUI or
 `[plugin_settings."author/plugin"]`. Position and open-near-click follow the same rules as built-in panels (pinned
@@ -331,6 +336,9 @@ screen positions disable open-near-click).
 
 Official defaults: `noctalia/example:panel` ships `floating` + `center`; `noctalia/wallhaven:browser` ships `attached` +
 `auto`.
+
+Use `decorated = false` only when the root tree paints every surface itself. The panel keeps its declared geometry,
+input handling, outside-click behavior, and keyboard policy; only the host-owned visual frame disappears.
 
 ### Handling keys directly
 
@@ -440,6 +448,107 @@ The reference implementation is the `panel` entry of the official `noctalia/exam
 exercising every interactive control. `noctalia/wallhaven:browser` is a network-backed panel (thumbnail grid, filters,
 download + apply via `noctalia.wallpaperDirectory()` and `noctalia.setWallpaper()`).
 
+## Free-form panel canvases {#free-form-panel-canvases}
+
+Every declarative control can leave its parent's normal row or column flow and keep explicit coordinates. This allows
+panels to implement sticky-note boards, node editors, diagram surfaces, dashboards, and other spatial layouts without
+creating one native surface per item. Requires
+<PluginApiBadge feature="freeform-canvas" />.
+
+These common props are available on every `ui.*` node:
+
+| Prop | Meaning |
+|------|---------|
+| `position` | `"flow"` (default) participates in the parent flex layout; `"absolute"` leaves that layout and uses `x` / `y` |
+| `x`, `y` | Top-left position in parent-local logical pixels; each defaults to `0` for an absolute node |
+| `zIndex` | Numeric stacking order, clamped to -1,000,000…1,000,000; higher nodes draw and receive pointer input above lower nodes |
+| `clipChildren` | Boolean controlling whether descendants are clipped to this node's bounds |
+
+An absolute node must have numeric `width` and `height`; otherwise the host logs a warning because its geometry is not
+well-defined. Give every movable node a stable `key`, keep its coordinates and stacking order in plugin-owned state,
+and re-render after a move. Coordinates describe the node within its immediate parent, not the output or compositor.
+
+```lua
+local notes = {
+  { id = "note-1", title = "Ideas", x = 40, y = 32, z = 1 },
+}
+local nextZ = 2
+local renderBoard
+
+local function findNote(id)
+  for _, note in ipairs(notes) do
+    if note.id == id then return note end
+  end
+  return nil
+end
+
+local function bringToFront(id)
+  local note = findNote(id)
+  if note == nil then return end
+  note.z = nextZ
+  nextZ = nextZ + 1
+end
+
+local function noteCard(note)
+  return ui.column({
+    key = note.id,
+    position = "absolute",
+    x = note.x,
+    y = note.y,
+    zIndex = note.z,
+    width = 220,
+    height = 180,
+    fill = "surface_variant",
+    radius = 12,
+  }, {
+    ui.dragSource({
+      key = note.id .. "-grip",
+      dragType = "note",
+      payload = note.id,
+      previewAncestor = 1,
+      height = 32,
+    }, {
+      ui.label({ text = note.title }),
+    }),
+    ui.input({
+      key = note.id .. "-body",
+      multiline = true,
+      flexGrow = 1,
+      frameVisible = false,
+      onPress = function()
+        bringToFront(note.id)
+        renderBoard()
+      end,
+    }),
+  })
+end
+
+renderBoard = function()
+  local cards = {}
+  for _, note in ipairs(notes) do table.insert(cards, noteCard(note)) end
+  panel.render(ui.dropZone({
+    key = "notes-canvas",
+    accepts = { "note" },
+    value = "canvas",
+    onDrop = "onNoteDrop",
+    flexGrow = 1,
+    clipChildren = true,
+  }, cards))
+end
+
+function onNoteDrop(noteId, target, x, y)
+  local note = findNote(noteId)
+  if note == nil or target ~= "canvas" then return end
+  note.x, note.y = x, y
+  bringToFront(noteId)
+  renderBoard()
+end
+```
+
+`clipChildren = true` on the canvas keeps cards inside the usable board. `zIndex` is also useful on flow nodes, but
+absolute cards normally persist it so clicking an overlapped card can bring it to the front. `position = "flow"`
+returns a retained node to normal layout; omit `x` and `y` for flow nodes.
+
 ## Drag and drop (panels only) {#drag-and-drop-panels-only}
 
 Panels can offer pointer drag and drop for reorderable lists, kanban-style groups, and cross-container moves
@@ -458,8 +567,12 @@ container that accepts drops. Both take the common layout props of a column/row 
 A press becomes a drag only after a small movement threshold, so clicks on controls inside a dragged row still work.
 While dragging, the source dims (or lifts out of layout), a ghost of the previewed subtree follows the pointer, and
 the accepted target under the pointer highlights with the primary color. Releasing over an accepted zone calls
-`onDrop(payload, value)`; releasing anywhere else cancels silently. Nested zones resolve to the deepest accepting
-zone; zones with `hitSlop` are considered first, closest wins.
+`onDrop(payload, value, x, y)`; releasing anywhere else cancels silently. The first two arguments are unchanged from
+the original drag-and-drop API. The coordinates require
+<PluginApiBadge feature="freeform-canvas" /> and report the drag preview's top-left corner in the
+target's local logical pixels. They preserve the original pointer grab offset and are clamped so the preview remains
+inside the target. Existing two-argument callbacks can ignore the extra values. Nested zones resolve to the deepest
+accepting zone; zones with `hitSlop` are considered first, closest wins.
 
 ```lua
 local items = { "alpha", "beta", "gamma" }
@@ -492,7 +605,8 @@ end
 
 - **Sortable lists**: place a thin `expandOnDrag` + `hitSlop` insertion zone before every row and one after the last;
   with `liftFromLayout` on the source the list shows exactly one open gap that follows the pointer. Encode the
-  insertion point in `value` (`"before:<id>"`, `"end"`, ...) - the callback never receives coordinates.
+  insertion point in `value` (`"before:<id>"`, `"end"`, ...). List callbacks normally ignore `x` / `y`; free-form
+  canvases persist them.
 - **Cross-container moves**: use the same `dragType` in every compatible container and a different `value` per
   container. Keep a container-level `ui.dropZone` around each list so an empty list stays a valid target.
 - **Validation is strict**: a missing, mistyped, empty, or over-limit required prop logs and disables that control for
