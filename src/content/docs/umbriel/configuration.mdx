@@ -422,10 +422,13 @@ because they are not properties of one physical input device.
 [input.cursor]
 theme = ""   # empty = environment/default Xcursor theme
 size = 24    # 1-512
+hardware_cursor = true
 ```
 
-Cursor theme and size changes apply on config reload. Output scale changes also
-reload the cursor image at the matching scale without requiring a restart.
+Set `hardware_cursor = false` to composite the cursor in the output render pass.
+This can work around cursor flicker or disappearance caused by hardware cursor
+planes. Cursor settings apply on config reload. Output scale changes also reload
+the cursor image at the matching scale without requiring a restart.
 
 ### Focus
 
