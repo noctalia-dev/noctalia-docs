@@ -14,6 +14,7 @@ Run `umbriel outputs` inside a session to list connector names and modes.
 mode = "3840x2160@165"
 position = [0, 0]
 scale = 1.25
+vrr = "fullscreen"
 workspaces = 5
 ```
 
@@ -24,6 +25,7 @@ workspaces = 5
 | `mode` | string | (native) | Resolution and refresh rate: `"WIDTHxHEIGHT"` or `"WIDTHxHEIGHT@HZ"`. Fractional Hz allowed. Ignored in nested sessions (the parent controls size). |
 | `position` | `[x, y]` | (auto) | Layout coordinates. |
 | `scale` | float | (auto) | Output scale (0.25-4.0). |
+| `vrr` | string | `"disabled"` | Variable refresh rate policy: `"disabled"`, `"always"`, or `"fullscreen"`. |
 | `workspaces` | int, string array, or `"dynamic"` | `"dynamic"` | Dynamic numbered workspaces, a static count from 1 to 64, or a static ordered list of 1 to 64 names. |
 | `transform` | string | `"normal"` | Output rotation/flip. |
 
@@ -32,12 +34,35 @@ workspaces = 5
 `normal`, `90`, `180`, `270`, `flipped`, `flipped-90`, `flipped-180`,
 `flipped-270`.
 
+### Variable refresh rate
+
+VRR accepts these policies:
+
+| Value | Behavior |
+|-------|----------|
+| `"disabled"` | Never enable adaptive sync. This is the default. |
+| `"always"` | Keep adaptive sync enabled whenever the output supports it. |
+| `"fullscreen"` | Enable adaptive sync only while the active workspace contains a mapped fullscreen window. |
+
+With `"fullscreen"`, switching away from the fullscreen workspace, leaving
+fullscreen, or closing the window disables VRR again.
+
+```toml
+[output.DP-1]
+mode = "2560x1440@165"
+vrr = "fullscreen"
+```
+
+Umbriel keeps VRR disabled if the output does not support adaptive sync or
+rejects the request. Nested Wayland outputs normally depend on the parent
+compositor and may not expose adaptive sync support.
+
 ## Live reconfiguration
 
 Umbriel implements `wlr-output-management-unstable-v1`, so tools such as
 `wlr-randr`, `kanshi`, and `wdisplays` can query and change mode, position,
-scale, and transform at runtime without editing the config file. `umbriel
-outputs` only reads from this protocol; it does not send configuration
+scale, transform, and adaptive sync at runtime without editing the config file.
+`umbriel outputs` only reads from this protocol; it does not send configuration
 requests itself.
 
 Requests that disable an output through this protocol are rejected: umbriel
