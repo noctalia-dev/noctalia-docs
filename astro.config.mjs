@@ -152,6 +152,10 @@ export default defineConfig({
           items: [{ autogenerate: { directory: "greeter" } }],
         },
         {
+          label: "Umbriel",
+          items: [{ autogenerate: { directory: "umbriel" } }],
+        },
+        {
           label: "Noctalia Shell",
           items: [
             { label: "Overview", link: "noctalia-shell/" },

@@ -1,0 +1,405 @@
+---
+title: Configuration
+description: Configure Umbriel via TOML - includes, general and appearance options, layout, input devices, and live reload behavior.
+---
+
+Umbriel reads TOML configuration from `~/.config/umbriel/config.toml`. Pass
+`umbriel -c <path>` to use a different file.
+
+Changes normally apply as soon as you save. If a reload fails, Umbriel keeps
+your last working configuration and continues watching included files. Save a
+corrected file to try the reload again. Options that require a restart are
+marked in the reference tables below.
+
+## Include
+
+```toml
+[include]
+files = ["appearance.toml", "keybinds.toml"]
+```
+
+Paths are resolved relative to the main config file. A leading `~` or `~/`
+expands to your home directory, and `$VAR` or `${VAR}` expands environment
+variables. Later files override earlier files, and values in the main file
+override every include.
+
+You can split your config into multiple files for clarity:
+
+```toml
+# ~/.config/umbriel/config.toml
+[include]
+files = [
+  "src/general.toml",
+  "src/appearance.toml",
+  "src/input.toml",
+  "src/keybinds.toml",
+  "src/rules.toml",
+  "src/workspaces.toml",
+  "machines/monolith.toml",
+]
+```
+
+## General
+
+```toml
+[general]
+autostart = ["noctalia", "kitty"]
+xwayland = true
+show_cheatsheet = true
+focus_on_activate = false
+```
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `autostart` | string array | `[]` | Shell commands run once after startup. Never re-run on config reload. |
+| `xwayland` | bool | `true` | Spawn `xwayland-satellite` for X11 app support. The binary must be installed. Changing this requires a restart. |
+| `show_cheatsheet` | bool | `true` | Show the keybinds cheatsheet overlay on startup. If an included file is still missing, Umbriel waits for it to load before showing the overlay. Press any key or mouse button to dismiss, or toggle at runtime via `cheatsheet-toggle`. |
+| `focus_on_activate` | bool | `false` | Focus and reveal windows that request activation. When false, activation marks the window and its workspace urgent without changing workspaces. Window rules can override this per application. |
+
+## Environment
+
+```toml
+[environment]
+GTK_THEME = "Adwaita:dark"
+QT_QPA_PLATFORMTHEME = "qt5ct"
+```
+
+Extra environment variables exported to Umbriel and all spawned commands.
+All values must be strings. Applied once at startup; changing this section
+requires a restart.
+
+## Workspaces
+
+```toml
+[workspaces]
+back_and_forth = true
+```
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `back_and_forth` | bool | `false` | Re-selecting the active workspace jumps back to the previously active workspace on that output. |
+
+Output workspaces are dynamic by default. See [Outputs](/umbriel/outputs/) for
+dynamic behavior and fixed workspace lists. See
+[Workspace rules](/umbriel/outputs/#workspace-rules) for per-workspace layout
+overrides.
+
+## Colors
+
+```toml
+[colors]
+background = "#141419F0"
+text_primary = "#E8E8EAFF"
+text_muted = "#8A8A92FF"
+accent_primary = "#7AA3FFFF"
+accent_secondary = "#F5C96BFF"
+warning = "#F5C96BFF"
+error = "#FF6B6BFF"
+```
+
+Shared semantic colors for Umbriel-owned interface surfaces such as the keybind
+cheatsheet and configuration diagnostic banner. Colors are `#RRGGBB` or
+`#RRGGBBAA`.
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `background` | color | `#141419F0` | Shared background for internal panels and banners. |
+| `text_primary` | color | `#E8E8EAFF` | Primary text. |
+| `text_muted` | color | `#8A8A92FF` | Secondary help and status text. |
+| `accent_primary` | color | `#7AA3FFFF` | Primary emphasis, including titles and key chords. |
+| `accent_secondary` | color | `#F5C96BFF` | Secondary emphasis, including group headings. |
+| `warning` | color | `#F5C96BFF` | Warning status text. |
+| `error` | color | `#FF6B6BFF` | Error status text. |
+
+Key chord backgrounds are derived from `background` and `text_primary`; they
+remain opaque so text stays legible over translucent panels.
+
+## Appearance
+
+```toml
+[appearance]
+prefer_no_csd = true
+border_width = 2               # 0-100
+outer_border_width = 0         # 0-100
+corner_radius = 10             # 0-500, 0 disables
+border_focused = "#7AA3FFFF"   # #RRGGBB or #RRGGBBAA
+border_unfocused = "#292933FF"
+scratchpad_border_focused = "#E5C07BFF"
+scratchpad_border_unfocused = "#5C4A2AFF"
+outer_border_color = "#1A1A1FFF"
+insert_hint_color = "#7FC8FF80"
+backdrop_color = "#000000FF"
+animation_ms = 250             # 1-10000
+```
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `prefer_no_csd` | bool | `true` | Ask clients to omit client-side decorations (xdg-decoration). Clients that explicitly request CSD are still honored. Restart apps after changing. |
+| `border_width` | int | `2` | Inner border width in logical pixels (0-100), including around rounded corners. |
+| `outer_border_width` | int | `0` | Ring outside the inner border in logical pixels (0-100). |
+| `corner_radius` | int | `10` | Rounded corner radius (0-500). 0 disables. |
+| `border_focused` | color | `#7AA3FFFF` | Border color for the focused window. |
+| `border_unfocused` | color | `#292933FF` | Border color for unfocused windows. |
+| `scratchpad_border_focused` | color | `#E5C07BFF` | Border color for the focused scratchpad window. |
+| `scratchpad_border_unfocused` | color | `#5C4A2AFF` | Border color for unfocused scratchpad windows. |
+| `outer_border_color` | color | `#1A1A1FFF` | Outer border color (no focus variant). |
+| `insert_hint_color` | color | `#7FC8FF80` | Drop-target preview during drag. |
+| `backdrop_color` | color | `#000000FF` | Background for fullscreen gaps and lock screen. |
+| `animation_ms` | int | `250` | Animation duration in milliseconds (1-10000). |
+
+Colors are `#RRGGBB` or `#RRGGBBAA`.
+
+### Blur
+
+```toml
+[appearance.blur]
+enabled = true
+optimized = true
+passes = 3        # 0-8
+radius = 5        # 0-100
+noise = 0.02      # 0.0-1.0
+brightness = 0.9  # 0.0-2.0
+contrast = 0.9    # 0.0-2.0
+saturation = 1.1  # 0.0-2.0
+```
+
+`enabled` is the master switch. Individual surfaces must still opt in through
+[window rules](/umbriel/rules/) or [layer rules](/umbriel/rules/#layer-rules).
+Blur only renders where a surface is transparent. Sampling remains confined to
+the surface's owning output when a window overflows into a neighbouring output.
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `enabled` | bool | `true` | Master blur switch. |
+| `optimized` | bool | `true` | Cache one background blur per output instead of recomputing per surface. |
+| `passes` | int | `3` | Blur passes (0-8). 0 disables. |
+| `radius` | int | `5` | Blur radius (0-100). 0 disables. |
+| `noise` | float | `0.02` | Noise overlay (0.0-1.0). |
+| `brightness` | float | `0.9` | Brightness adjustment (0.0-2.0). |
+| `contrast` | float | `0.9` | Contrast adjustment (0.0-2.0). |
+| `saturation` | float | `1.1` | Saturation adjustment (0.0-2.0). |
+
+### Shadow
+
+```toml
+[appearance.shadow]
+enabled = true
+softness = 10      # 0-200
+offset_x = 2       # -200 to 200
+offset_y = 2
+color = "#0000008C"
+```
+
+Drop shadow behind windows (tiled and floating). Hidden while fullscreen.
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `enabled` | bool | `true` | Enable drop shadows. |
+| `softness` | int | `10` | Gaussian blur sigma in pixels (0-200). 0 produces a hard-edged shadow. |
+| `offset_x` | int | `2` | Horizontal shadow offset (-200 to 200). |
+| `offset_y` | int | `2` | Vertical shadow offset (-200 to 200). |
+| `color` | color | `#0000008C` | Shadow color. |
+
+## Overview
+
+```toml
+[overview]
+zoom = 0.5                     # 0.1-0.75
+background_tint = "#10101430"
+workspace_background = "#00000044"
+```
+
+### Open and navigate
+
+The overview shows every workspace on every output. Press `Mod+O` by default,
+or use one of the [overview actions](/umbriel/keybinds/#overview-actions).
+
+Click a window to focus it, middle-click to close it, or drag it to another
+workspace. Use the wheel, arrow keys, or a 3-finger swipe to move through the
+workspace list. While the overview is open, each gesture moves one workspace
+at a time. A 4-finger swipe opens or closes the overview.
+
+An active client drag takes precedence. Umbriel ignores requests to open the
+overview until the pointer button that initiated the drag is released.
+
+### Move windows
+
+Dragged windows become translucent so you can see the destination beneath
+them. In the dwindle layout, the preview shows the direction of the new split
+before you drop the window.
+
+### Appearance
+
+Overview cards use the same borders, corner radius, transparency, and blur as
+their windows. `workspace_background` adds a rounded background behind each
+workspace. Its alpha can produce anything from a light tint to an opaque fill.
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `zoom` | float | `0.5` | Workspace scale when fully zoomed out (0.1-0.75). |
+| `background_tint` | color | `#10101430` | Tint composited over the desktop background. Alpha `00` leaves it untouched; `FF` hides it. |
+| `workspace_background` | color | `#00000044` | Rounded background behind each workspace. Alpha `00` makes it invisible; `FF` makes it opaque. |
+
+## Layout
+
+```toml
+[layout]
+mode = "scrolling"                  # "scrolling" or "dwindle"
+gap = 8                             # 0-500
+width_presets = [0.333, 0.5, 0.667]
+
+[layout.scrolling]
+default_width_fraction = 0.5        # 0.1-1.0
+center_underfull_strip = true
+```
+
+Shared layout options:
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `mode` | string | `"scrolling"` | Layout algorithm: `"scrolling"` or `"dwindle"`. |
+| `gap` | int | `8` | Gap between windows in pixels (0-500). |
+| `width_presets` | float array | `[0.333, 0.5, 0.667]` | Widths visited by the `window-cycle-width` action in both layouts. |
+
+Scrolling layout options:
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `default_width_fraction` | float | `0.5` | Initial width assigned to new scrolling columns (0.1-1.0). |
+| `center_underfull_strip` | bool | `true` | Center the complete strip whenever it is narrower than the viewport. Set to `false` to align an underfull strip at the left edge. |
+
+In the scrolling layout, Mod+Right-drag selects horizontal and vertical resize
+edges from the outer thirds of a window. Dragging from a corner region resizes
+both axes. Mod+Right-click in the center region starts no resize and instead
+scrolls the focused window into view. When a tiled resize ends, the focused
+scrolling column animates back into view.
+
+Resizing a column recenters an underfull strip immediately.
+
+Dragged windows become translucent so the insertion preview remains visible.
+Existing window transparency still applies during the drag.
+When you drag a column, the preview uses the free space beside the real column
+edges. If the strip extends beyond the output, its far left and right edges
+remain visible prepend and append targets, even when the corresponding end
+columns are off-screen.
+
+Dropping a window into empty space above or below a vertically resized stack
+consumes that space. Existing windows retain their pixel heights, and the
+dropped window fills the remainder apart from the configured inter-window gap.
+
+Layout fields can be overridden per-workspace; see
+[Workspace Rules](/umbriel/outputs/#workspace-rules).
+
+## Input
+
+### Keyboard
+
+```toml
+[input.keyboard]
+layout = ""       # XKB layout, empty = system default
+variant = ""      # XKB variant
+options = ""      # XKB options, comma-separated
+repeat_rate = 25  # 0-1000 Hz, 0 disables
+repeat_delay = 600 # 0-10000 ms
+```
+
+`layout` takes a comma-separated list to load several layouts at once
+(`layout = "us,de"`, optionally with a matching `variant = ",nodeadkeys"`). The
+first entry is active at startup. Switch between them with the
+`keyboard-layout-next` keybind or `umbriel msg keyboard-layout-next`, or put a
+toggle in `options`:
+
+```toml
+[input.keyboard]
+layout = "us,de"
+options = "grp:alt_shift_toggle"
+```
+
+`options` is passed to XKB verbatim, so anything `xkbcli list` reports under
+options works (`grp:win_space_toggle`, `caps:escape`, `compose:ralt`, …). An
+`options` value XKB does not recognize is ignored silently, the same as with
+`setxkbmap`; a `layout` or `variant` that fails to compile is reported in the
+log and the whole keyboard block falls back to the system default.
+
+### Touchpad
+
+```toml
+[input.touchpad]
+tap = true
+natural_scroll = true
+```
+
+Options are applied only when supported by the libinput device. Omit to
+preserve each device's defaults.
+
+### Mouse
+
+```toml
+[input.mouse]
+natural_scroll = false
+scroll_wheel_step = 60  # 1-1000, pixels per step for layout-scroll-left/right
+```
+
+Omit `natural_scroll` to preserve each device's default. `layout-scroll-left`
+and `layout-scroll-right` clamp to the strip bounds, so the columns never park
+past either edge. Wheel-triggered scrolling uses twice `scroll_wheel_step`
+during an active tiled window drag.
+
+### Per-device overrides
+
+Use `[[input.device]]` to override settings for devices whose name exactly
+matches `name`. Matching is case-sensitive. The name is the `Device` value
+reported by `libinput list-devices`.
+
+```toml
+[[input.device]]
+name = "Acme Split Keyboard"
+layout = "us"
+variant = "colemak_dh"
+repeat_rate = 40
+repeat_delay = 250
+
+[[input.device]]
+name = "Acme Precision Touchpad"
+tap = true
+natural_scroll = false
+```
+
+Each rule inherits the matching class settings and overrides only the keys it
+contains. `layout`, `variant`, `options`, `repeat_rate`, and `repeat_delay`
+apply to keyboards. `tap` applies to touchpads. `natural_scroll` applies to
+touchpads and mice. Unsupported libinput settings are reported in the log.
+
+Rules match every attached device with the exact name. Device overrides also
+apply when a device is connected after startup and when the configuration is
+reloaded. Duplicate rules for the same name are rejected.
+
+`scroll_wheel_step`, cursor settings, and focus settings remain compositor-wide
+because they are not properties of one physical input device.
+
+### Cursor
+
+```toml
+[input.cursor]
+theme = ""   # empty = environment/default Xcursor theme
+size = 24    # 1-512
+```
+
+Cursor theme and size changes apply on config reload. Output scale changes also
+reload the cursor image at the matching scale without requiring a restart.
+
+### Focus
+
+```toml
+[input.focus]
+follows_mouse = false
+follows_mouse_max_scroll = 0.5  # optional, measured in viewport widths
+```
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `follows_mouse` | bool | `false` | Focus a window when the pointer enters it, then scroll it into view. |
+| `follows_mouse_max_scroll` | float | (no limit) | Do not change focus when revealing the window would scroll farther than this many viewport widths. `0.0` allows only windows that are already fully visible. Omit for no limit. |
+
+For example, a window three screens away requires a limit of at least `3.0`.
+Values outside `0.0` to `100.0` are clamped and reported.

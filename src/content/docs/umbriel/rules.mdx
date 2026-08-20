@@ -1,0 +1,176 @@
+---
+title: Window and Layer Rules
+description: Match windows and layer-shell surfaces with regex rules to control floating, placement, opacity, and blur.
+---
+
+## Window Rules
+
+Window rules match `app_id`, title, or focus state using ECMAScript regular
+expressions. Every matching rule contributes its settings. If two rules set
+the same field, the rule that appears later in the file takes precedence.
+
+```toml
+[[window_rule]]
+match.app_id = "firefox"
+match.title = "^Library$"
+default_floating = true
+```
+
+### Matching
+
+| Selector | Type | Description |
+|----------|------|-------------|
+| `match.app_id` | regex | Match the window's app ID. |
+| `match.title` | regex | Match the window's title. |
+| `match.is_focused` | bool | Match the window's focused state dynamically. |
+
+Every selector is optional. A rule without selectors matches every window.
+Regular expressions match any part of a value by default. Use `^` and `$` when
+you need to match the entire value.
+
+Run `umbriel windows` to list the app IDs of open windows. Windows translated
+through Umbriel's managed `xwayland-satellite` are prefixed with `[Xwayland]`.
+The JSON form, `umbriel windows --json`, reports the same distinction through
+the boolean `xwayland` field.
+
+### Settings applied when a window opens
+
+These settings are applied once when the window opens. Some applications set
+their title shortly afterward, so Umbriel checks the rules one more time when
+that first title arrives. Only newly resolved settings are applied: unchanged
+opening settings do not overwrite user changes made in the meantime.
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `default_output` | string | Open on a specific output (e.g. `"DP-1"`). |
+| `default_floating` | bool | Force floating (`true`) or force tiling (`false`). |
+| `default_size` | `[w, h]` | Initial size in pixels, clamped to the client's min/max hints. Floats use both, then own their size and honor client resizes; tiled windows ignore height. |
+| `default_width` | float | Scrolling only. Column width fraction (0.1-1.0). Gap-aware: fractions that sum to 1 tile exactly. Overrides `layout.scrolling.default_width_fraction`. Dragging the column within or between scrolling workspaces retains its current width. Ignored in dwindle. |
+| `default_workspace` | int | Place on workspace N from 1 to 64. On dynamic outputs, values beyond the current count clamp to the last workspace. |
+| `default_fullscreen` | bool | Open in fullscreen. |
+| `default_maximize` | bool | Open maximized. For tiled windows, Umbriel expands the column to full width without changing the layout when the client requests maximize. Floating windows fill the usable area. |
+
+Without `default_output`, a numbered workspace owned by exactly one fixed output
+inventory also selects that output. For example, if only `DP-1` has a fourth
+configured workspace, `default_workspace = 4` opens there even when the window
+was launched from another output. If several fixed outputs contain that
+position, Umbriel keeps the launch output. An explicit `default_output` always
+scopes the workspace lookup to that output.
+
+### Settings updated while a window is open
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `opacity` | float | Surface opacity (0.0-1.0). |
+| `blur` | bool | Enable/disable blur for this window. |
+| `blur_popups` | bool | Enable/disable blur for its XDG popups. |
+| `blur_ignore_alpha` | float | Skip blur where surface alpha is below this threshold (0.0-1.0). Applies to the window and its popups. |
+| `blur_optimized` | bool | Override `appearance.blur.optimized` for this window. |
+| `focus_on_activate` | bool | Override `general.focus_on_activate` for activation requests targeting this window. `false` marks it urgent without focusing or switching workspaces. |
+
+### Examples
+
+```toml
+# Enable blur for every window
+[[window_rule]]
+blur = true
+
+# Narrow columns for terminals and file managers
+[[window_rule]]
+match.app_id = "^(Alacritty|kitty|org\\.gnome\\.Nautilus)$"
+default_width = 0.33
+
+# Wide columns for browsers
+[[window_rule]]
+match.app_id = "^(helium|chromium)$"
+default_width = 0.75
+
+# Slight transparency for editors and file managers
+[[window_rule]]
+match.app_id = "^(code|org\\.gnome\\.Nautilus)$"
+opacity = 0.97
+
+# Float utility windows
+[[window_rule]]
+match.app_id = "^(Emulator|zenity|xdg-desktop-portal|qalculate-gtk|org\\.pulseaudio\\.pavucontrol)$"
+default_floating = true
+
+# Float common dialogs by title
+[[window_rule]]
+match.title = "^(Open File|Select|Choose a wallpaper|Open Folder|Save As|Library|Choose Where to Download|File Operation Progress|Rename|Copy Files|Move Files|Search Files)"
+default_floating = true
+
+# Games on workspace 4, fullscreen
+[[window_rule]]
+match.app_id = "^(steam.*|overwatch|overwatch\\.exe)$"
+default_workspace = 4
+
+[[window_rule]]
+match.app_id = "^(steam_proton|steam_app.*|overwatch|overwatch\\.exe)$"
+default_fullscreen = true
+
+# Noctalia settings
+[[window_rule]]
+match.app_id = "^dev.noctalia.Noctalia$"
+default_floating = true
+default_size = [1020, 900]
+blur_popups = false
+
+# Noctalia share picker
+[[window_rule]]
+match.app_id = "^dev.noctalia.UmbrielSharePicker$"
+default_floating = true
+default_size = [800, 600]
+
+# Swash
+[[window_rule]]
+match.app_id = "^dev.lemmy.swash$"
+default_floating = true
+default_size = [1000, 900]
+
+# Dim unfocused windows
+[[window_rule]]
+match.is_focused = false
+opacity = 0.85
+
+[[window_rule]]
+match.is_focused = true
+opacity = 1.0
+```
+
+---
+
+## Layer Rules
+
+Layer rules match layer-shell surfaces such as bars, launchers, and
+notifications. The `match.namespace` selector uses an ECMAScript regular
+expression. Run `umbriel layers` to list the namespaces currently in use.
+
+```toml
+[[layer_rule]]
+match.namespace = "^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd|desktop-widget-[^\"]*)$"
+blur = true
+blur_ignore_alpha = 0.5
+blur_popups = true
+```
+
+### Matching
+
+| Selector | Type | Description |
+|----------|------|-------------|
+| `match.namespace` | regex | Match the layer surface namespace. |
+
+Regular expressions match any part of a namespace. Use `^` and `$` to match
+the entire namespace.
+
+### Effects
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `blur` | bool | Enable/disable blur for the layer surface. |
+| `blur_popups` | bool | Enable/disable blur for descendant XDG popups. |
+| `blur_ignore_alpha` | float | Skip blur where surface alpha is below this threshold (0.0-1.0). `0.0` blurs the entire rectangle; higher values leave transparent regions unblurred. |
+| `blur_optimized` | bool | Override `appearance.blur.optimized`. |
+
+Layer-shell blur is off by default. As with window rules, every matching rule
+contributes its settings, and later values take precedence.

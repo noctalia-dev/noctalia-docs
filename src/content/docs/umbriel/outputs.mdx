@@ -1,0 +1,195 @@
+---
+title: Outputs
+description: Configure per-monitor outputs, dynamic and static workspaces, and per-workspace layout overrides.
+---
+
+Output sections configure individual monitors. Names must exactly match
+connector names such as `DP-1` or `HDMI-A-1`. Nested outputs use `WL-1`;
+headless outputs use `HEADLESS-1`.
+
+Run `umbriel outputs` inside a session to list connector names and modes.
+
+```toml
+[output.DP-1]
+mode = "3840x2160@165"
+position = [0, 0]
+scale = 1.25
+workspaces = 5
+```
+
+## Settings
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `mode` | string | (native) | Resolution and refresh rate: `"WIDTHxHEIGHT"` or `"WIDTHxHEIGHT@HZ"`. Fractional Hz allowed. Ignored in nested sessions (the parent controls size). |
+| `position` | `[x, y]` | (auto) | Layout coordinates. |
+| `scale` | float | (auto) | Output scale (0.25-4.0). |
+| `workspaces` | int, string array, or `"dynamic"` | `"dynamic"` | Dynamic numbered workspaces, a static count from 1 to 64, or a static ordered list of 1 to 64 names. |
+| `transform` | string | `"normal"` | Output rotation/flip. |
+
+### Transform values
+
+`normal`, `90`, `180`, `270`, `flipped`, `flipped-90`, `flipped-180`,
+`flipped-270`.
+
+## Live reconfiguration
+
+Umbriel implements `wlr-output-management-unstable-v1`, so tools such as
+`wlr-randr`, `kanshi`, and `wdisplays` can query and change mode, position,
+scale, and transform at runtime without editing the config file. `umbriel
+outputs` only reads from this protocol; it does not send configuration
+requests itself.
+
+Requests that disable an output through this protocol are rejected: umbriel
+has no disabled-output state model.
+
+## Moving focus and windows between outputs
+
+`output-focus-left/right/up/down` move keyboard focus to the adjacent
+monitor in that direction. `window-move-to-output-*` and
+`column-move-to-output-*` move the focused window, or its whole column, to
+the adjacent monitor's active workspace. `workspace-move-to-output-*` instead
+creates a new workspace on the adjacent monitor and moves every window of the
+active workspace into it, preserving column order and widths. See
+[Keybinds](/umbriel/keybinds/) for the full list and their exact semantics.
+
+## Multi-monitor example
+
+A triple-monitor setup with a 4K primary, a 1440p top monitor, and a 1080p
+side panel:
+
+```toml
+[output.DP-1]
+mode = "3840x2160@165"
+position = [0, 0]
+scale = 1.25
+workspaces = 5
+
+[output.DP-2]
+mode = "2560x1440@144"
+position = [1300, -1440]
+scale = 1.0
+workspaces = ["VIDEO"]
+
+[output.HDMI-A-1]
+mode = "1920x1080@60"
+position = [3072, 0]
+scale = 1.0
+workspaces = ["CHAT", "STATS"]
+```
+
+Tiled windows are clipped to the logical bounds of their owning output.
+Partially visible scrolling columns do not render onto adjacent outputs,
+including when either output uses fractional scaling.
+
+## Machine-specific overrides
+
+A common pattern is to keep output configuration in a separate per-machine
+include file so the same base config works on different hardware:
+
+```toml
+# ~/.config/umbriel/config.toml
+[include]
+files = [
+  "src/general.toml",
+  "src/keybinds.toml",
+  "machines/monolith.toml",   # output config for this machine
+]
+```
+
+## Choose a workspace model
+
+Each output can use dynamic or static workspaces.
+
+### Dynamic workspaces
+
+Omit `workspaces` or set it to `"dynamic"`. The output starts with one empty
+workspace named `"1"`. When the last workspace gains a window, Umbriel adds
+another empty workspace.
+
+After you leave an empty workspace, Umbriel removes it unless it is still
+active. The remaining workspaces are renumbered. If you switch to a workspace
+number beyond the current count, Umbriel uses the last workspace.
+
+### Static workspaces
+
+Set `workspaces` to a number or an ordered list of names. Umbriel creates
+exactly those workspaces and keeps them when they are empty.
+
+```toml
+[output.DP-1]
+workspaces = 5
+
+[output.DP-2]
+workspaces = ["WEB", "CHAT", "VIDEO"]
+```
+
+### Change workspaces on reload
+
+Workspace changes apply when you save a valid configuration. For static
+workspaces, Umbriel first matches existing workspaces by name and then by
+position. Windows from a removed workspace move to the nearest remaining one.
+
+Switching to dynamic workspaces keeps populated and active workspaces,
+renumbers them, and adds an empty workspace at the end.
+
+## Workspace rules
+
+`[[workspace]]` entries customize static workspaces or numbered positions on a
+dynamic output. They change layout settings but do not create workspaces.
+
+Each rule selects a workspace by exactly one of `name` (string) or `index`
+(1-based integer from 1 to 64). An optional `output` restricts the rule to that
+output.
+
+### How settings are combined
+
+Workspace layout settings are applied in this order:
+
+1. The base `[layout]` settings.
+2. A matching `[[workspace]]` rule without an `output`.
+3. A matching `[[workspace]]` rule for the selected output.
+
+Later steps take precedence. On dynamic outputs, rules match workspace names
+and numbered positions as those workspaces are created or removed.
+
+### Available fields
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `name` | string | Select by workspace name (mutually exclusive with `index`). |
+| `index` | int | Select by 1-based position from 1 to 64 (mutually exclusive with `name`). |
+| `output` | string | Restrict to this output. |
+| `layout.mode` | string | `"scrolling"` or `"dwindle"`. |
+| `layout.gap` | int | Gap in pixels (0-500). |
+| `layout.width_presets` | float array | Widths used by the width-cycle action in both layouts. |
+| `layout.scrolling.default_width_fraction` | float | Initial scrolling column width (0.1-1.0). |
+| `layout.scrolling.center_underfull_strip` | bool | Center the complete strip whenever it is narrower than the viewport. Disable to left-align underfull strips. |
+
+### Examples
+
+```toml
+# Dwindle layout for the VIDEO workspace on DP-2
+[[workspace]]
+output = "DP-2"
+name = "VIDEO"
+layout.mode = "dwindle"
+
+# Scrolling for CHAT, dwindle for STATS, both on HDMI-A-1
+[[workspace]]
+output = "HDMI-A-1"
+name = "CHAT"
+layout.mode = "scrolling"
+
+[[workspace]]
+output = "HDMI-A-1"
+name = "STATS"
+layout.mode = "dwindle"
+
+# Customize workspace position 4 on DP-1
+[[workspace]]
+index = 4
+output = "DP-1"
+layout.gap = 0
+layout.scrolling.default_width_fraction = 0.667
+```

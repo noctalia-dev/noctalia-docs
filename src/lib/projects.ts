@@ -16,6 +16,13 @@ export const PROJECTS = [
     sidebarLabel: 'Noctalia Greeter',
   },
   {
+    id: 'umbriel',
+    label: 'Umbriel',
+    description: 'Wayland compositor',
+    href: '/umbriel/',
+    sidebarLabel: 'Umbriel',
+  },
+  {
     id: 'noctalia-shell',
     label: 'Noctalia Shell',
     description: 'Quickshell · v4 legacy',
