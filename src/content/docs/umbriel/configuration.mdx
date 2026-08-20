@@ -11,6 +11,9 @@ your last working configuration and continues watching included files. Save a
 corrected file to try the reload again. Options that require a restart are
 marked in the reference tables below.
 
+For the exact reload guarantees, see the
+[configuration reload design note](design/configuration-reload.md).
+
 ## Include
 
 ```toml
@@ -50,13 +53,13 @@ show_cheatsheet = true
 focus_on_activate = false
 ```
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| `autostart` | string array | `[]` | Shell commands run once after startup. Never re-run on config reload. |
-| `mod_key` | string | Super (Alt when nested) | Modifier represented by `Mod` in keybinds. Accepts `Super`, `Alt`, `Ctrl`, or `Shift`; aliases `Logo`, `Win`, and `Control` are also accepted. Applies on reload. |
-| `xwayland` | bool | `true` | Spawn `xwayland-satellite` for X11 app support. The binary must be installed. Changing this requires a restart. |
-| `show_cheatsheet` | bool | `true` | Show the keybinds cheatsheet overlay on startup. If an included file is still missing, Umbriel waits for it to load before showing the overlay. Press any key or mouse button to dismiss, or toggle at runtime via `cheatsheet-toggle`. |
-| `focus_on_activate` | bool | `false` | Focus and reveal windows that request activation. When false, activation marks the window and its workspace urgent without changing workspaces. Window rules can override this per application. |
+| Key                 | Type         | Default                 | Description                                                                                                                                                                                                                             |
+| ------------------- | ------------ | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `autostart`         | string array | `[]`                    | Shell commands run once after startup. Never re-run on config reload.                                                                                                                                                                   |
+| `mod_key`           | string       | Super (Alt when nested) | Modifier represented by `Mod` in keybinds. Accepts `Super`, `Alt`, `Ctrl`, or `Shift`; aliases `Logo`, `Win`, and `Control` are also accepted. Applies on reload.                                                                       |
+| `xwayland`          | bool         | `true`                  | Spawn `xwayland-satellite` for X11 app support. The binary must be installed. Changing this requires a restart.                                                                                                                         |
+| `show_cheatsheet`   | bool         | `true`                  | Show the keybinds cheatsheet overlay on startup. If an included file is still missing, Umbriel waits for it to load before showing the overlay. Press any key or mouse button to dismiss, or toggle at runtime via `cheatsheet-toggle`. |
+| `focus_on_activate` | bool         | `false`                 | Focus and reveal windows that request activation. When false, activation marks the window and its workspace urgent without changing workspaces. Window rules can override this per application.                                         |
 
 ## Environment
 
@@ -77,13 +80,13 @@ requires a restart.
 back_and_forth = true
 ```
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
+| Key              | Type | Default | Description                                                                                     |
+| ---------------- | ---- | ------- | ----------------------------------------------------------------------------------------------- |
 | `back_and_forth` | bool | `false` | Re-selecting the active workspace jumps back to the previously active workspace on that output. |
 
-Output workspaces are dynamic by default. See [Outputs](/umbriel/outputs/) for
-dynamic behavior and fixed workspace lists. See
-[Workspace rules](/umbriel/outputs/#workspace-rules) for per-workspace layout
+Output workspaces are dynamic by default. See [Outputs](outputs.md) for dynamic
+behavior and fixed workspace lists. See
+[Workspace rules](outputs.md#workspace-rules) for per-workspace layout
 overrides.
 
 ## Colors
@@ -103,15 +106,15 @@ Shared semantic colors for Umbriel-owned interface surfaces such as the keybind
 cheatsheet and configuration diagnostic banner. Colors are `#RRGGBB` or
 `#RRGGBBAA`.
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| `background` | color | `#141419F0` | Shared background for internal panels and banners. |
-| `text_primary` | color | `#E8E8EAFF` | Primary text. |
-| `text_muted` | color | `#8A8A92FF` | Secondary help and status text. |
-| `accent_primary` | color | `#7AA3FFFF` | Primary emphasis, including titles and key chords. |
-| `accent_secondary` | color | `#F5C96BFF` | Secondary emphasis, including group headings. |
-| `warning` | color | `#F5C96BFF` | Warning status text. |
-| `error` | color | `#FF6B6BFF` | Error status text. |
+| Key                | Type  | Default     | Description                                        |
+| ------------------ | ----- | ----------- | -------------------------------------------------- |
+| `background`       | color | `#141419F0` | Shared background for internal panels and banners. |
+| `text_primary`     | color | `#E8E8EAFF` | Primary text.                                      |
+| `text_muted`       | color | `#8A8A92FF` | Secondary help and status text.                    |
+| `accent_primary`   | color | `#7AA3FFFF` | Primary emphasis, including titles and key chords. |
+| `accent_secondary` | color | `#F5C96BFF` | Secondary emphasis, including group headings.      |
+| `warning`          | color | `#F5C96BFF` | Warning status text.                               |
+| `error`            | color | `#FF6B6BFF` | Error status text.                                 |
 
 Key chord backgrounds are derived from `background` and `text_primary`; they
 remain opaque so text stays legible over translucent panels.
@@ -134,20 +137,20 @@ backdrop_color = "#000000FF"
 animation_ms = 250             # 1-10000
 ```
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| `prefer_no_csd` | bool | `true` | Ask clients to omit client-side decorations (xdg-decoration). Clients that explicitly request CSD are still honored. Restart apps after changing. |
-| `border_width` | int | `2` | Inner border width in logical pixels (0-100), including around rounded corners. |
-| `outer_border_width` | int | `0` | Ring outside the inner border in logical pixels (0-100). |
-| `corner_radius` | int | `10` | Rounded corner radius (0-500). 0 disables. |
-| `border_focused` | color | `#7AA3FFFF` | Border color for the focused window. |
-| `border_unfocused` | color | `#292933FF` | Border color for unfocused windows. |
-| `scratchpad_border_focused` | color | `#E5C07BFF` | Border color for the focused scratchpad window. |
-| `scratchpad_border_unfocused` | color | `#5C4A2AFF` | Border color for unfocused scratchpad windows. |
-| `outer_border_color` | color | `#1A1A1FFF` | Outer border color (no focus variant). |
-| `insert_hint_color` | color | `#7FC8FF80` | Drop-target preview during drag. |
-| `backdrop_color` | color | `#000000FF` | Background for fullscreen gaps and lock screen. |
-| `animation_ms` | int | `250` | Animation duration in milliseconds (1-10000). |
+| Key                           | Type  | Default     | Description                                                                                                                                       |
+| ----------------------------- | ----- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `prefer_no_csd`               | bool  | `true`      | Ask clients to omit client-side decorations (xdg-decoration). Clients that explicitly request CSD are still honored. Restart apps after changing. |
+| `border_width`                | int   | `2`         | Inner border width in logical pixels (0-100), including around rounded corners.                                                                   |
+| `outer_border_width`          | int   | `0`         | Ring outside the inner border in logical pixels (0-100).                                                                                          |
+| `corner_radius`               | int   | `10`        | Rounded corner radius (0-500). 0 disables.                                                                                                        |
+| `border_focused`              | color | `#7AA3FFFF` | Border color for the focused window.                                                                                                              |
+| `border_unfocused`            | color | `#292933FF` | Border color for unfocused windows.                                                                                                               |
+| `scratchpad_border_focused`   | color | `#E5C07BFF` | Border color for the focused scratchpad window.                                                                                                   |
+| `scratchpad_border_unfocused` | color | `#5C4A2AFF` | Border color for unfocused scratchpad windows.                                                                                                    |
+| `outer_border_color`          | color | `#1A1A1FFF` | Outer border color (no focus variant).                                                                                                            |
+| `insert_hint_color`           | color | `#7FC8FF80` | Drop-target preview during drag.                                                                                                                  |
+| `backdrop_color`              | color | `#000000FF` | Background for fullscreen gaps and lock screen.                                                                                                   |
+| `animation_ms`                | int   | `250`       | Animation duration in milliseconds (1-10000).                                                                                                     |
 
 Colors are `#RRGGBB` or `#RRGGBBAA`.
 
@@ -166,20 +169,20 @@ saturation = 1.1  # 0.0-2.0
 ```
 
 `enabled` is the master switch. Individual surfaces must still opt in through
-[window rules](/umbriel/rules/) or [layer rules](/umbriel/rules/#layer-rules).
+[window rules](rules.md) or [layer rules](rules.md#layer-rules).
 Blur only renders where a surface is transparent. Sampling remains confined to
 the surface's owning output when a window overflows into a neighbouring output.
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| `enabled` | bool | `true` | Master blur switch. |
-| `optimized` | bool | `true` | Cache one background blur per output instead of recomputing per surface. |
-| `passes` | int | `3` | Blur passes (0-8). 0 disables. |
-| `radius` | int | `5` | Blur radius (0-100). 0 disables. |
-| `noise` | float | `0.02` | Noise overlay (0.0-1.0). |
-| `brightness` | float | `0.9` | Brightness adjustment (0.0-2.0). |
-| `contrast` | float | `0.9` | Contrast adjustment (0.0-2.0). |
-| `saturation` | float | `1.1` | Saturation adjustment (0.0-2.0). |
+| Key          | Type  | Default | Description                                                              |
+| ------------ | ----- | ------- | ------------------------------------------------------------------------ |
+| `enabled`    | bool  | `true`  | Master blur switch.                                                      |
+| `optimized`  | bool  | `true`  | Cache one background blur per output instead of recomputing per surface. |
+| `passes`     | int   | `3`     | Blur passes (0-8). 0 disables.                                           |
+| `radius`     | int   | `5`     | Blur radius (0-100). 0 disables.                                         |
+| `noise`      | float | `0.02`  | Noise overlay (0.0-1.0).                                                 |
+| `brightness` | float | `0.9`   | Brightness adjustment (0.0-2.0).                                         |
+| `contrast`   | float | `0.9`   | Contrast adjustment (0.0-2.0).                                           |
+| `saturation` | float | `1.1`   | Saturation adjustment (0.0-2.0).                                         |
 
 ### Shadow
 
@@ -194,13 +197,13 @@ color = "#0000008C"
 
 Drop shadow behind windows (tiled and floating). Hidden while fullscreen.
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| `enabled` | bool | `true` | Enable drop shadows. |
-| `softness` | int | `10` | Gaussian blur sigma in pixels (0-200). 0 produces a hard-edged shadow. |
-| `offset_x` | int | `2` | Horizontal shadow offset (-200 to 200). |
-| `offset_y` | int | `2` | Vertical shadow offset (-200 to 200). |
-| `color` | color | `#0000008C` | Shadow color. |
+| Key        | Type  | Default     | Description                                                            |
+| ---------- | ----- | ----------- | ---------------------------------------------------------------------- |
+| `enabled`  | bool  | `true`      | Enable drop shadows.                                                   |
+| `softness` | int   | `10`        | Gaussian blur sigma in pixels (0-200). 0 produces a hard-edged shadow. |
+| `offset_x` | int   | `2`         | Horizontal shadow offset (-200 to 200).                                |
+| `offset_y` | int   | `2`         | Vertical shadow offset (-200 to 200).                                  |
+| `color`    | color | `#0000008C` | Shadow color.                                                          |
 
 ## Overview
 
@@ -214,7 +217,7 @@ workspace_background = "#00000044"
 ### Open and navigate
 
 The overview shows every workspace on every output. Press `Mod+O` by default,
-or use one of the [overview actions](/umbriel/keybinds/#overview-actions).
+or use one of the [overview actions](keybinds.md#overview-actions).
 
 Click a window to focus it, middle-click to close it, or drag it to another
 workspace. Use the wheel, arrow keys, or a 3-finger swipe to move through the
@@ -236,10 +239,13 @@ Overview cards use the same borders, corner radius, transparency, and blur as
 their windows. `workspace_background` adds a rounded background behind each
 workspace. Its alpha can produce anything from a light tint to an opaque fill.
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| `zoom` | float | `0.5` | Workspace scale when fully zoomed out (0.1-0.75). |
-| `background_tint` | color | `#10101430` | Tint composited over the desktop background. Alpha `00` leaves it untouched; `FF` hides it. |
+See the [overview rendering design note](design/overview-rendering.md) for
+clipping, opacity, and decoration details.
+
+| Key                    | Type  | Default     | Description                                                                                    |
+| ---------------------- | ----- | ----------- | ---------------------------------------------------------------------------------------------- |
+| `zoom`                 | float | `0.5`       | Workspace scale when fully zoomed out (0.1-0.75).                                              |
+| `background_tint`      | color | `#10101430` | Tint composited over the desktop background. Alpha `00` leaves it untouched; `FF` hides it.    |
 | `workspace_background` | color | `#00000044` | Rounded background behind each workspace. Alpha `00` makes it invisible; `FF` makes it opaque. |
 
 ## Layout
@@ -257,18 +263,18 @@ center_underfull_strip = true
 
 Shared layout options:
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| `mode` | string | `"scrolling"` | Layout algorithm: `"scrolling"` or `"dwindle"`. |
-| `gap` | int | `8` | Gap between windows in pixels (0-500). |
+| Key             | Type        | Default               | Description                                                        |
+| --------------- | ----------- | --------------------- | ------------------------------------------------------------------ |
+| `mode`          | string      | `"scrolling"`         | Layout algorithm: `"scrolling"` or `"dwindle"`.                    |
+| `gap`           | int         | `8`                   | Gap between windows in pixels (0-500).                             |
 | `width_presets` | float array | `[0.333, 0.5, 0.667]` | Widths visited by the `window-cycle-width` action in both layouts. |
 
 Scrolling layout options:
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| `default_width_fraction` | float | `0.5` | Initial width assigned to new scrolling columns (0.1-1.0). |
-| `center_underfull_strip` | bool | `true` | Center the complete strip whenever it is narrower than the viewport. Set to `false` to align an underfull strip at the left edge. |
+| Key                      | Type  | Default | Description                                                                                                                       |
+| ------------------------ | ----- | ------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `default_width_fraction` | float | `0.5`   | Initial width assigned to new scrolling columns (0.1-1.0).                                                                        |
+| `center_underfull_strip` | bool  | `true`  | Center the complete strip whenever it is narrower than the viewport. Set to `false` to align an underfull strip at the left edge. |
 
 In the scrolling layout, Mod+Right-drag selects horizontal and vertical resize
 edges from the outer thirds of a window. Dragging from a corner region resizes
@@ -290,7 +296,7 @@ consumes that space. Existing windows retain their pixel heights, and the
 dropped window fills the remainder apart from the configured inter-window gap.
 
 Layout fields can be overridden per-workspace; see
-[Workspace Rules](/umbriel/outputs/#workspace-rules).
+[Workspace Rules](outputs.md#workspace-rules).
 
 ## Input
 
@@ -357,7 +363,7 @@ preserve each device's defaults.
 [input.mouse]
 natural_scroll = false
 accel_profile = "flat"  # "flat", "adaptive", or a custom curve
-sensitivity = 0.0       # -1.0 to 1.0
+sensitivity = 0.0        # -1.0 to 1.0
 scroll_wheel_step = 60  # 1-1000, pixels per step for layout-scroll-left/right
 ```
 
@@ -413,8 +419,44 @@ Rules match every attached device with the exact name. Device overrides also
 apply when a device is connected after startup and when the configuration is
 reloaded. Duplicate rules for the same name are rejected.
 
-`scroll_wheel_step`, cursor settings, and focus settings remain compositor-wide
-because they are not properties of one physical input device.
+`scroll_wheel_step`, cursor settings, tablet settings, and focus settings remain
+compositor-wide because they are not properties of one physical input device.
+
+### Tablet
+
+```toml
+[input.tablet]
+enabled = true                 # false disables the tablet and its pads
+map_to_output = "DP-1"         # confine the tablet area to one monitor
+map_to_focused_output = false
+map_to_focused_window = false  # pen area = focused window
+left_handed = false
+calibration_matrix = [1.0, 0.0, 0.0, 0.0, 1.0, 0.0]  # libinput calibration, 6 numbers
+```
+
+Stylus and pad input is delivered over the tablet-v2 protocol to clients that
+support it (pressure, tilt, eraser as a distinct tool, pad buttons, rings, and
+strips). Every other client receives pointer emulation instead: the tip acts as
+the left button, `BTN_STYLUS` as the right button, and `BTN_STYLUS2` as the
+middle button.
+
+| Key                      | Type  | Default | Description                                                                                                        |
+| ------------------------ | ----- | ------- | ------------------------------------------------------------------------------------------------------------------ |
+| `enabled`                | bool  | `true`  | Silences the tablet and its pads at the libinput level. Has no effect on devices libinput cannot disable.          |
+| `map_to_output`          | str   | (none)  | Confines the tablet area to the named output, using the same names as `[output.NAME]`.                             |
+| `map_to_focused_output`  | bool  | `false` | Pen area follows the output holding keyboard focus.                                                                |
+| `map_to_focused_window`  | bool  | `false` | Pen area tracks the focused window.                                                                                |
+| `left_handed`            | bool  | `false` | Flips the tablet orientation via libinput.                                                                         |
+| `calibration_matrix`     | array | (none)  | Six finite numbers passed to libinput; omitting the key restores the device default.                               |
+
+The mapping options form a cascade. `map_to_focused_window` wins while a window
+is focused; otherwise `map_to_focused_output` applies while an output holds
+keyboard focus; otherwise `map_to_output` applies while that output is
+connected; otherwise the pen covers the full output layout. Each level falls
+through to the next when its target is unavailable, so combining options is
+harmless. The tablet area is stretched to the target box without aspect-ratio
+correction. `enabled`, `left_handed`, and `calibration_matrix` changes apply on
+config reload, as do the mapping options for the next pen event.
 
 ### Cursor
 
@@ -438,9 +480,9 @@ follows_mouse = false
 follows_mouse_max_scroll = 0.5  # optional, measured in viewport widths
 ```
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| `follows_mouse` | bool | `false` | Focus a window when the pointer enters it, then scroll it into view. |
+| Key                        | Type  | Default    | Description                                                                                                                                                                     |
+| -------------------------- | ----- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `follows_mouse`            | bool  | `false`    | Focus a window when the pointer enters it, then scroll it into view.                                                                                                            |
 | `follows_mouse_max_scroll` | float | (no limit) | Do not change focus when revealing the window would scroll farther than this many viewport widths. `0.0` allows only windows that are already fully visible. Omit for no limit. |
 
 For example, a window three screens away requires a limit of at least `3.0`.

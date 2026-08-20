@@ -53,9 +53,9 @@ mode = "2560x1440@165"
 vrr = "fullscreen"
 ```
 
-Umbriel keeps VRR disabled if the output does not support adaptive sync or
-rejects the request. Nested Wayland outputs normally depend on the parent
-compositor and may not expose adaptive sync support.
+Umbriel logs a warning and keeps VRR disabled if the output does not support
+adaptive sync or rejects the request. Nested Wayland outputs normally depend on
+the parent compositor and may not expose adaptive sync support.
 
 ## Live reconfiguration
 
@@ -76,7 +76,7 @@ monitor in that direction. `window-move-to-output-*` and
 the adjacent monitor's active workspace. `workspace-move-to-output-*` instead
 creates a new workspace on the adjacent monitor and moves every window of the
 active workspace into it, preserving column order and widths. See
-[Keybinds](/umbriel/keybinds/) for the full list and their exact semantics.
+[keybinds.md](keybinds.md) for the full list and their exact semantics.
 
 ## Multi-monitor example
 
@@ -157,6 +157,11 @@ position. Windows from a removed workspace move to the nearest remaining one.
 
 Switching to dynamic workspaces keeps populated and active workspaces,
 renumbers them, and adds an empty workspace at the end.
+
+The [workspace lifecycle design note](design/workspace-lifecycle.md) records
+the exact state transitions. The
+[configuration reload design note](design/configuration-reload.md) explains
+which other output and layout settings are refreshed during a reload.
 
 ## Workspace rules
 
