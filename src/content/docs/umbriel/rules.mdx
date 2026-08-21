@@ -50,6 +50,7 @@ opening settings do not overwrite user changes made in the meantime.
 | `default_workspace` | int | Place on workspace N from 1 to 64. On dynamic outputs, values beyond the current count clamp to the last workspace. |
 | `default_fullscreen` | bool | Open in fullscreen. |
 | `default_maximize` | bool | Open maximized. For tiled windows, Umbriel expands the column to full width without changing the layout when the client requests maximize. Floating windows fill the usable area. |
+| `default_focused` | bool | Take focus when opening on the active workspace. Defaults to `true`; set to `false` to preserve the existing focus. |
 
 Without `default_output`, a numbered workspace owned by exactly one fixed output
 inventory also selects that output. For example, if only `DP-1` has a fourth
