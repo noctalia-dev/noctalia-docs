@@ -142,6 +142,14 @@ dwindle output flattens into single-window columns, the same as drag-and-drop.
 
 Use `overview-toggle`, `overview-open`, or `overview-close`.
 
+Windows can be dragged onto another workspace preview. With dynamic numbered
+workspaces, dropping a window into the gap between two previews, or into the
+gap above the first preview, creates a new workspace at that position and
+shifts the following workspace numbers down.
+Umbriel keeps one empty dynamic workspace, so other previews disappear as soon
+as their last window is moved or closed, including while the overview is open.
+Static configured workspace lists only accept drops onto existing previews.
+
 ### Cheatsheet actions
 
 Use `cheatsheet-toggle`, `cheatsheet-open`, or `cheatsheet-close`.
@@ -268,6 +276,7 @@ and widgets via `noctalia msg`. Typical bindings:
 # Volume (via Noctalia OSD)
 "XF86AudioRaiseVolume" = "spawn:noctalia msg volume-up 2%"
 "XF86AudioLowerVolume" = "spawn:noctalia msg volume-down 2%"
+"Mod+XF86AudioMute" = "spawn:wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
 
 # Media playback (playerctl)
 "XF86AudioPlay" = "spawn:playerctl play-pause"
@@ -278,3 +287,7 @@ and widgets via `noctalia msg`. Typical bindings:
 "XF86MonBrightnessUp" = "spawn:brightnessctl set +5%"
 "XF86MonBrightnessDown" = "spawn:brightnessctl set 5%-"
 ```
+
+XF86 keys accept the same `Mod`, `Ctrl`, `Alt`, `Shift`, and `Super`
+combinations as other keys. Modifier chords also work when the XF86 key is
+reported by a separate laptop hotkey device.
