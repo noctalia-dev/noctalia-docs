@@ -1,12 +1,28 @@
 import type { SidebarEntry, SidebarGroup } from '@astrojs/starlight/utils/routing/types';
 
-export const PROJECTS = [
+export interface Project {
+  id: string;
+  label: string;
+  description: string;
+  href: string;
+  sidebarLabel: string;
+  /** Canonical name used in SEO titles; falls back to `label`. */
+  displayName?: string;
+  /** Header FAQ link; only set for projects with an FAQ page. */
+  faqHref?: string;
+  /** Archived project; renders the legacy banner in the header. */
+  legacy?: boolean;
+}
+
+export const PROJECTS: readonly Project[] = [
   {
     id: 'noctalia',
     label: 'Noctalia',
     description: 'Current release · v5+',
     href: '/noctalia/',
     sidebarLabel: 'Noctalia',
+    displayName: 'Noctalia v5+',
+    faqHref: '/noctalia/getting-started/faq/',
   },
   {
     id: 'greeter',
@@ -28,11 +44,13 @@ export const PROJECTS = [
     description: 'Quickshell · v4 legacy',
     href: '/noctalia-shell/',
     sidebarLabel: 'Noctalia Shell',
+    displayName: 'Noctalia Shell v4',
+    faqHref: '/noctalia-shell/getting-started/faq/',
+    legacy: true,
   },
-] as const;
+];
 
-export type ProjectId = (typeof PROJECTS)[number]['id'];
-export type Project = (typeof PROJECTS)[number];
+export type ProjectId = Project['id'];
 
 export function projectFromPath(pathname: string): Project | undefined {
   return PROJECTS.find(({ href }) => {

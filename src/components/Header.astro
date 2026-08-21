@@ -11,13 +11,8 @@ const pathname = Astro.url.pathname;
 const project = projectFromPath(pathname);
 const shouldRenderSearch =
   config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
-const faqHref =
-  project?.id === 'noctalia'
-    ? '/noctalia/getting-started/faq/'
-    : project?.id === 'noctalia-shell'
-      ? '/noctalia-shell/getting-started/faq/'
-      : undefined;
-const isLegacy = project?.id === 'noctalia-shell';
+const faqHref = project?.faqHref;
+const isLegacy = project?.legacy === true;
 ---
 
 <div class="header-inner">
@@ -67,19 +62,14 @@ const isLegacy = project?.id === 'noctalia-shell';
 </div>
 
 <script>
+  import { projectFromPath } from '../lib/projects';
+
   function contextForPath(pathname: string) {
-    const isCurrent = pathname === '/noctalia' || pathname.startsWith('/noctalia/');
-    const isLegacy =
-      pathname === '/noctalia-shell' || pathname.startsWith('/noctalia-shell/');
+    const project = projectFromPath(pathname);
     return {
-      isCurrent,
-      isLegacy,
-      hasProject: isCurrent || isLegacy || pathname === '/greeter' || pathname.startsWith('/greeter/'),
-      faqHref: isCurrent
-        ? '/noctalia/getting-started/faq/'
-        : isLegacy
-          ? '/noctalia-shell/getting-started/faq/'
-          : undefined,
+      hasProject: project !== undefined,
+      faqHref: project?.faqHref,
+      isLegacy: project?.legacy === true,
     };
   }
 

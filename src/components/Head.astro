@@ -30,9 +30,7 @@ function sectionFromPath(pathname: string) {
 }
 
 function projectDisplayName() {
-  if (project?.id === 'noctalia') return 'Noctalia v5+';
-  if (project?.id === 'noctalia-shell') return 'Noctalia Shell v4';
-  return project?.label ?? 'Noctalia Projects';
+  return project?.displayName ?? project?.label ?? 'Noctalia Projects';
 }
 
 function buildSeoTitle(pageTitle: string) {
