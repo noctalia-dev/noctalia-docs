@@ -1,9 +1,9 @@
 ---
 title: Noctalia
-description: A native Wayland desktop shell with a bar, launcher, control center, lockscreen, and theming, configured in one place.
+description: Noctalia is a family of native Wayland projects - a desktop shell, a compositor, and a login screen that share one look, one palette, and one philosophy.
 template: splash
 hero:
-  tagline: A native Wayland desktop shell with a bar, launcher, control center, lockscreen, and theming, configured in one place.
+  tagline: A family of native Wayland projects - a desktop shell, a compositor, and a login screen that share one look, one palette, and one philosophy.
   actions:
     - text: Install Noctalia
       link: /noctalia/getting-started/installation/
@@ -25,28 +25,36 @@ hero:
         class: homepage-github
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+<div class="family">
 
-## What you get
+<div class="family-grid">
 
-<CardGrid>
-  <a class="homepage-card-link" href="/noctalia/bar/"><Card title="Bar & widgets" icon="bars">Top, bottom, left, and right bars with per-monitor overrides. Clock, tray, workspaces, media, and more.</Card></a>
-  <a class="homepage-card-link" href="/noctalia/launcher/"><Card title="Launcher" icon="rocket">App search, calculator, emoji picker, and wallpaper browser in one keystroke.</Card></a>
-  <a class="homepage-card-link" href="/noctalia/control-center/"><Card title="Control Center" icon="setting">Quick settings, shortcuts, and screen time from a single panel.</Card></a>
-  <a class="homepage-card-link" href="/noctalia/theming/"><Card title="Theming & palette" icon="sun">Wallpaper-driven colors, dark/light, and generated themes for terminals, editors, and browsers.</Card></a>
-  <a class="homepage-card-link" href="/noctalia/plugins/"><Card title="Plugins in Luau" icon="puzzle">Custom bar widgets, shortcuts, and services without recompiling the shell.</Card></a>
-  <a class="homepage-card-link" href="/noctalia/ipc/"><Card title="IPC & hooks" icon="code-branch">Drive Noctalia from keybinds, scripts, and event-driven automation.</Card></a>
-</CardGrid>
+<a class="family-card family-card--primary" href="/noctalia/">
+  <span class="family-badge">Start here</span>
+  <img class="family-logo" src="/noctalia.svg" alt="" width="76" height="76" loading="lazy" />
+  <span class="family-name">Noctalia</span>
+  <span class="family-desc">The native Wayland desktop shell. Bar, launcher, control center, lock screen, and wallpaper-driven theming, configured in one place.</span>
+  <span class="family-link">Explore Noctalia<span aria-hidden="true"> →</span></span>
+</a>
 
-## Runs on your compositor
+<a class="family-card" href="/umbriel/">
+  <img class="family-logo" src="/umbriel.svg" alt="" width="76" height="76" loading="lazy" />
+  <span class="family-name">Umbriel</span>
+  <span class="family-desc">An independent Wayland compositor with scrolling and dwindle layouts, blur, shadows, and fluid animations. Pairs perfectly with Noctalia.</span>
+  <span class="family-link">Explore Umbriel<span aria-hidden="true"> →</span></span>
+</a>
 
-Works across major Wayland compositors. See [compositor setup](/noctalia/compositor-settings/niri/) for the specifics of your setup.
+<a class="family-card" href="/greeter/">
+  <img class="family-logo" src="/greeter.svg" alt="" width="76" height="76" loading="lazy" />
+  <span class="family-name">Greeter</span>
+  <span class="family-desc">A greetd login screen that mirrors Noctalia's wallpaper, palette, and font, so your session looks consistent from boot.</span>
+  <span class="family-link">Explore Greeter<span aria-hidden="true"> →</span></span>
+</a>
 
-## The Noctalia family {#projects}
+</div>
 
-<CardGrid>
-  <a class="homepage-card-link" href="/noctalia/"><Card title="Noctalia" icon="moon">The native desktop shell. Actively developed.</Card></a>
-  <a class="homepage-card-link" href="/greeter/"><Card title="Noctalia Greeter" icon="padlock">A greetd greeter that shares Noctalia's look and palette on the login screen.</Card></a>
-  <a class="homepage-card-link" href="/umbriel/"><Card title="Umbriel" icon="laptop">An independent Wayland compositor with scrolling and dwindle layouts, blur, and shadows. Pairs well with Noctalia.</Card></a>
-  <a class="homepage-card-link" href="/noctalia-shell/"><Card title="Noctalia Shell (v4)" icon="document">Archived Quickshell-based implementation. Kept for reference; not receiving updates.</Card></a>
-</CardGrid>
+<p class="family-note">Noctalia runs on all major Wayland compositors. See <a href="/noctalia/compositor-settings/niri/">compositor setup</a> for your specifics.</p>
+
+<p class="family-legacy">Looking for the archived Quickshell-based <a href="/noctalia-shell/">Noctalia Shell (v4)</a>? It is kept for reference and no longer receiving updates.</p>
+
+</div>
