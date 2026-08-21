@@ -141,6 +141,12 @@ default_workspace = 4
 match.app_id = "^(steam_proton|steam_app.*|overwatch|overwatch\\.exe)$"
 default_fullscreen = true
 
+# Steam notification toasts
+[[window_rule]]
+match.title = "^notificationtoasts_.+_desktop"
+default_position = { x = 0, y = 0, anchor = "bottom_right" }
+default_focused = false
+
 # Noctalia settings
 [[window_rule]]
 match.app_id = "^dev.noctalia.Noctalia$"
