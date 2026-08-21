@@ -455,46 +455,114 @@ html {
 	transform: translateY(-1px);
 }
 
-.homepage-card-link {
-	display: block;
+/* Homepage: the Noctalia family */
+.family {
+	margin-top: 1rem;
+}
+
+.family-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 1.25rem;
+	align-items: stretch;
+}
+
+@media (max-width: 60rem) {
+	.family-grid {
+		grid-template-columns: 1fr;
+		max-width: 32rem;
+		margin-inline: auto;
+	}
+}
+
+.family-card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	gap: 0.6rem;
+	padding: 2rem 1.5rem 1.75rem;
+	border: 1px solid var(--sl-color-hairline);
+	border-radius: var(--radius-md);
+	background-color: var(--sl-color-bg-soft);
 	color: inherit;
 	text-decoration: none;
-	outline-offset: 0.35rem;
+	transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
-.homepage-card-link .card {
-	--sl-card-border: var(--sl-color-purple);
-	--sl-card-bg: var(--sl-color-purple-low);
-	border-radius: var(--radius-md);
-	height: 100%;
-	transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
-}
-
-.homepage-card-link:nth-child(4n + 1) .card {
-	--sl-card-border: var(--sl-color-orange);
-	--sl-card-bg: var(--sl-color-orange-low);
-}
-
-.homepage-card-link:nth-child(4n + 3) .card {
-	--sl-card-border: var(--sl-color-green);
-	--sl-card-bg: var(--sl-color-green-low);
-}
-
-.homepage-card-link:nth-child(4n + 4) .card {
-	--sl-card-border: var(--sl-color-red);
-	--sl-card-bg: var(--sl-color-red-low);
-}
-
-.homepage-card-link:nth-child(4n + 5) .card {
-	--sl-card-border: var(--sl-color-blue);
-	--sl-card-bg: var(--sl-color-blue-low);
-}
-
-.homepage-card-link:hover .card {
-	background-color: color-mix(in srgb, var(--sl-card-bg) 12%, var(--sl-color-black));
-	border-color: var(--sl-color-gray-3);
+.family-card:hover {
+	transform: translateY(-3px);
+	border-color: var(--sl-color-text-accent);
 	box-shadow: var(--sl-shadow-md);
-	transform: translateY(-2px);
+}
+
+/* Flagship: subtle accent emphasis for Noctalia. */
+.family-card--primary {
+	border-color: var(--sl-color-text-accent);
+	background-color: color-mix(in srgb, var(--sl-color-text-accent) 6%, var(--sl-color-bg-soft));
+}
+
+.family-badge {
+	position: absolute;
+	top: -0.7rem;
+	padding: 0.15rem 0.7rem;
+	font-size: 0.7rem;
+	font-weight: 600;
+	letter-spacing: 0.03em;
+	text-transform: uppercase;
+	color: var(--sl-color-bg);
+	background-color: var(--sl-color-text-accent);
+	border-radius: 999px;
+}
+
+.family-logo {
+	width: 76px;
+	height: 76px;
+	margin-bottom: 0.25rem;
+}
+
+.family-name {
+	font-size: 1.4rem;
+	font-weight: 600;
+	line-height: 1.1;
+	color: var(--sl-color-white);
+}
+
+.family-desc {
+	font-size: 0.95rem;
+	line-height: 1.5;
+	color: var(--sl-color-text-soft);
+}
+
+.family-link {
+	margin-top: auto;
+	padding-top: 0.5rem;
+	font-weight: 600;
+	color: var(--sl-color-text-accent);
+}
+
+.family-card:hover .family-link {
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+}
+
+.family-note,
+.family-legacy {
+	text-align: center;
+	margin-inline: auto;
+	max-width: 46rem;
+}
+
+.family-note {
+	margin-top: 2rem;
+	color: var(--sl-color-text);
+}
+
+.family-legacy {
+	margin-top: 0.75rem;
+	font-size: 0.85rem;
+	color: var(--sl-color-text-soft);
 }
 
 /* Align Starlight's default surfaces and hero actions with the website radius scale. */
