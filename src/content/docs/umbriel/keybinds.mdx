@@ -182,7 +182,8 @@ in the keymap itself; the two can coexist.
 
 ### Scratchpad actions
 
-Each output has its own scratchpad for temporarily hiding windows.
+Each output has a holding area for windows that should stay nearby without
+remaining on a workspace.
 
 | Action | What it does |
 |--------|--------------|
@@ -191,12 +192,12 @@ Each output has its own scratchpad for temporarily hiding windows.
 | `window-restore-from-scratchpad` | Return the focused scratchpad window to its saved workspace. |
 | `scratchpad-focus-next` | Focus the next visible scratchpad window. |
 
-When you show a scratchpad again, focus returns to the window that was focused
-when you hid it. Add `:<output>` to any scratchpad action to target another
-output, for example `scratchpad-toggle:DP-1`.
+Add `:<output>` to any action to target a specific output, for example
+`scratchpad-toggle:DP-1`. Without a suffix, the action targets the output under
+the pointer.
 
-Scratchpad windows always float. Dragging one does not tile it or restore it to
-the workspace beneath it.
+See [Scratchpads](/umbriel/scratchpads/) for setup examples, the full workflow,
+multi-output behavior, restoration rules, and troubleshooting.
 
 ## Repeat
 
