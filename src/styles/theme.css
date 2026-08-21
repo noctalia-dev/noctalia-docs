@@ -429,10 +429,9 @@ html {
 	justify-content: center;
 }
 
-/* Homepage actions and feature cards. */
+/* Homepage actions and project cards. */
 .homepage-install,
-.homepage-browse-docs,
-.homepage-github {
+.homepage-site {
 	transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease, transform 0.15s ease;
 }
 
@@ -441,14 +440,7 @@ html {
 	transform: translateY(-1px);
 }
 
-.homepage-browse-docs:hover {
-	background-color: var(--sl-color-gray-6);
-	border-color: var(--sl-color-white);
-	color: var(--sl-color-white);
-	transform: translateY(-1px);
-}
-
-.homepage-github:hover {
+.homepage-site:hover {
 	color: var(--sl-color-text-accent);
 	text-decoration: underline;
 	text-underline-offset: 0.2em;
@@ -458,6 +450,16 @@ html {
 /* Homepage: the Noctalia family */
 .family {
 	margin-top: 1rem;
+}
+
+.family-title {
+	margin-bottom: 1.5rem;
+	font-size: 1.05rem;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	text-align: center;
+	color: var(--sl-color-text-soft);
 }
 
 .family-grid {
@@ -535,6 +537,15 @@ html {
 	color: var(--sl-color-text-soft);
 }
 
+.family-role {
+	margin-top: -0.35rem;
+	font-size: 0.78rem;
+	font-weight: 600;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	color: var(--sl-color-text-accent);
+}
+
 .family-link {
 	margin-top: auto;
 	padding-top: 0.5rem;
@@ -557,6 +568,12 @@ html {
 .family-note {
 	margin-top: 2rem;
 	color: var(--sl-color-text);
+}
+
+.family-site {
+	margin-top: 0.75rem;
+	font-size: 0.95rem;
+	color: var(--sl-color-text-soft);
 }
 
 .family-legacy {
