@@ -45,6 +45,22 @@ override earlier ones.
   <LinkCard title="Window and Layer Rules" description="Matching, effects, and blur." href="/umbriel/rules/" />
 </CardGrid>
 
+## Starting Umbriel
+
+Installed display-manager sessions use `start-umbriel`. When a systemd user
+manager is available, the launcher runs Umbriel as a user service so the
+session inherits variables from `environment.d`. On other init systems it
+starts the compositor directly.
+
+Run `umbriel` directly for nested development sessions or explicit unmanaged
+startup.
+
+From a TTY, start a normal installed session with:
+
+```sh
+start-umbriel
+```
+
 ## Contributing
 
 Umbriel shares its conventions with [Noctalia](/noctalia/). For general help and design discussion, join the
