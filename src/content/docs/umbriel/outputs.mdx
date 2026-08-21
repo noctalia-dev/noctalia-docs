@@ -7,6 +7,11 @@ Output sections configure individual monitors. Names must exactly match
 connector names such as `DP-1` or `HDMI-A-1`. Nested outputs use `WL-1`;
 headless outputs use `HEADLESS-1`.
 
+When an output is disconnected or disabled through configuration, Umbriel moves
+its windows to the active workspace on another enabled output. Scratchpad
+windows move with that output assignment. If no enabled output remains, windows
+stay without a workspace until one becomes available.
+
 Run `umbriel outputs` inside a session to list connector names and modes.
 
 ```toml
@@ -22,6 +27,7 @@ workspaces = 5
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| `enabled` | bool | `true` | Set to `false` to turn the monitor off and remove it from the desktop. |
 | `mode` | string | (native) | Resolution and refresh rate: `"WIDTHxHEIGHT"` or `"WIDTHxHEIGHT@HZ"`. Fractional Hz allowed. Ignored in nested sessions (the parent controls size). |
 | `position` | `[x, y]` | (auto) | Layout coordinates. |
 | `scale` | float | (auto) | Output scale (0.25-4.0). |
@@ -57,6 +63,23 @@ Umbriel logs a warning and keeps VRR disabled if the output does not support
 adaptive sync or rejects the request. Nested Wayland outputs normally depend on
 the parent compositor and may not expose adaptive sync support.
 
+## Disabling an output
+
+Set `enabled = false` on an output section to turn the monitor off. The
+connector is powered down, the output leaves the output layout, and its
+workspaces no longer appear in the overview. The output's workspaces and their
+windows are preserved, so setting `enabled = true` back (or removing the key)
+restores the monitor exactly as it was. A disabled output is never picked as a
+focus, placement, or layer-surface target.
+
+```toml
+[output.HDMI-A-1]
+enabled = false
+```
+
+Changing `enabled` applies on the next config reload, like the other output
+settings. Only the config file can disable an output; see below.
+
 ## Live reconfiguration
 
 Umbriel implements `wlr-output-management-unstable-v1`, so tools such as
@@ -65,8 +88,9 @@ scale, transform, and adaptive sync at runtime without editing the config file.
 `umbriel outputs` only reads from this protocol; it does not send configuration
 requests itself.
 
-Requests that disable an output through this protocol are rejected: umbriel
-has no disabled-output state model.
+Requests that disable an output through this protocol are rejected: the
+protocol commit would bypass the layout and overview handling that the config
+`enabled` key performs. Use `enabled = false` instead.
 
 ## Moving focus and windows between outputs
 
@@ -76,7 +100,7 @@ monitor in that direction. `window-move-to-output-*` and
 the adjacent monitor's active workspace. `workspace-move-to-output-*` instead
 creates a new workspace on the adjacent monitor and moves every window of the
 active workspace into it, preserving column order and widths. See
-[keybinds.md](keybinds.md) for the full list and their exact semantics.
+[keybinds](/umbriel/keybinds/) for the full list and their exact semantics.
 
 ## Multi-monitor example
 
@@ -158,10 +182,7 @@ position. Windows from a removed workspace move to the nearest remaining one.
 Switching to dynamic workspaces keeps populated and active workspaces,
 renumbers them, and adds an empty workspace at the end.
 
-The [workspace lifecycle design note](design/workspace-lifecycle.md) records
-the exact state transitions. The
-[configuration reload design note](design/configuration-reload.md) explains
-which other output and layout settings are refreshed during a reload.
+Other output and layout settings are refreshed during a reload as well.
 
 ## Workspace rules
 

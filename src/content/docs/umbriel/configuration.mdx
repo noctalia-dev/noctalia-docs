@@ -11,9 +11,6 @@ your last working configuration and continues watching included files. Save a
 corrected file to try the reload again. Options that require a restart are
 marked in the reference tables below.
 
-For the exact reload guarantees, see the
-[configuration reload design note](design/configuration-reload.md).
-
 ## Include
 
 ```toml
@@ -84,9 +81,9 @@ back_and_forth = true
 | ---------------- | ---- | ------- | ----------------------------------------------------------------------------------------------- |
 | `back_and_forth` | bool | `false` | Re-selecting the active workspace jumps back to the previously active workspace on that output. |
 
-Output workspaces are dynamic by default. See [Outputs](outputs.md) for dynamic
+Output workspaces are dynamic by default. See [Outputs](/umbriel/outputs/) for dynamic
 behavior and fixed workspace lists. See
-[Workspace rules](outputs.md#workspace-rules) for per-workspace layout
+[Workspace rules](/umbriel/outputs/#workspace-rules) for per-workspace layout
 overrides.
 
 ## Colors
@@ -169,7 +166,7 @@ saturation = 1.1  # 0.0-2.0
 ```
 
 `enabled` is the master switch. Individual surfaces must still opt in through
-[window rules](rules.md) or [layer rules](rules.md#layer-rules).
+[window rules](/umbriel/rules/) or [layer rules](/umbriel/rules/#layer-rules).
 Blur only renders where a surface is transparent. Sampling remains confined to
 the surface's owning output when a window overflows into a neighbouring output.
 
@@ -217,7 +214,7 @@ workspace_background = "#00000044"
 ### Open and navigate
 
 The overview shows every workspace on every output. Press `Mod+O` by default,
-or use one of the [overview actions](keybinds.md#overview-actions).
+or use one of the [overview actions](/umbriel/keybinds/#overview-actions).
 
 Click a window to focus it, middle-click to close it, or drag it to another
 workspace. Use the wheel, arrow keys, or a 3-finger swipe to move through the
@@ -238,9 +235,6 @@ before you drop the window.
 Overview cards use the same borders, corner radius, transparency, and blur as
 their windows. `workspace_background` adds a rounded background behind each
 workspace. Its alpha can produce anything from a light tint to an opaque fill.
-
-See the [overview rendering design note](design/overview-rendering.md) for
-clipping, opacity, and decoration details.
 
 | Key                    | Type  | Default     | Description                                                                                    |
 | ---------------------- | ----- | ----------- | ---------------------------------------------------------------------------------------------- |
@@ -296,7 +290,7 @@ consumes that space. Existing windows retain their pixel heights, and the
 dropped window fills the remainder apart from the configured inter-window gap.
 
 Layout fields can be overridden per-workspace; see
-[Workspace Rules](outputs.md#workspace-rules).
+[Workspace Rules](/umbriel/outputs/#workspace-rules).
 
 ## Input
 
@@ -465,12 +459,16 @@ config reload, as do the mapping options for the next pen event.
 theme = ""   # empty = environment/default Xcursor theme
 size = 24    # 1-512
 hardware_cursor = true
+hide_timeout = 0  # seconds without pointer activity; 0 disables hiding
 ```
 
 Set `hardware_cursor = false` to composite the cursor in the output render pass.
 This can work around cursor flicker or disappearance caused by hardware cursor
 planes. Cursor settings apply on config reload. Output scale changes also reload
 the cursor image at the matching scale without requiring a restart.
+Set `hide_timeout` to a value from `1` to `3600` to hide the cursor after that
+many seconds without pointer activity. Motion, clicks, scrolling, and tablet
+input reveal it and restart the timeout.
 
 ### Focus
 
