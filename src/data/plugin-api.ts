@@ -160,32 +160,32 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
   },
   {
     level: 24,
-    noctaliaVersion: null,
+    noctaliaVersion: 'v5.0.0-beta.9',
     feature: 'direct-argv',
     introduced: 'Argument-array form of `noctalia.runAsync()` for direct process execution without shell parsing.',
   },
   {
     level: 25,
-    noctaliaVersion: null,
+    noctaliaVersion: 'v5.0.0-beta.9',
     feature: 'wallpaper-mask',
     introduced:
       '`noctalia.wallpaperPath(connector)` and `noctalia.setWallpaperMask(connector, mask)` for source-aligned desktop-widget occlusion masks.',
   },
   {
     level: 26,
-    noctaliaVersion: null,
+    noctaliaVersion: 'v5.0.0-beta.9',
     feature: 'get-setting',
     introduced: '`noctalia.getSetting(path)` for reading any effective shell config value by TOML dotted path.',
   },
   {
     level: 27,
-    noctaliaVersion: null,
+    noctaliaVersion: 'v5.0.0-beta.9',
     feature: 'input-frame-visibility',
     introduced: '`frameVisible` on `ui.input` for hiding the native input background and border.',
   },
   {
     level: 28,
-    noctaliaVersion: null,
+    noctaliaVersion: 'v5.0.0-beta.9',
     feature: 'panel-context-menu',
     introduced: '`panel.openContextMenu(request)` for native context menus in regular and persistent plugin panels.',
   },
