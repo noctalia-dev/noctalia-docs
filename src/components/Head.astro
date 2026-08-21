@@ -4,6 +4,7 @@ import { projectFromPath } from '../lib/projects';
 const { head } = Astro.locals.starlightRoute;
 const pathname = Astro.url.pathname;
 const project = projectFromPath(pathname);
+const isDocsRoot = pathname === '/' || pathname === '';
 
 function textFromHeadMeta(name: 'description' | 'twitter:card' | 'twitter:image') {
   const entry = head.find(({ tag, attrs }) => tag === 'meta' && attrs?.name === name);
@@ -34,6 +35,8 @@ function projectDisplayName() {
 }
 
 function buildSeoTitle(pageTitle: string) {
+  // The landing page is the documentation index itself, not a product page.
+  if (isDocsRoot) return 'Noctalia Docs | Noctalia, Umbriel, and Greeter documentation';
   if (!project) return `${pageTitle} | Noctalia Docs`;
 
   const projectName = projectDisplayName();

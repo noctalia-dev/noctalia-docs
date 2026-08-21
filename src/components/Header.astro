@@ -18,6 +18,7 @@ const isLegacy = project?.legacy === true;
 <div class="header-inner">
   <div class="title-wrapper sl-flex">
     <SiteTitle />
+    <span class="docs-pill">docs</span>
   </div>
   <div class:list={['header-search sl-flex print:hidden', { 'no-project': !project }]}>
     <div class="site-search" hidden={!project}>
@@ -130,6 +131,23 @@ const isLegacy = project?.legacy === true;
     margin: -0.25rem;
     padding: 0.25rem;
     overflow: clip;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Marks every page as the documentation subsite, not noctalia.dev. */
+  .docs-pill {
+    flex-shrink: 0;
+    padding: 0.1rem 0.45rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    text-transform: lowercase;
+    color: var(--sl-color-text-accent);
+    background-color: color-mix(in srgb, var(--sl-color-accent) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--sl-color-accent) 45%, transparent);
+    border-radius: 999px;
   }
 
   .header-search {

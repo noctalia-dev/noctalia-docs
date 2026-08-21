@@ -397,7 +397,8 @@ async function main() {
 			version: 'docs',
 			section: '',
 			title: 'Documentation',
-			description: 'Noctalia documentation and guides.',
+			description:
+				'Guides, configuration, and reference for the Noctalia family - the Noctalia desktop shell, the Umbriel Wayland compositor, and the Noctalia Greeter.',
 		},
 		logo,
 		fonts,

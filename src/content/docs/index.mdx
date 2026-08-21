@@ -1,9 +1,9 @@
 ---
-title: Noctalia
-description: Noctalia is a family of native Wayland projects - a desktop shell, a compositor, and a login screen that share one look, one palette, and one philosophy.
+title: Documentation
+description: Documentation for the Noctalia family - the Noctalia desktop shell, the Umbriel Wayland compositor, and the Noctalia Greeter.
 template: splash
 hero:
-  tagline: A family of native Wayland projects - a desktop shell, a compositor, and a login screen that share one look, one palette, and one philosophy.
+  tagline: Guides, configuration, and reference for the Noctalia family. Pick a project to get started.
   actions:
     - text: Install Noctalia
       link: /noctalia/getting-started/installation/
@@ -11,21 +11,19 @@ hero:
       variant: primary
       attrs:
         class: homepage-install
-    - text: Browse the docs
-      link: /noctalia/
-      icon: open-book
-      variant: secondary
-      attrs:
-        class: homepage-browse-docs
-    - text: GitHub
-      link: https://github.com/noctalia-dev
+    - text: noctalia.dev
+      link: https://noctalia.dev
       icon: external
       variant: minimal
       attrs:
-        class: homepage-github
+        class: homepage-site
+        target: _blank
+        rel: noopener
 ---
 
 <div class="family">
+
+<h2 class="family-title">Choose a project</h2>
 
 <div class="family-grid">
 
@@ -33,27 +31,32 @@ hero:
   <span class="family-badge">Start here</span>
   <img class="family-logo" src="/noctalia.svg" alt="" width="76" height="76" loading="lazy" />
   <span class="family-name">Noctalia</span>
-  <span class="family-desc">The native Wayland desktop shell. Bar, launcher, control center, lock screen, and wallpaper-driven theming, configured in one place.</span>
-  <span class="family-link">Explore Noctalia<span aria-hidden="true"> →</span></span>
+  <span class="family-role">Desktop shell</span>
+  <span class="family-desc">Installation, configuration, bar and widgets, launcher, control center, theming, and IPC.</span>
+  <span class="family-link">Read the docs<span aria-hidden="true"> →</span></span>
 </a>
 
 <a class="family-card" href="/umbriel/">
   <img class="family-logo" src="/umbriel.svg" alt="" width="76" height="76" loading="lazy" />
   <span class="family-name">Umbriel</span>
-  <span class="family-desc">An independent Wayland compositor with scrolling and dwindle layouts, blur, shadows, and fluid animations. Pairs perfectly with Noctalia.</span>
-  <span class="family-link">Explore Umbriel<span aria-hidden="true"> →</span></span>
+  <span class="family-role">Wayland compositor</span>
+  <span class="family-desc">Installation, layouts, workspaces, window rules, keybinds, and configuration reference.</span>
+  <span class="family-link">Read the docs<span aria-hidden="true"> →</span></span>
 </a>
 
 <a class="family-card" href="/greeter/">
   <img class="family-logo" src="/greeter.svg" alt="" width="76" height="76" loading="lazy" />
   <span class="family-name">Greeter</span>
-  <span class="family-desc">A greetd login screen that mirrors Noctalia's wallpaper, palette, and font, so your session looks consistent from boot.</span>
-  <span class="family-link">Explore Greeter<span aria-hidden="true"> →</span></span>
+  <span class="family-role">greetd login screen</span>
+  <span class="family-desc">Installation, greetd wiring, and matching your session wallpaper, palette, and font.</span>
+  <span class="family-link">Read the docs<span aria-hidden="true"> →</span></span>
 </a>
 
 </div>
 
 <p class="family-note">Noctalia runs on all major Wayland compositors. See <a href="/noctalia/compositor-settings/niri/">compositor setup</a> for your specifics.</p>
+
+<p class="family-note family-site">Looking for screenshots, plugins, palettes, and the blog? That is on <a href="https://noctalia.dev" target="_blank" rel="noopener">noctalia.dev<span aria-hidden="true"> ↗</span></a>.</p>
 
 <p class="family-legacy">Looking for the archived Quickshell-based <a href="/noctalia-shell/">Noctalia Shell (v4)</a>? It is kept for reference and no longer receiving updates.</p>
 
