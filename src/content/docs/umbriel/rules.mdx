@@ -100,6 +100,7 @@ offset would otherwise place it completely off-screen.
 | `blur_ignore_alpha` | float | Skip blur where surface alpha is below this threshold (0.0-1.0). Applies to the window and its popups. |
 | `blur_optimized` | bool | Override `appearance.blur.optimized` for this window. |
 | `focus_on_activate` | bool | Override `general.focus_on_activate` for activation requests targeting this window. `false` marks it urgent without focusing or switching workspaces. |
+| `vrr` | string | Override the focused window's output VRR policy: `"disabled"`, `"always"`, or `"fullscreen"`. Without this key, the output's configured `vrr` policy applies. |
 
 ### Examples
 
@@ -117,6 +118,11 @@ default_width = 0.33
 [[window_rule]]
 match.app_id = "^(helium|chromium)$"
 default_width = 0.75
+
+# Always use VRR while a game is focused, even when the output policy disables it
+[[window_rule]]
+match.app_id = "^(steam_app_[0-9]+|gamescope)$"
+vrr = "always"
 
 # Slight transparency for editors and file managers
 [[window_rule]]
