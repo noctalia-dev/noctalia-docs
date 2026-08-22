@@ -99,6 +99,7 @@ These take no argument.
 | `window-focus-left` / `window-focus-right` | Move focus to the adjacent window along the row. |
 | `window-focus-up` / `window-focus-down` | Move focus to the adjacent window along the column. |
 | `window-focus-next` | Cycle focus to the next mapped window on the active workspace. |
+| `window-move-to-workspace-next` / `window-move-to-workspace-previous` | Move the focused window to the adjacent workspace and follow it. These actions do not wrap around. |
 | `column-move-left` / `column-move-right` | Move the focused window's column left or right. |
 | `window-move-up` / `window-move-down` | Move the focused window up or down within its column. |
 | `window-consume-left` | Pull the focused window into the column to its left. |
@@ -127,6 +128,14 @@ window fullscreen removes its pinned state.
 focused output, by index. They do not wrap around: `workspace-previous` on the
 first workspace is a silent no-op. On a dynamic output, `workspace-next` reaches
 the trailing empty workspace, which becomes active as usual.
+
+The matching window actions can be bound independently:
+
+```toml
+[keybinds]
+"Mod+Shift+Comma" = "window-move-to-workspace-previous"
+"Mod+Shift+Period" = "window-move-to-workspace-next"
+```
 
 `window-center` centers the focused floating window on its output's usable
 area. It is a no-op while a tiled window is focused.
