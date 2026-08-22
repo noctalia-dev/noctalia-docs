@@ -22,6 +22,27 @@ notification_sound   = ""     # empty = bundled default sounds/notification.wav
   Files are decoded through `libsndfile`; common supported formats include WAV, FLAC, Ogg/Vorbis, Opus, MP3, and AIFF.
   Exact format support depends on the distribution's libsndfile build.
 
+## Bluetooth codecs
+
+When the active output is a Bluetooth device, the Output card in Control Center → Audio shows a **Codec** drop-down for switching the codec the device is using. The change applies immediately, and WirePlumber remembers it, so the device reconnects on the same codec.
+
+The row appears only when the active output offers two or more codec choices. Wired and USB devices do not show it.
+
+| Codec | What it is |
+|-------|------------|
+| `SBC` | The baseline A2DP codec that every Bluetooth audio device supports. Always available, lowest quality of the A2DP options. |
+| `SBC-XQ` | SBC run at a higher bitrate. Better quality than plain SBC on devices that hold the connection well. |
+| `AAC` | Generally better than SBC at the same bitrate, though the result depends on how well the device decodes it. Common on Apple hardware. |
+| `aptX` / `aptX HD` | Qualcomm codecs. Plain `aptX` favors low latency, `aptX HD` a higher bitrate. Both ends have to support them. |
+| `LDAC` | Sony's high-bitrate codec, the highest-quality option when it is available. Drops to lower bitrates when the signal is weak. |
+| `HFP` | Headset mode. The only option that enables the microphone, at much lower playback quality. |
+
+Which entries appear depends on the headset and on what your PipeWire and WirePlumber build supports. `aptX` and `LDAC` in particular need optional libraries that not every distribution ships. The active codec is marked with a checkmark.
+
+Higher-quality codecs use more bandwidth and battery. `HFP` stands in for every handsfree variant the device reports (CVSD, mSBC, LC3-SWB), and Noctalia picks the best one available; headsets often switch to it on their own during a call and stay there afterward, which is when this drop-down is most useful.
+
+Selecting a virtual sink such as an EasyEffects sink as the output device hides the row, because no Bluetooth device sits directly behind that sink.
+
 ## Related IPC
 
 For output and microphone commands, default steps, mute behavior, and overdrive limits, see:
