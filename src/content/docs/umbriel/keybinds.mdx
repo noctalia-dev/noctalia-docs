@@ -48,6 +48,10 @@ at least one modifier).
 **Defaults:** `Mod+WheelUp` = `window-focus-left`, `Mod+WheelDown` =
 `window-focus-right`.
 
+Mouse and wheel chords combine the modifier state of every keyboard, as
+keyboard chords do. They remain active while an input method grabs a physical
+keyboard and injects composed text through its own virtual keyboard.
+
 During an active tiled `Mod+MouseLeft` drag, `window-focus-left` and
 `window-focus-right` wheel binds scroll the strip instead of trying to move
 focus away from the detached window. Wheel-driven strip scrolling uses twice
