@@ -280,6 +280,7 @@ action = "spawn:notify-send 'Bottom right'"
 Each corner has its own enabled state, delay, and action. Actions use the same syntax as
 keybind values. Omitted corners do nothing, and `enabled = false` disables a corner without
 removing its action. A delay of `0` activates immediately.
+Hot corners are inactive on an output while a window is fullscreen there.
 
 Available subsections are `hot_corners.top_left`, `hot_corners.top_right`,
 `hot_corners.bottom_left`, and `hot_corners.bottom_right`.

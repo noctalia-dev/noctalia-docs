@@ -233,6 +233,9 @@ Applications that capture through xdg-desktop-portal (browser screen sharing,
 OBS, portal-aware screenshot tools) are served by the Screencast and Screenshot
 interfaces implemented by
 [xdg-desktop-portal-umbriel](https://github.com/noctalia-dev/xdg-desktop-portal-umbriel).
+Window sharing renders an isolated copy of the selected window and its own
+popups. Desktop backgrounds, other windows, compositor opacity, blur, borders,
+and shadows are never included in that window stream.
 
 A `submap:reset` bound in the default context (no prefix) always matches, even
 inside a submap, as a global emergency exit:
