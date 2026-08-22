@@ -405,8 +405,10 @@ tap = true
 natural_scroll = true
 ```
 
-Options are applied only when supported by the libinput device. Omit to
-preserve each device's defaults.
+Tap-to-click is enabled by default. Set `tap = false` to disable it globally,
+or use a per-device override below. `natural_scroll` remains unset by default,
+which preserves each device's libinput setting. Options are applied only when
+supported by the device.
 
 ### Mouse
 
