@@ -88,6 +88,16 @@ Extra environment variables exported to Umbriel and all spawned commands.
 All values must be strings. Applied once at startup; changing this section
 requires a restart.
 
+## Idle inhibition
+
+Umbriel supports application idle inhibitors and idle notifications. An
+application inhibits screen blanking, locking, and other idle actions only
+while its associated surface is mapped and visible. Switching away from its
+workspace, hiding a scratchpad window, disabling its output, or locking the
+session stops honoring that inhibitor until the surface becomes visible
+again. A visible lock surface may provide its own inhibitor while the session
+is locked.
+
 ## Workspaces
 
 ```toml
@@ -141,7 +151,7 @@ remain opaque so text stays legible over translucent panels.
 prefer_no_csd = true
 border_width = 2               # 0-100
 outer_border_width = 0         # 0-100
-corner_radius = 10             # 0-500, 0 disables
+corner_radius = 10             # 0-100, 0 disables
 border_focused = "#7AA3FFFF"   # #RRGGBB or #RRGGBBAA
 border_unfocused = "#292933FF"
 scratchpad_border_focused = "#E5C07BFF"
@@ -157,7 +167,7 @@ animation_ms = 200             # 1-10000
 | `prefer_no_csd`               | bool  | `true`      | Ask clients to omit client-side decorations (xdg-decoration). Clients that explicitly request CSD are still honored. Restart apps after changing. |
 | `border_width`                | int   | `2`         | Inner border width in logical pixels (0-100), including around rounded corners.                                                                   |
 | `outer_border_width`          | int   | `0`         | Ring outside the inner border in logical pixels (0-100).                                                                                          |
-| `corner_radius`               | int   | `10`        | Rounded corner radius (0-500). 0 disables.                                                                                                        |
+| `corner_radius`               | int   | `10`        | Rounded corner radius (0-100). 0 disables.                                                                                                        |
 | `border_focused`              | color | `#7AA3FFFF` | Border color for the focused window.                                                                                                              |
 | `border_unfocused`            | color | `#292933FF` | Border color for unfocused windows.                                                                                                               |
 | `scratchpad_border_focused`   | color | `#E5C07BFF` | Border color for the focused scratchpad window.                                                                                                   |
@@ -345,6 +355,12 @@ columns are off-screen.
 Dropping a window into empty space above or below a vertically resized stack
 consumes that space. Existing windows retain their pixel heights, and the
 dropped window fills the remainder apart from the configured inter-window gap.
+
+In the dwindle layout, a new window splits an existing one along that window's
+longer edge, so a landscape monitor starts side by side and a portrait monitor
+starts stacked. The direction is fixed when the split is created: resizing one
+boundary never reorients another split. Dropping a window on a specific edge
+picks that direction explicitly instead.
 
 Layout fields can be overridden per-workspace; see
 [Workspace Rules](/umbriel/outputs/#workspace-rules).

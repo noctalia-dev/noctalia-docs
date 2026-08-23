@@ -83,6 +83,23 @@ enabled = false
 Changing `enabled` applies on the next config reload, like the other output
 settings. Only the config file can disable an output; see below.
 
+## Display power management
+
+Use `dpms-off` and `dpms-on` to power configured monitors off and on without
+removing them from the output layout or moving their workspaces and windows.
+The bare actions target every configured output. Add a connector name to target
+one monitor:
+
+```sh
+umbriel msg dpms-off
+umbriel msg dpms-off:DP-1
+umbriel msg dpms-on:DP-1
+```
+
+Any keyboard, pointer, touch, gesture, or tablet activity powers all DPMS-off
+outputs back on. This includes pointer motion. Outputs disabled with
+`enabled = false` remain disabled and are not affected by these actions.
+
 ## Live reconfiguration
 
 Umbriel implements `wlr-output-management-unstable-v1`, so tools such as
