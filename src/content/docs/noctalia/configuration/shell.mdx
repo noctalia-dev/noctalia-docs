@@ -349,7 +349,7 @@ nightlight = true        # night light toggle
 dnd = true               # Do Not Disturb toggle
 lock_keys = true         # Caps/Num/Scroll Lock popups
 keyboard_layout = true   # input keyboard layout changes
-media = true             # MPRIS playback and track changes
+media = true             # MPRIS playback, track changes, and per-player volume changes
 privacy = true           # microphone/camera/screen share capture changes
 keyboard_backlight = true # keyboard backlight level
 ```
@@ -368,7 +368,8 @@ outputs until one reconnects. `background_opacity` sets popup background opacity
 absolute margins from the screen edge for the chosen `position`.
 Each popup kind can be toggled independently under `[osd.kinds]`. The volume master toggle enables both output and input
 OSDs by default; set `volume_output` or `volume_input` to `false` to disable one side only. `media = false` disables
-MPRIS playback and track-change popups, and `keyboard_backlight = false` disables keyboard-backlight level popups.
+MPRIS playback, track-change, and player-volume popups, and `keyboard_backlight = false` disables keyboard-backlight
+level popups.
 `lock_keys = false` disables Caps/Num/Scroll Lock popups; when no `lock_keys` bar widget is configured, this also stops
 lock-key state polling. `keyboard_layout = false` disables layout-change popups. `privacy = false` disables popups shown
 when microphone, camera, or screen share capture starts or stops.
