@@ -53,6 +53,10 @@ opening settings do not overwrite user changes made in the meantime.
 | `default_focused` | bool | Take focus when opening, switching to the window's workspace when needed. Defaults to `true`; set to `false` to preserve the existing focus and workspace. |
 | `default_pinned` | bool | Open pinned above regular windows and keep the window visible across workspace changes. Pinning makes a tiled window floating. |
 
+If neither `default_width` nor a matching
+`layout.scrolling.default_width_fraction` is set, a scrolling window chooses
+its initial logical extent.
+
 Without `default_output`, a numbered workspace owned by exactly one fixed output
 inventory also selects that output. For example, if only `DP-1` has a fourth
 configured workspace, `default_workspace = 4` opens there even when the window
