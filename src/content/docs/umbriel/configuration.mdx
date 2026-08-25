@@ -317,7 +317,7 @@ width_presets = [0.333, 0.5, 0.667]
 
 [layout.scrolling]
 direction = "horizontal"             # "horizontal" or "vertical"
-# default_width_fraction = 0.5       # optional, 0.1-1.0
+default_width_fraction = 0.5         # remove to let clients choose, 0.1-1.0
 center_underfull_strip = true
 ```
 
@@ -334,7 +334,7 @@ Scrolling layout options:
 | Key                      | Type   | Default        | Description                                                                                                                       |
 | ------------------------ | ------ | -------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | `direction`              | string | `"horizontal"` | Scroll axis: `"horizontal"` stacks columns left to right; `"vertical"` stacks lanes top to bottom.                                |
-| `default_width_fraction` | float  | unset          | Initial scroll-axis extent assigned to new scrolling lanes (0.1-1.0). When omitted, the client chooses its initial extent.        |
+| `default_width_fraction` | float  | unset          | Initial scroll-axis extent assigned to new scrolling lanes (0.1-1.0). The packaged config sets `0.5`; when omitted, the client chooses its initial extent. |
 | `center_underfull_strip` | bool   | `true`         | Center the complete strip whenever it is shorter than the viewport. Disable to align it at the start edge.                        |
 
 On a vertical scrolling workspace, each column becomes a horizontal lane. Lanes
@@ -344,10 +344,10 @@ width vocabulary, including `default_width_fraction`, `width_presets`,
 `window-toggle-maximize`, controls the lane's extent along the scroll axis. In
 other words, it controls lane height on a vertical workspace.
 
-When `default_width_fraction` is omitted, Umbriel leaves the scroll-axis
-dimension unconstrained in the initial configure and retains the logical size
-chosen by the client. Set a numeric value when every new scrolling lane should
-start at a fixed viewport fraction. A numeric window-rule `default_width` still
+The packaged config sets `default_width_fraction = 0.5` so new scrolling lanes
+start at half the viewport. When the option is removed, Umbriel leaves the
+scroll-axis dimension unconstrained in the initial configure and retains the
+logical size chosen by the client. A numeric window-rule `default_width` still
 takes precedence for matching applications.
 
 Directional focus and movement follow the screen: left and right operate within
