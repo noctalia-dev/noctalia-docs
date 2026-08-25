@@ -82,11 +82,12 @@ set.
 A second `session-quit` while the confirmation is open also quits. While the
 session is locked, `session-quit` quits without the dialog.
 
-Workspace selectors use exact names, including numeric names such as `1`.
-Unique names resolve globally; duplicate names resolve on the preferred output.
-Add `/output` to target another output explicitly. On a dynamic output, a
-numeric target first uses the preferred output. If the number is beyond the
-current workspace list, Umbriel uses the last workspace.
+Workspace selectors use exact names. Numeric selectors prefer the focused
+output: an exact numeric name wins, otherwise the number selects that 1-based
+position in a static custom-named workspace list. On a dynamic output, a number
+beyond the current workspace list selects the last workspace. Unique names
+resolve globally; duplicate names resolve on the preferred output. Add
+`/output` to target another output explicitly.
 
 When `workspace-switch` targets a workspace on another monitor, the cursor warps
 to the center of that monitor, so focus follows the switch.
@@ -110,7 +111,22 @@ These take no argument.
 | `window-toggle-maximize` | Toggle the focused column's full-width state. |
 | `window-toggle-maximize-to-edges` | Toggle maximization of the focused window to the usable area's edges, without gaps or borders. Layer-shell exclusive zones remain visible. |
 | `layout-scroll-left` / `layout-scroll-right` | Scroll the active workspace's scrolling-layout viewport; a no-op on a dwindle workspace. |
+| `layout-scroll-up` / `layout-scroll-down` | Scroll toward strip start or end. These are first-class synonyms for `layout-scroll-left` and `layout-scroll-right`. |
 | `config-reload` | Reload the config file, the same reload that runs automatically when the file changes on disk. |
+
+On a vertical scrolling workspace, directional actions follow their visual
+directions. `window-focus-left` and `window-focus-right` move within a lane;
+`window-focus-up` and `window-focus-down` walk lanes. Likewise,
+`column-move-left` and `column-move-right` reorder within a lane, while
+`window-move-up` and `window-move-down` move the lane along the strip.
+`layout-scroll-left` and `layout-scroll-up` both scroll toward strip start;
+their right and down forms scroll toward strip end.
+
+The default Mod+wheel bindings invoke `window-focus-left` and
+`window-focus-right`, so they move within a lane on a vertical workspace.
+Vertical-heavy configurations should bind wheel chords to
+`window-focus-up` and `window-focus-down`, or to `layout-scroll-up` and
+`layout-scroll-down`.
 
 ### Floating action
 
@@ -129,6 +145,9 @@ window fullscreen removes its pinned state.
 focused output, by index. They do not wrap around: `workspace-previous` on the
 first workspace is a silent no-op. On a dynamic output, `workspace-next` reaches
 the trailing empty workspace, which becomes active as usual.
+
+`workspace-move-down` and `workspace-move-up` move the focused workspace up or down
+on the focused output. They do not wrap around either.
 
 The matching window actions can be bound independently:
 
