@@ -82,11 +82,12 @@ set.
 A second `session-quit` while the confirmation is open also quits. While the
 session is locked, `session-quit` quits without the dialog.
 
-Workspace selectors use exact names, including numeric names such as `1`.
-Unique names resolve globally; duplicate names resolve on the preferred output.
-Add `/output` to target another output explicitly. On a dynamic output, a
-numeric target first uses the preferred output. If the number is beyond the
-current workspace list, Umbriel uses the last workspace.
+Workspace selectors use exact names. Numeric selectors prefer the focused
+output: an exact numeric name wins, otherwise the number selects that 1-based
+position in a static custom-named workspace list. On a dynamic output, a number
+beyond the current workspace list selects the last workspace. Unique names
+resolve globally; duplicate names resolve on the preferred output. Add
+`/output` to target another output explicitly.
 
 When `workspace-switch` targets a workspace on another monitor, the cursor warps
 to the center of that monitor, so focus follows the switch.
