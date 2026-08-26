@@ -135,6 +135,9 @@ Vertical-heavy configurations should bind wheel chords to
 The first time a window floats, Umbriel places it slightly below and to the
 right of its tiled position while keeping it on-screen.
 
+`window-focus-switch-floating` switches focus to the most recently focused
+window with the opposite floating state.
+
 `window-toggle-pinned` makes the focused window float and keeps it above
 fullscreen windows on its output. Pinned windows remain visible when you
 switch workspaces. You cannot pin a fullscreen window, and making a pinned
@@ -228,6 +231,7 @@ remaining on a workspace.
 | `window-move-to-scratchpad` | Move the focused window from its workspace into the scratchpad. |
 | `scratchpad-toggle` | Show or hide the output's scratchpad windows. |
 | `window-restore-from-scratchpad` | Return the focused scratchpad window to its saved workspace. |
+| `window-toggle-scratchpad` | Move the focused window into the scratchpad, or restore it if it's already the scratchpad's focused window. |
 | `scratchpad-focus-next` | Focus the next visible scratchpad window. |
 
 Add `:<output>` to any action to target a specific output, for example
@@ -321,9 +325,9 @@ and widgets via `noctalia msg`. Typical bindings:
 ## Example: media and brightness keys
 
 ```toml
-# Volume (via Noctalia OSD)
-"XF86AudioRaiseVolume" = "spawn:noctalia msg volume-up 2%"
-"XF86AudioLowerVolume" = "spawn:noctalia msg volume-down 2%"
+# Volume
+"XF86AudioRaiseVolume" = "spawn:wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+"XF86AudioLowerVolume" = "spawn:wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
 "Mod+XF86AudioMute" = "spawn:wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
 
 # Media playback (playerctl)
@@ -339,3 +343,5 @@ and widgets via `noctalia msg`. Typical bindings:
 XF86 keys accept the same `Mod`, `Ctrl`, `Alt`, `Shift`, and `Super`
 combinations as other keys. Modifier chords also work when the XF86 key is
 reported by a separate laptop hotkey device.
+
+Volume control requires `wpctl` (from WirePlumber/PipeWire) while media playback requires `playerctl`.
