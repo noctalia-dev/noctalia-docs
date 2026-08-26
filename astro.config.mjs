@@ -153,7 +153,19 @@ export default defineConfig({
         },
         {
           label: "Umbriel",
-          items: [{ autogenerate: { directory: "umbriel" } }],
+          items: [
+            { label: "Umbriel", link: "umbriel/" },
+            { label: "Configuration", link: "umbriel/configuration/" },
+            { label: "Outputs", link: "umbriel/outputs/" },
+            { label: "Workspaces", link: "umbriel/workspaces/" },
+            { label: "Layout", link: "umbriel/layout/" },
+            { label: "Appearance", link: "umbriel/appearance/" },
+            { label: "Input", link: "umbriel/input/" },
+            { label: "Keybinds", link: "umbriel/keybinds/" },
+            { label: "Actions", link: "umbriel/actions/" },
+            { label: "Window and Layer Rules", link: "umbriel/rules/" },
+            { label: "Scratchpads", link: "umbriel/scratchpads/" },
+          ],
         },
         {
           label: "Noctalia Shell",
