@@ -242,9 +242,14 @@ Drop shadow behind windows (tiled and floating). Hidden while fullscreen.
 ```toml
 [overview]
 zoom = 0.5                     # 0.1-0.75
+background_blur = true
 background_tint = "#10101430"
 workspace_background = "#00000044"
 ```
+
+The wallpaper is blurred while the overview is open using the `[appearance.blur]`
+parameters. Set `background_blur = false`, or disable appearance blur, to turn it
+off.
 
 ### Open and navigate
 
@@ -276,6 +281,7 @@ workspace. Its alpha can produce anything from a light tint to an opaque fill.
 | Key                    | Type  | Default     | Description                                                                                    |
 | ---------------------- | ----- | ----------- | ---------------------------------------------------------------------------------------------- |
 | `zoom`                 | float | `0.5`       | Workspace scale when fully zoomed out (0.1-0.75).                                              |
+| `background_blur`      | bool  | `true`      | Blur the wallpaper behind the filmstrip. Uses the `[appearance.blur]` parameters.             |
 | `background_tint`      | color | `#10101430` | Tint composited over the desktop background. Alpha `00` leaves it untouched; `FF` hides it.    |
 | `workspace_background` | color | `#00000044` | Rounded background behind each workspace. Alpha `00` makes it invisible; `FF` makes it opaque. |
 
