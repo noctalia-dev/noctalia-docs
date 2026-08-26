@@ -21,6 +21,7 @@ mode = "3840x2160@165"
 position = [0, 0]
 scale = 1.25
 vrr = "fullscreen"
+tearing = true
 workspaces = 5
 ```
 
@@ -33,6 +34,7 @@ workspaces = 5
 | `position` | `[x, y]` | (auto) | Layout coordinates. |
 | `scale` | float | (auto) | Output scale (0.25-4.0). |
 | `vrr` | string | `"disabled"` | Variable refresh rate policy: `"disabled"`, `"always"`, or `"fullscreen"`. |
+| `tearing` | bool | `false` | Permit asynchronous page flips for eligible fullscreen windows on this output. |
 | `hdr` | string | `"off"` | HDR policy: `"off"`, `"on"`, `"auto"`, or `"fullscreen"`. |
 | `sdr_white` | float | `203` | SDR reference white in cd/m2 while the output is in HDR mode (80-1000). |
 | `workspaces` | int, string array, or `"dynamic"` | `"dynamic"` | Dynamic numbered workspaces, a static count from 1 to 64, or a static ordered list of 1 to 64 names. |
@@ -68,6 +70,38 @@ vrr = "fullscreen"
 Umbriel logs a warning and keeps VRR disabled if the output does not support
 adaptive sync or rejects the request. Nested Wayland outputs normally depend on
 the parent compositor and may not expose adaptive sync support.
+
+### Tearing
+
+Tearing is disabled by default and must be enabled per output:
+
+```toml
+[output.DP-1]
+tearing = true
+```
+
+This setting is a safety gate, not an instruction to tear every frame. Umbriel
+requests an asynchronous page flip only when the active workspace contains a
+mapped fullscreen window and either the client requests asynchronous
+presentation through the tearing-control protocol or a matching window rule
+sets `tearing = true`. A window rule with `tearing = false` vetoes the client
+hint. No window rule can bypass the output gate.
+
+Umbriel temporarily uses regular page flips while the session is locked, an
+overview or compositor confirmation overlay is visible, an output animation is
+active, or the output is being captured. HDR, VRR, composition, and direct
+scanout are not unconditional blockers. Umbriel tests the complete output state
+with the backend and falls back to a regular page flip if the asynchronous
+state is rejected or fails.
+
+Backend support is required. Nested and headless outputs can exercise the
+policy and protocol without proving that physical tearing occurs. Run `umbriel
+tearing` to inspect the client hint, resolved rule, eligibility, last submitted
+page-flip mode, presentation result, and any fallback reason. Use `umbriel
+tearing --json` for machine-readable diagnostics.
+
+See [window rules](/umbriel/rules/#settings-updated-while-a-window-is-open) for per-window
+overrides.
 
 ### HDR
 
