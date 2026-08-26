@@ -453,12 +453,20 @@ log and the whole keyboard block falls back to the system default.
 [input.touchpad]
 tap = true
 natural_scroll = true
+# accel_profile = "adaptive"  # "flat", "adaptive", or a custom curve
+# sensitivity = 0.5           # -1.0 to 1.0
 ```
 
 Tap-to-click is enabled by default. Set `tap = false` to disable it globally,
 or use a per-device override below. `natural_scroll` remains unset by default,
 which preserves each device's libinput setting. Options are applied only when
 supported by the device.
+
+`accel_profile` and `sensitivity` work like their `[input.mouse]` counterparts,
+including custom curves. Both remain unset by default, which uses each
+touchpad's libinput default profile and speed. Removing either setting on reload
+restores the corresponding default. `sensitivity` alone adjusts pointer speed
+under the device's default profile.
 
 ### Mouse
 
@@ -507,6 +515,8 @@ repeat_delay = 250
 name = "Acme Precision Touchpad"
 tap = true
 natural_scroll = false
+accel_profile = "flat"
+sensitivity = 0.0
 
 [[input.device]]
 name = "Acme Gaming Mouse"
@@ -517,8 +527,9 @@ sensitivity = 0.0
 Each rule inherits the matching class settings and overrides only the keys it
 contains. `layout`, `variant`, `options`, `repeat_rate`, and `repeat_delay`
 apply to keyboards. `tap` applies to touchpads. `natural_scroll` applies to
-touchpads and mice. `accel_profile` and `sensitivity` apply to mice.
-Unsupported libinput settings are reported in the log.
+touchpads and mice. `accel_profile` and `sensitivity` apply to mice and
+touchpads; for a touchpad the rule overrides `[input.touchpad]` rather than
+`[input.mouse]`. Unsupported libinput settings are reported in the log.
 
 Rules match every attached device with the exact name. Device overrides also
 apply when a device is connected after startup and when the configuration is
