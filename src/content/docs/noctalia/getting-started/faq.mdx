@@ -174,7 +174,7 @@ See [Shell settings](/noctalia/configuration/shell/#shell-settings) and [Bars](/
 
 On Niri, making a bar transparent only changes Noctalia surface opacity. When Niri `ext-background-effects` support is active, Noctalia still publishes blur regions for its layer surfaces, so the compositor can keep blurring behind the bar.
 
-To disable that blur, keep the Noctalia `layer-rule` in your Niri config and set `blur false` inside its `background-effect` block. See [Niri compositor settings: Blur](/noctalia/compositor-settings/niri/?section=blur) for the full rule and notes.
+The default xray blur samples the wallpaper, which can also appear as faint wallpaper-colored pixels around rounded corners. Use `xray false` to blur the actual content behind Noctalia, or `blur false` to disable the effect. See [Niri compositor settings: Blur](/noctalia/compositor-settings/niri/?section=blur) for the full rules and explanation.
 
 </FaqItem>
 

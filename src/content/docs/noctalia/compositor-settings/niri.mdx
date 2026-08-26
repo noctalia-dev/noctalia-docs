@@ -203,7 +203,21 @@ blur {
 :::tip[Turning blur off]
 When Noctalia detects `ext-background-effects`, it automatically publishes blur regions for its layer surfaces. This means bars, panels, dock, notifications, and OSD can still blur even if you do not declare any Noctalia `layer-rule` in your Niri config.
 
-If you want fully transparent Noctalia surfaces or simply do not want blur behind them, keep the Noctalia `layer-rule` and uncomment `blur false` inside its `background-effect` block. Omit the `window-rule` and global `blur` block only if you do not want to configure Niri blur for regular windows.
+With Niri's default xray behavior, that blur samples the wallpaper. On contrasting wallpapers, it can show through the anti-aliased edges of rounded surfaces as faint, wallpaper-colored corner pixels.
+
+- To keep blur but use the windows and content behind Noctalia, set `xray false` as shown above.
+- To disable blur entirely, use `blur false`. A broad namespace match also covers future Noctalia layer surfaces:
+
+```kdl
+layer-rule {
+  match namespace="^noctalia-"
+  background-effect {
+    blur false
+  }
+}
+```
+
+Omitting the Noctalia `layer-rule` is not enough to disable its client-requested blur.
 :::
 
 ## Per-widget desktop layer rules
