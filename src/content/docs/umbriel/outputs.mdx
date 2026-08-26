@@ -77,7 +77,7 @@ HDR accepts these policies:
 |-------|----------|
 | `"off"` | Keep the output in its normal SDR mode. This is the default. |
 | `"on"` | Keep the output in PQ and BT.2020 continuously. SDR surfaces are mapped to `sdr_white`. |
-| `"auto"` | Enable PQ and BT.2020 while a fullscreen surface declaring PQ and BT.2020 is visible on the active workspace. |
+| `"auto"` | Enable PQ and BT.2020 while a fullscreen surface with supported HDR metadata is visible on the active workspace. This includes PQ with BT.2020 and Wine's Windows scRGB or BT.2100 descriptions. |
 | `"fullscreen"` | Enable PQ and BT.2020 while any fullscreen surface is visible on the active workspace. |
 
 Automatic HDR tracks the fullscreen surface that triggered the transition.
@@ -86,11 +86,23 @@ not keep HDR enabled. Leaving fullscreen, changing workspace, moving the
 surface to another output, unmapping it, or closing it returns the output to
 SDR.
 
-Automatic HDR cannot infer a color space from pixel values. Direct XWayland
-games and other clients that do not attach color-management metadata remain
-undetectable. Use a native Wayland HDR path or `hdr = "on"` for those clients.
-Automatic activation also requires fullscreen content on the active workspace;
-windowed HDR content does not activate the output.
+Automatic HDR follows metadata committed by the client, including metadata on
+mapped subsurfaces used by native Wayland Wine. It cannot infer a color space
+from pixel values. Direct XWayland games and other clients that do not attach
+color-management metadata remain undetectable. Use a native Wayland HDR path or
+`hdr = "on"` for those clients. Automatic activation also requires fullscreen
+content on the active workspace; windowed HDR content does not activate the
+output.
+
+When built with wayland-protocols 1.49 or newer, Umbriel exposes the predefined
+Windows BT.2100 description to native Wayland Wine clients. Wine may instead
+choose Windows scRGB for an HDR game. Both descriptions qualify for automatic
+HDR.
+
+Some native Wayland Wine builds require a runtime-specific launch option before
+they publish HDR metadata. With Proton-CachyOS, use `DXVK_HDR=1` instead of
+`PROTON_ENABLE_HDR=1`. Other Proton variants may behave differently; follow the
+documentation for the selected compatibility tool.
 
 The `"fullscreen"` policy activates HDR before a client supplies color
 metadata. This can break the discovery loop for native Wayland games that only
