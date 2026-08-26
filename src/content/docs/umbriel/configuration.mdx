@@ -277,8 +277,10 @@ before you drop the window.
 ### Appearance
 
 Overview cards use the same borders, corner radius, transparency, and blur as
-their windows. `workspace_background` adds a rounded background behind each
-workspace. Its alpha can produce anything from a light tint to an opaque fill.
+their windows. They also retain each surface's color description, so HDR and
+extended-linear content keeps the same appearance while the overview is open.
+`workspace_background` adds a rounded background behind each workspace. Its
+alpha can produce anything from a light tint to an opaque fill.
 
 | Key                    | Type  | Default     | Description                                                                                    |
 | ---------------------- | ----- | ----------- | ---------------------------------------------------------------------------------------------- |
@@ -365,6 +367,8 @@ above, and `window-expel-right` creates the next lane, which is visually below.
 The three-finger vertical swipe continues to switch workspaces. The
 three-finger horizontal strip gesture is inert on vertical workspaces, so use
 keyboard or wheel bindings to scroll the strip.
+On a horizontal scrolling workspace, a three-finger horizontal swipe moves the
+strip and uses release velocity when settling a column against a viewport edge.
 
 Mod+Right-drag selects horizontal and vertical resize edges from the outer
 thirds of both tiled and floating windows. Dragging from a corner region resizes

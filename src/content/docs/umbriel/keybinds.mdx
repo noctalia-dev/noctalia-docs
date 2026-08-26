@@ -82,11 +82,11 @@ set.
 A second `session-quit` while the confirmation is open also quits. While the
 session is locked, `session-quit` quits without the dialog.
 
-Workspace selectors use exact names. Numeric selectors prefer the focused
-output: an exact numeric name wins, otherwise the number selects that 1-based
-position in a static custom-named workspace list. On a dynamic output, a number
-beyond the current workspace list selects the last workspace. Unique names
-resolve globally; duplicate names resolve on the preferred output. Add
+Workspace selectors first resolve exact names globally, including numeric
+names. A unique name selects its workspace on any output. Duplicate names
+resolve on the preferred output. When no exact numeric name exists, the number
+selects that 1-based position on the preferred output. On a dynamic output, a
+number beyond the current workspace list selects the last workspace. Add
 `/output` to target another output explicitly.
 
 When `workspace-switch` targets a workspace on another monitor, the cursor warps
@@ -117,7 +117,7 @@ These take no argument.
 | `window-cycle-width-back` | Cycle the focused column through its preset widths in reverse. |
 | `window-toggle-fullscreen` | Toggle fullscreen for the focused window. |
 | `window-toggle-maximize` | Toggle the focused column's full-width state. |
-| `window-toggle-maximize-to-edges` | Toggle maximization of the focused window to the usable area's edges, without gaps or borders. Layer-shell exclusive zones remain visible. |
+| `window-toggle-maximize-to-edges` | Toggle maximization of the focused window to the usable area's edges, without gaps or borders. Layer-shell exclusive zones remain visible. A column's full-width restore state is preserved when this is toggled or when fullscreen is entered and left. |
 | `layout-scroll-left` / `layout-scroll-right` | Scroll the active workspace's scrolling-layout viewport; a no-op on a dwindle workspace. |
 | `layout-scroll-up` / `layout-scroll-down` | Scroll toward strip start or end. These are first-class synonyms for `layout-scroll-left` and `layout-scroll-right`. |
 | `config-reload` | Reload the config file, the same reload that runs automatically when the file changes on disk. |
