@@ -88,19 +88,44 @@ with the table form:
 
 ## Submaps
 
-Submaps are temporary keybind layers that can be nested. Enter with
-`submap:<name>`, exit one level with `submap:reset`.
+Submaps are temporary keybind layers that can be nested. Enter a named layer
+with `submap:<name>` and exit one level with `submap:reset`. Set entry binds to
+`repeat = false` so holding the key cannot push the same layer more than once.
 
 Binds inside a submap prefix the chord with `submap[name],`:
 
 ```toml
-"Mod+S" = "submap:screencapture"
+"Mod+S" = { action = "submap:screencapture", repeat = false }
 "submap[screencapture],1" = "spawn:grim screenshot.png"
-"submap[screencapture],2" = "submap:region"
+"submap[screencapture],2" = { action = "submap:region", repeat = false }
 "submap[screencapture],Escape" = "submap:reset"
 "submap[region],R" = "spawn:grim -g 'slurp -p' screenshot.png"
 "submap[region],Escape" = "submap:reset"
 ```
+
+Run `umbriel submap` to print the active submap name. It emits no text when the
+stack is empty. The JSON form returns `null` for that state:
+
+```console
+$ umbriel submap
+$ umbriel submap --json
+null
+$ umbriel msg submap:screencapture
+$ umbriel submap
+screencapture
+$ umbriel submap --json
+"screencapture"
+$ umbriel msg submap:reset
+$ umbriel submap
+```
+
+An empty name cannot be created through configuration or `umbriel msg`. If an
+internal caller supplies one, human output uses `unnamed` and JSON preserves the
+empty string.
+
+For nested submaps, the command reports the top layer. One `submap:reset`
+reveals the previous layer; resetting the last layer makes the human command
+silent again.
 
 These bindings capture through `grim` and `slurp` over wlr-screencopy.
 Applications that capture through xdg-desktop-portal (browser screen sharing,
