@@ -160,6 +160,7 @@ export default defineConfig({
             { label: "Workspaces", link: "umbriel/workspaces/" },
             { label: "Layout", link: "umbriel/layout/" },
             { label: "Appearance", link: "umbriel/appearance/" },
+            { label: "Animation", link: "umbriel/animation/" },
             { label: "Input", link: "umbriel/input/" },
             { label: "Keybinds", link: "umbriel/keybinds/" },
             { label: "Actions", link: "umbriel/actions/" },
