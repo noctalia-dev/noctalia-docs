@@ -38,33 +38,73 @@ to the center of that monitor, so focus follows the switch.
 
 These take no argument.
 
-| Action | What it does |
-|--------|--------------|
-| `window-focus-left` / `window-focus-right` | Move focus to the adjacent window along the row. |
-| `window-focus-or-output-left` / `window-focus-or-output-right` | Move focus to the adjacent window along the row; if already at the edge, focus the output in that direction instead. |
-| `column-focus-first` / `column-focus-last` | Move focus to the first or last column in the workspace. |
-| `window-focus-up` / `window-focus-down` | Move focus to the adjacent window along the column. |
-| `window-focus-or-workspace-up` / `window-focus-or-workspace-down` | Move focus up or down within the column; at the boundary, switch to the adjacent workspace and restore its focus. |
-| `window-focus-or-output-up` / `window-focus-or-output-down` | Move focus to the adjacent window along the column; if already at the edge, focus the output in that direction instead. |
-| `window-focus-next` | Cycle focus to the next mapped window on the active workspace. |
-| `window-move-to-workspace-next` / `window-move-to-workspace-previous` | Move the focused window to the adjacent workspace and follow it. These actions do not wrap around. |
-| `column-move-left` / `column-move-right` | Move the focused window's column left or right. |
-| `window-move-or-output-left` / `window-move-or-output-right` | Move the focused window's column left or right; if already at the edge, move the column to the output in that direction instead. |
-| `column-move-to-first` / `column-move-to-last` | Move the focused window's column to the first or last position in the workspace. |
-| `column-center` | Center the focused column in the scrolling viewport; a no-op on non-scrolling workspaces. |
-| `window-move-up` / `window-move-down` | Move the focused window up or down within its column. |
-| `window-move-or-workspace-up` / `window-move-or-workspace-down` | Move the focused window up or down within its column; at the boundary, move it to the adjacent workspace. |
-| `window-move-or-output-up` / `window-move-or-output-down` | Move the focused window up or down within its column; if already at the edge, move the column to the output in that direction instead. |
-| `window-consume-left` | Pull the focused window into the column to its left. |
-| `window-expel-right` | Pop the focused window out of its column into a new column to the right. |
-| `window-cycle-width` | Cycle the focused column through its preset widths. |
-| `window-cycle-width-back` | Cycle the focused column through its preset widths in reverse. |
-| `window-toggle-fullscreen` | Toggle fullscreen for the focused window. |
-| `window-toggle-maximize` | Toggle the focused column's full-width state. |
-| `window-toggle-maximize-to-edges` | Toggle maximization of the focused window to the usable area's edges, without gaps or borders. Layer-shell exclusive zones remain visible. A column's full-width restore state is preserved when this is toggled or when fullscreen is entered and left. |
-| `layout-scroll-left` / `layout-scroll-right` | Scroll the active workspace's scrolling-layout viewport; a no-op on non-scrolling workspaces. |
-| `layout-scroll-up` / `layout-scroll-down` | Scroll toward strip start or end. These are first-class synonyms for `layout-scroll-left` and `layout-scroll-right`. |
-| `config-reload` | Reload the config file, the same reload that runs automatically when the file changes on disk. |
+### Focus
+
+- **Within a row:** `window-focus-left`, `window-focus-right`. Move focus to the
+  adjacent window.
+- **At a row's output edge:** `window-focus-or-output-left`,
+  `window-focus-or-output-right`. Move focus to the adjacent window, or to the
+  output in that direction when already at the edge.
+- **First or last column:** `column-focus-first`, `column-focus-last`. Move
+  focus to the first or last column in the workspace.
+- **Within a column:** `window-focus-up`, `window-focus-down`. Move focus to
+  the adjacent window.
+- **At a workspace boundary:** `window-focus-or-workspace-up`,
+  `window-focus-or-workspace-down`. Move within the column, or switch to the
+  adjacent workspace and restore its focus.
+- **At a column's output edge:** `window-focus-or-output-up`,
+  `window-focus-or-output-down`. Move focus to the adjacent window, or to the
+  output in that direction when already at the edge.
+- **Next window:** `window-focus-next`. Cycle focus to the next mapped window
+  on the active workspace.
+
+### Moving windows and columns
+
+- **To the next or previous workspace:** `window-move-to-workspace-next`,
+  `window-move-to-workspace-previous`. Move the focused window to the adjacent
+  workspace and follow it. These actions do not wrap around.
+- **A column within a row:** `column-move-left`, `column-move-right`. Move the
+  focused window's column left or right.
+- **A column across an output edge:** `window-move-or-output-left`,
+  `window-move-or-output-right`. Move the focused column left or right, or to
+  the output in that direction when already at the edge.
+- **First or last column position:** `column-move-to-first`,
+  `column-move-to-last`. Move the focused window's column to the first or last
+  position in the workspace.
+- **Within a column:** `window-move-up`, `window-move-down`. Move the focused
+  window up or down within its column.
+- **Across a workspace boundary:** `window-move-or-workspace-up`,
+  `window-move-or-workspace-down`. Move within the column, or move the focused
+  window to the adjacent workspace at the boundary.
+- **Across an output edge:** `window-move-or-output-up`,
+  `window-move-or-output-down`. Move within the column, or move the column to
+  the output in that direction when already at the edge.
+- **Merge or split columns:** `window-consume-left` pulls the focused window
+  into the column to its left. `window-expel-right` places it in a new column to
+  the right.
+
+### Size, state, and viewport
+
+- **Column width:** `window-cycle-width`, `window-cycle-width-back`. Cycle the
+  focused column through its preset widths, forward or backward.
+- **Fullscreen:** `window-toggle-fullscreen`. Toggle fullscreen for the focused
+  window.
+- **Column width state:** `window-toggle-maximize`. Toggle the focused column's
+  full-width state.
+- **Window to usable-area edges:** `window-toggle-maximize-to-edges`. Toggle
+  maximization without gaps or borders. Layer-shell exclusive zones remain
+  visible. A column's full-width restore state is preserved when this is toggled
+  or when fullscreen is entered and left.
+- **Center a column:** `column-center`. Center the focused column in the
+  scrolling viewport. It is a no-op on non-scrolling workspaces.
+- **Scroll the viewport:** `layout-scroll-left`, `layout-scroll-right`. Scroll
+  the active workspace's scrolling-layout viewport. `layout-scroll-up` and
+  `layout-scroll-down` are first-class synonyms for left and right.
+
+### Configuration
+
+- **Reload configuration:** `config-reload`. Reload the config file, the same
+  reload that runs automatically when the file changes on disk.
 
 On a vertical scrolling workspace, directional actions follow their visual
 directions. `window-focus-left` and `window-focus-right` move within a lane;
