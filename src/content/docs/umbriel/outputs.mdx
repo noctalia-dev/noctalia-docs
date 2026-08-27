@@ -28,6 +28,7 @@ position = [0, 0]
 scale = 1.25
 vrr = "fullscreen"
 tearing = true
+direct_scanout = false
 workspaces = 5
 ```
 
@@ -41,6 +42,7 @@ workspaces = 5
 | `scale` | float | (auto) | Output scale (0.25-4.0). |
 | `vrr` | string | `"disabled"` | Variable refresh rate policy: `"disabled"`, `"always"`, or `"fullscreen"`. |
 | `tearing` | bool | `false` | Permit asynchronous page flips for eligible fullscreen windows on this output. |
+| `direct_scanout` | bool | `true` | Permit eligible client buffers to bypass composition on this output. Set to `false` to always composite. |
 | `hdr` | string | `"off"` | HDR policy: `"off"`, `"on"`, `"auto"`, or `"fullscreen"`. |
 | `sdr_white` | float | `203` | SDR reference white in cd/m2 while the output is in HDR mode (80-1000). |
 | `workspaces` | int, string array, or `"dynamic"` | `"dynamic"` | Dynamic numbered workspaces, a static count from 1 to 64, or a static ordered list of 1 to 64 names. |
@@ -50,6 +52,28 @@ workspaces = 5
 
 `normal`, `90`, `180`, `270`, `flipped`, `flipped-90`, `flipped-180`,
 `flipped-270`.
+
+### Direct scanout
+
+Direct scanout lets an eligible fullscreen client buffer be presented without
+first rendering it into Umbriel's composited output buffer. Disable it for an
+output when a fullscreen application causes graphical corruption, black
+frames, flicker, or driver-specific presentation problems:
+
+```toml
+[output.DP-1]
+direct_scanout = false
+```
+
+The setting applies on reload. Changing it fully damages and schedules that
+output. Setting it to `false` returns an active direct scanout to composition on
+the next frame; setting it to `true` makes eligible future frames candidates
+for direct scanout. Disabling it can increase GPU use and power consumption
+while fullscreen content is visible.
+
+`WLR_SCENE_DISABLE_DIRECT_SCANOUT=1` is a process-wide startup override. When
+set, it disables direct scanout on every output regardless of
+`direct_scanout = true`.
 
 ### Variable refresh rate
 
