@@ -9,8 +9,12 @@ headless outputs use `HEADLESS-1`.
 
 When an output is disconnected or disabled through configuration, Umbriel moves
 its windows to the active workspace on another enabled output, and moves them
-back to the workspace they came from when it returns. Scratchpad windows move
-with that output assignment and return with it too. If no enabled output
+back to the workspace they came from when it returns. The output also returns
+to its previously active workspace. Floating and pinned windows retain their
+full-output-relative positions even when a panel recreates its exclusive zone
+after the output. Scratchpad windows move with their output assignment and
+return with it too. Tiled windows retain their order, grouping, split ratios,
+and sizes in the scrolling, dwindle, and master layouts. If no enabled output
 remains, windows stay without a workspace until one becomes available.
 
 Run `umbriel outputs` inside a session to list connector names and modes.
@@ -173,8 +177,11 @@ Set `enabled = false` on an output section to turn the monitor off. The
 connector is powered down, the output leaves the output layout, and its
 workspaces no longer appear in the overview. The output's workspaces and their
 windows are preserved, so setting `enabled = true` back (or removing the key)
-restores the monitor exactly as it was. A disabled output is never picked as a
-focus, placement, or layer-surface target.
+restores the monitor exactly as it was. Tiled windows retain their order,
+grouping, split ratios, and sizes in the scrolling, dwindle, and master layouts.
+Its active workspace and the positions of floating, pinned, and scratchpad
+windows return too. A disabled output is never picked as a focus, placement, or
+layer-surface target.
 
 ```toml
 [output.HDMI-A-1]
