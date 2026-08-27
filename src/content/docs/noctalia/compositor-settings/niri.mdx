@@ -18,6 +18,60 @@ Add the following settings to your Niri configuration file (usually located at `
 spawn-at-startup "noctalia"
 ```
 
+## Running Noctalia Alongside Another Shell
+
+You can keep a second shell (for example DankMaterialShell) available as a
+separate Niri session and pick between the two at login. The one rule that
+matters: **never start both shells in the same session.** Desktop shells
+usually claim `org.freedesktop.Notifications` and the
+`org.kde.StatusNotifierWatcher` tray host, so a second shell started next to
+the first silently breaks notifications and the tray.
+
+The reliable pattern is one shared base config plus one overlay per shell,
+and a session entry per overlay:
+
+```kdl
+// ~/.config/niri/config.kdl — the DMS session's entry point
+include "base.kdl"        // layout, window rules, shared binds
+include "shell-dms.kdl"   // spawn-at-startup "dms", DMS binds/rules
+
+// ~/.config/niri/config-noctalia.kdl — the Noctalia session's entry point
+include "base.kdl"
+include "shell-noctalia.kdl" // spawn-at-startup "noctalia", Noctalia binds
+```
+
+Each overlay starts only its own shell with `spawn-at-startup`. Include the
+overlay last so its values (for example `layout.background-color`) win over
+the shared defaults.
+
+:::warning[Do not start shells from systemd units]
+`niri.service` runs in **every** Niri session, so hooking a shell into it —
+a `wants` symlink, a drop-in, or a user unit bound to the session — starts
+that shell in *all* Niri sessions, including Noctalia's. Compositor
+autostart from the session's own overlay is the only start path scoped to
+one session.
+:::
+
+Finally, expose both entry points at the display manager. Keep the stock
+`niri.desktop` for the first session and add one desktop entry per extra
+session in `/usr/share/wayland-sessions/`, selecting its overlay via
+`NIRI_CONFIG`:
+
+```ini
+# /usr/share/wayland-sessions/niri-noctalia.desktop
+[Desktop Entry]
+Name=Niri — Noctalia
+Comment=Niri session with the Noctalia shell
+Exec=env NIRI_CONFIG=/home/YOU/.config/niri/config-noctalia.kdl niri-session
+Type=Application
+DesktopNames=niri;Noctalia;
+```
+
+(If your display manager dislikes `env` in `Exec`, wrap it in a two-line
+script and point `Exec` at that instead.)
+
+Selecting the session at the login screen then determines exactly one shell.
+
 ## Compositor Settings
 
 These settings are for general window appearance and functionality.
