@@ -69,14 +69,14 @@ focus_on_activate = false
 honor_restored_maximize = false
 ```
 
-| Key                         | Type         | Default                 | Description                                                                                                                                                                                                                             |
-| --------------------------- | ------------ | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `autostart`                 | string array | `[]`                    | Shell commands run once after startup. Never re-run on config reload.                                                                                                                                                                   |
-| `mod_key`                   | string       | Super (Alt when nested) | Modifier represented by `Mod` in keybinds. Accepts `Super`, `Alt`, `Ctrl`, or `Shift`; aliases `Logo`, `Win`, and `Control` are also accepted. Applies on reload.                                                                       |
-| `xwayland`                  | bool         | `true`                  | Spawn `xwayland-satellite` for X11 app support. The binary must be installed. Changing this requires a restart.                                                                                                                         |
-| `show_cheatsheet`           | bool         | `true`                  | Show the keybinds cheatsheet overlay on startup. If an included file is still missing, Umbriel waits for it to load before showing the overlay. Press any key or mouse button to dismiss, or toggle at runtime via `cheatsheet-toggle`. |
-| `focus_on_activate`         | bool         | `false`                 | Focus and reveal windows that request activation. When false, activation marks the window and its workspace urgent without changing workspaces. Window rules can override this per application.                                         |
-| `honor_restored_maximize`   | bool         | `false`                 | Honor maximized state restored by applications while their windows open. Later maximize requests are always honored. Applies to newly opened windows.                                                                                   |
+| Key                       | Type         | Default                 | Description                                                                                                                                                                                                                             |
+| ------------------------- | ------------ | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `autostart`               | string array | `[]`                    | Shell commands run once after startup. Never re-run on config reload.                                                                                                                                                                   |
+| `mod_key`                 | string       | Super (Alt when nested) | Modifier represented by `Mod` in keybinds. Accepts `Super`, `Alt`, `Ctrl`, or `Shift`; aliases `Logo`, `Win`, and `Control` are also accepted. Applies on reload.                                                                       |
+| `xwayland`                | bool         | `true`                  | Spawn `xwayland-satellite` for X11 app support. The binary must be installed. Changing this requires a restart.                                                                                                                         |
+| `show_cheatsheet`         | bool         | `true`                  | Show the keybinds cheatsheet overlay on startup. If an included file is still missing, Umbriel waits for it to load before showing the overlay. Press any key or mouse button to dismiss, or toggle at runtime via `cheatsheet-toggle`. |
+| `focus_on_activate`       | bool         | `false`                 | Focus and reveal windows that request activation. When false, activation marks the window and its workspace urgent without changing workspaces. Window rules can override this per application.                                         |
+| `honor_restored_maximize` | bool         | `false`                 | Honor maximized state restored by applications while their windows open. Later maximize requests are always honored. Applies to newly opened windows.                                                                                   |
 
 ## Environment
 
@@ -86,9 +86,27 @@ GTK_THEME = "Adwaita:dark"
 QT_QPA_PLATFORMTHEME = "qt5ct"
 ```
 
-Extra environment variables exported to Umbriel and all spawned commands.
-All values must be strings. Applied once at startup; changing this section
-requires a restart.
+Umbriel exports these variables to itself and commands it starts. In a native
+session, it also publishes them to the systemd user manager before
+`umbriel-session.target` starts. Systemd session services such as Noctalia
+inherit the same values, as do applications they launch. D-Bus receives the
+graphical connection variables but not arbitrary configured variables, because
+they are intended for systemd-managed session services. A nested Umbriel session
+does not modify the host session environment. Without a reachable systemd user
+manager, the values still apply to Umbriel and commands it starts directly.
+
+Published values remain in the systemd user manager until it exits or another
+process changes them. After removing a key from the config, run
+`systemctl --user unset-environment NAME` to remove its previous manager value,
+or wait until the user manager exits.
+
+Names must match `[A-Za-z_][A-Za-z0-9_]*`, and all values must be strings. This
+section cannot override `WAYLAND_DISPLAY`, `WAYLAND_SOCKET`, `DISPLAY`,
+`UMBRIEL_SOCKET`, `XDG_CURRENT_DESKTOP`, `XDG_SESSION_DESKTOP`, or
+`XDG_SESSION_TYPE`, which Umbriel owns. It is applied only at startup. Config
+reload does not update environments already captured by running processes.
+Restart Umbriel after changing it, then fully quit and relaunch long-running
+applications such as Steam if they survived the session restart.
 
 ## Idle inhibition
 

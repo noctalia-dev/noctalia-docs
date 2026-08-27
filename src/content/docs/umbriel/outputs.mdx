@@ -168,6 +168,19 @@ they publish HDR metadata. With Proton-CachyOS, use `DXVK_HDR=1` instead of
 `PROTON_ENABLE_HDR=1`. Other Proton variants may behave differently; follow the
 documentation for the selected compatibility tool.
 
+A Steam launch option scopes the variable to one game. To publish it to newly
+started systemd session services and their applications instead, configure it
+for the Umbriel session:
+
+```toml
+[environment]
+PROTON_ENABLE_WAYLAND = "1"
+DXVK_HDR = "1"
+```
+
+This requires an Umbriel restart. Fully exit and relaunch Steam afterward,
+because an existing Steam process keeps the environment with which it started.
+
 The `"fullscreen"` policy activates HDR before a client supplies color
 metadata. This can break the discovery loop for native Wayland games that only
 offer HDR after seeing an HDR output. It also activates for fullscreen SDR
