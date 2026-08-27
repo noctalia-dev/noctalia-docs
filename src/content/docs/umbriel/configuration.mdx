@@ -105,6 +105,7 @@ is locked.
 Use these pages for detailed topic references:
 
 - [Appearance](/umbriel/appearance/): colors, borders, blur, and shadows.
+- [Animation](/umbriel/animation/): transition timing, curves, and event-specific effects.
 - [Workspace Overview](/umbriel/workspace-overview/): workspace overview and hot corners.
 - [Layout](/umbriel/layout/): scrolling, dwindle, and master layout behavior.
 - [Input](/umbriel/input/): keyboard, pointer, tablet, cursor, and focus settings.
@@ -131,110 +132,8 @@ See [Appearance](/umbriel/appearance/) for appearance, blur, and shadow settings
 
 ## Animation
 
-Animation settings live in the top-level `animation` section. `duration_ms` and
-`curve` set defaults for every event when present; a nested event can override
-either value. The master switch makes every transition instant. Each event also
-has its own switch.
-
-```toml
-[animation]
-enabled = true
-duration_ms = 250
-curve = "easeout"
-
-[animation.windows_in]
-enabled = true
-duration_ms = 150
-curve = "easeout"
-style = "popin"       # "popin", "zoom", "slide", "fade", or "none"
-scale = 0.85          # 0.1-1.0, used by "popin"
-
-[animation.windows_out]
-enabled = true
-duration_ms = 150
-curve = "easeout"
-style = "fade"        # "fade" or "slide"
-
-[animation.windows_move]
-enabled = true
-duration_ms = 250
-curve = "snappy"
-
-[animation.workspaces]
-enabled = true
-duration_ms = 250
-curve = "easeout"
-
-[animation.overview]
-enabled = true
-duration_ms = 250
-curve = "easeout"
-
-[animation.scratchpad]
-enabled = false
-duration_ms = 250
-curve = "easeout"
-dim = 0.5             # 0.0-1.0
-blur = false          # requires appearance.blur.enabled
-scale = 0.0           # 0 preserves geometry; 0.1-1.0 sizes and centers on entry
-maximize = false      # maximize to edges on entry
-fullscreen = false    # fullscreen on entry
-
-[animation.border]
-enabled = false
-duration_ms = 250
-curve = "easeout"
-
-[animation.dim_unfocused]
-enabled = false
-duration_ms = 250
-curve = "easeout"
-dim = 0.0             # 0.0-1.0
-
-[animation.layers]
-enabled = false
-duration_ms = 250
-curve = "easeout"
-```
-
-| Key               | Type   | Default  | Description                                                                 |
-| ----------------- | ------ | -------- | --------------------------------------------------------------------------- |
-| `enabled`         | bool   | `true`   | Master switch. When false, every animation transition is instant.           |
-| `duration_ms`     | int    | `250`    | Default duration for all events when explicitly set (1-10000 milliseconds). |
-| `curve`           | string | `easeout` | Default curve for all events when explicitly set.                           |
-| `windows_in.*`    | table  |          | Window open transition.                                                     |
-| `windows_out.*`   | table  |          | Window close transition using a scene snapshot.                             |
-| `windows_move.*`  | table  |          | Window move and resize transitions.                                         |
-| `workspaces.*`    | table  |          | Workspace switch transition.                                                |
-| `overview.*`      | table  |          | Overview open, close, and row-settling transitions.                         |
-| `scratchpad.*`    | table  |          | Scratchpad show/hide transition and backdrop.                               |
-| `border.*`        | table  |          | Focus-ring color transition in OkLab color space.                           |
-| `dim_unfocused.*` | table  |          | Unfocused-window opacity transition; `dim = 0` disables dimming.             |
-| `layers.*`        | table  |          | Layer-shell surface map and unmap fades.                                    |
-
-An event's `enabled = false` makes only that transition instant. Scratchpad
-`dim` and `blur` remain active, without a fade, when animation is disabled.
-Scratchpad `scale`, `maximize`, and `fullscreen` apply when a window enters the
-scratchpad.
-
-Each curve accepts a built-in name such as `linear`, `ease`, `easeout`,
-`snappy`, `bounce`, or `elastic`; a cubic bezier string
-`"x1,y1,x2,y2"`; or a spring string `"spring: damping,stiffness"`. Bezier x
-coordinates must be between 0 and 1. Spring damping must be between 0.01 and 5,
-and stiffness between 1 and 1000.
-
-Custom named curves can be registered once and reused by name:
-
-```toml
-[animation.beziers]
-myBezier = [0.05, 0.9, 0.1, 1.05]
-
-[animation.springs]
-myBounce = { damping = 0.5, stiffness = 200 }
-```
-
-Then reference them as `curve = "myBezier"` or `curve = "myBounce"` in any
-event section.
+See [Animation](/umbriel/animation/) for transition timing, curves, and event-specific
+effects.
 
 ## Overview
 
