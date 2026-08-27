@@ -256,6 +256,10 @@ creates a new workspace on the adjacent monitor and moves every window of the
 active workspace into it, preserving column order and widths. See
 [Actions](/umbriel/actions/) for the full list and their exact semantics.
 
+Whole-column moves between scrolling workspaces retain member order, width,
+full-width restore state, and stacked row proportions. A destination using the
+dwindle layout flattens the moved stack into ordered single-window columns.
+
 Direction is determined from output centers in logical layout coordinates.
 Small overlaps caused by fractional scaling and coordinate rounding therefore
 do not prevent vertically or horizontally arranged outputs from being found.

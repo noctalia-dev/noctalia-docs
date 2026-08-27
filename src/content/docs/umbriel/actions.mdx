@@ -12,6 +12,7 @@ through `umbriel msg`. See [Keybinds](/umbriel/keybinds/) for binding syntax.
 | `spawn:<cmd>` | Shell command | `"spawn:kitty"` |
 | `workspace-switch:<ws>` | Workspace name, optionally `/<output>` | `"workspace-switch:3"`, `"workspace-switch:CHAT/HDMI-A-1"` |
 | `window-move-to-workspace:<ws>` | Same as above | `"window-move-to-workspace:2"` |
+| `column-move-to-workspace:<ws>` | Same as above; moves the focused window's whole column | `"column-move-to-workspace:CHAT/HDMI-A-1"` |
 | `window-set-width:<frac>` | Fraction 0.1-1.0 | `"window-set-width:0.667"` |
 | `window-modify-width:<delta>` | Signed fraction -0.9..0.9; the resulting width clamps to 0.1..1.0 | `"window-modify-width:-0.2"` |
 | `workspace-set-layout:<scrolling\|dwindle\|master\|toggle>` | Switch the active workspace's layout at runtime; `toggle` cycles scrolling to dwindle to master to scrolling. The override remains until a config reload reasserts the configured mode. | `"workspace-set-layout:toggle"` |
@@ -31,12 +32,13 @@ selects that 1-based position on the preferred output. On a dynamic output, a
 number beyond the current workspace list selects the last workspace. Add
 `/output` to target another output explicitly.
 
-When `workspace-switch` targets a workspace on another monitor, the cursor warps
-to the center of that monitor, so focus follows the switch.
+When `workspace-switch`, `window-move-to-workspace`, or
+`column-move-to-workspace` targets another monitor, the cursor warps to that
+monitor's center so subsequent actions continue there.
 
 ## Window and layout actions
 
-These take no argument.
+Unless shown with a `:<parameter>` suffix below, these take no argument.
 
 ### Focus
 
@@ -60,9 +62,13 @@ These take no argument.
 
 ### Moving windows and columns
 
-- **To the next or previous workspace:** `window-move-to-workspace-next`,
-  `window-move-to-workspace-previous`. Move the focused window to the adjacent
-  workspace and follow it. These actions do not wrap around.
+- **To a selected workspace:** `window-move-to-workspace:<ws>` moves the focused
+  window, while `column-move-to-workspace:<ws>` moves its whole column. Both
+  use the workspace selectors described above and follow the moved focus.
+- **To the next or previous workspace:** `window-move-to-workspace-next` and
+  `window-move-to-workspace-previous` move the focused window.
+  `column-move-to-workspace-next` and `column-move-to-workspace-previous` move
+  its whole column. All four follow the moved focus and do not wrap around.
 - **A column within a row:** `column-move-left`, `column-move-right`. Move the
   focused window's column left or right.
 - **A column across an output edge:** `window-move-or-output-left`,
@@ -144,13 +150,21 @@ the trailing empty workspace, which becomes active as usual.
 `workspace-move-down` and `workspace-move-up` move the focused workspace up or down
 on the focused output. They do not wrap around either.
 
-The matching window actions can be bound independently:
+The matching window and column actions can be bound independently:
 
 ```toml
 [keybinds]
 "Mod+Shift+Comma" = "window-move-to-workspace-previous"
 "Mod+Shift+Period" = "window-move-to-workspace-next"
+"Mod+Ctrl+Page_Up" = "column-move-to-workspace-previous"
+"Mod+Ctrl+Page_Down" = "column-move-to-workspace-next"
 ```
+
+Whole-column moves between scrolling workspaces preserve member order and
+scrolling-layout state, including the column width, its full-width restore
+value, and stacked row proportions. Destination-moving column actions act like
+their matching window action when a floating window is focused because it has
+no tiled column.
 
 `window-center` centers the focused floating window on its output's usable
 area. It is a no-op while a tiled window is focused.
@@ -168,7 +182,8 @@ Directions do not wrap around: with no monitor in that direction the action
 fails with an IPC error ("no output to the left" and friends). The cursor warps
 to the center of the target monitor, so focus follows the action. Floating
 windows keep their relative position on the new monitor; a column moved onto a
-dwindle output flattens into single-window columns, the same as drag-and-drop.
+dwindle workspace flattens into single-window columns, whether it is moved by a
+workspace or output action, the same as drag-and-drop.
 
 ## Overview actions
 
