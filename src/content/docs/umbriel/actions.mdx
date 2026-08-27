@@ -14,7 +14,7 @@ through `umbriel msg`. See [Keybinds](/umbriel/keybinds/) for binding syntax.
 | `window-move-to-workspace:<ws>` | Same as above | `"window-move-to-workspace:2"` |
 | `window-set-width:<frac>` | Fraction 0.1-1.0 | `"window-set-width:0.667"` |
 | `window-modify-width:<delta>` | Signed fraction -0.9..0.9; the resulting width clamps to 0.1..1.0 | `"window-modify-width:-0.2"` |
-| `workspace-set-layout:<scrolling\|dwindle\|toggle>` | Switch the active workspace's layout at runtime; sticky until a config reload reasserts the configured mode | `"workspace-set-layout:toggle"` |
+| `workspace-set-layout:<scrolling\|dwindle\|master\|toggle>` | Switch the active workspace's layout at runtime; `toggle` cycles scrolling to dwindle to master to scrolling. The override remains until a config reload reasserts the configured mode. | `"workspace-set-layout:toggle"` |
 | `window-focus:<window-id>` | Window id from `umbriel windows` | `"window-focus:0123abcd"` |
 | `window-focus-warp:<window-id>` | Focus the window and warp the cursor to its visible center | `"window-focus-warp:0123abcd"` |
 | `window-close[:<window-id>]` | Optional window id; bare form closes the focused window | `"window-close"` |
@@ -51,7 +51,7 @@ These take no argument.
 | `column-move-left` / `column-move-right` | Move the focused window's column left or right. |
 | `window-move-or-output-left` / `window-move-or-output-right` | Move the focused window's column left or right; if already at the edge, move the column to the output in that direction instead. |
 | `column-move-to-first` / `column-move-to-last` | Move the focused window's column to the first or last position in the workspace. |
-| `column-center` | Center the focused column in the scrolling viewport; a no-op on a dwindle workspace. |
+| `column-center` | Center the focused column in the scrolling viewport; a no-op on non-scrolling workspaces. |
 | `window-move-up` / `window-move-down` | Move the focused window up or down within its column. |
 | `window-move-or-workspace-up` / `window-move-or-workspace-down` | Move the focused window up or down within its column; at the boundary, move it to the adjacent workspace. |
 | `window-move-or-output-up` / `window-move-or-output-down` | Move the focused window up or down within its column; if already at the edge, move the column to the output in that direction instead. |
@@ -62,7 +62,7 @@ These take no argument.
 | `window-toggle-fullscreen` | Toggle fullscreen for the focused window. |
 | `window-toggle-maximize` | Toggle the focused column's full-width state. |
 | `window-toggle-maximize-to-edges` | Toggle maximization of the focused window to the usable area's edges, without gaps or borders. Layer-shell exclusive zones remain visible. A column's full-width restore state is preserved when this is toggled or when fullscreen is entered and left. |
-| `layout-scroll-left` / `layout-scroll-right` | Scroll the active workspace's scrolling-layout viewport; a no-op on a dwindle workspace. |
+| `layout-scroll-left` / `layout-scroll-right` | Scroll the active workspace's scrolling-layout viewport; a no-op on non-scrolling workspaces. |
 | `layout-scroll-up` / `layout-scroll-down` | Scroll toward strip start or end. These are first-class synonyms for `layout-scroll-left` and `layout-scroll-right`. |
 | `config-reload` | Reload the config file, the same reload that runs automatically when the file changes on disk. |
 

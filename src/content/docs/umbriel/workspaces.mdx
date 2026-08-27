@@ -89,12 +89,14 @@ and numbered positions as those workspaces are created or removed.
 | `name` | string | Select by workspace name (mutually exclusive with `index`). |
 | `index` | int | Select by 1-based position from 1 to 64 (mutually exclusive with `name`). |
 | `output` | string | Restrict to this output. |
-| `layout.mode` | string | `"scrolling"` or `"dwindle"`. |
+| `layout.mode` | string | `"scrolling"`, `"dwindle"`, or `"master"`. |
 | `layout.gap` | int | Gap in pixels (0-500). |
-| `layout.width_presets` | float array | Widths used by the width-cycle action in both layouts. |
+| `layout.width_presets` | float array | Widths used by the width-cycle action in every layout. |
 | `layout.scrolling.default_width_fraction` | float | Optional initial scrolling lane extent (0.1-1.0). When omitted globally and for the workspace, the client chooses its initial logical extent. |
 | `layout.scrolling.center_underfull_strip` | bool | Center the complete strip whenever it is narrower than the viewport. Disable to left-align underfull strips. |
 | `layout.scrolling.direction` | string | `"horizontal"` or `"vertical"` scroll axis. |
+| `layout.master.position` | string | Side occupied by the master area: `"left"` or `"right"`. |
+| `layout.master.default_width_fraction` | float | Master area fraction when both areas exist (0.1-0.9). |
 
 ### Examples
 
