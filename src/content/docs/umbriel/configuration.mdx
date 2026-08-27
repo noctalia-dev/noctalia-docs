@@ -186,7 +186,7 @@ duration_ms = 200
 curve = "snappy"
 dim = 0.0             # 0.0-1.0
 
-[animation.fade]
+[animation.layers]
 enabled = true
 duration_ms = 200
 curve = "snappy"
@@ -204,7 +204,7 @@ curve = "snappy"
 | `scratchpad.*`    | table  |          | Scratchpad show/hide transition and backdrop.                               |
 | `border.*`        | table  |          | Focus-ring color transition in OkLab color space.                           |
 | `dim_unfocused.*` | table  |          | Unfocused-window opacity transition; `dim = 0` disables dimming.             |
-| `fade.*`          | table  |          | Generic fade used by layer-shell surfaces.                                  |
+| `layers.*`        | table  |          | Layer-shell surface map and unmap fades.                                    |
 
 An event's `enabled = false` makes only that transition instant. Scratchpad
 `dim` and `blur` remain active, without a fade, when animation is disabled.
