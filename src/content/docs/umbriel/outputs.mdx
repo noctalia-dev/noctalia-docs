@@ -14,8 +14,10 @@ to its previously active workspace. Floating and pinned windows retain their
 full-output-relative positions even when a panel recreates its exclusive zone
 after the output. Scratchpad windows move with their output assignment and
 return with it too. Tiled windows retain their order, grouping, split ratios,
-and sizes in the scrolling, dwindle, and master layouts. If no enabled output
-remains, windows stay without a workspace until one becomes available.
+and sizes in the scrolling, dwindle, and master layouts. Taskbars and docks
+continue to associate windows on inactive workspaces with the restored output
+without requiring each workspace to be visited. If no enabled output remains,
+windows stay without a workspace until one becomes available.
 
 Run `umbriel outputs` inside a session to list connector names and modes.
 
