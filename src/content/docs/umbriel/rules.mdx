@@ -99,7 +99,7 @@ offset would otherwise place it completely off-screen.
 
 | Key | Type | Description |
 |-----|------|-------------|
-| `opacity` | float | Surface opacity (0.0-1.0). With blur enabled, the translucent surface reveals a full-strength blurred backdrop, matching equivalent alpha supplied by the client. |
+| `opacity` | float | Surface opacity (0.0-1.0). The rule is bypassed while the window is fullscreen and resumes after it leaves fullscreen; client-provided alpha remains active. With blur enabled, the translucent surface reveals a full-strength blurred backdrop, matching equivalent alpha supplied by the client. |
 | `blur` | bool | Enable/disable blur for this window. |
 | `blur_popups` | bool | Enable/disable blur for its XDG popups. |
 | `blur_ignore_alpha` | float | Skip blur where surface alpha is below this threshold (0.0-1.0). Applies to the window and its popups. |
