@@ -36,11 +36,13 @@ umbriel workspaces --json | jq -r '.[] | select(.focused).layout'
 ```toml
 [workspaces]
 back_and_forth = true
+empty_above = false
 ```
 
 | Key              | Type | Default | Description                                                                                     |
 | ---------------- | ---- | ------- | ----------------------------------------------------------------------------------------------- |
 | `back_and_forth` | bool | `false` | Re-selecting the active workspace jumps back to the previously active workspace on that output. |
+| `empty_above`    | bool | `false` | Add an empty workspace at the start, in addition to the workspace at the end.                    |
 
 Output workspaces are dynamic by default. The workspace models and rules are
 documented below.
@@ -51,11 +53,15 @@ Each output can use dynamic or static workspaces.
 
 ### Dynamic workspaces
 
-Omit `workspaces` or set it to `"dynamic"`. The output starts with one empty
-workspace named `"1"`. When the last workspace gains a window, Umbriel adds
-another empty workspace.
+Omit `workspaces` or set it to `"dynamic"`. By default, the output starts with
+one empty workspace named `"1"`. With `empty_above = true`, it starts with
+distinct leading and trailing empty workspaces named `"1"` and `"2"`.
 
-After you leave an empty workspace, Umbriel removes it unless it is still
+When the last workspace gains a window, Umbriel adds another empty workspace.
+With `empty_above = true`, it also adds a new leading empty workspace when the
+first workspace gains a window.
+
+After you leave any other empty workspace, Umbriel removes it unless it is still
 active. The remaining workspaces are renumbered. If you switch to a workspace
 number beyond the current count, Umbriel uses the last workspace.
 
