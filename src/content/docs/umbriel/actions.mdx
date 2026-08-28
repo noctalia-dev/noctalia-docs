@@ -61,6 +61,12 @@ Unless shown with a `:<parameter>` suffix below, these take no argument.
 - **Next window:** `window-focus-next`. Cycle focus to the next mapped window
   on the active workspace.
 
+With `input.cursor.follows_focus` enabled, these navigation actions warp the
+cursor to the visible center of the selected window. This also applies to
+`window-focus-switch-floating`. Pointer-driven and automatic focus changes do
+not move the cursor. `window-focus:<id>` remains focus-only, while
+`window-focus-warp:<id>` always moves it.
+
 ### Moving windows and columns
 
 - **To a selected workspace:** `window-move-to-workspace:<ws>` moves the focused

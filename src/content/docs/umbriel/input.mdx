@@ -193,6 +193,7 @@ config reload, as do the mapping options for the next pen event.
 theme = ""   # empty = environment/default Xcursor theme
 size = 24    # 1-512
 hardware_cursor = true
+follows_focus = false
 hide_when_typing = false
 hide_timeout_ms = 0  # 0-3600000, 0 disables hiding
 ```
@@ -209,6 +210,14 @@ Set `hide_timeout_ms` to a value from `1` to `3600000` to hide the cursor after
 that many milliseconds without pointer activity. Motion, clicks, scrolling,
 and tablet input reveal the cursor and restart the timeout. The two hiding
 options can be enabled together.
+
+Set `follows_focus = true` to warp the cursor to the visible center of a window
+selected by directional window focus, next-window focus, floating-state focus,
+or first/last-column focus navigation. This applies whether the action comes
+from a keybind, wheel bind, or IPC. Pointer-driven focus, automatic focus after
+a window closes, gestures, and overview selection do not warp the cursor.
+`window-focus:<id>` remains focus-only; use `window-focus-warp:<id>` when an
+individual id-based request must always move the cursor.
 
 ### Focus
 
