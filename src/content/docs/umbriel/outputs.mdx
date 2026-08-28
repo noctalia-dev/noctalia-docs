@@ -34,19 +34,32 @@ workspaces = 5
 
 ## Settings
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| `enabled` | bool | `true` | Set to `false` to turn the monitor off and remove it from the desktop. |
-| `mode` | string | (native) | Resolution and refresh rate: `"WIDTHxHEIGHT"` or `"WIDTHxHEIGHT@HZ"`. Fractional Hz allowed. Ignored in nested sessions (the parent controls size). |
-| `position` | `[x, y]` | (auto) | Layout coordinates. |
-| `scale` | float | (auto) | Output scale (0.25-4.0). |
-| `vrr` | string | `"disabled"` | Variable refresh rate policy: `"disabled"`, `"always"`, or `"fullscreen"`. |
-| `tearing` | bool | `false` | Permit asynchronous page flips for eligible fullscreen windows on this output. |
-| `direct_scanout` | bool | `true` | Permit eligible client buffers to bypass composition on this output. Set to `false` to always composite. |
-| `hdr` | string | `"off"` | HDR policy: `"off"`, `"on"`, `"auto"`, or `"fullscreen"`. |
-| `sdr_white` | float | `203` | SDR reference white in cd/m2 while the output is in HDR mode (80-1000). |
-| `workspaces` | int, string array, or `"dynamic"` | `"dynamic"` | Dynamic numbered workspaces, a static count from 1 to 64, or a static ordered list of 1 to 64 names. |
-| `transform` | string | `"normal"` | Output rotation/flip. |
+| Key              | Type                              | Default      | Description                                                                                                                                         |
+| ---------------- | --------------------------------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `enabled`        | bool                              | `true`       | Set to `false` to turn the monitor off and remove it from the desktop.                                                                              |
+| `mode`           | string                            | (native)     | Resolution and refresh rate: `"WIDTHxHEIGHT"` or `"WIDTHxHEIGHT@HZ"`. Fractional Hz allowed. Ignored in nested sessions (the parent controls size). |
+| `position`       | `[x, y]`                          | (auto)       | Top-left corner in logical layout coordinates. Omit for automatic placement.                                                                        |
+| `scale`          | float                             | `1.0`        | Output scale (0.25-4.0).                                                                                                                            |
+| `vrr`            | string                            | `"disabled"` | Variable refresh rate policy: `"disabled"`, `"always"`, or `"fullscreen"`.                                                                          |
+| `tearing`        | bool                              | `false`      | Permit asynchronous page flips for eligible fullscreen windows on this output.                                                                      |
+| `direct_scanout` | bool                              | `true`       | Permit eligible client buffers to bypass composition on this output. Set to `false` to always composite.                                            |
+| `hdr`            | string                            | `"off"`      | HDR policy: `"off"`, `"on"`, `"auto"`, or `"fullscreen"`.                                                                                           |
+| `sdr_white`      | float                             | `203`        | SDR reference white in cd/m2 while the output is in HDR mode (80-1000).                                                                             |
+| `workspaces`     | int, string array, or `"dynamic"` | `"dynamic"`  | Dynamic numbered workspaces, a static count from 1 to 64, or a static ordered list of 1 to 64 names.                                                |
+| `transform`      | string                            | `"normal"`   | Output rotation/flip.                                                                                                                               |
+
+### Position and scale
+
+An output's logical size is its transformed mode size divided by `scale`. A
+`2560x1600` output at scale `1.25` occupies `2048x1280` logical units. If it
+starts at `[0, 0]`, an output immediately to its right starts at `[2048, 0]`.
+A 1920-wide output at scale `1.0` immediately to its left starts at
+`[-1920, 0]`.
+
+The pointer can cross only where output rectangles touch or overlap. Omit
+`position` to place outputs automatically from left to right and keep them
+adjacent when their mode, scale, or transform changes. Removing a configured
+`scale` restores `1.0` on reload.
 
 ### Transform values
 
@@ -79,10 +92,10 @@ set, it disables direct scanout on every output regardless of
 
 VRR accepts these policies:
 
-| Value | Behavior |
-|-------|----------|
-| `"disabled"` | Never enable adaptive sync. This is the default. |
-| `"always"` | Keep adaptive sync enabled whenever the output supports it. |
+| Value          | Behavior                                                                                  |
+| -------------- | ----------------------------------------------------------------------------------------- |
+| `"disabled"`   | Never enable adaptive sync. This is the default.                                          |
+| `"always"`     | Keep adaptive sync enabled whenever the output supports it.                               |
 | `"fullscreen"` | Enable adaptive sync only while the active workspace contains a mapped fullscreen window. |
 
 With `"fullscreen"`, switching away from the fullscreen workspace, leaving
@@ -137,12 +150,12 @@ overrides.
 
 HDR accepts these policies:
 
-| Value | Behavior |
-|-------|----------|
-| `"off"` | Keep the output in its normal SDR mode. This is the default. |
-| `"on"` | Keep the output in PQ and BT.2020 continuously. SDR surfaces are mapped to `sdr_white`. |
-| `"auto"` | Enable PQ and BT.2020 while a fullscreen surface with supported HDR metadata is visible on the active workspace. This includes PQ with BT.2020 and Wine's Windows scRGB or BT.2100 descriptions. |
-| `"fullscreen"` | Enable PQ and BT.2020 while any fullscreen surface is visible on the active workspace. |
+| Value          | Behavior                                                                                                                                                                                         |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `"off"`        | Keep the output in its normal SDR mode. This is the default.                                                                                                                                     |
+| `"on"`         | Keep the output in PQ and BT.2020 continuously. SDR surfaces are mapped to `sdr_white`.                                                                                                          |
+| `"auto"`       | Enable PQ and BT.2020 while a fullscreen surface with supported HDR metadata is visible on the active workspace. This includes PQ with BT.2020 and Wine's Windows scRGB or BT.2100 descriptions. |
+| `"fullscreen"` | Enable PQ and BT.2020 while any fullscreen surface is visible on the active workspace.                                                                                                           |
 
 Automatic HDR tracks the fullscreen surface that triggered the transition.
 Other applications that adopt the HDR output color space after activation do
@@ -308,6 +321,9 @@ position = [3072, 0]
 scale = 1.0
 workspaces = ["CHAT", "STATS"]
 ```
+
+The primary output is 3072 logical units wide (`3840 / 1.25`), so the HDMI
+output starts at x = 3072.
 
 Tiled windows are clipped to the logical bounds of their owning output.
 Partially visible scrolling columns do not render onto adjacent outputs,
