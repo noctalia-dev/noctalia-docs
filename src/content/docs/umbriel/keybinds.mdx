@@ -12,6 +12,21 @@ All keybinds live under `[keybinds]`. Chords are case-insensitive.
 "Mod+I" = "overview-toggle"
 ```
 
+## Keyboard layouts
+
+Keybinds continue to match the effective symbol from the active keyboard
+layout. If the key's unmodified (level 0) symbol is printable non-ASCII,
+Umbriel also checks the same physical key in the keyboard's other configured
+layouts, in order, for a printable ASCII fallback. This keeps bindings such as
+`Mod+T` working after switching from `us` to a non-Latin layout while retaining
+active-layout symbol matching.
+
+Umbriel does not load an implicit reference layout. A keyboard configured with
+only a non-Latin layout, or whose other layouts have no printable ASCII symbol
+on that key, has no ASCII fallback. Add a suitable alternate to that keyboard's
+layout list (see [Input](/umbriel/input/)), or bind the active layout's XKB keysym
+name.
+
 ## Modifiers
 
 | Modifier | Notes |
