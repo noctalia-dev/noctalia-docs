@@ -243,9 +243,16 @@ umbriel msg dpms-off:DP-1
 umbriel msg dpms-on:DP-1
 ```
 
-Any keyboard, pointer, touch, gesture, or tablet activity powers all DPMS-off
-outputs back on. This includes pointer motion. Outputs disabled with
-`enabled = false` remain disabled and are not affected by these actions.
+When every configured output is DPMS-off, a new keyboard or button press,
+pointer or touch motion, wheel input, gesture activity, or tablet activity
+powers all of them back on. Releases, repeated keybind actions, and gesture
+end events do not wake outputs on their own, so the trailing release from a
+`dpms-off` key or button cannot immediately undo it.
+
+If another configured output remains powered, input activity leaves a named
+DPMS-off output off. Use `dpms-on:<output>` to power that monitor back on.
+Outputs disabled with `enabled = false` remain disabled and are not affected
+by these actions.
 
 ## Live reconfiguration
 
