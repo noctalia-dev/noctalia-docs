@@ -47,6 +47,14 @@ layout = "us,de"
 options = "grp:alt_shift_toggle"
 ```
 
+Physical keyboards that share a named layout stay on that layout together,
+whether the change comes from an XKB toggle or `keyboard-layout-next`. Device
+overrides may list layouts in a different order: Umbriel matches them by XKB
+name, and leaves a keyboard unchanged when it does not provide the selected
+layout. IPC reports the layout vocabulary of the keyboard that most recently
+changed groups. Connecting another keyboard adopts that selected layout when
+available and does not reset the existing keyboards.
+
 `options` is passed to XKB verbatim, so anything `xkbcli list` reports under
 options works (`grp:win_space_toggle`, `caps:escape`, `compose:ralt`, …). An
 `options` value XKB does not recognize is ignored silently, the same as with

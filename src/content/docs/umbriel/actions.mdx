@@ -276,9 +276,11 @@ passed to the window beneath it.
 
 ## Keyboard layout action
 
-`keyboard-layout-next` activates the next layout in `input.keyboard.layout` and
-wraps at the end, on every physical keyboard. It is inert when only one layout
-is configured, and virtual keyboards keep the keymap their client supplied.
+`keyboard-layout-next` advances one physical keyboard to its next configured
+layout and synchronizes that named layout to physical keyboards that also
+provide it. The action wraps at the source keyboard's final layout, is inert
+when no physical keyboard provides multiple layouts, and never changes a
+virtual keyboard's client-owned keymap.
 
 ```toml
 [input.keyboard]
