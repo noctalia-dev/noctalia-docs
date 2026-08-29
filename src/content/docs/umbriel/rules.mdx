@@ -101,6 +101,17 @@ default_size = [800, 600]
 default_position = { x = 32, y = 24, anchor = "bottom_left" }
 ```
 
+Floating windows can instead be sized as fractions of the usable area, per
+axis. `default_size` (pixels) wins when both are set:
+
+```toml
+[[window_rule]]
+match.app_id = "^org[.]example[.]Utility$"
+default_floating = true
+default_width = 0.5
+default_height = 0.6
+```
+
 `anchor` defaults to `"center"`, so this centers a floating window exactly:
 
 ```toml
