@@ -166,6 +166,7 @@ export default defineConfig({
             { label: "Actions", link: "umbriel/actions/" },
             { label: "Window and Layer Rules", link: "umbriel/rules/" },
             { label: "Scratchpads", link: "umbriel/scratchpads/" },
+            { label: "Security", link: "umbriel/security/" },
           ],
         },
         {
