@@ -24,6 +24,7 @@ preserve_split = false              # keep each split direction fixed after it i
 [layout.master]
 position = "left"                   # "left" or "right"
 default_width_fraction = 0.55       # 0.1-0.9
+new_on_top = true                 # place new windows at the top of the stack
 ```
 
 Shared layout options:
@@ -55,6 +56,7 @@ Master layout options:
 | ------------------------ | ------ | -------- | --------------------------------------------------------------------------- |
 | `position`               | string | `"left"` | Side occupied by the master area: `"left"` or `"right"`.                    |
 | `default_width_fraction` | float  | `0.55`   | Initial fraction assigned to the master area when both areas exist (0.1-0.9). |
+| `new_on_top`             | bool   | `true`   | Place newly opened windows at the top of the stack. Disable to place them at the bottom. |
 
 On a vertical scrolling workspace, each column becomes a horizontal lane. Lanes
 stack from top to bottom, and windows within a lane sit side by side. Existing
@@ -133,8 +135,9 @@ from top to bottom. When only one area has windows, that area fills the complete
 content box.
 
 The first window becomes master. A new window also becomes master whenever the
-master area is empty. Otherwise, new windows join the top of the stack. Removing
-the final master window promotes the top stack window. Explicitly moving every
+master area is empty. Otherwise, new windows join the top of the stack when
+`new_on_top = true`, or the bottom when it is false. Removing the final master
+window promotes the top stack window. Explicitly moving every
 window out of master does not promote one, so the remaining stack stays
 full-width until another window opens or is moved into master.
 
