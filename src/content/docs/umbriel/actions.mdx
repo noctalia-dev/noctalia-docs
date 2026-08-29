@@ -43,6 +43,14 @@ monitor's center so subsequent actions continue there.
 
 Unless shown with a `:<parameter>` suffix below, these take no argument.
 
+Column-scoped actions operate on the active layout's column projection.
+Scrolling owns real multi-window columns. In dwindle, every tiled leaf is a
+single-window column, so column actions act on that window. In master, the
+master and stack areas are the two columns. When an action has no meaning in
+the active layout, its keybind does nothing and the IPC `msg` command returns
+an error naming the required layout. Currently, only `column-center` has this
+restriction.
+
 ### Focus
 
 - **Within a row:** `window-focus-left`, `window-focus-right`. Move focus to the
@@ -84,13 +92,17 @@ focus-only, while `window-focus-warp:<id>` always moves it.
   its whole column. All four follow the moved focus and do not wrap around.
   In master layout, the column-scoped forms move only the focused window.
 - **A column within a row:** `column-move-left`, `column-move-right`. Move the
-  focused window's column left or right.
+  focused window's column left or right. In dwindle, they swap the focused
+  window with the neighboring tile in that direction. In master, they exchange
+  the master and stack contents and do nothing while either area is empty.
 - **A column across an output edge:** `window-move-or-output-left`,
   `window-move-or-output-right`. Move the focused column left or right, or to
   the output in that direction when already at the edge.
 - **First or last column position:** `column-move-to-first`,
   `column-move-to-last`. Move the focused window's column to the first or last
-  position in the workspace.
+  position in the workspace. In dwindle, they swap the focused window with the
+  first or last tile. In master, they perform the same master/stack exchange
+  when the focused area is not already first or last.
 - **Next or previous layout position:** `window-swap-next`,
   `window-swap-previous`. Exchange the focused tiled window with its next or
   previous layout-order neighbor, wrapping at both ends. Focus stays on the
@@ -136,7 +148,8 @@ focus-only, while `window-focus-warp:<id>` always moves it.
   visible. A column's full-width restore state is preserved when this is toggled
   or when fullscreen is entered and left.
 - **Center a column:** `column-center`. Center the focused column in the
-  scrolling viewport. It is a no-op on non-scrolling workspaces.
+  scrolling viewport. It requires the scrolling layout; elsewhere its keybind
+  does nothing and the IPC `msg` command reports an error.
 - **Scroll the viewport:** `layout-scroll-left`, `layout-scroll-right`. Scroll
   the active workspace's scrolling-layout viewport. `layout-scroll-up` and
   `layout-scroll-down` are first-class synonyms for left and right.
