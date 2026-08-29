@@ -5,9 +5,10 @@ description: Match windows and layer-shell surfaces with regex rules to control 
 
 ## Window Rules
 
-Window rules match `app_id`, title, or focus state using ECMAScript regular
-expressions. Every matching rule contributes its settings. If two rules set
-the same field, the rule that appears later in the file takes precedence.
+Window rules can match `app_id` and title using ECMAScript regular expressions,
+a standardized content type, or focus state. Every matching rule contributes
+its settings. If two rules set the same field, the rule that appears later in
+the file takes precedence.
 
 ```toml
 [[window_rule]]
@@ -22,16 +23,24 @@ default_floating = true
 |----------|------|-------------|
 | `match.app_id` | regex | Match the window's app ID. |
 | `match.title` | regex | Match the window's title. |
+| `match.content_type` | string | Match `"none"`, `"photo"`, `"video"`, or `"game"`. |
 | `match.is_focused` | bool | Match the window's focused state dynamically. |
 
 Every selector is optional. A rule without selectors matches every window.
 Regular expressions match any part of a value by default. Use `^` and `$` when
 you need to match the entire value.
 
-Run `umbriel windows` to list the app IDs of open windows. Windows translated
-through Umbriel's managed `xwayland-satellite` are prefixed with `[Xwayland]`.
-The JSON form, `umbriel windows --json`, reports the same distinction through
-the boolean `xwayland` field.
+Run `umbriel windows` to list the app IDs of open windows. Its human-readable
+output adds a suffix such as `[content_type=game]` only when the type is not
+`none`. The JSON form, `umbriel windows --json`, always reports `content_type`
+and also includes the `xwayland` boolean.
+
+Umbriel derives a window's content type from standardized Wayland hints on its
+XDG root surface and visible subsurfaces. When those hints differ, it uses the
+priority `game`, `video`, `photo`, then `none`. This also covers Proton and Wine
+games that publish the hint on a child surface. `none` includes windows that do
+not publish a content hint. Client changes refresh settings from the dynamic
+table below, but never replay the opening settings.
 
 ### Settings applied when a window opens
 
@@ -127,9 +136,9 @@ default_width = 0.33
 match.app_id = "^(helium|chromium)$"
 default_width = 0.75
 
-# Always use VRR while a game is focused, even when the output policy disables it
+# Always use VRR for game content, even when the output policy disables it
 [[window_rule]]
-match.app_id = "^(steam_app_[0-9]+|gamescope)$"
+match.content_type = "game"
 vrr = "always"
 
 # Activate the HDR output while a matching fullscreen game is focused
