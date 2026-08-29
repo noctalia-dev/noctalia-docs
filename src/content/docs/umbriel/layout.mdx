@@ -85,10 +85,10 @@ unaffected and win.
 
 Directional focus and movement follow the screen: left and right operate within
 a vertical lane, while up and down walk or reorder lanes along the strip.
-`window-consume-left` still merges into the previous lane, which is visually
-above, and `window-expel-right` creates the next lane, which is visually below.
-`window-consume-or-expel` selects between those two operations from the focused
-window's current lane membership.
+`window-consume-left` and `window-consume-right` merge into the previous or next
+lane, which is visually above or below. Their `window-consume-or-expel-left` and
+`window-consume-or-expel-right` counterparts create a lane in the requested
+direction when the focused window already shares one.
 The three-finger vertical swipe continues to switch workspaces. The
 three-finger horizontal strip gesture is inert on vertical workspaces, so use
 keyboard or wheel bindings to scroll the strip.
@@ -143,12 +143,12 @@ window promotes the top stack window. Explicitly moving every
 window out of master does not promote one, so the remaining stack stays
 full-width until another window opens or is moved into master.
 
-`window-consume-left` and `window-expel-right` preserve their visual meanings.
-With `position = "left"`, consume moves a stack window into master and expel
-moves a master window into the stack. With `position = "right"`, those area
-roles reverse because master is visually right.
-`window-consume-or-expel` provides the corresponding one-action toggle between
-the master and stack areas.
+The directional consume actions preserve their visual meanings. With
+`position = "left"`, left moves a stack window into master and right moves a
+master window into the stack. With `position = "right"`, those area roles
+reverse because master is visually right. The `window-consume-or-expel-left`
+and `window-consume-or-expel-right` variants make the same directional move in
+master layout.
 
 Master workflows use a deterministic layout-order ring: master windows from top
 to bottom, then stack windows from top to bottom. `window-focus-next` and
