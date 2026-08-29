@@ -25,6 +25,12 @@ through `umbriel msg`. See [Keybinds](/umbriel/keybinds/) for binding syntax.
 | `dpms-off[:<output>]` / `dpms-on[:<output>]` | Optional connector name; bare form targets every configured output | `"dpms-off:DP-1"`, `"dpms-on"` |
 | `session-quit[:skip-confirmation]` | Bare form opens an on-screen confirmation (Enter or the quit bind confirms; any other key or click cancels); `skip-confirmation` quits immediately | `"session-quit:skip-confirmation"` |
 
+`spawn:` exports a one-shot `XDG_ACTIVATION_TOKEN` and matching
+`DESKTOP_STARTUP_ID` to the command. Single-instance applications can pass
+that token to their existing window so Umbriel reveals it, including when the
+window remaps after hiding in a tray. Startup commands from `general.autostart`
+do not receive a launch token.
+
 A second `session-quit` while the confirmation is open also quits. While the
 session is locked, `session-quit` quits without the dialog.
 
