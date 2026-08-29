@@ -139,11 +139,21 @@ With `position = "left"`, consume moves a stack window into master and expel
 moves a master window into the stack. With `position = "right"`, those area
 roles reverse because master is visually right.
 
-Width actions operate on the master fraction. The stack fraction is its
-complement. Width actions are inert while either area is empty because the
-single occupied area already fills the viewport. Tiled resizing is available
-on the boundary between master and stack and on boundaries between rows in
-either area.
+Master workflows use a deterministic layout-order ring: master windows from top
+to bottom, then stack windows from top to bottom. `window-focus-next` and
+`window-focus-previous` cycle through that ring and wrap. `window-swap-next` and
+`window-swap-previous` exchange the focused window with the neighboring slot
+while keeping focus on that window. `master-count-increase` promotes the stack
+top into master; `master-count-decrease` demotes the master bottom into the
+stack. At least one window remains in master.
+
+Width actions operate on the master fraction; the stack fraction is its
+complement. `window-modify-width:<delta>` changes the focused area's fraction
+by the requested increment. `window-cycle-width` and
+`window-cycle-width-back` walk the configured `width_presets`. Width actions
+are inert while either area is empty because the single occupied area already
+fills the viewport. Tiled resizing is available on the boundary between master
+and stack and on boundaries between rows in either area.
 
 Dragging over a master workspace previews the destination row within the
 nearest area. Hint bands appear at the top, bottom, and between existing rows.
