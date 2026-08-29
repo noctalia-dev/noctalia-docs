@@ -154,8 +154,9 @@ focus-only, while `window-focus-warp:<id>` always moves it.
   outright, so the actions do nothing while a float is fullscreen.
 - **Fullscreen:** `window-toggle-fullscreen`. Toggle fullscreen for the focused
   window.
-- **Column width state:** `window-toggle-maximize`. Toggle the focused column's
-  full-width state.
+- **Maximize:** `window-toggle-maximize`. Toggle the focused column's full-width
+  state. A floating window has no column, so it toggles filling the output's
+  usable area and restores the box it had before.
 - **Window to usable-area edges:** `window-toggle-maximize-to-edges`. Toggle
   maximization without gaps or borders. Layer-shell exclusive zones remain
   visible. A column's full-width restore state is preserved when this is toggled
