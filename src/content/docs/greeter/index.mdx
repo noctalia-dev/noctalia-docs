@@ -9,7 +9,7 @@ sidebar:
 
 It is built for **[greetd](https://github.com/kennylevinsen/greetd)**: greetd starts the bundled wlroots compositor (`noctalia-greeter-compositor`), and the greeter runs inside that session. It is a login UI only, not a desktop shell or compositor replacement.
 
-Pair it with **Noctalia v5** if you want your wallpaper, palette, and UI font copied from the shell to the login screen (optional).
+Pair it with **Noctalia** if you want your wallpaper, palette, and UI font copied from the shell to the login screen (optional).
 
 - [Installing](#installing)
 - [Setting up greetd](#setting-up-greetd)
@@ -139,7 +139,7 @@ sudo sv restart greetd
 
 ## Matching your Noctalia desktop
 
-With Noctalia v5 and the greeter both installed, open **Settings → Security → Noctalia Greeter → Sync Now**. Noctalia copies:
+With Noctalia and the greeter both installed, open **Settings → Security → Noctalia Greeter → Sync Now**. Noctalia copies:
 
 - wallpaper (including per-output wallpapers when configured)
 - palette and theme mode
@@ -236,7 +236,7 @@ The greeter works without a mouse.
 - **Black screen after reboot** - Same as blank screen: greetd/syslog first. Confirm the state dir and synced appearance files are present.
 - **Wrong session on startup** - Use the desktop-entry **`Name=`** from `noctalia-greeter sessions` (picker label), not the `.desktop` basename. `[session].default` in `greeter.toml` wins over last-used `[session].last` in `sync.toml`; `--session` on the greetd command wins over both. Put names with spaces in `greeter.toml` rather than unquoted on the greetd `command` line.
 - **GNOME fails with `graphical-session-pre.target` / kicks back to greeter** - GNOME expects a systemd-managed user session. The greeter passes `XDG_SESSION_TYPE` and `DesktopNames`-derived desktop env via greetd; if that is not enough, use GDM for GNOME or a custom `wayland-sessions` wrapper. See [Default session](#default-session).
-- **Synced look missing** - Install Noctalia v5, the greeter, and the polkit policy; sync again from Settings; restart greetd or log out once.
+- **Synced look missing** - Install Noctalia, the greeter, and the polkit policy; sync again from Settings; restart greetd or log out once.
 - **User avatars missing on the login screen** - Install and enable **accountsservice** / `accounts-daemon`. The greeter reads the avatar from the user's AccountsService `IconFile`; without it, the picker falls back to a placeholder.
 - **Sync fails with no privilege escalator** - Greeter sync needs `pkexec` or `run0` on `PATH` (for example when `pkexec` is disabled on NixOS, install `run0` from systemd ≥ 256). A polkit authentication agent must be running in your session.
 - **Sync Now does nothing / greeter look unchanged** - Sync stages `sync.toml` + wallpapers first, then waits for polkit to authorize `noctalia-greeter-apply-appearance` (merges into live `sync.toml`, installs wallpapers). On **seatd without logind**, Noctalia's polkit agent cannot register; run the `pkexec` command from the Sync Now notification in a terminal. Sync Now warns after 90 seconds if approval is still pending.

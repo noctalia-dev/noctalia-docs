@@ -1,19 +1,19 @@
 ---
 title: FAQ
-description: Frequently asked questions for Noctalia v5.
+description: Frequently asked questions for Noctalia.
 sidebar:
   order: 99
 ---
 
 import FaqItem from '../../../../components/FaqItem.astro';
 
-Find answers to common setup and troubleshooting questions for Noctalia v5.
+Find answers to common setup and troubleshooting questions for Noctalia.
 
 ## Setup
 
 <FaqItem question="What distributions are supported?">
 
-Noctalia v5 is packaged for Arch Linux, NixOS, Fedora, openSUSE, and Void Linux. You can also install it manually on other Linux distributions if the required build and runtime dependencies are available.
+Noctalia is packaged for Arch Linux, NixOS, Fedora, openSUSE, and Void Linux. You can also install it manually on other Linux distributions if the required build and runtime dependencies are available.
 
 See the [Installation guide](/noctalia/getting-started/installation/) for distro-specific commands and manual install steps.
 
@@ -112,6 +112,15 @@ Settings changes load after hand-written config, so they win when both layers de
 file looks ignored, check Settings first, or inspect `~/.local/state/noctalia/settings.toml`.
 
 See [How configuration works](/noctalia/configuration/) for the full load order and export options.
+
+</FaqItem>
+
+
+<FaqItem question="How does Noctalia resolve application icons?">
+
+Noctalia resolves application icons through GTK's icon-theme support. The dock, taskbar, launcher, and other shell surfaces use the active GTK icon theme; configuring an icon theme only in a Qt control center does not change Noctalia's application icons.
+
+Configure and apply the icon theme through your system's GTK settings, for example with `nwg-look`.
 
 </FaqItem>
 
@@ -319,7 +328,7 @@ See [Location](/noctalia/services/location/), [Theme](/noctalia/theming/#mode), 
 
 <FaqItem question="Why can't I unlock my lock screen?">
 
-Noctalia v5 authenticates through PAM using the `login` service. Make sure `/etc/pam.d/login` exists and is valid for your distribution.
+Noctalia authenticates through PAM using the `login` service. Make sure `/etc/pam.d/login` exists and is valid for your distribution.
 
 If you changed your PAM stack for fingerprint, security key, or other authentication methods, make sure those changes are present in the `login` PAM service used by Noctalia.
 
