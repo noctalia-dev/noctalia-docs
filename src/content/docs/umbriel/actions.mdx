@@ -2,8 +2,8 @@
 title: Actions
 ---
 
-This page lists every action that can be assigned to a keybind or invoked
-through `umbriel msg`. See [Keybinds](/umbriel/keybinds/) for binding syntax.
+Assign actions to keybinds or invoke them through `umbriel msg`; this reference
+lists every available action. See [Keybinds](/umbriel/keybinds/) for binding syntax.
 
 ## Parameterized actions
 
@@ -252,6 +252,9 @@ to the center of the target monitor, so focus follows the action. Floating
 windows keep their relative position on the new monitor; a column moved onto a
 dwindle workspace flattens into single-window columns, whether it is moved by a
 workspace or output action, the same as drag-and-drop.
+Output direction is determined from output centers in logical layout
+coordinates. Small overlaps caused by fractional scaling and coordinate rounding
+do not prevent vertically or horizontally arranged outputs from being found.
 
 ## Overview actions
 
@@ -264,6 +267,38 @@ shifts the following workspace numbers down.
 Umbriel keeps one empty dynamic workspace, so other previews disappear as soon
 as their last window is moved or closed, including while the overview is open.
 Static configured workspace lists only accept drops onto existing previews.
+
+## Hot corners
+
+Hot corners run an action when the pointer rests in a configured output corner.
+They are independent of the workspace overview and can invoke any action
+accepted by a keybind.
+
+```toml
+[hot_corners.top_left]
+enabled = true
+delay_ms = 500
+action = "overview-open"
+
+[hot_corners.bottom_right]
+enabled = true
+delay_ms = 750
+action = "spawn:notify-send 'Bottom right'"
+```
+
+Each corner has its own enabled state, delay, and action. Omitted corners do
+nothing, and `enabled = false` disables a corner without removing its action. A
+delay of `0` activates immediately. Hot corners are inactive on an output while
+a window is fullscreen there.
+
+Available subsections are `hot_corners.top_left`, `hot_corners.top_right`,
+`hot_corners.bottom_left`, and `hot_corners.bottom_right`.
+
+| Key | Type | Default | Description |
+| --- | --- | --- | --- |
+| `enabled` | bool | `false` | Enable this corner. |
+| `delay_ms` | int | `500` | Time at this corner before its action runs (0-10000). |
+| `action` | string | unset | Keybind-style action to run. |
 
 ## Cheatsheet actions
 

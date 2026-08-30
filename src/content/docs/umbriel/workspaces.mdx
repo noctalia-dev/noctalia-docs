@@ -2,50 +2,7 @@
 title: Workspaces
 ---
 
-This page covers workspace models, reload behavior, and per-workspace layout
-rules.
-
-## Inspect workspace state
-
-Run `umbriel workspaces` to list every workspace with its output and effective
-layout mode. An asterisk marks the active workspace on each output, while
-`(focused)` identifies the active workspace on the output Umbriel currently
-targets for actions.
-
-```text
-* DP-1: 1 [scrolling] (focused)
-  DP-1: 2 [dwindle]
-* DP-2: WEB [master]
-```
-
-Use `umbriel workspaces --json` for structured output. Each entry contains the
-workspace `id`, `name`, one-based `index`, `output`, `active`, `focused`, and
-`layout`. `active` is per output, so more than one workspace can be active.
-`focused` is true for at most one workspace. The `layout` value is the current
-effective mode, including an override made with `workspace-set-layout`.
-
-For example, this prints the layout on the workspace currently targeted by
-workspace actions:
-
-```sh
-umbriel workspaces --json | jq -r '.[] | select(.focused).layout'
-```
-
-## Global workspace settings
-
-```toml
-[workspaces]
-back_and_forth = true
-empty_above = false
-```
-
-| Key              | Type | Default | Description                                                                                     |
-| ---------------- | ---- | ------- | ----------------------------------------------------------------------------------------------- |
-| `back_and_forth` | bool | `false` | Re-selecting the active workspace jumps back to the previously active workspace on that output. |
-| `empty_above`    | bool | `false` | Add an empty workspace at the start, in addition to the workspace at the end.                    |
-
-Output workspaces are dynamic by default. The workspace models and rules are
-documented below.
+Choose a workspace model, inspect its state, and customize layout per workspace.
 
 ## Choose a workspace model
 
@@ -93,6 +50,48 @@ Switching to dynamic workspaces keeps populated and active workspaces,
 renumbers them, and adds an empty workspace at the end.
 
 Other output and layout settings are refreshed during a reload as well.
+## Inspect workspace state
+
+Run `umbriel workspaces` to list every workspace with its output and effective
+layout mode. An asterisk marks the active workspace on each output, while
+`(focused)` identifies the active workspace on the output Umbriel currently
+targets for actions.
+
+```text
+* DP-1: 1 [scrolling] (focused)
+  DP-1: 2 [dwindle]
+* DP-2: WEB [master]
+```
+
+Use `umbriel workspaces --json` for structured output. Each entry contains the
+workspace `id`, `name`, one-based `index`, `output`, `active`, `focused`, and
+`layout`. `active` is per output, so more than one workspace can be active.
+`focused` is true for at most one workspace. The `layout` value is the current
+effective mode, including an override made with `workspace-set-layout`.
+
+For example, this prints the layout on the workspace currently targeted by
+workspace actions:
+
+```sh
+umbriel workspaces --json | jq -r '.[] | select(.focused).layout'
+```
+
+## Global workspace settings
+
+```toml
+[workspaces]
+back_and_forth = true
+empty_above = false
+```
+
+| Key              | Type | Default | Description                                                                                     |
+| ---------------- | ---- | ------- | ----------------------------------------------------------------------------------------------- |
+| `back_and_forth` | bool | `false` | Re-selecting the active workspace jumps back to the previously active workspace on that output. |
+| `empty_above`    | bool | `false` | Add an empty workspace at the start, in addition to the workspace at the end.                    |
+
+Output workspaces are dynamic by default. The workspace models and rules are
+documented below.
+
 
 ## Workspace rules
 
