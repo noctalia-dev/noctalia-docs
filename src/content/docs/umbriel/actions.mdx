@@ -158,14 +158,16 @@ focus-only, while `window-focus-warp:<id>` always moves it.
   rather than reverting to the pre-maximize box. Fullscreen owns the size
   outright, so the actions do nothing while a float is fullscreen.
 - **Fullscreen:** `window-toggle-fullscreen`. Toggle fullscreen for the focused
-  window.
+  window. Fullscreen ignores layout struts and layer-shell exclusive zones and
+  fills the entire output.
 - **Maximize:** `window-toggle-maximize`. Toggle the focused column's full-width
-  state. A floating window has no column, so it toggles filling the output's
-  usable area and restores the box it had before.
+  state. Tiled columns remain inside configured struts and gaps. A floating
+  window has no column, so it fills the output's usable area and restores the
+  box it had before.
 - **Window to usable-area edges:** `window-toggle-maximize-to-edges`. Toggle
-  maximization without gaps or borders. Layer-shell exclusive zones remain
-  visible. A column's full-width restore state is preserved when this is toggled
-  or when fullscreen is entered and left.
+  maximization without layout struts, gaps, or borders. Layer-shell exclusive
+  zones remain visible. A column's full-width restore state is preserved when
+  this is toggled or when fullscreen is entered and left.
 - **Center a column:** `column-center`. Center the focused column in the
   scrolling viewport. It requires the scrolling layout; elsewhere its keybind
   does nothing and the IPC `msg` command reports an error.

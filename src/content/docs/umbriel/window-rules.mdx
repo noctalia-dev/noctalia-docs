@@ -60,10 +60,10 @@ opening settings do not overwrite user changes made in the meantime.
 |-----|------|-------------|
 | `default_output` | string | Open on a specific output (e.g. `"DP-1"`). |
 | `default_workspace` | int | Place on workspace N from 1 to 64. On dynamic outputs, values beyond the current count clamp to the last workspace. |
-| `default_fullscreen` | bool | Open in fullscreen. |
+| `default_fullscreen` | bool | Open fullscreen across the entire output, ignoring layout struts and layer-shell exclusive zones. |
 | `default_floating` | bool | Force floating (`true`) or force tiling (`false`). |
-| `default_maximize` | bool | Open maximized. Parented transient dialogs keep their natural size. |
-| `default_maximize_to_edges` | bool | Explicitly open maximized to edges. The initial configure fills the usable area without gaps or borders, so the window does not open at its normal size first. Layer-shell exclusive zones stay visible. Takes precedence over `default_maximize`; when combined with `default_fullscreen` the window opens fullscreen and returns to maximized to edges once fullscreen is cleared. |
+| `default_maximize` | bool | Open maximized. A tiled column still respects layout struts and gaps. Parented transient dialogs keep their natural size. |
+| `default_maximize_to_edges` | bool | Explicitly open maximized to edges. The initial configure fills the usable area without layout struts, gaps, or borders, so the window does not open at its normal size first. Layer-shell exclusive zones stay visible. Takes precedence over `default_maximize`; when combined with `default_fullscreen` the window opens fullscreen and returns to maximized to edges once fullscreen is cleared. |
 | `default_focused` | bool | Take focus when opening, switching to the window's workspace when needed. Defaults to `true`; set to `false` to preserve the existing focus and workspace. |
 | `default_pinned` | bool | Open pinned above regular windows and keep the window visible across workspace changes. Pinning makes a tiled window floating. |
 | `default_size` | `[w,h]` | Initial size in pixels, clamped to the client's min/max hints. Floats use both, then own their size and honor client resizes; tiled windows ignore height. Takes precedence over `default_width`/`default_height` when set. |
@@ -73,9 +73,9 @@ opening settings do not overwrite user changes made in the meantime.
 | `default_scrolling_column` | string | Scrolling windows only. Place windows with the same non-empty name in one column. Floating windows and other layout modes ignore it. |
 | `default_scrolling_column_order` | int | Scrolling windows only. Position within `default_scrolling_column`, independent of launch timing. Lower values open higher in horizontal scrolling and farther left in vertical scrolling. Windows without an order follow ordered windows. |
 
-For tiled windows, `default_maximize` expands the column to full width without
-changing the layout; for floating windows, it fills the usable area. Client
-maximize requests made before the window maps are honored only when
+For tiled windows, `default_maximize` expands the column to the full width
+inside configured struts and gaps; for floating windows, it fills the usable
+area. Client maximize requests made before the window maps are honored only when
 `general.honor_restored_maximize` is enabled. Requests after mapping are always
 honored.
 

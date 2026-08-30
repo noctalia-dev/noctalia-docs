@@ -37,6 +37,29 @@ width_presets = [0.333, 0.5, 0.667]
 | `gap` | int | `8` | Gap between windows in pixels (0-500). |
 | `width_presets` | float array | `[0.333, 0.5, 0.667]` | Fractions used by `window-cycle-width` and `window-cycle-height` in every layout. Both actions use this one list. |
 
+### Struts
+
+```toml
+[layout.struts]
+left = 0
+right = 0
+top = 0
+bottom = 0
+```
+
+Struts reserve signed logical pixels around the normal tiled layout. Umbriel
+applies them after layer-shell exclusive zones, so positive values reserve more
+space inward from panels, while negative values expand the tiled area and can
+place windows beneath panels or beyond an output edge. Each edge accepts a value
+from `-65535` to `65535`.
+
+All three tiled layouts use the resulting area. On the scrolling axis, struts
+leave room beyond the viewport where neighboring lanes can remain visible.
+Floating windows and popups ignore struts. A full-width tiled column still
+respects struts and gaps; maximize-to-edges ignores struts, gaps, and borders
+but keeps layer-shell exclusive zones visible; fullscreen fills the entire
+output.
+
 `Mod+Right-drag` selects horizontal and vertical resize edges from the outer
 thirds of tiled and floating windows. Dragging from a corner resizes both axes.
 Mod+Right-click in the center starts no resize and preserves the window's
