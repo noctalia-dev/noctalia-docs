@@ -133,7 +133,8 @@ focus-only, while `window-focus-warp:<id>` always moves it.
   new column in the requested direction, or consume a window that is alone.
   In master layout these actions move between the master and stack areas in
   the requested direction. In dwindle layout they swap with the adjacent
-  neighbor in that direction.
+  on-screen neighbor in the requested horizontal direction. Vertically adjacent
+  tree-order neighbors are not considered.
 
 ### Size, state, and viewport
 
