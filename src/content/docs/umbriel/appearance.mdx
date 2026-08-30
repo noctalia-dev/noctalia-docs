@@ -26,13 +26,17 @@ cheatsheet and configuration diagnostic banner. Colors are `#RRGGBB` or
 | `background`       | color | `#141419FF` | Shared background for internal panels and banners. |
 | `text_primary`     | color | `#E8E8EAFF` | Primary text.                                      |
 | `text_muted`       | color | `#8A8A92FF` | Secondary help and status text.                    |
-| `accent_primary`   | color | `#7AA3FFFF` | Primary emphasis, including titles and key chords. |
+| `accent_primary`   | color | `#7AA3FFFF` | Primary emphasis, including titles, key chords, and the cheatsheet border. |
 | `accent_secondary` | color | `#F5C96BFF` | Secondary emphasis, including group headings.      |
 | `warning`          | color | `#F5C96BFF` | Warning status text.                               |
-| `error`            | color | `#FF6B6BFF` | Error status text.                                 |
+| `error`            | color | `#FF6B6BFF` | Error text and the session-quit confirmation border.             |
 
 Key chord backgrounds are derived from `background` and `text_primary`; they
 remain opaque so text stays legible over translucent panels.
+
+Modal panels use their semantic colors as borders: one logical pixel of
+`accent_primary` around the keybind cheatsheet, and two logical pixels of
+`error` around the smaller session-quit confirmation.
 
 ## Window appearance
 
