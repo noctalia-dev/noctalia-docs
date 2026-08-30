@@ -101,6 +101,11 @@ scopes the workspace lookup to that output.
 within the output's usable area, so panels and other exclusive zones are taken
 into account.
 
+The packaged config floats browser windows titled `Picture-in-Picture` or
+`Picture in picture` and places them 20 logical pixels from the bottom-right
+corner. XDG shell has no semantic PiP role and does not let clients choose a
+global window position, so this behavior is implemented as a title rule.
+
 For example, this opens a window 32 pixels right and 24 pixels up from the
 bottom-left corner:
 
