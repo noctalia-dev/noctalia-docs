@@ -57,6 +57,10 @@ layout. IPC reports the layout vocabulary of the keyboard that most recently
 changed groups. Connecting another keyboard adopts that selected layout when
 available and does not reset the existing keyboards.
 
+Run `umbriel keyboard-layouts` to list the layouts reported by that keyboard.
+The active layout is prefixed with `*`. Use `umbriel keyboard-layouts --json`
+for the same names and a zero-based `current_index` in structured output.
+
 `options` is passed to XKB verbatim, so anything `xkbcli list` reports under
 options works (`grp:win_space_toggle`, `caps:escape`, `compose:ralt`, …). An
 `options` value XKB does not recognize is ignored silently, the same as with
