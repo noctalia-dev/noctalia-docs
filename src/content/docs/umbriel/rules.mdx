@@ -67,6 +67,8 @@ opening settings do not overwrite user changes made in the meantime.
 | `default_width` | float | For floating windows, the initial width as a fraction (0.1-1.0) of the usable area. This includes windows that float without `default_floating`, such as dialogs that declare a parent. For tiled windows, scrolling only: lane scroll-axis extent fraction (0.1-1.0), which is height on a vertical workspace. Gap-aware: fractions that sum to 1 tile exactly. Overrides `layout.scrolling.default_width_fraction`. Dragging the lane within or between scrolling workspaces retains its current fraction. Ignored in dwindle and master. |
 | `default_height` | float | Floating windows only, on the same terms as `default_width`. Initial height as a fraction (0.1-1.0) of the usable area. Ignored for tiled windows. |
 | `default_workspace` | int | Place on workspace N from 1 to 64. On dynamic outputs, values beyond the current count clamp to the last workspace. |
+| `default_scrolling_column` | string | Scrolling only. Place windows with the same non-empty name in one column. Floating windows and other layout modes ignore it. |
+| `default_scrolling_column_order` | int | Position within `default_scrolling_column`, independent of launch timing. Lower values open higher in horizontal scrolling and farther left in vertical scrolling. Windows without an order follow ordered windows. |
 | `default_fullscreen` | bool | Open in fullscreen. |
 | `default_maximize_to_edges` | bool | Explicitly open maximized to edges. The initial configure fills the usable area without gaps or borders, so the window does not open at its normal size first. Layer-shell exclusive zones stay visible. Takes precedence over `default_maximize`; when combined with `default_fullscreen` the window opens fullscreen and returns to maximized to edges once fullscreen is cleared. |
 | `default_maximize` | bool | Explicitly open maximized. Parented transient dialogs keep their natural size. The initial configure uses the layout's final full-width target, so the window does not open at its normal size first. Umbriel ignores client maximization requested before the first buffer maps unless `general.honor_restored_maximize` is enabled, but always honors requests sent after mapping. Tiled windows expand their column to full width without changing the layout; floating windows fill the usable area. |
@@ -83,6 +85,29 @@ configured workspace, `default_workspace = 4` opens there even when the window
 was launched from another output. If several fixed outputs contain that
 position, Umbriel keeps the launch output. An explicit `default_output` always
 scopes the workspace lookup to that output.
+
+#### Named scrolling columns
+
+Assign the same `default_scrolling_column` to applications that should share a
+scrolling column. The first matching window opens a column. Later matches on the
+same workspace join it.
+
+```toml
+[[window_rule]]
+match.app_id = "^firefox$"
+default_scrolling_column = "browsers"
+default_scrolling_column_order = 10
+
+[[window_rule]]
+match.app_id = "^chromium$"
+default_scrolling_column = "browsers"
+default_scrolling_column_order = 20
+```
+
+The name is local to a workspace. If a named scrolling column has been split manually,
+new windows join the first column containing that name. The first window also
+sets the column width. `default_scrolling_column_order` has no effect without
+`default_scrolling_column`.
 
 #### Floating position
 
