@@ -246,3 +246,5 @@ The greeter works without a mouse.
 - **Blanked greeter will not wake** - Use a key press, mouse button, or touch. If outputs stay off, check greeter compositor logs for idle/output commit errors.
 - **UI too small or too large on a high-DPI monitor** - Set `[output].scale` in `greeter.toml`. See [Configuration](/greeter/configuration/#ui-scale).
 - **Wrong or default cursor theme** - Set `[cursor].theme` (and `[cursor].size`) in `greeter.toml`, or the `XCURSOR_*` variables in the greetd command. If the theme is not on the default search path, also set `[cursor].path` / `XCURSOR_PATH`. On NixOS use `programs.noctalia-greeter.settings.cursor` (writes `greeter.toml`; use `path` for packaged themes, there is no `package` option). See [Cursor theme](/greeter/configuration/#cursor-theme).
+
+test
