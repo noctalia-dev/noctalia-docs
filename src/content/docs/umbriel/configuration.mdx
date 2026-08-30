@@ -41,6 +41,9 @@ expands to your home directory, and `$VAR` or `${VAR}` expands environment
 variables. Later files override earlier files, and values in the main file
 override every include.
 
+`files` is the only key `[include]` accepts. Anything else in the section is
+reported as an unknown key, in the main config and in included files alike.
+
 You can split your config into multiple files for clarity:
 
 ```toml
