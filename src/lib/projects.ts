@@ -42,10 +42,10 @@ export const PROJECTS: readonly Project[] = [
     id: 'noctalia-shell',
     label: 'Noctalia Shell',
     description: 'Quickshell · v4 legacy',
-    href: '/noctalia-shell/',
+    href: '/noctalia-shell-legacy/',
     sidebarLabel: 'Noctalia Shell',
     displayName: 'Noctalia Shell Legacy v4',
-    faqHref: '/noctalia-shell/getting-started/faq/',
+    faqHref: '/noctalia-shell-legacy/getting-started/faq/',
     legacy: true,
   },
 ];

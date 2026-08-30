@@ -84,20 +84,6 @@
 }
 
 
-/* Repo cards hover effect */
-.repo-card {
-	transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-}
-
-.repo-card article {
-	border-radius: var(--sl-border-radius);
-	border: 1px solid var(--sl-color-hairline);
-}
-
-.repo-card:hover {
-	transform: translateY(-2px);
-	filter: drop-shadow(0 2px 8px var(--sl-shadow-color));
-}
 
 button {
 	background-color: var(--sl-color-bg);

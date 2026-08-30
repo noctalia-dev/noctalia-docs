@@ -158,6 +158,7 @@ export default defineConfig({
             { label: "Configuration", link: "umbriel/configuration/" },
             { label: "Outputs", link: "umbriel/outputs/" },
             { label: "Workspaces", link: "umbriel/workspaces/" },
+            { label: "Workspace Overview", link: "umbriel/workspace-overview/" },
             { label: "Layout", link: "umbriel/layout/" },
             { label: "Appearance", link: "umbriel/appearance/" },
             { label: "Animation", link: "umbriel/animation/" },

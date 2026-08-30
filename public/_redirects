@@ -19,5 +19,3 @@
 /development/*     /noctalia-shell-legacy/development/:splat      301
 /deprecated        /noctalia-shell-legacy/deprecated/             301
 /deprecated/*      /noctalia-shell-legacy/deprecated/:splat       301
-/projects          /noctalia-shell-legacy/projects/               301
-/projects/*        /noctalia-shell-legacy/projects/:splat         301
