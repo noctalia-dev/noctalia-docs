@@ -56,6 +56,8 @@ Set these in **`greeter.toml`**. The greeter UI and Sync do not change them. Whe
 | `[appearance].scheme` | Color scheme (`Synced`, builtin name such as `Noctalia`, …). Overrides last UI pick in `sync.toml`. |
 | `[appearance].password_style` | Password mask: `default` or `random` |
 | `[appearance].hide_logo` | Hide the Noctalia brand logo (`true` / `false`) |
+| `[appearance].power_buttons_position` | Power buttons: `bottom-right` (default), `bottom-left`, `top-left`, `top-right`, `hidden` |
+| `[appearance].scheme_selector_position` | Scheme selector: `top-right` (default), `top-left`, `bottom-left`, `bottom-right`, `hidden` |
 | `[appearance].theme_mode` | Theme mode string for Synced look (e.g. `dark`) |
 | `[appearance].corner_radius_scale` | Corner radius scale for Synced look |
 | `[appearance].font_family` | Font family for Synced look |
@@ -109,6 +111,10 @@ scheme = "Synced"
 password_style = "random"
 # Hide the Noctalia brand logo on the login screen.
 hide_logo = false
+# Power buttons position: "bottom-right" (default), "bottom-left", "top-left", "top-right", "hidden"
+power_buttons_position = "bottom-right"
+# Scheme selector position: "top-right" (default), "top-left", "bottom-left", "bottom-right", "hidden"
+scheme_selector_position = "top-right"
 theme_mode = "dark"
 corner_radius_scale = 1.0
 # Optional; empty / omit keeps the greeter default font.
