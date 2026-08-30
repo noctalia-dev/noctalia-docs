@@ -164,7 +164,7 @@ export default defineConfig({
             { label: "Animation", link: "umbriel/animation/" },
             { label: "Layout", link: "umbriel/layout/" },
             { label: "Workspaces", link: "umbriel/workspaces/" },
-            { label: "Workspaces Overview", link: "umbriel/workspace-overview/" },
+            { label: "Workspaces Overview", link: "umbriel/workspaces-overview/" },
             { label: "Window and Layer Rules", link: "umbriel/rules/" },
             { label: "Scratchpads", link: "umbriel/scratchpads/" },
             { label: "Security", link: "umbriel/security/" },
