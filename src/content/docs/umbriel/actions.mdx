@@ -23,7 +23,7 @@ lists every available action. See [Keybinds](/umbriel/keybinds/) for binding syn
 | `window-focus:<window-id>` | Window id from `umbriel windows` | `"window-focus:0123abcd"` |
 | `window-focus-warp:<window-id>` | Focus the window and warp the cursor to its visible center | `"window-focus-warp:0123abcd"` |
 | `window-close[:<window-id>]` | Optional window id; bare form closes the focused window | `"window-close"` |
-| `dpms-off[:<output>]` / `dpms-on[:<output>]` | Optional connector name; bare form targets every configured output | `"dpms-off:DP-1"`, `"dpms-on"` |
+| `dpms-off[:<output>]` / `dpms-on[:<output>]` | Optional connector or monitor name; bare form targets every configured output | `"dpms-off:DP-1"`, `"dpms-on"` |
 | `session-quit[:skip-confirmation]` | Bare form opens an on-screen confirmation (Enter or the quit bind confirms; any other key or click cancels); `skip-confirmation` quits immediately | `"session-quit:skip-confirmation"` |
 
 `spawn:` exports a one-shot `XDG_ACTIVATION_TOKEN` and matching

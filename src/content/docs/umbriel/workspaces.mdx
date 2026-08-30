@@ -100,8 +100,8 @@ documented below.
 dynamic output. They change layout settings but do not create workspaces.
 
 Each rule selects a workspace by exactly one of `name` (string) or `index`
-(1-based integer from 1 to 64). An optional `output` restricts the rule to that
-output.
+(1-based integer from 1 to 64). An optional `output` restricts the rule to a
+case-insensitive connector or monitor name from `umbriel outputs`.
 
 ### How settings are combined
 
@@ -123,7 +123,7 @@ Strut edges are resolved independently. A rule that sets only
 |-----|------|-------------|
 | `name` | string | Select by workspace name (mutually exclusive with `index`). |
 | `index` | int | Select by 1-based position from 1 to 64 (mutually exclusive with `name`). |
-| `output` | string | Restrict to this output. |
+| `output` | string | Restrict to a connector or monitor name. |
 | `layout.mode` | string | `"scrolling"`, `"dwindle"`, or `"master"`. |
 | `layout.gap` | int | Gap in pixels (0-500). |
 | `layout.struts.{left,right,top,bottom}` | int | Signed logical pixels reserved at each edge of the normal tiled layout (-65535 to 65535). Positive values shrink the area and negative values expand it. |
