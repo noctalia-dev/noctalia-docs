@@ -362,7 +362,7 @@ follows_mouse = false
 # Controls intended to remain usable while the session is locked use the table form.
 # "XF86MonBrightnessDown" = { action = "spawn:noctalia msg brightness-down 10", allow_when_locked = true }
 
-# Window and layer rules (see docs/user/rules.md) ---------------------------
+# Window rules (see docs/user/window-rules.md) ---------------------------
 
 # Blur all windows
 [[window_rule]]
@@ -431,7 +431,7 @@ default_size = [800, 600]
 # default_focused = false
 # default_pinned = true
 
-# Layer rules (see docs/user/rules.md#layer-rules) ---------------------------
+# Layer rules (see docs/user/layer-rules.md) ---------------------------
 
 [[layer_rule]]
 match.namespace="^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd)$"
