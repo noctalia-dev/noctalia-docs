@@ -108,6 +108,16 @@ reload does not update environments already captured by running processes.
 Restart Umbriel after changing it, then fully quit and relaunch long-running
 applications such as Steam if they survived the session restart.
 
+## Events
+
+```toml
+[events]
+lid_close = "notify-send 'The laptop lid is closed!'"
+lid_open = "notify-send 'The laptop lid is open!'"
+```
+
+Defines commands that are executed when the laptop lid is closed or opened.
+
 ## Idle inhibition
 
 Umbriel supports application idle inhibitors and idle notifications. An
