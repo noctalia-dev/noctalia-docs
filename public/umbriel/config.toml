@@ -35,7 +35,7 @@ empty_above = false
 # Colors ---------------------------------------------------------------------
 
 [colors]
-# background = "#141419F0"
+# background = "#141419FF"
 # text_primary = "#E8E8EAFF"
 # text_muted = "#8A8A92FF"
 # accent_primary = "#7AA3FFFF"
@@ -417,6 +417,13 @@ default_size = [800, 600]
 # vrr = "always"                # override the output VRR policy while focused
 # tearing = true                 # force a tearing request; false vetoes the client hint
 # hdr = "fullscreen"            # override the output HDR policy while focused
+
+# Keep tiled windows from several rules in one scrolling column. Lower orders
+# appear higher in horizontal scrolling and farther left in vertical scrolling.
+# [[window_rule]]
+# match.app_id = "^firefox$"
+# default_scrolling_column = "browsers"
+# default_scrolling_column_order = 10
 
 # [[window_rule]]
 # match.title = "^notificationtoasts_.+_desktop"
