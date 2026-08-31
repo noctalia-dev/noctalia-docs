@@ -1,4 +1,8 @@
 
+## Documentation source
+
+All documentation in this repository is synchronized from the relevant external Noctalia repositories. This repository is used as the published documentation mirror, so pull requests and issues are disabled here. To propose a documentation change, update the corresponding source repository instead.
+
 ## 🧞 Commands
 
 All commands are run from the root of the project, from a terminal:
