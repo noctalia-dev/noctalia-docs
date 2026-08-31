@@ -177,8 +177,9 @@ focus-only, while `window-focus-warp:<id>` always moves it.
   fills the entire output.
 - **Maximize:** `window-toggle-maximize`. Toggle the focused column's full-width
   state. Tiled columns remain inside configured struts and gaps. A floating
-  window has no column, so it fills the output's usable area and restores the
-  box it had before.
+  window has no column, so it fills the output's usable area and restores its
+  exact previous box, including its last dropped position. Both directions use
+  the `animation.windows_move` transition.
 - **Window to usable-area edges:** `window-toggle-maximize-to-edges`. Toggle
   maximization without layout struts, gaps, or borders. Layer-shell exclusive
   zones remain visible. A column's full-width restore state is preserved when
