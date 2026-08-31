@@ -59,7 +59,7 @@ drag_opacity = 0.75
 
 | Key                           | Type  | Default     | Description                                                                                                                                       |
 | ----------------------------- | ----- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `prefer_no_csd`               | bool  | `true`      | Ask clients to omit client-side decorations (xdg-decoration). Clients that explicitly request CSD are still honored. Restart apps after changing. |
+| `prefer_no_csd`               | bool  | `true`      | Prefer Umbriel's border-only server decoration. Set to `false` to let clients draw their own decorations.                                        |
 | `border_width`                | int   | `2`         | Inner border width in logical pixels (0-100), including around rounded corners.                                                                   |
 | `outer_border_width`          | int   | `0`         | Ring outside the inner border in logical pixels (0-100).                                                                                          |
 | `corner_radius`               | int   | `10`        | Final decorated outer-edge radius in logical pixels (0-100). 0 disables.                                                                          |
@@ -71,6 +71,13 @@ drag_opacity = 0.75
 | `insert_hint_color`           | color | `#7FC8FF80` | Drop-target preview during drag.                                                                                                                  |
 | `backdrop_color`              | color | `#000000FF` | Background for fullscreen gaps and lock screen.                                                                                                   |
 | `drag_opacity`                | float | `0.75`      | Opacity of the window while dragging.                                                                                                             |
+
+With `prefer_no_csd = true`, Umbriel advertises the XDG and KDE decoration
+managers and prefers its border-only server decoration. An explicit request for
+client-side decorations is still honored. With `false`, Umbriel hides both
+managers from newly connected clients so toolkits such as Qt draw their own
+decorations. Protocol visibility is fixed when an application connects, so
+restart applications after changing this setting.
 
 Colors are `#RRGGBB` or `#RRGGBBAA`.
 
