@@ -74,6 +74,7 @@ Set these in **`greeter.toml`**. The greeter UI and Sync do not change them. Whe
 | `[cursor].theme` / `.size` / `.path` | Cursor theme |
 | `[keyboard].layout` / `.variant` / `.options` / `.numlock` | XKB keymap |
 | `[auth].allow_empty_password` | Empty password submit for fprintd/smartcard PAM |
+| `[auth].request_timeout` | Seconds to wait for each greetd reply (`0`-`3600`); `0` disables the watchdog (default `60`) |
 
 ---
 
@@ -189,6 +190,8 @@ numlock = true
 [auth]
 # Allow empty password submit (fprintd / smartcard PAM). Default false.
 allow_empty_password = false
+# Fail closed if greetd leaves a request unanswered (0-3600 seconds; 0 disables).
+request_timeout = 60
 ```
 
 ---
