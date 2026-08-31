@@ -69,6 +69,26 @@ options works (`grp:win_space_toggle`, `caps:escape`, `compose:ralt`, …). An
 `setxkbmap`; a `layout` or `variant` that fails to compile is reported in the
 log and the whole keyboard block falls back to the system default.
 
+#### Layout switching
+
+`keyboard-layout-next` advances one physical keyboard to its next configured
+layout and synchronizes that named layout to physical keyboards that also
+provide it. The action wraps at the source keyboard's final layout, is inert
+when no physical keyboard provides multiple layouts, and never changes a
+virtual keyboard's client-owned keymap.
+
+```toml
+[input.keyboard]
+layout = "us,de"
+
+[keybinds]
+"Mod+Shift+K" = "keyboard-layout-next"
+```
+
+`umbriel msg keyboard-layout-next` does the same from a script or panel. An XKB
+toggle such as `options = "grp:alt_shift_toggle"` is an alternative that lives
+in the keymap itself, and the two can coexist.
+
 #### Tracking the layout per window
 
 With several layouts loaded, `track_layout` decides how far a layout change

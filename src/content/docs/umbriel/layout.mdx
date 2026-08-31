@@ -21,8 +21,15 @@ mode = "scrolling" # "scrolling", "dwindle", or "master"
 | `master` | Windows occupy a master area and a stack area. | Keeping one or more primary windows separate from the rest. |
 
 The active mode can also be changed with `workspace-set-layout:<mode>`; see
-[Actions](/umbriel/actions/#parameterized-actions). A workspace rule can set a
+[Actions](/umbriel/actions/#argument-forms). A workspace rule can set a
 persistent per-workspace mode; see [Workspace Rules](/umbriel/workspaces/#workspace-rules).
+
+Column-scoped actions operate on the active layout's column projection.
+Scrolling owns real multi-window columns. In dwindle, every tiled leaf is a
+single-window column, so column actions act on that window. In master, the
+master and stack areas are the two columns. When an action has no meaning in
+the active layout, its keybind does nothing and the IPC `msg` command returns
+an error naming the required layout.
 
 ## Shared settings
 
@@ -55,10 +62,8 @@ from `-65535` to `65535`.
 
 All three tiled layouts use the resulting area. On the scrolling axis, struts
 leave room beyond the viewport where neighboring lanes can remain visible.
-Floating windows and popups ignore struts. A full-width tiled column still
-respects struts and gaps; maximize-to-edges ignores struts, gaps, and borders
-but keeps layer-shell exclusive zones visible; fullscreen fills the entire
-output.
+Floating windows and popups ignore struts. Maximize and fullscreen treat struts
+differently from the tiled layout; see [Sizing behavior](#sizing-behavior).
 
 `Mod+Right-drag` selects horizontal and vertical resize edges from the outer
 thirds of tiled and floating windows. Dragging from a corner resizes both axes.
@@ -100,10 +105,10 @@ expand_single_column = true
 | `horizontal` | Columns run left to right. Windows within a column stack from top to bottom. | Width actions change a column's strip extent. Height actions change a window's extent within its column. |
 | `vertical` | Horizontal lanes run top to bottom. Windows within a lane sit side by side. | Width actions change a lane's strip extent, which is its height on screen. Height actions change a window's extent within its lane, which is its visual width. |
 
-For a vertical workspace, directional actions follow the screen. Left and
-right move within a lane, while up and down walk or reorder lanes. The consume
-and expel actions use the same visual directions: left and right merge or split
-within the lane, while the resulting lane is above or below the focused lane.
+For a vertical workspace, directional actions follow the screen; see
+[Vertical workspaces](#vertical-workspaces). The consume and expel actions use
+the same visual directions: left and right merge or split within the lane, while
+the resulting lane is above or below the focused lane.
 
 The three-finger vertical swipe continues to switch workspaces. A three-finger
 horizontal swipe scrolls a horizontal strip and is inert on a vertical one. Use
@@ -138,10 +143,24 @@ Dropping a window into empty space above or below a vertically resized stack
 consumes that space. Existing windows retain their pixel heights, and the
 dropped window fills the remainder apart from the configured gap.
 
+## Vertical workspaces
+
+On a vertical scrolling workspace, directional actions follow their visual
+directions. `window-focus-left` and `window-focus-right` move within a lane,
+while `window-focus-up` and `window-focus-down` walk lanes. Likewise,
+`column-move-left` and `column-move-right` reorder within a lane, while
+`window-move-up` and `window-move-down` move the lane along the strip.
+`layout-scroll-left` and `layout-scroll-up` both scroll toward strip start;
+their right and down forms scroll toward strip end.
+
+The default Mod+wheel bindings invoke `window-focus-left` and
+`window-focus-right`, so they move within a lane. Vertical-heavy configurations
+should bind wheel chords to `window-focus-up` and `window-focus-down`, or to
+`layout-scroll-up` and `layout-scroll-down`.
+
 ## Dwindle layout
 
-Dwindle recursively splits tiles. Each tiled leaf is a single-window column, so
-column actions operate on individual windows in this mode.
+Dwindle recursively splits tiles into independently sized regions.
 
 ### Settings
 
@@ -206,18 +225,68 @@ Master workflows use a deterministic layout-order ring: master windows from top
 to bottom, then stack windows from top to bottom. `window-focus-next` and
 `window-focus-previous` cycle through that ring and wrap. The swap actions
 exchange the focused window with its neighboring slot while keeping focus on
-that window. `master-count-increase` promotes the stack top into master, and
-`master-count-decrease` demotes the master bottom into the stack. At least one
-window remains in master.
+that window. `layout-master-count-increase` promotes the stack top into master,
+and `layout-master-count-decrease` demotes the master bottom into the stack. At
+least one window remains in master.
 
 Width actions operate on the master fraction; the stack fraction is its
 complement. `window-modify-width:<delta>` changes the focused area's fraction,
 and the cycle actions walk `width_presets`. Width actions are inert while either
 area is empty because the occupied area already fills the viewport. Height
-actions change a window's row fraction within its area and are inert when that
-window is the area's only row. Tiled resizing is available on the boundary
+actions change a window's row fraction within its area; see
+[Sizing behavior](#sizing-behavior). Tiled resizing is available on the boundary
 between master and stack and between rows in either area.
 
 Dragging over a master workspace previews the destination row within the
 nearest area. Hint bands appear at the top, bottom, and between existing rows.
 Dropping inserts the window at that row.
+
+## Sizing behavior
+
+The width and height actions are shared by every layout, but each layout gives
+them a different meaning.
+
+`window-modify-width:<delta>` changes the focused area's width by a signed
+fraction, and `window-cycle-width` / `window-cycle-width-back` walk
+`width_presets` in either direction.
+
+`window-set-height:<frac>` sets the focused window's fraction of its column's
+stacking extent, `window-modify-height:<delta>` changes that fraction by a
+signed amount, and `window-cycle-height` / `window-cycle-height-back` cycle it
+through the same presets in either direction. In scrolling and master layouts
+this sizes a row within its column or area. In dwindle it adjusts the vertical
+splits containing the window. On a vertical scrolling workspace the stacking
+axis is horizontal, so these actions change a window's width within its lane.
+
+In the scrolling layout, a window alone in its column is resized from its bottom
+edge, exactly as dragging that edge does: the top edge stays where it is and the
+freed space collects below the window, so the next window stacked into that
+column fills it. A fraction of `1.0` reclaims the space. A window that a
+previous drag pushed against the column's bottom keeps that anchor and frees
+space above itself instead. In master and dwindle, a window with no neighbor on
+the stacking axis has nothing to trade space with, so the height actions leave
+it unchanged.
+
+### Floating windows
+
+All of the width and height actions resize a focused floating window directly,
+as fractions of the output's usable area clamped to the client's min/max size
+hints. Cycling walks `width_presets` on either axis, stepping to the next preset
+that changes the window's pixel size on that axis: a float's size is pixels, so
+a preset that rounds to the size the window already has is skipped rather than
+applied as a step that does nothing. Resizing a maximized float leaves
+maximization behind and keeps the new size, so a later toggle maximizes rather
+than reverting to the pre-maximize box. Fullscreen owns the size outright, so
+the actions do nothing while a float is fullscreen.
+
+### Maximize and fullscreen
+
+`window-toggle-fullscreen` ignores layout struts and layer-shell exclusive zones
+and fills the entire output. `window-toggle-maximize` toggles the focused
+column's full-width state, and a tiled column stays inside configured struts and
+gaps. A floating window has no column, so it fills the output's usable area and
+restores its exact previous box, including its last dropped position. Both
+directions use the `animation.windows_move` transition.
+`window-toggle-maximize-to-edges` drops layout struts, gaps, and borders, while
+layer-shell exclusive zones remain visible. A column's full-width restore state
+survives that toggle and a fullscreen round trip.

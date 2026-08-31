@@ -26,7 +26,7 @@ off.
 ### Open and navigate
 
 The overview shows every workspace on every output. Press `Mod+O` by default,
-or use one of the [overview actions](/umbriel/actions/#overview-actions).
+or use one of the [overview actions](/umbriel/actions/#overview).
 Opening it immediately hides every visible scratchpad. The stored windows
 remain available the next time their scratchpad is shown.
 Pinned windows are hidden for as long as the overview is open and do not appear
@@ -81,6 +81,14 @@ Dragged windows become translucent so you can see the destination beneath
 them. In the dwindle layout, the preview shows the direction of the new split
 before you drop the window. In the master layout, it previews the destination
 row within the nearest area.
+
+Windows can be dropped onto another workspace preview. With dynamic numbered
+workspaces, dropping a window into the gap between two previews, or into the
+gap above the first preview, creates a new workspace at that position and
+shifts the following workspace numbers down. Umbriel keeps one empty dynamic
+workspace, so other previews disappear as soon as their last window is moved
+or closed, including while the overview is open. Static configured workspace
+lists only accept drops onto existing previews.
 
 ### Appearance
 

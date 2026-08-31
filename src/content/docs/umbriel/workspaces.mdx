@@ -28,10 +28,8 @@ number beyond the current count, Umbriel uses the last workspace.
 Set `workspaces` to a number or an ordered list of names. Umbriel creates
 exactly those workspaces and keeps them when they are empty.
 
-Workspace actions first resolve exact names globally. When no exact numeric
-name exists, `workspace-switch:2` selects the second entry on the focused
-output, even when that workspace has a custom name. If an exact name exists on
-more than one output, the focused output wins.
+Actions that take a workspace argument resolve names and numbered positions the
+same way here as everywhere else; see [Workspace selectors](#workspace-selectors).
 
 ```toml
 [output.DP-1]
@@ -51,6 +49,30 @@ Switching to dynamic workspaces keeps populated and active workspaces,
 renumbers them, and adds an empty workspace at the end.
 
 Other output and layout settings are refreshed during a reload as well.
+
+## Workspace selectors
+
+Actions that take a workspace argument, such as `workspace-switch`,
+`window-move-to-workspace`, and `column-move-to-workspace`, resolve it with
+these rules:
+
+- Exact names resolve globally first, including numeric names.
+- A unique name selects its workspace on any output.
+- Duplicate names resolve on the preferred output.
+- When no exact numeric name exists, the number selects that 1-based position
+  on the preferred output.
+- On a dynamic output, a number beyond the current workspace list selects the
+  last workspace.
+- Add `/output` to target another output explicitly.
+
+For example, `workspace-switch:3` selects a workspace named `3` when one
+exists and otherwise the third workspace on the preferred output, while
+`workspace-switch:CHAT/HDMI-A-1` selects `CHAT` on `HDMI-A-1`.
+
+When `workspace-switch`, `window-move-to-workspace`, or
+`column-move-to-workspace` targets another monitor, the cursor warps to that
+monitor's center so subsequent actions continue there.
+
 ## Inspect workspace state
 
 Run `umbriel workspaces` to list every workspace with its output and effective

@@ -168,6 +168,50 @@ on that key, has no ASCII fallback. Add a suitable alternate to that keyboard's
 layout list (see [Input](/umbriel/input/)), or bind the active layout's XKB keysym
 name.
 
+## Hot corners
+
+Hot corners are a second way to invoke an action. Instead of a chord, the
+trigger is the pointer resting in a configured output corner, and the corner
+runs any action a keybind accepts. They are independent of the workspace
+overview.
+
+```toml
+[hot_corners.top_left]
+enabled = true
+delay_ms = 500
+action = "overview-open"
+
+[hot_corners.bottom_right]
+enabled = true
+delay_ms = 750
+action = "spawn:notify-send 'Bottom right'"
+```
+
+Each corner has its own enabled state, delay, and action. Omitted corners do
+nothing, and `enabled = false` disables a corner without removing its action. A
+delay of `0` activates immediately. Hot corners are inactive on an output while
+a window is fullscreen there.
+
+Available subsections are `hot_corners.top_left`, `hot_corners.top_right`,
+`hot_corners.bottom_left`, and `hot_corners.bottom_right`.
+
+| Key | Type | Default | Description |
+| --- | --- | --- | --- |
+| `enabled` | bool | `false` | Enable this corner. |
+| `delay_ms` | int | `500` | Time at this corner before its action runs (0-10000). |
+| `action` | string | unset | Keybind-style action to run. |
+
+## Cheatsheet
+
+The cheatsheet lists every active keybind. It opens at startup when
+`general.show_cheatsheet` is `true`, which is the default. The
+`cheatsheet-toggle`, `cheatsheet-open`, and `cheatsheet-close` actions control
+it from a keybind or from `umbriel msg`.
+
+Any non-modifier key or mouse button closes the cheatsheet. Bound key
+combinations still run normally. A click used to close the cheatsheet is not
+passed to the window beneath it.
+
 ## Example: Noctalia shell integration
 
 [Noctalia](https://github.com/noctalia-dev/noctalia) exposes panels, screenshots,
