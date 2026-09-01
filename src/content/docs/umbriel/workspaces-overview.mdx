@@ -42,6 +42,21 @@ closes the overview.
 
 #### Keyboard shortcuts
 
+Configured `[keybinds]` continue through the normal action dispatcher while the
+overview is interactive, so custom Vim-style bindings and non-navigation
+actions operate on the selected workspace and card without a separate overview
+mapping. Direct `window-focus-left` and `window-focus-right` actions select
+neighboring cards. Direct `window-focus-up` and `window-focus-down` actions
+select the previous and next workspace rows. Unbound arrow keys invoke those
+same four actions as a fallback.
+
+Composite focus actions keep their normal local-first behavior. For example,
+`window-focus-or-workspace-down` first tries a window below and then selects the
+next workspace, while `window-focus-or-output-right` falls through to the
+output on the right at the card edge. Overview selection never applies the
+implicit cursor warp from `input.cursor.follows_focus`; an explicit
+`window-focus-warp:<id>` or an output-changing action keeps its documented warp.
+
 Window cards show shortcut badges while the overview is open. Press a badge
 label without modifiers to focus that window and close the overview. Every card
 in the visible workspace rows receives a label, including scrolling-layout
