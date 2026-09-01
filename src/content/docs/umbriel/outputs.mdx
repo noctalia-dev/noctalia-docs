@@ -250,6 +250,9 @@ sdr_white = 203
 Switching between SDR and HDR changes the output format, color space, and HDR
 metadata. Many monitors briefly go black while their display link resynchronizes.
 This is expected for each automatic or fullscreen transition.
+PQ HDR output encoding requires fragment `highp` precision to preserve smooth
+gradients in the 10-bit output. OpenGL ES 2 implementations without fragment
+`highp` cannot initialize Umbriel's output shader.
 
 While an HDR output is active, screencopy clients such as `grim` and Noctalia
 receive an SDR Gamma 2.2 view instead of PQ-encoded output pixels. This keeps
