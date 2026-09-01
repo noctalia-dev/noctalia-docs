@@ -129,6 +129,9 @@ $ umbriel msg submap:reset
 $ umbriel submap
 ```
 
+Use `umbriel subscribe submap` to receive the current value immediately and a
+new JSON event whenever the active value changes.
+
 An empty name cannot be created through configuration or `umbriel msg`. If an
 internal caller supplies one, human output uses `unnamed` and JSON preserves the
 empty string.

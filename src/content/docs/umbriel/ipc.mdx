@@ -46,6 +46,7 @@ line is `{"event":"<family>","data":…}`.
 | `keyboard_layout` | layout switches; skipped in the initial state when no keyboard exists |
 | `windows` | window open, close, focus, title, app id, geometry, workspace, floating state |
 | `workspaces` | layout mode, activation, names, indices, and workspace or output membership |
+| `submap` | the active keybind submap changing; `null` is the default context |
 
 Subscribing to an unknown family answers
 `{"err":"unknown subscription event: <name>"}` and closes, so a typo fails
@@ -54,9 +55,9 @@ immediately rather than waiting on a stream that never opens.
 Each family is a **full snapshot**, not a delta: the payload is the same
 structure the matching query returns. A client replaces its state with the
 newest line and never reassembles it from increments, so a stream cannot
-desync. Updates are coalesced per event-loop iteration, and a payload identical
-to the last one sent for that family is dropped, so a resize that ends where it
-started wakes nobody.
+desync. Window and workspace updates are coalesced per event-loop iteration,
+and a payload identical to the last one sent for that family is dropped, so a
+resize that ends where it started wakes nobody.
 
 Events are the only way to follow a workspace's **layout mode**: the
 `ext-workspace-v1` protocol publishes workspace lists, names, and activation to
@@ -68,6 +69,7 @@ scrolling, dwindle, or master per workspace.
 ```sh
 umbriel subscribe workspaces
 umbriel subscribe workspaces,windows
+umbriel subscribe submap
 ```
 
 One JSON line per event on stdout, flushed as it arrives, until the compositor
