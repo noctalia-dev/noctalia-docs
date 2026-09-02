@@ -34,8 +34,9 @@ xdg-desktop-portal backend for Umbriel.
 
 ## Configuration
 
-Umbriel loads `~/.config/umbriel/config.toml` at startup. Config files can include other TOML files, and later files
-override earlier ones. See [Configuration](/umbriel/configuration/).
+Umbriel searches the user, XDG system, and packaged config paths in priority order and keeps that lookup live. Creating
+a higher-priority config applies it without a session restart. Config files can include other TOML files, and later
+files override earlier ones. See [Configuration](/umbriel/configuration/).
 
 ## Starting Umbriel
 
