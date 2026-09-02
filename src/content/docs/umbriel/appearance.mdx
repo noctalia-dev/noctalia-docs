@@ -85,6 +85,10 @@ badge = "#7AA3FFFF"
 | `workspace_background` | color | `#00000044` | Rounded background behind each workspace. Alpha `00` makes it invisible; `FF` makes it opaque. |
 | `badge`                | color | `#7AA3FFFF` | Keyboard shortcut badges on overview cards.                                                    |
 
+`overview.workspace_wallpaper` mirrors the output's background- and bottom-layer
+surfaces over `workspace_background`, which then only shows on an output where
+no client maps one.
+
 The rest of the overview's behavior is configured in
 [`[overview]`](/umbriel/workspaces-overview/#settings-and-behavior).
 

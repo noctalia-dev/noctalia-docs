@@ -12,6 +12,7 @@ appearance.
 [overview]
 zoom = 0.5                     # 0.1-0.75
 background_blur = true
+workspace_wallpaper = true
 shortcuts = true
 shortcut_keys = "1234567890"
 ```
@@ -19,6 +20,16 @@ shortcut_keys = "1234567890"
 The wallpaper is blurred while the overview is open using the `[appearance.blur]`
 parameters. Set `background_blur = false`, or disable appearance blur, to turn it
 off.
+
+Each workspace preview shows the output's background: its wallpaper and
+anything else below the windows, mirrored from the background- and bottom-layer
+surfaces and scaled into the preview. The real bottom layer steps aside while
+the overview is open, the same way windows do behind their cards, so a surface
+there appears once per workspace instead of twice at two scales. Set
+`workspace_wallpaper = false` to leave the bottom layer in place and show only
+the flat `colors.overview.workspace_background` fill in each preview. An output
+whose clients map no background- or bottom-layer surface shows that fill either
+way.
 
 ### Open and navigate
 
@@ -120,7 +131,8 @@ other rows' markers mix that color into `colors.border.unfocused`.
 Cards also retain each surface's color description, so HDR and
 extended-linear content keeps the same appearance while the overview is open.
 `colors.overview.workspace_background` adds a rounded background behind each
-workspace. Its alpha can produce anything from a light tint to an opaque fill.
+workspace. Its alpha can produce anything from a light tint to an opaque fill,
+and the mirrored background covers it when `workspace_wallpaper` is on.
 Shortcut badges use `colors.overview.badge` for their label and render a subtle
 keycap background from it, matching the cheatsheet key combinations. Badge
 corners follow `appearance.corner_radius`, capped at one quarter of the badge
@@ -130,6 +142,7 @@ height so the shape remains a rounded rectangle.
 | ---------------------- | ----- | ----------- | ---------------------------------------------------------------------------------------------- |
 | `zoom`                 | float | `0.5`       | Workspace scale when fully zoomed out (0.1-0.75).                                              |
 | `background_blur`      | bool  | `true`      | Blur the wallpaper behind the filmstrip. Uses the `[appearance.blur]` parameters.             |
+| `workspace_wallpaper`  | bool  | `true`      | Mirror the output's background- and bottom-layer surfaces inside each workspace preview.        |
 | `shortcuts`             | bool   | `true`      | Show shortcut badges and accept their plain key sequences.                                      |
 | `shortcut_keys`         | string | `"1234567890"` | Favorite badge keys in preference order.                                                     |
 
