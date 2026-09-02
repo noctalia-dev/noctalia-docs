@@ -321,8 +321,14 @@ follows_mouse_max_scroll = 0.5  # optional, measured in viewport widths
 
 | Key                        | Type  | Default    | Description                                                                                                                                                                     |
 | -------------------------- | ----- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `follows_mouse`            | bool  | `false`    | Focus a window when the pointer enters it, then scroll it into view.                                                                                                            |
+| `follows_mouse`            | bool  | `false`    | Focus the pointer target on enter, after compositor focus changes reveal another target, and after client drag completion.                                                      |
 | `follows_mouse_max_scroll` | float | (no limit) | Do not change focus when revealing the window would scroll farther than this many viewport widths. `0.0` allows only windows that are already fully visible. Omit for no limit. |
+
+Mapping windows and switching workspaces can change which window is under a
+stationary pointer. The existing focus remains until the next pointer motion,
+which selects the window under the pointer without requiring a border crossing.
+Finishing a client data drag performs the same refresh at the unchanged cursor
+position, so dropping over another window selects it immediately.
 
 For example, a window three screens away requires a limit of at least `3.0`.
 Values outside `0.0` to `100.0` are clamped and reported.
