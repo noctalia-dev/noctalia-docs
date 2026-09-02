@@ -1,7 +1,7 @@
 ---
-import { projectFromPath } from '../lib/projects';
+import { breadcrumbFromSidebar, projectFromPath } from '../lib/projects';
 
-const { head } = Astro.locals.starlightRoute;
+const { head, sidebar } = Astro.locals.starlightRoute;
 const pathname = Astro.url.pathname;
 const project = projectFromPath(pathname);
 const isDocsRoot = pathname === '/' || pathname === '';
@@ -71,6 +71,9 @@ const seoDescription = buildSeoDescription(pageTitle, textFromHeadProperty('og:d
 const ogImagePath = ogImagePathForRoute(pathname);
 const ogImageUrl = new URL(ogImagePath, Astro.site ?? Astro.url.origin).href;
 const ogImageAlt = 'Noctalia documentation preview';
+// Sidebar section path for search results; empty for pages sitting at the root
+// of their project, where the search UI falls back to the project name.
+const breadcrumb = breadcrumbFromSidebar(sidebar, pathname);
 
 const enhancedHead = head.map((entry) => {
   if (entry.tag === 'title') return { ...entry, content: seoTitle };
@@ -90,6 +93,8 @@ const enhancedHead = head.map((entry) => {
 {enhancedHead.map(({ tag: Tag, attrs, content }) => <Tag {...attrs} set:html={content} />)}
 <slot />
 <meta data-pagefind-filter={`project:${project?.id ?? 'projects'}`} />
+{breadcrumb && <meta data-pagefind-meta={`breadcrumb:${breadcrumb}`} />}
+<meta data-pagefind-meta={`project:${project?.label ?? 'Noctalia Docs'}`} />
 <meta property="og:image" content={ogImageUrl} />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />

@@ -261,24 +261,6 @@ snake-toc a[data-visible="true"] {
 	color: var(--sl-color-text-accent);
 }
 
-/* Search result breadcrumb, value injected via JS into --result-path custom property */
-#starlight__search .pagefind-ui__result-inner > .pagefind-ui__result-title {
-	line-height: 1.1rem;
-}
-
-#starlight__search .pagefind-ui__result-inner > .pagefind-ui__result-title::after {
-	content: var(--result-path, '');
-	display: block;
-	font-size: 0.78em;
-	font-weight: normal;
-	opacity: 0.5;
-}
-
-/* Search is automatically scoped to the current docs version. */
-#starlight__search .pagefind-ui__filter-panel {
-	display: none;
-}
-
 /* Caution aside, bright yellow bg with dark text */
 :root[data-theme='dark'] .starlight-aside--caution {
 	--sl-color-asides-text-accent: #070722;
