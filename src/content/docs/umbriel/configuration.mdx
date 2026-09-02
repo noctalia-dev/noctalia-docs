@@ -29,6 +29,18 @@ your last working configuration and continues watching included files. Save a
 corrected file to try the reload again. Options that require a restart are
 marked in their reference tables.
 
+## Diagnostics
+
+Warnings and errors from a load or reload appear in a panel at the top of the
+primary output, bordered in `colors.warning` or `colors.error` for the highest
+severity present. Errors are listed first, since they are the ones that kept the
+configuration from applying. Each entry names its file, line, and column.
+
+A panel that reports only warnings hides itself after ten seconds; one that
+reports an error stays until the next successful reload. At most six entries are
+listed, and the footer counts the rest. `umbriel validate` prints the full list
+without a running compositor.
+
 ## Include
 
 ```toml
