@@ -24,30 +24,10 @@ printf '{"cmd":"workspaces"}\n' | socat -t 5 STDIO "$UMBRIEL_SOCKET"
 | `{"cmd":"workspaces"}` | `umbriel workspaces --json` | workspace list with names, indices, outputs, active/focused flags, layout modes |
 | `{"cmd":"submap"}` | `umbriel submap --json` | active keybind submap, or `null` |
 | `{"cmd":"layers"}` | `umbriel layers --json` | layer-shell surfaces |
-| `{"cmd":"config-state"}` | `umbriel config-state --json` | active root/settings paths, successful generation, diagnostics |
-| `{"cmd":"actions"}` | `umbriel actions --json` | canonical action names, parameters, summaries, argument kinds |
-| `{"cmd":"keybinds"}` | `umbriel keybinds --json` | running effective keybinds, including built-in defaults |
 | `{"cmd":"msg","arg":"<action>"}` | `umbriel msg <action>` | runs an [action](/umbriel/actions/) |
 
 A connection with no subscription closes once its replies are written, and a
 connection that sends nothing is dropped after a second.
-
-`config-state` returns `root_path`, `settings_path`, `generation`, and a
-`diagnostics` array. Each diagnostic has `severity`, `message`, `file`, `line`,
-and `column`. Paths are absolute so a separate settings process does not depend
-on the compositor's working directory.
-
-Each `actions` entry has `name`, `parameter`, `summary`, and `argument_kind`.
-The argument kind is one of `none`, `command`, `width_fraction`, `workspace`,
-`optional_output`, `window_id`, `optional_window_id`, `width_delta`,
-`layout_mode`, or `skip_confirmation`.
-
-Each `keybinds` entry has the canonical `chord` and `action`, boolean `repeat`
-and `allow_when_locked` flags, and a nullable `submap` transition. A trigger
-submap remains part of the chord, for example `submap[resize],Mod+H`. The list
-comes from the active configuration in the running compositor, so sessions on
-Umbriel defaults expose those built-in bindings even when no config file
-exists.
 
 ## Event stream
 
@@ -105,9 +85,7 @@ done
 
 ## Inspection commands
 
-`umbriel outputs`, `umbriel color`, `umbriel tearing`, `umbriel layers`,
-`umbriel keyboard-layouts`, `umbriel config-state`, `umbriel actions`, and
-`umbriel keybinds` print human-readable state; each takes `--json` for the
-machine-readable form.
-`umbriel validate` checks configuration without a running compositor. See
-[Configuration](/umbriel/configuration/#validation) for staged settings overlays.
+`umbriel outputs`, `umbriel color`, `umbriel tearing`, `umbriel layers`, and
+`umbriel keyboard-layouts` print human-readable state; each takes `--json` for
+the machine-readable form. `umbriel validate` checks a config file without a
+running compositor.
