@@ -189,6 +189,12 @@ export const PLUGIN_API_LEVELS: PluginApiLevel[] = [
     feature: 'panel-context-menu',
     introduced: '`panel.openContextMenu(request)` for native context menus in regular and persistent plugin panels.',
   },
+  {
+    level: 29,
+    noctaliaVersion: null,
+    feature: 'graph-pointer-tracking',
+    introduced: '`onPointerMove` and `onPointerLeave` callbacks on `ui.graph` nodes.',
+  },
 ];
 
 export const CURRENT_PLUGIN_API = Math.max(...PLUGIN_API_LEVELS.map((entry) => entry.level));
