@@ -54,6 +54,18 @@ From a TTY, start a normal installed session with:
 start-umbriel
 ```
 
+## Logs
+
+Umbriel writes its main log to
+`$XDG_CACHE_HOME/umbriel/umbriel.log`. If `XDG_CACHE_HOME` is unset, the
+fallback path is `~/.cache/umbriel/umbriel.log`. The previous file is retained
+as `umbriel.log.1` when the current log reaches 1 MiB.
+
+When standard output or standard error is connected to a TTY, raw writes from
+Umbriel and its child processes are redirected to
+`$XDG_CACHE_HOME/umbriel/umbriel-stderr.log`, or
+`~/.cache/umbriel/umbriel-stderr.log` when `XDG_CACHE_HOME` is unset.
+
 ## Contributing
 
 Umbriel shares its conventions with [Noctalia](https://github.com/noctalia-dev/noctalia). Bug reports are always
