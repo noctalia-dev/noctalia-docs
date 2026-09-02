@@ -40,6 +40,16 @@ or a 3-finger swipe to move through the workspace list. While the overview is
 open, each gesture moves one workspace at a time. A 4-finger swipe opens or
 closes the overview.
 
+#### Which window actions act on
+
+No window holds the keyboard while the overview is open, so one card at a time
+carries the full `border_focused` color: the window a focus or close action
+would act on. It sits on the current output, which is the output holding the
+cursor and the one every output-changing keybind warps the cursor to. Each
+other workspace row marks its own window with a fainter border, showing where
+that row would land when you zoom into it. When the current workspace is empty,
+no card is marked, and those actions have nothing to act on.
+
 #### Keyboard shortcuts
 
 Configured `[keybinds]` continue through the normal action dispatcher while the
@@ -108,7 +118,9 @@ lists only accept drops onto existing previews.
 ### Appearance
 
 Overview cards use the same borders, corner radius, transparency, and blur as
-their windows. They also retain each surface's color description, so HDR and
+their windows. The live target uses `appearance.border_focused` unchanged, and
+the other rows' markers mix that color into `appearance.border_unfocused`.
+Cards also retain each surface's color description, so HDR and
 extended-linear content keeps the same appearance while the overview is open.
 `workspace_background` adds a rounded background behind each workspace. Its
 alpha can produce anything from a light tint to an opaque fill.
