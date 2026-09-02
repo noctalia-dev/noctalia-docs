@@ -12,11 +12,8 @@ appearance.
 [overview]
 zoom = 0.5                     # 0.1-0.75
 background_blur = true
-background_tint = "#10101430"
-workspace_background = "#00000044"
 shortcuts = true
 shortcut_keys = "1234567890"
-# badge_color = "#7AA3FFFF"
 ```
 
 The wallpaper is blurred while the overview is open using the `[appearance.blur]`
@@ -43,9 +40,9 @@ closes the overview.
 #### Which window actions act on
 
 No window holds the keyboard while the overview is open, so one card at a time
-carries the full `border_focused` color: the window a focus or close action
-would act on. It sits on the current output, which is the output holding the
-cursor and the one every output-changing keybind warps the cursor to. Each
+carries the full `colors.border.focused` color: the window a focus or close
+action would act on. It sits on the current output, which is the output holding
+the cursor and the one every output-changing keybind warps the cursor to. Each
 other workspace row marks its own window with a fainter border, showing where
 that row would land when you zoom into it. When the current workspace is empty,
 no card is marked, and those actions have nothing to act on.
@@ -118,24 +115,23 @@ lists only accept drops onto existing previews.
 ### Appearance
 
 Overview cards use the same borders, corner radius, transparency, and blur as
-their windows. The live target uses `appearance.border_focused` unchanged, and
-the other rows' markers mix that color into `appearance.border_unfocused`.
+their windows. The live target uses `colors.border.focused` unchanged, and the
+other rows' markers mix that color into `colors.border.unfocused`.
 Cards also retain each surface's color description, so HDR and
 extended-linear content keeps the same appearance while the overview is open.
-`workspace_background` adds a rounded background behind each workspace. Its
-alpha can produce anything from a light tint to an opaque fill.
-Shortcut badges use `colors.accent_primary` for their label and derive a subtle
-keycap background from that accent, matching the cheatsheet key combinations.
-Set `badge_color` to replace the badge accent and derive the background from the
-replacement. Badge corners follow `appearance.corner_radius`, capped at one
-quarter of the badge height so the shape remains a rounded rectangle.
+`colors.overview.workspace_background` adds a rounded background behind each
+workspace. Its alpha can produce anything from a light tint to an opaque fill.
+Shortcut badges use `colors.overview.badge` for their label and render a subtle
+keycap background from it, matching the cheatsheet key combinations. Badge
+corners follow `appearance.corner_radius`, capped at one quarter of the badge
+height so the shape remains a rounded rectangle.
 
 | Key                    | Type  | Default     | Description                                                                                    |
 | ---------------------- | ----- | ----------- | ---------------------------------------------------------------------------------------------- |
 | `zoom`                 | float | `0.5`       | Workspace scale when fully zoomed out (0.1-0.75).                                              |
 | `background_blur`      | bool  | `true`      | Blur the wallpaper behind the filmstrip. Uses the `[appearance.blur]` parameters.             |
-| `background_tint`      | color | `#10101430` | Tint composited over the desktop background. Alpha `00` leaves it untouched; `FF` hides it.    |
-| `workspace_background` | color | `#00000044` | Rounded background behind each workspace. Alpha `00` makes it invisible; `FF` makes it opaque. |
 | `shortcuts`             | bool   | `true`      | Show shortcut badges and accept their plain key sequences.                                      |
 | `shortcut_keys`         | string | `"1234567890"` | Favorite badge keys in preference order.                                                     |
-| `badge_color`          | color  | `colors.accent_primary` | Badge label accent. The keycap background is derived from this color.                                  |
+
+The overview's colors are configured in
+[`[colors.overview]`](/umbriel/appearance/#overview-colors).
