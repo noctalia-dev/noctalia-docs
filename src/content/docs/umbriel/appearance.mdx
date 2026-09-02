@@ -113,7 +113,7 @@ Disabling the master switch also releases the per-output blur render targets.
 | Key          | Type  | Default | Description                                                                                                                       |
 | ------------ | ----- | ------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | `enabled`    | bool  | `true`  | Master blur switch.                                                                                                              |
-| `optimized`  | bool  | `true`  | Use one cached background blur per output for all surfaces. This is the X-ray mode: translucent surfaces blur the background beneath the window stack instead of the surfaces behind them. |
+| `optimized`  | bool  | `true`  | Use one cached background blur per output for all surfaces. This is the X-ray mode: translucent surfaces blur the background beneath the window stack instead of the surfaces behind them. `false` drops the cache and its two per-output buffers unless a window or layer rule sets `blur_optimized = true`. |
 | `passes`     | int   | `3`     | Blur passes (0-8). 0 disables.                                           |
 | `radius`     | int   | `5`     | Blur radius (0-100). 0 disables.                                         |
 | `noise`      | float | `0.02`  | Noise overlay (0.0-1.0).                                                 |

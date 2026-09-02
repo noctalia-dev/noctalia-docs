@@ -33,7 +33,7 @@ the entire namespace.
 | `blur` | bool | Enable/disable blur for the layer surface. |
 | `blur_popups` | bool | Enable/disable blur for descendant XDG popups. |
 | `blur_ignore_alpha` | float | Skip blur where surface alpha is below this threshold (0.0-1.0). `0.0` blurs the entire rectangle; higher values leave transparent regions unblurred. |
-| `blur_optimized` | bool | Override `appearance.blur.optimized`. |
+| `blur_optimized` | bool | Override `appearance.blur.optimized`. A `true` value keeps the cached background blur alive on every output even when the global switch is off. |
 
 Layer-shell blur is off by default. As with window rules, every matching rule
 contributes its settings, and later values take precedence.
