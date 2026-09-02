@@ -14,6 +14,17 @@ reference.
 "Mod+I" = "overview-toggle"
 ```
 
+Set a chord to `false` to disable an inherited binding. This is useful in the
+final `settings.toml` overlay and works in any config source:
+
+```toml
+[keybinds]
+"Mod+Return" = false
+```
+
+The chord is validated normally. Literal `true` is not a binding and is
+reported as invalid.
+
 
 ## Modifiers
 

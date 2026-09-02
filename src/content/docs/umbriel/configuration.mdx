@@ -8,7 +8,7 @@ Umbriel checks `$XDG_CONFIG_HOME/umbriel/config.toml` first, followed by each
 `share/umbriel/config.toml`. Pass `umbriel -c <path>` to use a different file.
 The packaged file is [`examples/config.toml`](/umbriel/config.toml) and
 can be copied into your user config directory as a starting point. Umbriel
-does not create or modify a user config automatically.
+does not modify this root config automatically.
 
 ## Starting configuration
 
@@ -29,6 +29,26 @@ your last working configuration and continues watching included files. Save a
 corrected file to try the reload again. Options that require a restart are
 marked in their reference tables.
 
+## GUI overrides
+
+Settings applications write overrides to `$XDG_STATE_HOME/umbriel/settings.toml`,
+or `~/.local/state/umbriel/settings.toml` when `XDG_STATE_HOME` is unset.
+Umbriel loads this file after every include and the root config, so its values
+win. The location stays the same when Umbriel uses a packaged root or starts
+with `-c <path>`, which keeps GUI settings writable when the root is read-only.
+
+`settings.toml` is an application-owned final overlay. Its own `[include]`
+section is not expanded. Umbriel watches the path even before the file exists,
+then reloads when it is created, replaced, edited, or removed. A malformed
+overlay leaves the last working configuration active. Removing the file clears
+all GUI overrides at once.
+
+The effective merge order is:
+
+1. Included files in declared order
+2. The root config
+3. The GUI-owned `settings.toml`
+
 ## Diagnostics
 
 Warnings and errors from a load or reload appear in a panel at the top of the
@@ -40,6 +60,29 @@ A panel that reports only warnings hides itself after ten seconds; one that
 reports an error stays until the next successful reload. At most six entries are
 listed, and the footer counts the rest. `umbriel validate` prints the full list
 without a running compositor.
+
+`umbriel config-state` reports the active root path, settings path, successful
+generation, and current diagnostics. Add `--json` for the structured form used
+by settings applications.
+
+## Validation
+
+`umbriel validate` checks the same root, includes, and standard settings overlay
+that a normal compositor start would load. Use `-c` to select another root:
+
+```sh
+umbriel validate -c ~/.config/umbriel/config.toml
+```
+
+Use `--settings` to substitute a staged overlay before replacing the active
+file. The candidate must already exist. This is suitable for settings
+applications that need syntax and semantic validation as one operation:
+
+```sh
+umbriel validate -c ~/.config/umbriel/config.toml --settings /tmp/settings.toml
+```
+
+Use `--no-settings` to validate only the root and its includes.
 
 ## Include
 
