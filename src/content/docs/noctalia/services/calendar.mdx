@@ -7,7 +7,7 @@ sidebar:
 
 The calendar service syncs events from your online accounts and shows them in the control center calendar. CalDAV providers (Nextcloud, iCloud, Fastmail, Radicale, mailbox.org, …) are talked to directly; Google Calendar is connected through a browser authorization flow. Events are read-only.
 
-`[calendar]` covers accounts and sync only. How the Calendar tab is drawn, including event date and time formats and the ISO week number column, lives under [`[control_center.calendar]`](/noctalia/control-center/#calendar).
+`[calendar]` covers account sync and shared event date and time formats. Calendar-tab-only presentation options, such as the events card and ISO week number column, live under [`[control_center.calendar]`](/noctalia/control-center/#calendar).
 
 ## Settings setup
 
@@ -31,8 +31,10 @@ Existing accounts can be edited from **Settings → Services → Calendar**. Goo
 
 ```toml
 [calendar]
-enabled         = true
-refresh_minutes = 15
+enabled             = true
+refresh_minutes     = 15
+event_date_format   = "%A %e %B"
+event_time_format   = "%H:%M"
 
 # iCloud CalDAV. The table name is the local account id.
 [calendar.account.personal_icloud]
