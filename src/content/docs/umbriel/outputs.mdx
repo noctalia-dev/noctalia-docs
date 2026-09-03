@@ -53,7 +53,13 @@ without requiring each workspace to be visited. If no enabled output remains,
 windows stay without a workspace until one becomes available.
 
 Run `umbriel outputs` inside a session to list connector names, copyable monitor
-configuration names, and modes.
+configuration names, and modes. `umbriel outputs --json` prints the same
+information as an array. Each entry has the reported `name`, `description`,
+`make`, `model`, `serial`, `enabled`, `transform`, and `scale`; logical
+`position`; physical `physical_size` in millimetres; nullable `adaptive_sync`;
+and `modes`. Every mode has `width`, `height`, `refresh_mhz`, `preferred`, and
+`current`. `config_name` is the copyable monitor name or `null` when the display
+does not report make, model, or serial.
 
 ```toml
 [output.DP-1]
