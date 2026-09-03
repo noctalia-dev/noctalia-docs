@@ -122,6 +122,8 @@ The packaged config sets `default_width_fraction = 0.5`, so new columns start at
 half the viewport. If the option is omitted, Umbriel leaves the strip-axis
 extent unconstrained during the initial configure and retains the logical size
 chosen by the client. A numeric `default_width` window rule takes precedence.
+For a new horizontal column, the pixel width from a matching `default_size`
+window rule takes precedence over both fractional settings.
 
 Set a different initial width for every scrolling workspace on one output under
 that output's section:
