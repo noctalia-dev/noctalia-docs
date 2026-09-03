@@ -160,5 +160,11 @@
     "noctaliaVersion": null,
     "feature": "graph-pointer-tracking",
     "introduced": "`onPointerMove` and `onPointerLeave` callbacks on `ui.graph` nodes."
+  },
+  {
+    "level": 30,
+    "noctaliaVersion": null,
+    "feature": "panel-layer",
+    "introduced": "The `layer` panel entry option for choosing the layer-shell layer of a floating plugin panel."
   }
 ]
