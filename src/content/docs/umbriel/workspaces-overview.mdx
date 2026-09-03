@@ -43,10 +43,10 @@ closes.
 
 Click a window to focus it, middle-click to close it, or drag it to another
 workspace. When a click selects a window in another scrolling column, the
-column reveal runs together with the closing zoom. Use the wheel, arrow keys,
-or a 3-finger swipe to move through the workspace list. While the overview is
-open, each gesture moves one workspace at a time. A 4-finger swipe opens or
-closes the overview.
+column reveal runs together with the closing zoom. Use the wheel, the plain
+`Up`/`Down` fallback keys, or a 3-finger swipe to move through the workspace
+list. Each wheel notch or swipe step moves one workspace at a time. A 4-finger
+swipe opens or closes the overview.
 
 #### Which window actions act on
 
@@ -64,9 +64,11 @@ Configured `[keybinds]` continue through the normal action dispatcher while the
 overview is interactive, so custom Vim-style bindings and non-navigation
 actions operate on the selected workspace and card without a separate overview
 mapping. Direct `window-focus-left` and `window-focus-right` actions select
-neighboring cards. Direct `window-focus-up` and `window-focus-down` actions
-select the previous and next workspace rows. Unbound arrow keys invoke those
-same four actions as a fallback.
+neighboring cards. Direct `window-focus-up` and `window-focus-down` retain their
+normal layout-specific behavior. With the default horizontal strip direction,
+they traverse stacked cards in the current column. Plain `Left`/`Right` keys
+that reach the overview fallback invoke the horizontal focus actions, while
+fallback `Up`/`Down` keys select the previous and next workspace rows.
 
 Composite focus actions keep their normal local-first behavior. For example,
 `window-focus-or-workspace-down` first tries a window below and then selects the
