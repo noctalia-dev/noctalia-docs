@@ -318,4 +318,6 @@ restores its exact previous box, including its last dropped position. Both
 directions use the `animation.windows_move` transition.
 `window-toggle-maximize-to-edges` drops layout struts, gaps, and borders, while
 layer-shell exclusive zones remain visible. A column's full-width restore state
-survives that toggle and a fullscreen round trip.
+survives that toggle and a fullscreen round trip. In the scrolling layout the
+strip reserves the strut band such a column reaches past, so neighboring
+columns keep their gap instead of sitting underneath the window.
