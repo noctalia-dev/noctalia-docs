@@ -134,9 +134,11 @@ extended-linear content keeps the same appearance while the overview is open.
 workspace. Its alpha can produce anything from a light tint to an opaque fill,
 and the mirrored background covers it when `workspace_wallpaper` is on.
 Shortcut badges use `colors.overview.badge` for their label and render a subtle
-keycap background from it, matching the cheatsheet key combinations. Badge
-corners follow `appearance.corner_radius`, capped at one quarter of the badge
-height so the shape remains a rounded rectangle.
+keycap background from it, matching the cheatsheet key combinations. A badge is
+as tall as its label's line box and never narrower than it is tall, so a
+single-character label reads as a square keycap. Badge corners use
+`appearance.corner_radius` scaled by `zoom`, the radius the cards around them
+draw with, capped at half the badge's shorter side.
 
 | Key                    | Type  | Default     | Description                                                                                    |
 | ---------------------- | ----- | ----------- | ---------------------------------------------------------------------------------------------- |
