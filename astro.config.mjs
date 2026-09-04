@@ -149,7 +149,15 @@ export default defineConfig({
         },
         {
           label: "Noctalia Greeter",
-          items: [{ autogenerate: { directory: "greeter" } }],
+          items: [
+            { label: "Overview", link: "greeter/" },
+            { label: "Installation", link: "greeter/installation/" },
+            { label: "Configuration", link: "greeter/configuration/" },
+            { label: "Sync with Noctalia", link: "greeter/sync/" },
+            { label: "Displays", link: "greeter/displays/" },
+            { label: "Keyboard and cursor", link: "greeter/input/" },
+            { label: "Troubleshooting", link: "greeter/troubleshooting/" },
+          ],
         },
         {
           label: "Umbriel",
