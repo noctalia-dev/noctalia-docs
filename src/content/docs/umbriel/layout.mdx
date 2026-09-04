@@ -311,11 +311,14 @@ the actions do nothing while a float is fullscreen.
 ### Maximize and fullscreen
 
 `window-toggle-fullscreen` ignores layout struts and layer-shell exclusive zones
-and fills the entire output. `window-toggle-maximize` toggles the focused
-column's full-width state, and a tiled column stays inside configured struts and
-gaps. A floating window has no column, so it fills the output's usable area and
-restores its exact previous box, including its last dropped position. Both
-directions use the `animation.windows_move` transition.
+and fills the entire output. It normally targets the focused window. If another
+fullscreen window completely covers that focus on the active output, the action
+exits the covering fullscreen window first and leaves focus in place.
+`window-toggle-maximize` toggles the focused column's full-width state, and a
+tiled column stays inside configured struts and gaps. A floating window has no
+column, so it fills the output's usable area and restores its exact previous
+box, including its last dropped position. Both directions use the
+`animation.windows_move` transition.
 `window-toggle-maximize-to-edges` drops layout struts, gaps, and borders, while
 layer-shell exclusive zones remain visible. A column's full-width restore state
 survives that toggle and a fullscreen round trip. In the scrolling layout the
