@@ -69,9 +69,10 @@ For example, `workspace-switch:3` selects a workspace named `3` when one
 exists and otherwise the third workspace on the preferred output, while
 `workspace-switch:CHAT/HDMI-A-1` selects `CHAT` on `HDMI-A-1`.
 
-When `workspace-switch`, `window-move-to-workspace`, or
-`column-move-to-workspace` targets another monitor, the cursor warps to that
-monitor's center so subsequent actions continue there.
+When `workspace-switch` targets another monitor, the cursor warps to that
+monitor's center so subsequent actions continue there. Window and column moves
+do the same by default. With `input.cursor.follows_focus` enabled, they warp to
+the moved focused window's visible center instead.
 
 ## Inspect workspace state
 
