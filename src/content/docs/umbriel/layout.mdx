@@ -305,8 +305,11 @@ that changes the window's pixel size on that axis: a float's size is pixels, so
 a preset that rounds to the size the window already has is skipped rather than
 applied as a step that does nothing. Resizing a maximized float leaves
 maximization behind and keeps the new size, so a later toggle maximizes rather
-than reverting to the pre-maximize box. Fullscreen owns the size outright, so
-the actions do nothing while a float is fullscreen.
+than reverting to the pre-maximize box. Both axes use the
+`animation.windows_move` transition, and a float that hangs off an edge travels
+with the resize so the same part of it stays on screen at the new size.
+Fullscreen owns the size outright, so the actions do nothing while a float is
+fullscreen.
 
 Parented XDG dialogs are stacked with their ancestor chain. Raising any member
 raises the family while keeping each dialog above its parent, including when an
