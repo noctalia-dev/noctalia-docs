@@ -79,6 +79,11 @@ output on the right at the card edge. Overview selection never applies the
 implicit cursor warp from `input.cursor.follows_focus`; an explicit
 `window-focus-warp:<id>` or an output-changing action keeps its documented warp.
 
+Configured keybinds remain active while the closing zoom runs. A focus,
+workspace, or output selection made during that interval becomes the final
+landing target. Repeated workspace navigation moves the filmstrip without
+extending the closing zoom.
+
 Window cards show shortcut badges while the overview is open. Press a badge
 label without modifiers to focus that window and close the overview. Every card
 in the visible workspace rows receives a label, including scrolling-layout
