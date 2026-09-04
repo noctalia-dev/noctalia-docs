@@ -308,6 +308,10 @@ maximization behind and keeps the new size, so a later toggle maximizes rather
 than reverting to the pre-maximize box. Fullscreen owns the size outright, so
 the actions do nothing while a float is fullscreen.
 
+Parented XDG dialogs are stacked with their ancestor chain. Raising any member
+raises the family while keeping each dialog above its parent, including when an
+ancestor is floating, pinned, or fullscreen.
+
 ### Maximize and fullscreen
 
 `window-toggle-fullscreen` ignores layout struts and layer-shell exclusive zones
