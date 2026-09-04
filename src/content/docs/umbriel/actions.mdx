@@ -1,302 +1,258 @@
 ---
 title: Actions
+description: Complete reference for keybind and IPC actions, including window, layout, output, overview, and scratchpad actions.
 ---
 
-This page lists every action that can be assigned to a keybind or invoked
-through `umbriel msg`. See [Keybinds](/umbriel/keybinds/) for binding syntax.
+Actions are the compositor's verbs. Bind one under `[keybinds]`, attach it to a
+[hot corner](/umbriel/keybinds/#hot-corners), or run it with `umbriel msg <action>`.
+`umbriel msg --help` prints this same list, with the same wording and the same
+grouping. See [Keybinds](/umbriel/keybinds/) for chord syntax and [IPC](/umbriel/ipc/) for the
+socket behind `umbriel msg`, including the event stream that reports what an
+action changed.
 
-## Parameterized actions
+## Argument forms
 
-| Action | Parameter | Example |
-|--------|-----------|---------|
-| `spawn:<cmd>` | Shell command | `"spawn:kitty"` |
-| `submap:<name>` | Enter a named submap; `submap:reset` exits one level | `"submap:resize"` |
-| `workspace-switch:<ws>` | Workspace name, optionally `/<output>` | `"workspace-switch:3"`, `"workspace-switch:CHAT/HDMI-A-1"` |
-| `window-move-to-workspace:<ws>` | Same as above | `"window-move-to-workspace:2"` |
-| `column-move-to-workspace:<ws>` | Same as above; moves the focused window's whole column | `"column-move-to-workspace:CHAT/HDMI-A-1"` |
-| `window-set-width:<frac>` | Fraction 0.1-1.0 | `"window-set-width:0.667"` |
-| `window-modify-width:<delta>` | Signed fraction -0.9..0.9; the resulting width clamps to 0.1..1.0 | `"window-modify-width:-0.2"` |
-| `window-set-height:<frac>` | Fraction 0.1-1.0 | `"window-set-height:0.7"` |
-| `window-modify-height:<delta>` | Signed fraction -0.9..0.9; the resulting height clamps to 0.1..1.0 | `"window-modify-height:-0.2"` |
-| `workspace-set-layout:<scrolling\|dwindle\|master\|toggle>` | Switch the active workspace's layout at runtime; `toggle` cycles scrolling to dwindle to master to scrolling. The override remains until a config reload reasserts the configured mode. | `"workspace-set-layout:toggle"` |
-| `window-focus:<window-id>` | Window id from `umbriel windows` | `"window-focus:0123abcd"` |
-| `window-focus-warp:<window-id>` | Focus the window and warp the cursor to its visible center | `"window-focus-warp:0123abcd"` |
-| `window-close[:<window-id>]` | Optional window id; bare form closes the focused window | `"window-close"` |
-| `dpms-off[:<output>]` / `dpms-on[:<output>]` | Optional connector name; bare form targets every configured output | `"dpms-off:DP-1"`, `"dpms-on"` |
-| `session-quit[:skip-confirmation]` | Bare form opens an on-screen confirmation (Enter or the quit bind confirms; any other key or click cancels); `skip-confirmation` quits immediately | `"session-quit:skip-confirmation"` |
+An action takes at most one argument, appended after a colon. `<angle>` forms
+are required, `[bracket]` forms are optional.
 
-`spawn:` exports a one-shot `XDG_ACTIVATION_TOKEN` and matching
-`DESKTOP_STARTUP_ID` to the command. Single-instance applications can pass
-that token to their existing window so Umbriel reveals it, including when the
-window remaps after hiding in a tray. Startup commands from `general.autostart`
-do not receive a launch token.
+| Form | Meaning |
+|------|---------|
+| `<cmd>` | Command line, run through the shell: `spawn:kitty` |
+| `<name>` | Submap to enter; `submap:reset` leaves one level |
+| `<workspace>[/<output>]` | Workspace name or 1-based position, optionally qualified by output: `workspace-switch:CHAT/HDMI-A-1` |
+| `<window-id>` | Window id from `umbriel windows` |
+| `[<window-id>]` | The same id; the bare action targets the focused window |
+| `[<output>]` | Connector or monitor name. Bare scratchpad actions target the output under the pointer; bare `dpms-off` and `dpms-on` target every configured output |
+| `<fraction>` | `0.1` to `1.0` of the column extent, or of the usable area for a floating window |
+| `<delta>` | Signed `-0.9` to `0.9`; the result clamps to `0.1` to `1.0` |
+| `<scrolling\|dwindle\|master\|toggle>` | Layout mode for `workspace-set-layout`; `toggle` cycles scrolling, dwindle, master |
+| `[skip-confirmation]` | `session-quit` only: quit without the on-screen confirmation |
 
-A second `session-quit` while the confirmation is open also quits. While the
-session is locked, `session-quit` quits without the dialog.
+## Apps
 
-Workspace selectors first resolve exact names globally, including numeric
-names. A unique name selects its workspace on any output. Duplicate names
-resolve on the preferred output. When no exact numeric name exists, the number
-selects that 1-based position on the preferred output. On a dynamic output, a
-number beyond the current workspace list selects the last workspace. Add
-`/output` to target another output explicitly.
+| Action | Effect |
+|--------|--------|
+| `spawn:<cmd>` | Run a command with a launch activation token |
 
-When `workspace-switch`, `window-move-to-workspace`, or
-`column-move-to-workspace` targets another monitor, the cursor warps to that
-monitor's center so subsequent actions continue there.
+## Focus
 
-## Window and layout actions
+| Action | Effect |
+|--------|--------|
+| `column-focus-first` | Focus the first column in the workspace |
+| `column-focus-last` | Focus the last column in the workspace |
+| `output-focus-down` | Focus the output below |
+| `output-focus-left` | Focus the output to the left |
+| `output-focus-right` | Focus the output to the right |
+| `output-focus-up` | Focus the output above |
+| `window-focus:<window-id>` | Focus the given window |
+| `window-focus-down` | Focus the next window down in the column |
+| `window-focus-last` | Focus the previously focused window |
+| `window-focus-left` | Focus the window to the left |
+| `window-focus-next` | Focus the next window in layout order |
+| `window-focus-or-output-down` | Focus down, or the output below at the edge |
+| `window-focus-or-output-left` | Focus left, or the output left at the edge |
+| `window-focus-or-output-right` | Focus right, or the output right at the edge |
+| `window-focus-or-output-up` | Focus up, or the output above at the edge |
+| `window-focus-or-workspace-down` | Focus down, or the next workspace at the edge |
+| `window-focus-or-workspace-up` | Focus up, or the previous workspace at the edge |
+| `window-focus-previous` | Focus the previous window in layout order |
+| `window-focus-right` | Focus the window to the right |
+| `window-focus-switch-floating` | Focus the last window of the opposite floating state |
+| `window-focus-up` | Focus the next window up in the column |
+| `window-focus-warp:<window-id>` | Focus the given window and warp the cursor to it |
+| `workspace-focus-last` | Focus the previously active workspace |
 
-Unless shown with a `:<parameter>` suffix below, these take no argument.
+## Move & size
 
-Column-scoped actions operate on the active layout's column projection.
-Scrolling owns real multi-window columns. In dwindle, every tiled leaf is a
-single-window column, so column actions act on that window. In master, the
-master and stack areas are the two columns. When an action has no meaning in
-the active layout, its keybind does nothing and the IPC `msg` command returns
-an error naming the required layout. Currently, only `column-center` has this
-restriction.
+Sizing rules per layout live in [Sizing behavior](/umbriel/layout/#sizing-behavior).
 
-### Focus
+| Action | Effect |
+|--------|--------|
+| `column-center` | Center the focused column in the viewport |
+| `column-move-left` | Move the focused column one position left |
+| `column-move-right` | Move the focused column one position right |
+| `column-move-to-first` | Move the focused column to the first position |
+| `column-move-to-last` | Move the focused column to the last position |
+| `column-move-to-output-down` | Move the focused column to the output below |
+| `column-move-to-output-left` | Move the focused column to the output left |
+| `column-move-to-output-right` | Move the focused column to the output right |
+| `column-move-to-output-up` | Move the focused column to the output above |
+| `layout-master-count-decrease` | Demote the last master window to the stack |
+| `layout-master-count-increase` | Promote the first stack window to master |
+| `layout-scroll-down` | Scroll the strip toward its end |
+| `layout-scroll-drag` | Pan the strip while the bound button is held |
+| `layout-scroll-left` | Scroll the strip toward its start |
+| `layout-scroll-right` | Scroll the strip toward its end |
+| `layout-scroll-up` | Scroll the strip toward its start |
+| `window-center` | Center the focused floating window on its output |
+| `window-consume-left` | Stack the focused window into the column left |
+| `window-consume-or-expel-left` | Split the window out, or stack it into the column left |
+| `window-consume-or-expel-right` | Split the window out, or stack it into the column right |
+| `window-consume-right` | Stack the focused window into the column right |
+| `window-cycle-height` | Cycle the focused window through the height presets |
+| `window-cycle-height-back` | Cycle the height presets in reverse |
+| `window-cycle-width` | Cycle the focused column through the width presets |
+| `window-cycle-width-back` | Cycle the width presets in reverse |
+| `window-modify-height:<delta>` | Change the focused window's height by a fraction |
+| `window-modify-width:<delta>` | Change the focused column's width by a fraction |
+| `window-move-down` | Move the focused window down in its column |
+| `window-move-or-output-down` | Move down, or the column to the output below |
+| `window-move-or-output-left` | Move the column left, or to the output left |
+| `window-move-or-output-right` | Move the column right, or to the output right |
+| `window-move-or-output-up` | Move up, or the column to the output above |
+| `window-move-or-workspace-down` | Move down, or to the next workspace at the edge |
+| `window-move-or-workspace-up` | Move up, or to the previous workspace at the edge |
+| `window-move-to-output-down` | Move the focused window to the output below |
+| `window-move-to-output-left` | Move the focused window to the output left |
+| `window-move-to-output-right` | Move the focused window to the output right |
+| `window-move-to-output-up` | Move the focused window to the output above |
+| `window-move-up` | Move the focused window up in its column |
+| `window-set-height:<fraction>` | Set the focused window's height fraction |
+| `window-set-width:<fraction>` | Set the focused column's width fraction |
+| `window-swap-next` | Swap with the next window in layout order |
+| `window-swap-previous` | Swap with the previous window in layout order |
 
-- **Within a row:** `window-focus-left`, `window-focus-right`. Move focus to the
-  adjacent window.
-- **At a row's output edge:** `window-focus-or-output-left`,
-  `window-focus-or-output-right`. Move focus to the adjacent window, or to the
-  output in that direction when already at the edge.
-- **First or last column:** `column-focus-first`, `column-focus-last`. Move
-  focus to the first or last column in the workspace.
-- **Within a column:** `window-focus-up`, `window-focus-down`. Move focus to
-  the adjacent window.
-- **At a workspace boundary:** `window-focus-or-workspace-up`,
-  `window-focus-or-workspace-down`. Move within the column, or switch to the
-  adjacent workspace and restore its focus.
-- **At a column's output edge:** `window-focus-or-output-up`,
-  `window-focus-or-output-down`. Move focus to the adjacent window, or to the
-  output in that direction when already at the edge.
-- **Next or previous window:** `window-focus-next`, `window-focus-previous`.
-  Cycle through tiled windows in layout order, then floating windows, with
-  wrapping in both directions.
-- **Previously focused window:** `window-focus-last`. Focus the previous entry in
-  the global focus history, including windows on another workspace or output.
-  Repeated use toggles between the two most recently focused windows.
+## Windows
 
-With `input.cursor.follows_focus` enabled, these navigation actions warp the
-cursor to the visible center of the selected window. This also applies to
-`window-focus-switch-floating` and `window-focus-last`. Pointer-driven and
-automatic focus changes do not move the cursor. `window-focus:<id>` remains
-focus-only, while `window-focus-warp:<id>` always moves it.
+| Action | Effect |
+|--------|--------|
+| `window-close:[<window-id>]` | Close the focused window, or the given window |
+| `window-toggle-floating` | Float or tile the focused window |
+| `window-toggle-fullscreen` | Toggle fullscreen or exit a window covering the focus |
+| `window-toggle-maximize` | Toggle full width for the focused column |
+| `window-toggle-maximize-to-edges` | Toggle maximize without gaps, struts, or borders |
+| `window-toggle-pinned` | Pin the focused window above other windows |
 
-### Moving windows and columns
+## Scratchpad
 
-- **To a selected workspace:** `window-move-to-workspace:<ws>` moves the focused
-  window, while `column-move-to-workspace:<ws>` moves its whole column. Both
-  use the workspace selectors described above and follow the moved focus.
-- **To the next or previous workspace:** `window-move-to-workspace-next` and
-  `window-move-to-workspace-previous` move the focused window.
-  `column-move-to-workspace-next` and `column-move-to-workspace-previous` move
-  its whole column. All four follow the moved focus and do not wrap around.
-- **A column within a row:** `column-move-left`, `column-move-right`. Move the
-  focused window's column left or right. In dwindle, they swap the focused
-  window with the neighboring tile in that direction. In master, they exchange
-  the master and stack contents and do nothing while either area is empty.
-- **A column across an output edge:** `window-move-or-output-left`,
-  `window-move-or-output-right`. Move the focused column left or right, or to
-  the output in that direction when already at the edge.
-- **First or last column position:** `column-move-to-first`,
-  `column-move-to-last`. Move the focused window's column to the first or last
-  position in the workspace. In dwindle, they swap the focused window with the
-  first or last tile. In master, they perform the same master/stack exchange
-  when the focused area is not already first or last.
-- **Next or previous layout position:** `window-swap-next`,
-  `window-swap-previous`. Exchange the focused tiled window with its next or
-  previous layout-order neighbor, wrapping at both ends. Focus stays on the
-  moved window.
-- **Master count:** `master-count-increase` promotes the stack's top window to
-  the bottom of master. `master-count-decrease` demotes the bottom master window
-  to the top of the stack. The minimum master count is one.
-- **Within a column:** `window-move-up`, `window-move-down`. Move the focused
-  window up or down within its column.
-- **Across a workspace boundary:** `window-move-or-workspace-up`,
-  `window-move-or-workspace-down`. Move within the column, or move the focused
-  window to the adjacent workspace at the boundary.
-- **Across an output edge:** `window-move-or-output-up`,
-  `window-move-or-output-down`. Move within the column, or move the column to
-  the output in that direction when already at the edge.
-- **Merge or split columns:** `window-consume-left` and
-  `window-consume-right` pull the focused window into the adjacent column in
-  that direction. `window-consume-or-expel-left` and
-  `window-consume-or-expel-right` split a window that shares its column into a
-  new column in the requested direction, or consume a window that is alone.
-  In master layout these actions move between the master and stack areas in
-  the requested direction. In dwindle layout they swap with the adjacent
-  neighbor in that direction.
+Every output has its own holding area. [Scratchpads](/umbriel/scratchpads/) covers the
+workflow, restoration rules, and multi-output behavior.
 
-### Size, state, and viewport
+| Action | Effect |
+|--------|--------|
+| `scratchpad-focus-next:[<output>]` | Focus the next visible scratchpad window |
+| `scratchpad-toggle:[<output>]` | Show or hide the output's scratchpad windows |
+| `window-move-to-scratchpad:[<output>]` | Move the focused window into the scratchpad |
+| `window-restore-from-scratchpad:[<output>]` | Return the scratchpad window to its saved workspace |
+| `window-toggle-scratchpad:[<output>]` | Move the focused window to or from the scratchpad |
 
-- **Column width:** `window-modify-width:<delta>` changes the focused area's
-  width by a signed fraction. `window-cycle-width` and
-  `window-cycle-width-back` cycle through preset widths in either direction.
-- **Height within a column:** `window-set-height:<frac>` sets the focused
-  window's fraction of its column's stacking extent.
-  `window-modify-height:<delta>` changes that fraction by a signed amount. In
-  scrolling and master layouts this sizes a row within its column or area. In
-  dwindle it adjusts the vertical splits containing the window. On a vertical
-  scrolling workspace the stacking axis is horizontal, so these actions change
-  a window's width within its lane.
-- **Fullscreen:** `window-toggle-fullscreen`. Toggle fullscreen for the focused
-  window.
-- **Column width state:** `window-toggle-maximize`. Toggle the focused column's
-  full-width state.
-- **Window to usable-area edges:** `window-toggle-maximize-to-edges`. Toggle
-  maximization without gaps or borders. Layer-shell exclusive zones remain
-  visible. A column's full-width restore state is preserved when this is toggled
-  or when fullscreen is entered and left.
-- **Center a column:** `column-center`. Center the focused column in the
-  scrolling viewport. It requires the scrolling layout; elsewhere its keybind
-  does nothing and the IPC `msg` command reports an error.
-- **Scroll the viewport:** `layout-scroll-left`, `layout-scroll-right`. Scroll
-  the active workspace's scrolling-layout viewport. `layout-scroll-up` and
-  `layout-scroll-down` are first-class synonyms for left and right.
+## Workspaces
 
-### Configuration
+Selector resolution, including numeric names and `/output` qualifiers, is
+described in [Workspace selectors](/umbriel/workspaces/#workspace-selectors).
 
-- **Reload configuration:** `config-reload`. Reload the config file, the same
-  reload that runs automatically when the file changes on disk.
+| Action | Effect |
+|--------|--------|
+| `column-move-to-workspace:<workspace>[/<output>]` | Move the focused column to the selected workspace |
+| `column-move-to-workspace-next` | Move the focused column to the next workspace |
+| `column-move-to-workspace-previous` | Move the focused column to the previous workspace |
+| `window-move-to-workspace:<workspace>[/<output>]` | Move the focused window to the selected workspace |
+| `window-move-to-workspace-next` | Move the focused window to the next workspace |
+| `window-move-to-workspace-previous` | Move the focused window to the previous workspace |
+| `workspace-move-down` | Move the focused workspace down the list |
+| `workspace-move-to-output-down` | Move every workspace window to the output below |
+| `workspace-move-to-output-left` | Move every workspace window to the output left |
+| `workspace-move-to-output-right` | Move every workspace window to the output right |
+| `workspace-move-to-output-up` | Move every workspace window to the output above |
+| `workspace-move-up` | Move the focused workspace up the list |
+| `workspace-next` | Switch to the next workspace on this output |
+| `workspace-previous` | Switch to the previous workspace on this output |
+| `workspace-set-layout:<scrolling\|dwindle\|master\|toggle>` | Set the active workspace's layout mode |
+| `workspace-switch:<workspace>[/<output>]` | Switch to the selected workspace |
 
-On a vertical scrolling workspace, directional actions follow their visual
-directions. `window-focus-left` and `window-focus-right` move within a lane;
-`window-focus-up` and `window-focus-down` walk lanes. Likewise,
-`column-move-left` and `column-move-right` reorder within a lane, while
-`window-move-up` and `window-move-down` move the lane along the strip.
-`layout-scroll-left` and `layout-scroll-up` both scroll toward strip start;
-their right and down forms scroll toward strip end.
+## Overview
 
-The default Mod+wheel bindings invoke `window-focus-left` and
-`window-focus-right`, so they move within a lane on a vertical workspace.
-Vertical-heavy configurations should bind wheel chords to
-`window-focus-up` and `window-focus-down`, or to `layout-scroll-up` and
-`layout-scroll-down`.
+Dragging windows between previews and creating workspaces by dropping into a gap
+are described in [Overview](/umbriel/workspaces-overview/).
 
-## Floating action
+| Action | Effect |
+|--------|--------|
+| `overview-close` | Close the workspace overview |
+| `overview-open` | Open the workspace overview |
+| `overview-toggle` | Open or close the workspace overview |
 
-`window-toggle-floating` remembers the window's floating size and position.
-The first time a window floats, Umbriel places it slightly below and to the
-right of its tiled position while keeping it on-screen.
+## System
 
-`window-focus-switch-floating` switches focus to the most recently focused
-window with the opposite floating state.
+| Action | Effect |
+|--------|--------|
+| `cheatsheet-close` | Hide the keybind cheatsheet |
+| `cheatsheet-open` | Show the keybind cheatsheet |
+| `cheatsheet-toggle` | Show or hide the keybind cheatsheet |
+| `config-reload` | Reload the configuration file |
+| `dpms-off:[<output>]` | Power off one output, or every output when bare |
+| `dpms-on:[<output>]` | Power on one output, or every output when bare |
+| `keyboard-layout-next` | Switch one keyboard to its next configured layout |
+| `session-quit:[skip-confirmation]` | Quit the session, confirming first unless told to skip |
+| `submap:<name>` | Enter a submap layer, or leave one with 'reset' |
 
-`window-toggle-pinned` makes the focused window float and keeps it above
-fullscreen windows on its output. Pinned windows remain visible when you
-switch workspaces. You cannot pin a fullscreen window, and making a pinned
-window fullscreen removes its pinned state.
+## Layout differences
 
-## Output and movement actions
+Column-scoped actions operate on the active layout's column projection,
+described in [Layouts](/umbriel/layout/). Where that projection changes what an action
+does, this is the full list:
 
-`workspace-next` and `workspace-previous` switch to the adjacent workspace on the
-focused output, by index. They do not wrap around: `workspace-previous` on the
-first workspace is a silent no-op. On a dynamic output, `workspace-next` reaches
-the trailing empty workspace, which becomes active as usual.
+| Action | Scrolling | Dwindle | Master |
+|--------|-----------|---------|--------|
+| `column-move-left`, `column-move-right` | Reorders the focused column | Swaps the focused window with the neighboring tile | Exchanges the master and stack contents, and does nothing while either area is empty |
+| `column-move-to-first`, `column-move-to-last` | Moves the column to that end of the workspace | Swaps the focused window with the first or last tile | Exchanges master and stack unless the focused area is already first or last |
+| `window-consume-left`, `window-consume-right` | Stacks the window into the adjacent column | Swaps with the adjacent on-screen tile in that direction | Moves the window between the master and stack areas |
+| `window-consume-or-expel-left`, `window-consume-or-expel-right` | Splits a stacked window into its own column, or stacks a lone window into the adjacent one | Swaps with the adjacent on-screen tile in that direction | Moves the window between the master and stack areas |
+| `window-set-height`, `window-modify-height`, `window-cycle-height`, `window-cycle-height-back` | Sizes the row within its column | Adjusts the vertical splits containing the window | Sizes the row within the master or stack area |
+| `column-center` | Centers the column in the viewport | Returns an IPC error | Returns an IPC error |
+| `layout-scroll-left`, `layout-scroll-right`, `layout-scroll-up`, `layout-scroll-down`, `layout-scroll-drag` | Pans the strip | No effect | No effect |
+| `layout-master-count-increase`, `layout-master-count-decrease` | No effect | No effect | Moves one window between master and stack |
 
-`workspace-move-down` and `workspace-move-up` move the focused workspace up or down
-on the focused output. They do not wrap around either.
+Dwindle and master have no horizontal viewport, so the vertical splits and areas
+absorb what scrolling would express as column geometry. On a vertical scrolling
+workspace the directional actions follow their visual directions; see [Vertical
+workspaces](/umbriel/layout/#vertical-workspaces).
 
-The matching window and column actions can be bound independently:
+## Notes
 
-```toml
-[keybinds]
-"Mod+Shift+Comma" = "window-move-to-workspace-previous"
-"Mod+Shift+Period" = "window-move-to-workspace-next"
-"Mod+Ctrl+Page_Up" = "column-move-to-workspace-previous"
-"Mod+Ctrl+Page_Down" = "column-move-to-workspace-next"
-```
-
-Whole-column moves between scrolling workspaces preserve member order and
-scrolling-layout state, including the column width, its full-width restore
-value, and stacked row proportions. Destination-moving column actions act like
-their matching window action when a floating window is focused because it has
-no tiled column.
-In master layout, column-scoped workspace moves transfer every member of the
-focused master or stack area.
-
-`window-center` centers the focused floating window on its output's usable
-area. It is a no-op while a tiled window is focused.
-
-The directional output actions target the adjacent monitor:
-
-| Action | What it does |
-|--------|--------------|
-| `output-focus-left` / `output-focus-right` / `output-focus-up` / `output-focus-down` | Move focus to the adjacent monitor in that direction. |
-| `window-move-to-output-left` / `window-move-to-output-right` / `window-move-to-output-up` / `window-move-to-output-down` | Move the focused window to the adjacent monitor's active workspace. |
-| `column-move-to-output-left` / `column-move-to-output-right` / `column-move-to-output-up` / `column-move-to-output-down` | Move the focused window's whole column to the adjacent monitor's active workspace. |
-| `workspace-move-to-output-left` / `workspace-move-to-output-right` / `workspace-move-to-output-up` / `workspace-move-to-output-down` | Move every window of the active workspace to the adjacent monitor, preserving column order and widths. |
-
-Directions do not wrap around: with no monitor in that direction the action
-fails with an IPC error ("no output to the left" and friends). The cursor warps
-to the center of the target monitor, so focus follows the action. Floating
-windows keep their relative position on the new monitor; a column moved onto a
-dwindle workspace flattens into single-window columns, whether it is moved by a
-workspace or output action, the same as drag-and-drop.
-
-## Overview actions
-
-Use `overview-toggle`, `overview-open`, or `overview-close`.
-
-Windows can be dragged onto another workspace preview. With dynamic numbered
-workspaces, dropping a window into the gap between two previews, or into the
-gap above the first preview, creates a new workspace at that position and
-shifts the following workspace numbers down.
-Umbriel keeps one empty dynamic workspace, so other previews disappear as soon
-as their last window is moved or closed, including while the overview is open.
-Static configured workspace lists only accept drops onto existing previews.
-
-## Cheatsheet actions
-
-Use `cheatsheet-toggle`, `cheatsheet-open`, or `cheatsheet-close`.
-
-The cheatsheet lists every active keybind. It opens at startup when
-`general.show_cheatsheet` is `true`, which is the default. You can also toggle
-it through IPC with `umbriel msg cheatsheet-toggle`.
-
-Any non-modifier key or mouse button closes the cheatsheet. Bound key
-combinations still run normally. A click used to close the cheatsheet is not
-passed to the window beneath it.
-
-## Keyboard layout action
-
-`keyboard-layout-next` activates the next layout in `input.keyboard.layout` and
-wraps at the end, on every physical keyboard. It is inert when only one layout
-is configured, and virtual keyboards keep the keymap their client supplied.
-
-```toml
-[input.keyboard]
-layout = "us,de"
-
-[keybinds]
-"Mod+Shift+K" = "keyboard-layout-next"
-```
-
-`umbriel msg keyboard-layout-next` does the same from a script or panel. An XKB
-toggle such as `options = "grp:alt_shift_toggle"` is an alternative that lives
-in the keymap itself; the two can coexist.
-
-## Scratchpad actions
-
-Each output has a holding area for windows that should stay nearby without
-remaining on a workspace.
-
-| Action | What it does |
-|--------|--------------|
-| `window-move-to-scratchpad` | Move the focused window from its workspace into the scratchpad. |
-| `scratchpad-toggle` | Show or hide the output's scratchpad windows. |
-| `window-restore-from-scratchpad` | Return the focused scratchpad window to its saved workspace. |
-| `window-toggle-scratchpad` | Move the focused window into the scratchpad, or restore it if it's already the scratchpad's focused window. |
-| `scratchpad-focus-next` | Focus the next visible scratchpad window. |
-
-Add `:<output>` to any action to target a specific output, for example
-`scratchpad-toggle:DP-1`. Without a suffix, the action targets the output under
-the pointer.
-
-See [Scratchpads](/umbriel/scratchpads/) for setup examples, the full workflow,
-multi-output behavior, restoration rules, and troubleshooting.
+- **Launch tokens.** `spawn:` exports a one-shot `XDG_ACTIVATION_TOKEN` and a
+  matching `DESKTOP_STARTUP_ID` to the command. A single-instance application
+  can pass that token to its existing window so Umbriel reveals it, including
+  when the window remaps after hiding in a tray. Startup commands from
+  `general.autostart` receive no launch token.
+- **Quitting.** Bare `session-quit` opens an on-screen confirmation: Enter or
+  the quit bind confirms, any other key or a click cancels, and a second
+  `session-quit` also quits. While the session is locked it quits without the
+  dialog.
+- **Cursor.** With `input.cursor.follows_focus` enabled, focus navigation and
+  window or column transfers between workspaces warp the cursor to the visible
+  center of the focused window. This includes transfers to another output.
+  Pointer-driven and automatic focus changes never move the cursor. `window-
+  focus:<window-id>` stays focus-only, while `window-focus-warp:<window-id>`
+  always moves it.
+- **Across outputs.** Directions never wrap: with no monitor in that direction
+  the action fails with an IPC error naming it ("no output to the left" and
+  friends). Otherwise the cursor warps to the center of the target monitor so
+  focus follows the action. With `input.cursor.follows_focus` enabled, a moved
+  window or column uses its focused window's visible center instead. Output
+  direction comes from output centers in logical coordinates, so fractional-
+  scale rounding does not hide a neighbor.
+- **Cycling.** `window-focus-next` and `window-focus-previous` walk the tiled
+  windows in layout order, then the floating ones, wrapping in both directions.
+  `window-swap-next` and `window-swap-previous` exchange the focused tiled
+  window with its layout-order neighbor, wrap at both ends, and keep focus on
+  the moved window.
+- **Workspace order.** `workspace-next`, `workspace-previous`, `workspace-move-
+  up`, and `workspace-move-down` never wrap: on the first workspace, the
+  previous forms are silent no-ops. On a dynamic output, `workspace-next`
+  reaches the trailing empty workspace, which becomes active as usual.
+- **Columns as a unit.** A whole-column move preserves member order, the column
+  width, its full-width restore value, and stacked row proportions. In master
+  layout it transfers every member of the focused master or stack area. A column
+  moved onto a dwindle workspace flattens into single-window columns. With a
+  floating window focused there is no column, so the destination-moving column
+  actions act like their window counterparts.
+- **Floating and pinned.** `window-toggle-floating` remembers the window's
+  floating size and position; the first time a window floats, Umbriel places it
+  slightly below and to the right of its tiled position while keeping it on-
+  screen. `window-toggle-pinned` floats the window and keeps it above fullscreen
+  windows on its output, visible across workspace switches and hidden for as
+  long as the overview is open. A fullscreen window cannot be pinned, and making
+  a pinned window fullscreen drops the pin.
+- **Unavailable actions.** When an action has no meaning in the active layout,
+  its keybind does nothing and `umbriel msg` returns an error naming the
+  requirement.

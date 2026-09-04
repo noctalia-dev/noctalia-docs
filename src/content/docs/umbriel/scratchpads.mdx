@@ -43,11 +43,12 @@ scratchpad again.
 | `window-move-to-scratchpad` | Move the focused workspace window into the target scratchpad. |
 | `scratchpad-toggle` | Show or hide all scratchpad windows on the target output. |
 | `window-restore-from-scratchpad` | Restore the focused scratchpad window to a workspace. |
+| `window-toggle-scratchpad` | Move the focused window into the target scratchpad, or restore it when it is already that scratchpad's focused window. |
 | `scratchpad-focus-next` | Focus the next visible scratchpad window, wrapping at the end. |
 
-The toggle, restore, and focus actions do nothing when their required window is
-not available. In particular, restore and focus-next require the scratchpad to
-be visible.
+The `scratchpad-toggle`, restore, and focus actions do nothing when their
+required window is not available. In particular, restore and focus-next require
+the scratchpad to be visible.
 
 Scratchpad visibility and cycling actions never repeat while their key is held,
 even if the binding does not set `repeat = false`.
@@ -67,9 +68,9 @@ Add `:<output>` to target a specific output from anywhere:
 "Mod+Alt+0" = "scratchpad-focus-next:DP-1"
 ```
 
-For `window-move-to-scratchpad`, the suffix selects the destination
-scratchpad. The source is still the focused window on the active workspace
-under the pointer.
+For `window-move-to-scratchpad` and `window-toggle-scratchpad`, the suffix
+selects the destination scratchpad. The source is still the focused window on
+the active workspace under the pointer.
 
 Use `umbriel outputs` inside a session to find output names such as `DP-1` or
 `HDMI-A-1`.
@@ -83,6 +84,8 @@ from the scene. A window moved into a visible scratchpad remains visible.
 Showing a scratchpad focuses the window that was most recently focused there.
 If no window has been focused yet, Umbriel focuses the first stored window.
 Hiding it returns focus to a regular workspace window.
+Opening the workspaces overview immediately hides every visible scratchpad
+while keeping its windows stored.
 
 All windows assigned to one output share its visibility state. There are no
 separate named scratchpads within an output.
@@ -122,9 +125,9 @@ output-relative positions intact.
 Scratchpad windows use dedicated focused and unfocused border colors:
 
 ```toml
-[appearance]
-scratchpad_border_focused = "#E5C07BFF"
-scratchpad_border_unfocused = "#5C4A2AFF"
+[colors.border]
+scratchpad_focused = "#E5C07BFF"
+scratchpad_unfocused = "#5C4A2AFF"
 ```
 
 See [Appearance](/umbriel/appearance/) for the complete appearance

@@ -21,7 +21,9 @@ const isLegacy = project?.legacy === true;
     <span class="docs-pill">docs</span>
   </div>
   <div class:list={['header-search sl-flex print:hidden', { 'no-project': !project }]}>
-    <div class="site-search" hidden={!project}>
+    {/* On the docs landing page the trigger is hidden, but the dialog must stay
+        rendered so the Ctrl+K shortcut still opens a working, unscoped search. */}
+    <div class="site-search" data-trigger-hidden={!project ? '' : undefined}>
       {shouldRenderSearch && <Search />}
     </div>
     <a href={faqHref ?? '#'} class="faq-button" hidden={!faqHref}>
@@ -80,7 +82,7 @@ const isLegacy = project?.legacy === true;
     headerSearch?.classList.toggle('no-project', !context.hasProject);
 
     const search = document.querySelector<HTMLElement>('.site-search');
-    if (search) search.hidden = !context.hasProject;
+    if (search) search.toggleAttribute('data-trigger-hidden', !context.hasProject);
 
     const faqButton = document.querySelector<HTMLAnchorElement>('.faq-button');
     if (faqButton) {
@@ -111,9 +113,18 @@ const isLegacy = project?.legacy === true;
 </script>
 
 <style>
-  .site-search[hidden],
   .faq-button[hidden],
   .version-alert-banner[hidden] {
+    display: none;
+  }
+
+  /* Collapse the wrapper without removing the subtree: `display: contents`
+     keeps the dialog in the DOM and out of the header layout. */
+  .site-search[data-trigger-hidden] {
+    display: contents;
+  }
+
+  .site-search[data-trigger-hidden] :global(button[data-open-modal]) {
     display: none;
   }
 

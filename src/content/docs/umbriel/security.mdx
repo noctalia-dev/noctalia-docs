@@ -1,5 +1,6 @@
 ---
 title: Sandboxed Wayland clients
+description: Understand Umbriel security-context support and the capabilities restricted for sandboxed Wayland clients.
 ---
 
 Umbriel supports version 1 of the
@@ -34,13 +35,67 @@ hidden from restricted clients until it has received a security review.
 Trusted host services such as xdg-desktop-portal can mediate capture and other
 privileged operations for a sandboxed application.
 
+## Per-application grants
+
+Some protocols have no portal equivalent. A status bar needs layer-shell, a
+clipboard manager needs data-control, and an input method needs input-method
+ownership. `[[security_context_rule]]` entries widen the allowed set for
+individual applications, matched against the metadata the sandbox engine
+supplies. Every matching rule contributes its globals.
+
+```toml
+[[security_context_rule]]
+match.sandbox_engine = 'org\.flatpak'
+match.app_id = 'org\.example\.ClipboardManager'
+allow_globals = [
+  "ext_data_control_manager_v1",
+  "zwlr_data_control_manager_v1",
+]
+```
+
+Umbriel advertises both data-control variants to unrestricted clients. The
+`ext_data_control_manager_v1` global is the current protocol, while
+`zwlr_data_control_manager_v1` remains available for legacy clients. Both can
+observe and replace selections without keyboard focus, so restricted clients
+receive neither unless a matching rule grants it. Grant only the variants the
+application requires; the example grants both for compatibility.
+
+| Selector | Type | Description |
+|----------|------|-------------|
+| `match.sandbox_engine` | regex | Match the sandbox engine that labeled the connection. |
+| `match.app_id` | regex | Match the application ID the engine supplied. |
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `allow_globals` | string array | Wayland globals exposed in addition to the base allowed set. |
+
+Every selector is optional. A rule without selectors applies to every
+restricted client, and a client whose metadata omits a field never matches a
+selector on that field. Unlike window and layer rules, a pattern must match
+the entire value: a substring match would let an application choose an ID that
+embeds another rule's pattern.
+
+A rule with a mistake is dropped. An unknown key, an empty or non-string
+selector, or an empty `allow_globals` rejects the entry with a warning.
+
+Rules are additive only. They cannot remove protocols from the base set, and
+`wp_security_context_manager_v1` remains blocked even when listed, so a
+granted client can never create a nested context and label itself into another
+application's rules. A client's grants are decided when it first reads the
+registry and stay fixed for that connection. A reload therefore affects
+applications launched afterwards; a running application keeps its grants until
+it is restarted.
+
 ## Security boundary
 
 The protocol labels a new Wayland connection and lets Umbriel filter it. It
 does not constrain files, processes, devices, the network, D-Bus, or other host
 interfaces. The metadata is supplied by the sandbox engine and is not
-independently authenticated by Umbriel, so Umbriel does not use it to grant
-extra privileges.
+independently authenticated by Umbriel. Restricted clients cannot create
+security contexts, so labels always originate from an unrestricted process,
+and a per-application grant is only as trustworthy as the sandbox engine that
+labeled the connection. Without `[[security_context_rule]]` entries the
+metadata grants nothing.
 
 For the restriction to matter, the sandbox must not expose Umbriel's original
 Wayland socket. It must separately control Umbriel IPC through

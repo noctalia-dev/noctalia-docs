@@ -3,6 +3,7 @@ import { defineConfig } from "astro/config";
 import { unified } from "@astrojs/markdown-remark";
 import starlight from "@astrojs/starlight";
 import { remarkHeadingId } from "remark-custom-heading-id";
+import { pagefindCodeWeight } from "./src/lib/pagefind-code-weight";
 
 // https://astro.build/config
 export default defineConfig({
@@ -20,6 +21,7 @@ export default defineConfig({
     "/noctalia/system/network/wpa_supplicant/": "/noctalia/getting-started/faq/#wpa-supplicant",
   },
   integrations: [
+    pagefindCodeWeight(),
     starlight({
       components: {
         Head: "./src/components/Head.astro",
@@ -31,13 +33,6 @@ export default defineConfig({
         Pagination: "./src/components/Pagination.astro",
       },
       head: [
-        {
-          tag: "script",
-          attrs: {
-            src: "/search-breadcrumb.js",
-            defer: true,
-          },
-        },
         {
           tag: "script",
           attrs: {
@@ -65,6 +60,26 @@ export default defineConfig({
       ],
       customCss: ["./src/styles/theme.css"],
       tableOfContents: true,
+      pagefind: {
+        ranking: {
+          // "logs" should not rank "logout"/"logo"/"logging" pages as highly as
+          // pages containing the term itself.
+          termSimilarity: 3.0,
+          // A page repeating a term dozens of times (reference tables, IPC
+          // command lists) saturates quickly instead of dominating the results.
+          termSaturation: 0.8,
+          // Long reference pages stay competitive with short widget stubs.
+          pageLength: 0.6,
+          metaWeights: {
+            // A title match is the strongest signal we have about intent.
+            title: 8.0,
+            // Breadcrumb and project name are display-only; they must not drag
+            // every page of a section or project into its own name's results.
+            breadcrumb: 0.0,
+            project: 0.0,
+          },
+        },
+      },
       sidebar: [
         {
           label: "Noctalia",
@@ -165,14 +180,16 @@ export default defineConfig({
             { label: "Umbriel", link: "umbriel/" },
             { label: "Configuration", link: "umbriel/configuration/" },
             { label: "Outputs", link: "umbriel/outputs/" },
-            { label: "Workspaces", link: "umbriel/workspaces/" },
-            { label: "Layout", link: "umbriel/layout/" },
-            { label: "Appearance", link: "umbriel/appearance/" },
-            { label: "Animation", link: "umbriel/animation/" },
-            { label: "Input", link: "umbriel/input/" },
             { label: "Keybinds", link: "umbriel/keybinds/" },
             { label: "Actions", link: "umbriel/actions/" },
-            { label: "Window and Layer Rules", link: "umbriel/rules/" },
+            { label: "Input", link: "umbriel/input/" },
+            { label: "Appearance", link: "umbriel/appearance/" },
+            { label: "Animation", link: "umbriel/animation/" },
+            { label: "Layout", link: "umbriel/layout/" },
+            { label: "Workspaces", link: "umbriel/workspaces/" },
+            { label: "Workspaces Overview", link: "umbriel/workspaces-overview/" },
+            { label: "Window Rules", link: "umbriel/window-rules/" },
+            { label: "Layer Rules", link: "umbriel/layer-rules/" },          
             { label: "Scratchpads", link: "umbriel/scratchpads/" },
             { label: "Security", link: "umbriel/security/" },
           ],

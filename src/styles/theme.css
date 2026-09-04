@@ -84,20 +84,6 @@
 }
 
 
-/* Repo cards hover effect */
-.repo-card {
-	transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-}
-
-.repo-card article {
-	border-radius: var(--sl-border-radius);
-	border: 1px solid var(--sl-color-hairline);
-}
-
-.repo-card:hover {
-	transform: translateY(-2px);
-	filter: drop-shadow(0 2px 8px var(--sl-shadow-color));
-}
 
 button {
 	background-color: var(--sl-color-bg);
@@ -273,24 +259,6 @@ snake-toc nav>ul::before {
 
 snake-toc a[data-visible="true"] {
 	color: var(--sl-color-text-accent);
-}
-
-/* Search result breadcrumb, value injected via JS into --result-path custom property */
-#starlight__search .pagefind-ui__result-inner > .pagefind-ui__result-title {
-	line-height: 1.1rem;
-}
-
-#starlight__search .pagefind-ui__result-inner > .pagefind-ui__result-title::after {
-	content: var(--result-path, '');
-	display: block;
-	font-size: 0.78em;
-	font-weight: normal;
-	opacity: 0.5;
-}
-
-/* Search is automatically scoped to the current docs version. */
-#starlight__search .pagefind-ui__filter-panel {
-	display: none;
 }
 
 /* Caution aside, bright yellow bg with dark text */

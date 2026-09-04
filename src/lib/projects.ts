@@ -42,10 +42,10 @@ export const PROJECTS: readonly Project[] = [
     id: 'noctalia-shell',
     label: 'Noctalia Shell',
     description: 'Quickshell · v4 legacy',
-    href: '/noctalia-shell/',
+    href: '/noctalia-shell-legacy/',
     sidebarLabel: 'Noctalia Shell',
     displayName: 'Noctalia Shell Legacy v4',
-    faqHref: '/noctalia-shell/getting-started/faq/',
+    faqHref: '/noctalia-shell-legacy/getting-started/faq/',
     legacy: true,
   },
 ];
@@ -72,4 +72,27 @@ export function pickProjectSidebarEntries(
   );
 
   return group?.entries ?? [];
+}
+
+/**
+ * Sidebar path to a page, e.g. `Configuration › Bar`, used as the search
+ * result breadcrumb. Empty for pages absent from the sidebar.
+ */
+export function breadcrumbFromSidebar(sidebar: SidebarEntry[], pathname: string): string {
+  const trail: string[] = [];
+
+  const walk = (entries: SidebarEntry[], ancestors: string[]): boolean => {
+    for (const entry of entries) {
+      if (entry.type === 'group') {
+        if (walk(entry.entries, [...ancestors, entry.label])) return true;
+      } else if (entry.isCurrent) {
+        trail.push(...ancestors);
+        return true;
+      }
+    }
+    return false;
+  };
+
+  walk(pickProjectSidebarEntries(sidebar, pathname), []);
+  return trail.join(' › ');
 }
