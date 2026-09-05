@@ -178,6 +178,7 @@ export default defineConfig({
           label: "Umbriel",
           items: [
             { label: "Umbriel", link: "umbriel/" },
+            { label: "Installation", link: "umbriel/installation/" },
             { label: "Configuration", link: "umbriel/configuration/" },
             { label: "Outputs", link: "umbriel/outputs/" },
             { label: "Keybinds", link: "umbriel/keybinds/" },
