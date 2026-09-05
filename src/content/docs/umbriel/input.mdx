@@ -11,6 +11,7 @@ place.
 ```toml
 [input]
 middle_click_paste = false
+window_drag_toggle = "none"
 ```
 
 `middle_click_paste` controls the primary-selection clipboard. It defaults to
@@ -25,6 +26,19 @@ disabled are not offered the primary-selection protocol. The setting applies
 immediately on config reload, but protocol visibility is fixed when an
 application connects. Applications started while it was disabled must be
 restarted after re-enabling it.
+
+`window_drag_toggle` retargets a window drag in progress: while a window is held
+with one mouse button, a press of the other main button changes where the drag
+will put it. It defaults to `none`, which leaves the drag alone. `floating`
+switches between the tiled layout and floating; `pinned` switches between pinned
+and the state the window had when the drag started.
+
+The window's state changes when the drag drops, not when the button is pressed,
+so a drag can be retargeted as often as needed and toggling back and forth
+returns the window to the column width it was dragged out of. A drop that floats
+the window restores its remembered floating size, and the pointer keeps its grip
+on the same part of the window across that resize. A window that cannot take the
+target state (a fullscreen window cannot be pinned) drops where it was.
 
 ### Keyboard
 
