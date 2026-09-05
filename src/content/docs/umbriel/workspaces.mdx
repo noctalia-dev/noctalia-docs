@@ -7,7 +7,9 @@ Choose a workspace model, inspect its state, and customize layout per workspace.
 
 ## Choose a workspace model
 
-Each output can use dynamic or static workspaces.
+Each output can use dynamic or static workspaces, up to 64 including empty ones.
+At the limit, a workspace transfer reuses an empty destination on a dynamic
+output and is rejected when it would require another workspace.
 
 ### Dynamic workspaces
 
