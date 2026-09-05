@@ -250,9 +250,17 @@ Shaders never change layout, client configure sizes, input coordinates, or focus
 A window's scene subtree, including its subsurfaces and border, is processed as
 one target. Borders can also have their own inner effect. Workspace effects
 process the output's workspace view root, and overview effects process each
-output's overview tree. Scratchpad backdrops have their own targets. Compositor
-shadows kept in a separate stacking layer retain their existing native behavior;
-they are not relocated into window textures.
+output's overview tree. Scratchpad backdrops have their own targets.
+
+Window shadows follow the alpha silhouette produced by active window or border
+shaders, including reveal masks and squash effects. The compositor applies the
+configured shadow color, softness, and offset automatically; shaders do not
+need to draw shadows. Shadows stay in their separate stacking layer beneath
+windows and do not tint visible translucent window pixels. Closing snapshots
+retain their shadows, including when a window closes during another animation.
+Enclosing workspace effects process the window and its shadow together.
+Without a window or border shader, the normal rounded-rectangle shadow path
+is used. No additional configuration is required.
 
 Child effects run before parent effects. Effects sharing a target run in this
 order: dimming, border, movement, window opening, window closing, scratchpad,

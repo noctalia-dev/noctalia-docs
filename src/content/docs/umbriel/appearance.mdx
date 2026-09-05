@@ -175,6 +175,12 @@ offset_y = 2
 Drop shadow behind windows (tiled and floating). Hidden while fullscreen. The
 shadow color is [`colors.shadow`](#colors).
 
+During a [custom window animation](/umbriel/animation/#custom-glsl-shaders), shadows
+follow the shader's resulting alpha silhouette automatically. Color, softness,
+and offset still use these settings. Shadows remain beneath other windows and
+are excluded from visible window content, including translucent pixels.
+Closing animations retain the shadow until their snapshot finishes.
+
 | Key        | Type  | Default     | Description                                                            |
 | ---------- | ----- | ----------- | ---------------------------------------------------------------------- |
 | `enabled`  | bool  | `true`      | Enable drop shadows.                                                   |
