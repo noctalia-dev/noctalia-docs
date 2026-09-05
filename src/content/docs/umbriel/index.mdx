@@ -17,6 +17,9 @@ xdg-desktop-portal backend for Umbriel.
 > change between releases, and you may hit rough edges. We would rather change what feels wrong than promise stability
 > we cannot back yet, so treat current defaults as opinions, not contracts.
 
+See [Installation](/umbriel/installation/) for distribution packages, manual build
+instructions, and starting a session.
+
 ## Features
 
 - Scrolling, dwindle, and master layouts with per-workspace selection, width presets, animated navigation, and mouse-driven
@@ -38,33 +41,6 @@ Umbriel searches the user, XDG system, and packaged config paths in priority ord
 a higher-priority config applies it without a session restart. Config files can include other TOML files, and later
 files override earlier ones. See [Configuration](/umbriel/configuration/).
 
-## Starting Umbriel
-
-Installed display-manager sessions use `start-umbriel`. When a systemd user
-manager is available, the launcher runs Umbriel as a user service so the
-session inherits variables from `environment.d`. On other init systems it
-starts the compositor directly.
-
-Run `umbriel` directly for nested development sessions or explicit unmanaged
-startup.
-
-From a TTY, start a normal installed session with:
-
-```sh
-start-umbriel
-```
-
-## Logs
-
-Umbriel writes its main log to
-`$XDG_CACHE_HOME/umbriel/umbriel.log`. If `XDG_CACHE_HOME` is unset, the
-fallback path is `~/.cache/umbriel/umbriel.log`. The previous file is retained
-as `umbriel.log.1` when the current log reaches 1 MiB.
-
-When standard output or standard error is connected to a TTY, raw writes from
-Umbriel and its child processes are redirected to
-`$XDG_CACHE_HOME/umbriel/umbriel-stderr.log`, or
-`~/.cache/umbriel/umbriel-stderr.log` when `XDG_CACHE_HOME` is unset.
 
 ## Contributing
 

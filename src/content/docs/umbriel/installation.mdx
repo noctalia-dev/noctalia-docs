@@ -1,0 +1,119 @@
+---
+title: Installing Umbriel
+---
+
+Umbriel is available for Arch Linux, Fedora, Debian, and Ubuntu. You can also
+[build it manually](#manual-build) on another Linux distribution.
+
+> Package ownership: the Umbriel team maintains the manual build instructions.
+> Distribution packages are maintained by their distributions or package
+> repository maintainers. Review third-party repositories before installing
+> from them.
+
+## Arch Linux
+
+[`umbriel-git`](https://aur.archlinux.org/packages/umbriel-git) is available in
+the AUR:
+
+```sh
+yay -S umbriel-git
+```
+
+## Fedora
+
+[Terra](https://wiki.fyralabs.com/Terra) provides nightly builds:
+
+```sh
+sudo dnf install umbriel-nightly
+```
+
+## Debian and Ubuntu
+
+The NickH APT repository provides Umbriel for Debian-based distributions.
+
+### Install the repository signing key
+
+```sh
+wget https://pkg.noctalia.dev/deb/nickh-archive-keyring.deb
+sudo dpkg -i nickh-archive-keyring.deb
+```
+
+### Add the repository
+
+Choose the source matching your distribution:
+
+```sh
+# Debian Trixie
+sudo wget -O /etc/apt/sources.list.d/noctalia-trixie.sources \
+  https://pkg.noctalia.dev/deb/noctalia-trixie.sources
+
+# Debian Sid
+sudo wget -O /etc/apt/sources.list.d/noctalia-unstable.sources \
+  https://pkg.noctalia.dev/deb/noctalia-unstable.sources
+
+# Ubuntu 26.04
+sudo wget -O /etc/apt/sources.list.d/noctalia-resolute.sources \
+  https://pkg.noctalia.dev/deb/noctalia-resolute.sources
+```
+
+### Install Umbriel
+
+```sh
+sudo apt update
+sudo apt install umbriel
+```
+
+The repository provides `amd64` and `arm64` packages only.
+
+## Manual build
+
+Manual installations have no automatic upgrade path. Prefer a distribution
+package when one is available.
+
+Install a C++23 compiler, Meson, Ninja, `just`, `pkg-config`,
+`wayland-scanner`, and the development packages listed in
+[`PACKAGING.md`](../../PACKAGING.md#dependencies). Then clone, build, and
+install Umbriel:
+
+```sh
+git clone https://github.com/noctalia-dev/umbriel.git
+cd umbriel
+just release
+sudo just install
+```
+
+The default installation prefix is `/usr/local`. Set `prefix` when building to
+install elsewhere:
+
+```sh
+just prefix="$HOME/.local" release
+just install
+```
+
+## Starting Umbriel
+
+Installed display-manager sessions use `start-umbriel`. When a systemd user
+manager is available, the launcher runs Umbriel as a user service so the
+session inherits variables from `environment.d`. On other init systems it
+starts the compositor directly.
+
+Run `umbriel` directly for nested development sessions or explicit unmanaged
+startup.
+
+From a TTY, start a normal installed session with:
+
+```sh
+start-umbriel
+```
+
+## Logs
+
+Umbriel writes its main log to `$XDG_CACHE_HOME/umbriel/umbriel.log`. If
+`XDG_CACHE_HOME` is unset, the fallback path is
+`~/.cache/umbriel/umbriel.log`. The previous file is retained as
+`umbriel.log.1` when the current log reaches 1 MiB.
+
+When standard output or standard error is connected to a TTY, raw writes from
+Umbriel and its child processes are redirected to
+`$XDG_CACHE_HOME/umbriel/umbriel-stderr.log`, or
+`~/.cache/umbriel/umbriel-stderr.log` when `XDG_CACHE_HOME` is unset.
