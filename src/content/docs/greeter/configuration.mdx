@@ -6,8 +6,6 @@ sidebar:
 ---
 
 
-# Configuration
-
 Administrator-controlled settings live in `/var/lib/noctalia-greeter/greeter.toml`. Noctalia Sync and choices made on the login screen use the lower-priority `sync.toml`; they never rewrite `greeter.toml`.
 
 - [Configuration files](#configuration-files)
@@ -80,7 +78,7 @@ Display and input settings have task-oriented guides:
 
 ## Default session
 
-The value is the desktop entry's exact **`Name=`**—the same text shown in the picker—not the `.desktop` filename. List available names with:
+The value is the desktop entry's exact **`Name=`**, which is the same text shown in the picker, not the `.desktop` filename. List available names with:
 
 ```sh
 noctalia-greeter sessions

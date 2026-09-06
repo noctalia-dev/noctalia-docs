@@ -6,24 +6,24 @@ sidebar:
 ---
 
 
-# Noctalia Greeter
-
 [Noctalia Greeter](https://github.com/noctalia-dev/noctalia-greeter) is a graphical login screen for **[greetd](https://github.com/kennylevinsen/greetd)**. It lets you select a user and Wayland session, authenticate, and choose a color scheme using the same visual language as Noctalia.
 
-greetd starts the bundled wlroots compositor, which runs the greeter UI. It is a focused login environment—not a desktop shell or a general-purpose compositor.
+greetd launches `noctalia-greeter-session`, which starts the bundled wlroots compositor and runs the greeter UI. It is a focused login environment, not a desktop shell or a general-purpose compositor.
 
 ## Start here
 
-1. [Install the greeter and its runtime dependencies](/greeter/installation/).
-2. If your package or module did not configure greetd, [point it at `noctalia-greeter-session`](/greeter/installation/#configure-greetd-manually).
-3. [Choose any administrator-controlled defaults](/greeter/configuration/), such as the initial user, session, or cursor.
-4. Optionally [sync your Noctalia appearance](/greeter/sync/) to the login screen.
+1. [Install a distribution package or configure NixOS](/greeter/installation/).
+2. If no package is available, [build the greeter from source](/greeter/building-from-source/).
+3. If your package or module did not configure greetd, [point it at `noctalia-greeter-session`](/greeter/installation/#3-configure-greetd).
+4. [Choose any administrator-controlled defaults](/greeter/configuration/), such as the initial user, session, or cursor.
+5. Optionally [sync your Noctalia appearance](/greeter/sync/) to the login screen.
 
 ## Guides
 
 | Guide | Use it for |
 |-------|------------|
-| [Installation](/greeter/installation/) | Distribution packages, source installation, NixOS modules, and greetd setup |
+| [Installation](/greeter/installation/) | Distribution packages, NixOS modules, greetd setup, and display-manager cutover |
+| [Building from source](/greeter/building-from-source/) | Build dependencies and manual installation for distributions without a package |
 | [Configuration](/greeter/configuration/) | Config-file precedence, remembered state, available keys, default user, and default session |
 | [Sync with Noctalia](/greeter/sync/) | Wallpapers, palette, monitor sync, Polkit, and passwordless authorization |
 | [Displays](/greeter/displays/) | Output selection, multi-monitor layout, modes, transforms, scale, and idle blanking |

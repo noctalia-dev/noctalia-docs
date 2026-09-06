@@ -3,8 +3,6 @@ title: Troubleshooting
 ---
 
 
-# Troubleshooting
-
 Start with the greetd and Noctalia Greeter logs. The message immediately before a blank screen, failed login, or failed sync is usually more useful than the visible symptom.
 
 - [Logging](#logging)
@@ -48,7 +46,7 @@ greetd does not interpret a bare environment assignment as a command, so keep th
 
 Check the logs first. Confirm that `/var/lib/noctalia-greeter` exists, is mode `0750`, and is owned by the account configured as greetd's greeter user. Also verify that the greeter package's required `assets/` tree was installed.
 
-For a source checkout, `sudo ./scripts/setup_greeter_system.sh` performs the complete system setup; `just setup-log-dir` repairs only the state directory. Those commands are available only from the source tree. Packaged installations should use their distribution's setup or reinstall procedure. See [Installation](/greeter/installation/#configure-greetd-manually).
+For a source checkout, `sudo ./scripts/setup_greeter_system.sh` performs the complete system setup; `just setup-log-dir` repairs only the state directory. Those commands are available only from the source tree. Packaged installations should use their distribution's setup or reinstall procedure. See [Installation](/greeter/installation/#3-configure-greetd).
 
 ### Black screen after reboot
 
@@ -62,7 +60,7 @@ The greetd `command` must use the full installed path to `noctalia-greeter-sessi
 command -v noctalia-greeter-session
 ```
 
-Update `/etc/greetd/config.toml` as shown in [Configure greetd manually](/greeter/installation/#configure-greetd-manually).
+Update `/etc/greetd/config.toml` as shown in [Configure greetd](/greeter/installation/#3-configure-greetd).
 
 ### `WAYLAND_DISPLAY is not set`
 
