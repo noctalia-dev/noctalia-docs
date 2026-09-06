@@ -54,16 +54,31 @@ without a running compositor and exits nonzero when it reports a diagnostic.
 
 ```toml
 [include]
-files = ["appearance.toml", "keybinds.toml"]
+files = [
+    "appearance.toml",
+    "keybinds.toml",
+]
+
+[include.optional]
+files = [
+    "~/.config/umbriel/noctalia.toml",
+]
 ```
 
-Paths are resolved relative to the main config file. A leading `~` or `~/`
-expands to your home directory, and `$VAR` or `${VAR}` expands environment
-variables. Later files override earlier files, and values in the main file
-override every include.
+Paths are resolved relative to the file that declares them. `~` and `~/`
+expand to the user's home directory. `$VAR` and `${VAR}` expand environment
+variables.
 
-`files` is the only key `[include]` accepts. Anything else in the section is
-reported as an unknown key, in the main config and in included files alike.
+Missing files in `[include.optional]` are silently ignored and remain watched.
+Creating one applies it without a restart. An optional file that exists must
+contain valid TOML.
+
+Files in `[include]` are applied in list order, followed by files in
+`[include.optional]`. Values in the including file override every include.
+
+`[include]` accepts `files` and the `optional` sub-table.
+`[include.optional]` accepts only `files`. Anything else is reported as an
+unknown key, in the main config and in included files alike.
 
 You can split your config into multiple files for clarity:
 
