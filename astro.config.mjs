@@ -167,6 +167,7 @@ export default defineConfig({
           items: [
             { label: "Overview", link: "greeter/" },
             { label: "Installation", link: "greeter/installation/" },
+            { label: "Building from source", link: "greeter/building-from-source/" },
             { label: "Configuration", link: "greeter/configuration/" },
             { label: "Sync with Noctalia", link: "greeter/sync/" },
             { label: "Displays", link: "greeter/displays/" },
