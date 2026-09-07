@@ -327,6 +327,9 @@ ancestor is floating, pinned, or fullscreen.
 and fills the entire output. It normally targets the focused window. If another
 fullscreen window completely covers that focus on the active output, the action
 exits the covering fullscreen window first and leaves focus in place.
+Leaving fullscreen sends the restored tiled or floating size with the windowed
+configure, including for XWayland windows, so the action has no timer-delayed
+fallback.
 `window-toggle-maximize` toggles the focused column's full-width state, and a
 tiled column stays inside configured struts and gaps. A floating window has no
 column, so it fills the output's usable area and restores its exact previous
