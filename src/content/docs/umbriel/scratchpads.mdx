@@ -3,20 +3,23 @@ title: Scratchpads
 description: Store, show, cycle, and restore windows with Umbriel's per-output scratchpads.
 ---
 
-A scratchpad is a holding area for windows you want nearby without keeping them
-on a workspace. Each output has its own scratchpad, and every window assigned to
-that output is shown or hidden together.
+A scratchpad is a global, named holding area for windows you want nearby
+without keeping them on a workspace. Its windows always float and are shown or
+hidden together. A scratchpad is not owned by an output: showing or dragging it
+on another output moves the whole scratchpad there.
 
 Scratchpad membership and visibility are separate:
 
 - Moving a window to a scratchpad stores it there.
-- Toggling a scratchpad shows or hides its stored windows.
-- Restoring a window removes it from the scratchpad and returns it to a
-  workspace.
+- Toggling a scratchpad shows or hides all of its stored windows.
+- Restoring a window removes it from the scratchpad and returns it to the
+  output and workspace where that window was stored.
 
-## Basic setup
+## Default scratchpad
 
-The packaged config uses these bindings:
+When the config has no `[[scratchpad]]` entries, Umbriel creates one implicit
+scratchpad named `default`. The packaged config uses that mode, so its actions
+do not need a suffix:
 
 ```toml
 [keybinds]
@@ -26,79 +29,115 @@ The packaged config uses these bindings:
 "Mod+Tab" = "scratchpad-focus-next"
 ```
 
+The explicit `:default` suffix is also valid in this mode.
+
 A typical workflow is:
 
 1. Focus a workspace window and press `Mod+Shift+Space` to store it.
 2. Press `Mod+Space` to show the stored windows.
 3. Press `Mod+Tab` to cycle focus when several windows are visible.
-4. Press `Mod+Ctrl+Space` to return the focused window to its workspace.
+4. Press `Mod+Ctrl+Space` to return the focused window to its saved workspace.
 
 Press `Mod+Space` instead of restoring when you only want to hide the
 scratchpad again.
+
+## Named scratchpads
+
+Add one `[[scratchpad]]` table for each scratchpad you want:
+
+```toml
+[[scratchpad]]
+name = "terminal"
+
+[[scratchpad]]
+name = "music"
+
+[keybinds]
+"Mod+Shift+Space" = "window-toggle-scratchpad:terminal"
+"Mod+Space" = "scratchpad-toggle:terminal"
+"Mod+Shift+M" = "window-toggle-scratchpad:music"
+"Mod+M" = "scratchpad-toggle:music"
+```
+
+Defining any named scratchpad disables the implicit `default` scratchpad. In
+this mode every scratchpad action must include a configured name. Names must be
+nonempty and unique, and `default` is reserved for the implicit scratchpad.
+
+On config reload, windows in a removed scratchpad return to their individually
+saved outputs and workspaces. This also happens to windows in the implicit
+`default` scratchpad when the first named definition is added.
 
 ## Actions
 
 | Action | What it does |
 |--------|--------------|
-| `window-move-to-scratchpad` | Move the focused workspace window into the target scratchpad. |
-| `scratchpad-toggle` | Show or hide all scratchpad windows on the target output. |
-| `window-restore-from-scratchpad` | Restore the focused scratchpad window to a workspace. |
-| `window-toggle-scratchpad` | Move the focused window into the target scratchpad, or restore it when it is already that scratchpad's focused window. |
-| `scratchpad-focus-next` | Focus the next visible scratchpad window, wrapping at the end. |
+| `window-move-to-scratchpad:[<scratchpad>]` | Move the focused workspace window into the selected scratchpad. |
+| `scratchpad-toggle:[<scratchpad>]` | Show or hide all windows in the selected scratchpad. |
+| `window-restore-from-scratchpad:[<scratchpad>]` | Restore the selected scratchpad's remembered window. |
+| `window-toggle-scratchpad:[<scratchpad>]` | Move the focused window into the selected scratchpad, or restore it when it is already that scratchpad's focused window. |
+| `scratchpad-focus-next:[<scratchpad>]` | Focus the next visible window in the selected scratchpad, wrapping at the end. |
 
-The `scratchpad-toggle`, restore, and focus actions do nothing when their
-required window is not available. In particular, restore and focus-next require
-the scratchpad to be visible.
+The optional argument is only optional when the implicit `default` scratchpad
+exists. In named mode it is required.
+
+Toggle, restore, and focus actions do nothing when their required window is not
+available. In particular, restore and focus-next require the selected
+scratchpad to be visible.
 
 Scratchpad visibility and cycling actions never repeat while their key is held,
 even if the binding does not set `repeat = false`.
 
 ## Choosing an output
 
-Without an output suffix, an action targets the output under the pointer. If the
-pointer is outside every output, Umbriel uses the first enabled output.
+An action suffix selects a scratchpad, not an output. The output under the
+pointer is the invoking output. If the pointer is outside every output,
+Umbriel uses the first enabled output.
 
-Add `:<output>` to target a specific output from anywhere:
+`window-move-to-scratchpad` takes the focused window from the invoking
+output's active workspace. `window-toggle-scratchpad:<scratchpad>` restores the
+focused window only when it belongs to the selected scratchpad. Otherwise its
+move branch takes the invoking output's focused workspace window, even when a
+different scratchpad currently owns keyboard focus.
 
-```toml
-[keybinds]
-"Mod+0" = "scratchpad-toggle:DP-1"
-"Mod+Shift+0" = "window-move-to-scratchpad:DP-1"
-"Mod+Ctrl+0" = "window-restore-from-scratchpad:DP-1"
-"Mod+Alt+0" = "scratchpad-focus-next:DP-1"
-```
+Toggling a hidden scratchpad shows the whole scratchpad on the invoking output.
+Toggling a scratchpad that is visible on another output summons it to the
+invoking output without hiding it first. Toggling it again on the same output
+hides it.
 
-For `window-move-to-scratchpad` and `window-toggle-scratchpad`, the suffix
-selects the destination scratchpad. The source is still the focused window on
-the active workspace under the pointer.
+Moving a workspace window into a hidden scratchpad moves that scratchpad to the
+invoking output while keeping it hidden. Moving a window into a scratchpad that
+is already visible adds the window where the scratchpad is currently shown.
 
-Use `umbriel outputs` inside a session to find output names such as `DP-1` or
-`HDMI-A-1`.
+Only one scratchpad can be visible on an output. Showing one there hides the
+scratchpad that was already visible. Different scratchpads can remain visible
+on different outputs at the same time.
 
 ## Visibility and focus
 
-Moving a window preserves the target scratchpad's current visibility. By
-default, a window moved into a hidden scratchpad fades out and is then removed
-from the scene. A window moved into a visible scratchpad remains visible.
+Moving a window preserves the selected scratchpad's visibility. A window moved
+into a hidden scratchpad is removed from the scene immediately by default. It
+fades out first when global animations and `animation.scratchpad` are enabled.
+A window moved into a visible scratchpad remains visible.
 
 Showing a scratchpad focuses the window that was most recently focused there.
 If no window has been focused yet, Umbriel focuses the first stored window.
-Hiding it returns focus to a regular workspace window.
-Opening the workspaces overview immediately hides every visible scratchpad
-while keeping its windows stored.
+Hiding it returns focus to a regular workspace window. Opening the workspaces
+overview immediately hides every visible scratchpad while keeping its windows
+stored.
 
-All windows assigned to one output share its visibility state. There are no
-separate named scratchpads within an output.
+Backdrop dim and blur apply only to an output with a visible scratchpad. Hiding
+or moving that scratchpad clears the old output's backdrop.
 
 ## Restoring windows
 
-Umbriel remembers the source output, workspace, and whether the window was
-tiled or floating. Restoring the window returns it to that workspace and
+Each window remembers its own source output, workspace, and tiled or floating
+state from immediately before it entered the scratchpad. Roaming the scratchpad
+does not change that saved destination. Restoring a window returns it there and
 restores its tiled or floating state.
 
-If the original output no longer exists, Umbriel restores the window on the
-output targeted by the action. If the original workspace no longer exists, it
-uses that output's active workspace.
+If the saved output no longer exists, Umbriel restores the window on the
+scratchpad's current output. If the saved workspace no longer exists, it uses
+that output's active workspace.
 
 Fullscreen, pinned, and maximize-to-edges state are cleared when a window enters
 the scratchpad and are not restored automatically. The optional
@@ -107,23 +146,22 @@ apply a new state on entry.
 
 ## Moving scratchpad windows
 
-Scratchpad windows always float. Dragging one does not restore it or tile it on
-the workspace beneath it.
+Dragging a scratchpad window does not restore it or tile it on the workspace
+beneath it. Dragging one member to another output moves the whole named
+scratchpad there. The dragged window keeps its drop position, while the other
+members retain proportional positions within the destination output's usable
+area. Starting a drag from a maximized scratchpad window first restores that
+window's saved floating box.
 
-Dragging a scratchpad window to another output assigns it to that output's
-scratchpad and makes the destination scratchpad visible. The window keeps its
-size. Umbriel only repositions it when its center would otherwise be outside the
-destination output's usable area.
+If an enabled output changes position, mode, scale, transform, or usable area,
+scratchpads assigned there retain their proportional output-local positions.
+Their backdrop follows the output as well.
 
-The visible backdrop follows that transfer. If no scratchpad entries remain on
-the source output, its dim and blur clear. Hiding the destination scratchpad
-clears its backdrop too. When the moved window was the source's last entry,
-both outputs are then undimmed.
-
-When an output disconnects or is disabled, its scratchpad windows move to
-another enabled output. A visible scratchpad remains visible after that move.
-When the original output returns, its scratchpad windows return with their
-output-relative positions intact.
+When an output disconnects or is disabled, each scratchpad assigned there is
+parked on another output when one remains enabled. A visible scratchpad remains
+visible after that move. When the original output returns, the whole scratchpad
+returns with its output-relative positions intact unless it was deliberately
+moved elsewhere in the meantime.
 
 ## Appearance and window actions
 
@@ -135,11 +173,11 @@ scratchpad_focused = "#E5C07BFF"
 scratchpad_unfocused = "#5C4A2AFF"
 ```
 
-See [Appearance](/umbriel/appearance/) for the complete appearance
-reference.
+See [Appearance](/umbriel/appearance/) for the complete appearance reference.
 
 Scratchpad show and hide transitions, backdrop dimming and blur, and optional
-entry sizing are configured under [`animation.scratchpad`](/umbriel/animation/#animation).
+entry sizing are configured under
+[`animation.scratchpad`](/umbriel/animation/#animation).
 
 While a scratchpad window has keyboard focus, width and height actions resize
 it directly using `animation.windows_move`. Maximize, maximize-to-edges,
@@ -152,14 +190,12 @@ swap, workspace or output transfer, `window-toggle-floating`,
 actions can still use their stated output or workspace fallback. Restore the
 window before using a layout-relative action on it.
 
-`window-move-to-scratchpad` and the move branch of
-`window-toggle-scratchpad` keep the source behavior described under
-[Choosing an output](#choosing-an-output).
-
 ## Troubleshooting
 
-- If toggle does nothing, the target output has no stored scratchpad windows.
-- If restore or focus-next does nothing, show the target scratchpad first.
-- If an action affects the wrong monitor, move the pointer to the intended
-  output or add an explicit output suffix.
+- If toggle does nothing, the selected scratchpad has no stored windows.
+- If restore or focus-next does nothing, show the selected scratchpad first.
+- If a named action does nothing, check that its suffix matches a configured
+  scratchpad name.
+- If a scratchpad appears on the wrong monitor, move the pointer to the output
+  where you want to summon it before invoking the action.
 - If a window will not tile, pin, or center, restore it to a workspace first.

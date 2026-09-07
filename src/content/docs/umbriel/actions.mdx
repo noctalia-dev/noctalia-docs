@@ -22,7 +22,8 @@ are required, `[bracket]` forms are optional.
 | `<workspace>[/<output>]` | Workspace name or 1-based position, optionally qualified by output: `workspace-switch:CHAT/HDMI-A-1` |
 | `<window-id>` | Window id from `umbriel windows` |
 | `[<window-id>]` | The same id; the bare action targets the focused window |
-| `[<output>]` | Connector or monitor name. Bare scratchpad actions target the output under the pointer; bare `dpms-off` and `dpms-on` target every configured output |
+| `[<output>]` | Connector or monitor name. Bare `dpms-off` and `dpms-on` target every configured output |
+| `[<scratchpad>]` | Scratchpad name. The bare form selects the implicit `default` scratchpad, which exists only when no named scratchpads are configured |
 | `<fraction>` | `0.1` to `1.0` of the column extent, or of the usable area for a floating window |
 | `<delta>` | Signed `-0.9` to `0.9`; the result clamps to `0.1` to `1.0` |
 | `<scrolling\|dwindle\|master\|toggle>` | Layout mode for `workspace-set-layout`; `toggle` cycles scrolling, dwindle, master |
@@ -125,16 +126,17 @@ Sizing rules per layout live in [Sizing behavior](/umbriel/layout/#sizing-behavi
 
 ## Scratchpad
 
-Every output has its own holding area. [Scratchpads](/umbriel/scratchpads/) covers the
-workflow, restoration rules, and multi-output behavior.
+Scratchpads are global named holding areas that roam between outputs.
+[Scratchpads](/umbriel/scratchpads/) covers their configuration, restoration rules, and
+multi-output behavior.
 
 | Action | Effect |
 |--------|--------|
-| `scratchpad-focus-next:[<output>]` | Focus the next visible scratchpad window |
-| `scratchpad-toggle:[<output>]` | Show or hide the output's scratchpad windows |
-| `window-move-to-scratchpad:[<output>]` | Move the focused window into the scratchpad |
-| `window-restore-from-scratchpad:[<output>]` | Return the scratchpad window to its saved workspace |
-| `window-toggle-scratchpad:[<output>]` | Move the focused window to or from the scratchpad |
+| `scratchpad-focus-next:[<scratchpad>]` | Focus the next visible scratchpad window |
+| `scratchpad-toggle:[<scratchpad>]` | Show or hide the selected scratchpad windows |
+| `window-move-to-scratchpad:[<scratchpad>]` | Move the focused window into a scratchpad |
+| `window-restore-from-scratchpad:[<scratchpad>]` | Return a scratchpad window to its saved workspace |
+| `window-toggle-scratchpad:[<scratchpad>]` | Move the focused window to or from a scratchpad |
 
 ## Workspaces
 
