@@ -228,14 +228,16 @@ during an active tiled window drag.
 
 `scroll_button` hands one button to libinput as a scroll modifier: while it is
 held, pointer motion scrolls the surface under the cursor instead of moving the
-cursor, and the button no longer clicks anything. It takes the same names as a
-mouse keybind, `MouseLeft`, `MouseRight`, `MouseMiddle`, `MouseBack`, or
-`MouseForward`, and a bind on that button stops firing while it is claimed,
-which the log reports on load. `scroll_button_lock = true` latches instead: one
-press starts scrolling, the next stops it, which suits a side button that is
-awkward to hold. Both keys are unset by default and removing them restores the
-device's libinput default. A device that cannot do button scrolling, or that
-has no such button, is reported in the log and left alone.
+cursor, and that motion consumes the button rather than clicking. Pressing and
+releasing it without moving the pointer still clicks, so the button keeps
+working for plain clicks and a bind on it still fires in that case, which is
+what the load-time log line means. It takes the same names as a mouse keybind,
+`MouseLeft`, `MouseRight`, `MouseMiddle`, `MouseBack`, or `MouseForward`.
+`scroll_button_lock = true` latches instead: one press starts scrolling, the
+next stops it, which suits a side button that is awkward to hold. Both keys are
+unset by default and removing them restores the device's libinput default. A
+device that cannot do button scrolling, or that has no such button, is reported
+in the log and left alone.
 
 `[input.mouse]` reaches every pointer that is not a touchpad. A touchpad takes
 a scroll button only from its own `[[input.device]]` rule, because a touchpad
