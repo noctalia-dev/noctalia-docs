@@ -93,6 +93,11 @@ in the visible workspace previews receives a label, including scrolling-layout
 cards that are temporarily beyond an output edge. Their badges appear with the
 cards when the strip moves.
 
+A badge sits in its card's top-left corner. When that corner falls outside the
+usable area, because the card hangs past the output edge or sits under a panel's
+exclusive zone, the badge slides along that axis until it is back inside, so
+previews above the current workspace keep their labels visible below the panel.
+
 Favorite keys are assigned in `shortcut_keys` order. Cards on the active
 workspace receive them first, and the preferred output is assigned before other
 outputs. Cards within a workspace are ordered from left to right.
