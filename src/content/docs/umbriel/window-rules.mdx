@@ -5,9 +5,10 @@ description: Match application windows and configure their layout, appearance, f
 
 Window rules can match `app_id`, title, and a client-defined XDG toplevel tag
 using ECMAScript regular expressions. They can also match a standardized
-content type or focus state. Every matching rule contributes its settings. If
-two rules set the same field, the rule that appears later takes precedence.
-Rules from included files come before the rules in the file that includes them.
+content type or the window's current state. Every matching rule contributes its
+settings. If two rules set the same field, the rule that appears later takes
+precedence. Rules from included files come before the rules in the file that
+includes them.
 
 ```toml
 [[window_rule]]
@@ -25,6 +26,9 @@ default_floating = true
 | `match.xdg_tag` | regex | Match the client-defined XDG toplevel tag. |
 | `match.content_type` | string | Match `"none"`, `"photo"`, `"video"`, or `"game"`. |
 | `match.is_focused` | bool | Match the window's focused state dynamically. |
+| `match.is_floating` | bool | Match the window's floating state dynamically. |
+| `match.is_pinned` | bool | Match the window's pinned state dynamically. |
+| `match.is_scratchpad` | bool | Match the window's scratchpad state dynamically. |
 | `match.at_startup` | bool | Match `true` during the first 60 seconds after starting umbriel and `false` afterward. |
 
 Every selector is optional. A rule without selectors matches every window.
@@ -56,6 +60,14 @@ priority `game`, `video`, `photo`, then `none`. This also covers Proton and Wine
 games that publish the hint on a child surface. `none` includes windows that do
 not publish a content hint. Client changes refresh settings from the dynamic
 table below, but never replay the opening settings.
+
+`is_focused`, `is_floating`, `is_pinned`, and `is_scratchpad` match the window's
+current state, and every one of those transitions refreshes the settings from
+the dynamic table below. Pinned and scratchpad windows are floating, so
+`is_floating = true` also matches them. Opening settings resolve against the
+state the window opens with, before `default_floating` and `default_pinned`
+apply, so a rule that sets one of those cannot also select on the state it
+produces.
 
 ## Settings applied when a window opens
 
@@ -334,4 +346,17 @@ opacity = 0.85
 [[window_rule]]
 match.is_focused = true
 opacity = 1.0
+
+# Disable blur for floating windows, but not scratchpad windows
+[[window_rule]]
+match.is_floating = true
+match.is_scratchpad = false
+blur = false
+
+# Dim them even further
+[[window_rule]]
+match.is_focused = false
+match.is_floating = true
+match.is_scratchpad = false
+opacity = 0.4
 ```
