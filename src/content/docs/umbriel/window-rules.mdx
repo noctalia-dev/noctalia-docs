@@ -67,7 +67,7 @@ opening settings do not overwrite user changes made in the meantime.
 | Key | Type | Description |
 |-----|------|-------------|
 | `default_output` | string | Open on a specific output (e.g. `"DP-1"`). |
-| `default_workspace` | int | Place on workspace N from 1 to 64. On dynamic outputs, values beyond the current count clamp to the last workspace. |
+| `default_workspace` | int or string | Place on an existing workspace by 1-based position (1 to 64) or exact, case-sensitive name. On dynamic outputs, integer positions beyond the current count clamp to the last workspace; names never clamp. |
 | `default_fullscreen` | bool | Open fullscreen across the entire output, ignoring layout struts and layer-shell exclusive zones. |
 | `default_floating` | bool | Force floating (`true`) or force tiling (`false`). |
 | `default_maximize` | bool | Open maximized. A tiled column still respects layout struts and gaps. Parented transient dialogs keep their natural size. |
@@ -99,12 +99,34 @@ If neither `default_width` nor a matching
 `layout.scrolling.default_width_fraction` is set, a scrolling window chooses
 its initial logical extent.
 
-Without `default_output`, a numbered workspace owned by exactly one fixed output
-inventory also selects that output. For example, if only `DP-1` has a fourth
-configured workspace, `default_workspace = 4` opens there even when the window
-was launched from another output. If several fixed outputs contain that
-position, Umbriel keeps the launch output. An explicit `default_output` always
-scopes the workspace lookup to that output.
+### Workspace placement
+
+`default_workspace` selects an existing workspace and never creates one. An
+integer selects a 1-based position, while a string selects an exact,
+case-sensitive name. These forms are intentionally distinct:
+
+```toml
+# Choose one form.
+default_workspace = 2       # Position 2
+# default_workspace = "2"   # Workspace named "2"
+# default_workspace = "CHAT" # Workspace named "CHAT"
+```
+
+On a dynamic output, an integer beyond the current workspace count selects the
+last workspace. A string never clamps to another name. A name such as `"CHAT"`
+therefore needs to exist already, normally in a static output inventory such as
+`workspaces = ["WEB", "CHAT"]`. The setting does not add named workspaces to a
+dynamic output.
+
+An explicit `default_output` selects the output first and scopes either form of
+`default_workspace` to it. Without `default_output`, a target owned by exactly
+one static output inventory also selects that output. For example, if only
+`DP-1` has a fourth configured workspace, `default_workspace = 4` opens there
+even when the window was launched from another output. The same applies to an
+exact name such as `"CHAT"` when only one static inventory contains it. If
+several static outputs contain the position or name, Umbriel keeps the launch
+output and resolves the target there. If the target does not exist there,
+Umbriel keeps the normal workspace placement.
 
 ## Floating position
 
