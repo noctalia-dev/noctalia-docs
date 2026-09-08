@@ -155,7 +155,9 @@ window's saved floating box.
 
 If an enabled output changes position, mode, scale, transform, or usable area,
 scratchpads assigned there retain their proportional output-local positions.
-Their backdrop follows the output as well.
+Their backdrop follows the output as well. A focused visible scratchpad also
+keeps keyboard focus through the change, even when the pointer is on another
+output.
 
 When an output disconnects or is disabled, each scratchpad assigned there is
 parked on another output when one remains enabled. A visible scratchpad remains

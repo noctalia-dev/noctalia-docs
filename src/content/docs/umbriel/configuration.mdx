@@ -42,6 +42,11 @@ keeps your last working configuration and continues watching the failed
 candidate and its included files. Save a corrected file to try the reload
 again. Options that require a restart are marked in their reference tables.
 
+A successful reload keeps the current keyboard focus when its window or
+keyboard-interactive layer remains mapped, visible, and on an enabled output.
+If that owner is no longer usable, Umbriel selects the active workspace on the
+pointer output instead.
+
 ## Diagnostics
 
 Warnings and errors from a load or reload appear in a panel at the top of the
