@@ -286,7 +286,8 @@ touchpads; for a touchpad the rule overrides `[input.touchpad]` rather than
 
 Rules match every attached device with the exact name. Device overrides also
 apply when a device is connected after startup and when the configuration is
-reloaded. Duplicate rules for the same name are rejected.
+reloaded. Rules from included files are collected alongside the ones in the
+file that includes them, and duplicate rules for the same name are rejected.
 
 `scroll_wheel_step`, cursor settings, tablet settings, and focus settings remain
 compositor-wide because they are not properties of one physical input device.

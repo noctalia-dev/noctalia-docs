@@ -38,4 +38,5 @@ empty string.
 | `blur_optimized` | bool | Override `appearance.blur.optimized`. A `true` value keeps the cached background blur alive on every output even when the global switch is off. |
 
 Layer-shell blur is off by default. As with window rules, every matching rule
-contributes its settings, and later values take precedence.
+contributes its settings, and later values take precedence. Rules from included
+files come before the rules in the file that includes them.

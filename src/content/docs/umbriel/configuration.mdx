@@ -85,6 +85,21 @@ it without a restart. An optional file that exists must contain valid TOML.
 Files in `[include]` are applied in list order, followed by files in
 `[include.optional]`. Values in the including file override every include.
 
+A key that holds a table is merged key by key, so an include can set
+`colors.accent_primary` while your main config sets `colors.background`. A key
+that holds a list of rules (`[[window_rule]]`, `[[layer_rule]]`,
+`[[security_context_rule]]`, `[[workspace]]`, `[[input.device]]`) collects the
+entries from every file, in the order the files are applied. Every other value,
+including a plain array such as `general.autostart` or
+`output.<name>.position`, is replaced by the last file that sets it. Setting a
+rule list to `[]` replaces it too, which discards the entries earlier files
+contributed.
+
+Because rule lists are collected rather than replaced, a duplicate that is an
+error inside one file is still an error across files: two `[[input.device]]`
+entries with the same `name`, or two `[[workspace]]` entries selecting the same
+workspace, are reported and the config is rejected.
+
 `[include]` accepts `files` and the `optional` sub-table.
 `[include.optional]` accepts only `files`. Unknown keys and invalid types reject
 both main and included configurations.
