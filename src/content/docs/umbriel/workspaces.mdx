@@ -65,6 +65,34 @@ renumbers them, and adds an empty workspace at the end.
 
 Other output and layout settings are refreshed during a reload as well.
 
+## Workspace axis
+
+Each output arranges its workspaces along one axis. `workspace_axis` selects it
+per output and accepts `"vertical"` (the default) or `"horizontal"`:
+
+```toml
+[output.DP-1]
+workspace_axis = "horizontal"
+```
+
+Vertical workspaces stack top to bottom: switching slides the previous workspace
+down and the next one up, and the overview shows one vertical filmstrip. With
+`"horizontal"`, workspaces sit side by side, switching slides them left and
+right, and the overview filmstrip runs horizontally.
+
+The axis also selects the scrolling strip axis, which is always perpendicular to
+it. Vertical workspaces scroll horizontally and horizontal workspaces scroll
+vertically; see [Scrolling layout](/umbriel/layout/#scrolling-layout). Dwindle and
+master workspaces follow their output's axis for switching and the overview,
+like every other layout.
+
+A three-finger swipe along the axis switches workspaces, and a swipe across it
+scrolls the strip. In the overview, the ordinary vertical wheel navigates either
+arrangement, while a horizontal wheel navigates only horizontal workspaces.
+
+An axis change on reload applies to every workspace on the output. Any live
+swipe, strip drag or tiled resize is settled first, and an open overview closes.
+
 ## Workspace selectors
 
 Actions that take a workspace argument, such as `workspace-switch`,
@@ -174,7 +202,6 @@ Strut edges are resolved independently. A rule that sets only
 | `layout.scrolling.default_width_fraction` | float | Optional initial scrolling lane extent (0.1-1.0). It overrides the global and matching output values. When omitted at every level, the client chooses its initial logical extent. Reloading a default does not resize existing columns. |
 | `layout.scrolling.center_underfull_strip` | bool | Center the complete strip whenever it is narrower than the viewport. Disable to left-align underfull strips. |
 | `layout.scrolling.center_focused` | bool | Always center the focused column, including when the setting changes on config reload. |
-| `layout.scrolling.direction` | string | `"horizontal"` or `"vertical"` scroll axis. |
 | `layout.scrolling.expand_single_column` | bool | Fill the viewport for a workspace's lone tiled column, subject to client size hints and viewport bounds. Disable to keep the configured/default width. |
 | `layout.master.position` | string | Side occupied by the master area: `"left"` or `"right"`. |
 | `layout.master.default_width_fraction` | float | Master area fraction when both areas exist (0.1-0.9). |
@@ -195,7 +222,7 @@ layout.mode = "dwindle"
 output = "HDMI-A-1"
 name = "CHAT"
 layout.mode = "scrolling"
-layout.scrolling.direction = "vertical"
+layout.scrolling.center_focused = true
 
 [[workspace]]
 output = "HDMI-A-1"

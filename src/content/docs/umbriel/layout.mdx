@@ -77,14 +77,16 @@ resize; screen-facing edges propose nothing.
 ## Scrolling layout
 
 Scrolling keeps columns at their configured widths and moves the strip through a
-viewport. A column can contain multiple windows. The `direction` setting changes
-which screen axis is the strip axis.
+viewport. A column can contain multiple windows. The strip axis is always
+perpendicular to the owning output's
+[workspace axis](/umbriel/workspaces/#workspace-axis): an output whose workspaces are
+arranged vertically scrolls horizontally, and one whose workspaces are arranged
+horizontally scrolls vertically.
 
 ### Settings
 
 ```toml
 [layout.scrolling]
-direction = "horizontal"             # "horizontal" or "vertical"
 default_width_fraction = 0.5         # remove to let clients choose, 0.1-1.0
 center_underfull_strip = true
 center_focused = false
@@ -93,7 +95,6 @@ expand_single_column = true
 
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
-| `direction` | string | `"horizontal"` | Strip axis: `"horizontal"` places columns left to right, while `"vertical"` places lanes top to bottom. |
 | `default_width_fraction` | float | unset | Initial strip-axis extent for new columns (0.1-1.0). The packaged config sets `0.5`; a matching output or workspace rule can override it. When it is unset at every level, the client chooses its initial extent. |
 | `center_underfull_strip` | bool | `true` | Center the complete strip when it is shorter than the viewport. Disable to align it at the start edge. |
 | `center_focused` | bool | `false` | Always center the focused column. |
@@ -101,20 +102,20 @@ expand_single_column = true
 
 ### Horizontal and vertical scrolling
 
-| Direction | Layout | Width and height actions |
-| --------- | ------ | ------------------------ |
-| `horizontal` | Columns run left to right. Windows within a column stack from top to bottom. | Width actions change a column's strip extent. Height actions change a window's extent within its column. |
-| `vertical` | Horizontal lanes run top to bottom. Windows within a lane sit side by side. | Width actions change a lane's strip extent, which is its height on screen. Height actions change a window's extent within its lane, which is its visual width. |
+| Workspace axis | Layout | Width and height actions |
+| -------------- | ------ | ------------------------ |
+| `vertical` (default) | Columns run left to right. Windows within a column stack from top to bottom. | Width actions change a column's strip extent. Height actions change a window's extent within its column. |
+| `horizontal` | Horizontal lanes run top to bottom. Windows within a lane sit side by side. | Width actions change a lane's strip extent, which is its height on screen. Height actions change a window's extent within its lane, which is its visual width. |
 
-For a vertical workspace, directional actions follow the screen; see
-[Vertical workspaces](#vertical-workspaces). The consume and expel actions use
-the same visual directions: left and right merge or split within the lane, while
-the resulting lane is above or below the focused lane.
+On an output with horizontal workspaces, directional actions follow the screen;
+see [Vertical strips](#vertical-strips). The consume and expel actions use the
+same visual directions: left and right merge or split within the lane, while the
+resulting lane is above or below the focused lane.
 
-The three-finger vertical swipe continues to switch workspaces. A three-finger
-horizontal swipe scrolls a horizontal strip and is inert on a vertical one. Use
-keyboard or wheel bindings to scroll a vertical strip. On a horizontal strip,
-release velocity settles a three-finger swipe against a viewport edge.
+A three-finger swipe along the output's workspace axis switches workspaces. A
+three-finger swipe across it scrolls the strip, and is inert when the workspace
+has no scrolling layout. Release velocity settles the swipe against a viewport
+edge.
 
 ### Scrolling behavior
 
@@ -178,20 +179,21 @@ Dropping a window into empty space above or below a vertically resized stack
 consumes that space. Existing windows retain their pixel heights, and the
 dropped window fills the remainder apart from the configured gap.
 
-## Vertical workspaces
+## Vertical strips
 
-On a vertical scrolling workspace, directional actions follow their visual
-directions. `window-focus-left` and `window-focus-right` move within a lane,
-while `window-focus-up` and `window-focus-down` walk lanes. Likewise,
-`column-move-left` and `column-move-right` reorder within a lane, while
-`window-move-up` and `window-move-down` move the lane along the strip.
-`layout-scroll-left` and `layout-scroll-up` both scroll toward strip start;
-their right and down forms scroll toward strip end.
+On an output with horizontal workspaces the strip is vertical, and directional
+actions follow their visual directions. `window-focus-left` and
+`window-focus-right` move within a lane, while `window-focus-up` and
+`window-focus-down` walk lanes. Likewise, `column-move-left` and
+`column-move-right` reorder within a lane, while `window-move-up` and
+`window-move-down` move the lane along the strip. `layout-scroll-left` and
+`layout-scroll-up` both scroll toward strip start; their right and down forms
+scroll toward strip end.
 
 The default Mod+wheel bindings invoke `window-focus-left` and
-`window-focus-right`, so they move within a lane. Vertical-heavy configurations
-should bind wheel chords to `window-focus-up` and `window-focus-down`, or to
-`layout-scroll-up` and `layout-scroll-down`.
+`window-focus-right`, so they move within a lane. Configurations using vertical
+strips should bind wheel chords to `window-focus-up` and `window-focus-down`, or
+to `layout-scroll-up` and `layout-scroll-down`.
 
 ## Dwindle layout
 
@@ -290,8 +292,8 @@ stacking extent, `window-modify-height:<delta>` changes that fraction by a
 signed amount, and `window-cycle-height` / `window-cycle-height-back` cycle it
 through the same presets in either direction. In scrolling and master layouts
 this sizes a row within its column or area. In dwindle it adjusts the vertical
-splits containing the window. On a vertical scrolling workspace the stacking
-axis is horizontal, so these actions change a window's width within its lane.
+splits containing the window. On a vertical strip the stacking axis is
+horizontal, so these actions change a window's width within its lane.
 
 In the scrolling layout, a window alone in its column is resized from its bottom
 edge, exactly as dragging that edge does: the top edge stays where it is and the

@@ -45,7 +45,11 @@ Click a window to focus it, middle-click to close it, or drag it to another
 workspace. When a click selects a window in another scrolling column, the
 column reveal runs together with the closing zoom. Use the wheel or a 3-finger
 swipe to move through the workspace list. Each wheel notch or swipe step moves
-one workspace at a time. A 4-finger swipe opens or closes the overview.
+one workspace at a time. The filmstrip runs along each output's
+[workspace axis](/umbriel/workspaces/#workspace-axis), so a 3-finger swipe selects
+workspaces along that axis, while the ordinary vertical wheel works on either
+arrangement and a horizontal wheel navigates only horizontal workspaces. A
+4-finger swipe opens or closes the overview.
 
 #### Which window actions act on
 
@@ -53,9 +57,9 @@ No window holds the keyboard while the overview is open, so one card at a time
 carries the full `colors.border.focused` color: the window a focus or close
 action would act on. It sits on the current output, which is the output holding
 the cursor and the one every output-changing keybind warps the cursor to. Each
-other workspace row marks its own window with a fainter border, showing where
-that row would land when you zoom into it. When the current workspace is empty,
-no card is marked, and those actions have nothing to act on.
+other workspace preview marks its own window with a fainter border, showing
+where that preview would land when you zoom into it. When the current workspace
+is empty, no card is marked, and those actions have nothing to act on.
 
 #### Keyboard shortcuts
 
@@ -64,13 +68,12 @@ overview is interactive, so custom Vim-style bindings and non-navigation
 actions operate on the selected workspace and card without a separate overview
 mapping. Direct `window-focus-left` and `window-focus-right` actions select
 neighboring cards. Direct `window-focus-up` and `window-focus-down` retain their
-normal layout-specific behavior. With the default horizontal strip direction,
-they traverse stacked cards in the current column. Plain `Left`/`Right` keys
-that reach the overview fallback invoke the horizontal focus actions, while
-fallback `Up`/`Down` keys invoke `window-focus-or-workspace-up` and
-`window-focus-or-workspace-down`: they select a card above or below in the
-current workspace and step to the previous or next workspace row only when the
-layout has no card in that direction.
+normal layout-specific behavior: with the default vertical workspace axis the
+strip is horizontal, so they traverse stacked cards in the current column. Plain
+arrow keys that reach the overview fallback first move focus to a neighboring
+card in that direction, and step to the previous or next workspace only when the
+arrow runs along the output's workspace axis and the layout has no card that
+way. An arrow across the workspace axis never switches workspace.
 
 Composite focus actions keep their normal local-first behavior. For example,
 `window-focus-or-workspace-down` first tries a window below and then selects the
@@ -86,9 +89,9 @@ extending the closing zoom.
 
 Window cards show shortcut badges while the overview is open. Press a badge
 label without modifiers to focus that window and close the overview. Every card
-in the visible workspace rows receives a label, including scrolling-layout
+in the visible workspace previews receives a label, including scrolling-layout
 cards that are temporarily beyond an output edge. Their badges appear with the
-cards when the horizontal strip moves.
+cards when the strip moves.
 
 Favorite keys are assigned in `shortcut_keys` order. Cards on the active
 workspace receive them first, and the preferred output is assigned before other
@@ -110,9 +113,9 @@ characters. Letter uniqueness ignores case, while badges preserve the case
 written in the configuration.
 
 Middle-click still closes a window card, but the close is sent on button
-release. Drag the middle button vertically instead to step through workspace
-rows without using the keyboard; moving beyond the drag threshold suppresses
-the close.
+release. Drag the middle button along the output's workspace axis instead to
+step through workspaces without using the keyboard; moving beyond the drag
+threshold suppresses the close.
 
 An active client drag takes precedence. Umbriel ignores requests to open the
 overview until the pointer button that initiated the drag is released.
