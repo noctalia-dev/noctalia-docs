@@ -11,15 +11,6 @@ export default defineConfig({
   vite: {
     logLevel: "error",
   },
-  redirects: {
-    "/v5/greeter/": "/greeter/",
-    "/v5/shell/": "/noctalia/configuration/shell/",
-    "/v5/system/network/wpa_supplicant/": "/noctalia/getting-started/faq/#wpa-supplicant",
-    "/v5/": "/noctalia/",
-    "/v4/": "/noctalia-shell-legacy/",
-    "/noctalia-shell/": "/noctalia-shell-legacy/",
-    "/noctalia/system/network/wpa_supplicant/": "/noctalia/getting-started/faq/#wpa-supplicant",
-  },
   integrations: [
     pagefindCodeWeight(),
     starlight({
