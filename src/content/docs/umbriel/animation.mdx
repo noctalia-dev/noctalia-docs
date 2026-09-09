@@ -234,8 +234,8 @@ completion, so their endpoint must match the normal visible or hidden state.
 Return premultiplied RGBA. Preserve the sampled alpha when modifying colors,
 especially for borders: a shader returning an opaque constant can fill the
 otherwise transparent center of a border's rectangular target. Samples use the
-compositor's working color space: gamma 2.2 for ordinary SDR composition and
-linear light when the color-management pass uses an FP16 intermediate target.
+compositor's working color space: sRGB for ordinary SDR composition and linear
+light when the color-management pass uses an FP16 intermediate target.
 There is no previous-frame sampler.
 
 ### Targets and composition

@@ -265,6 +265,10 @@ not keep HDR enabled. Leaving fullscreen, changing workspace, moving the
 surface to another output, unmapping it, or closing it returns the output to
 SDR.
 
+Normal SDR outputs and implicit surfaces use the sRGB transfer curve. The
+preferred encoding for color-managed SDR clients is gamma 2.2; tagged content
+is converted to the sRGB target, while ordinary sRGB pixels keep their values.
+
 Automatic HDR follows metadata committed by the client, including metadata on
 mapped subsurfaces used by native Wayland Wine. It cannot infer a color space
 from pixel values. Direct XWayland games and other clients that do not attach
