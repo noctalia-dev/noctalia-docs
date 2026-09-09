@@ -82,6 +82,7 @@ opening settings do not overwrite user changes made in the meantime.
 |-----|------|-------------|
 | `default_output` | string | Open on a specific output (e.g. `"DP-1"`). |
 | `default_workspace` | int or string | Place on an existing workspace by 1-based position (1 to 64) or exact, case-sensitive name. On dynamic outputs, integer positions beyond the current count clamp to the last workspace; names never clamp. |
+| `default_scratchpad` | string | Store the window in the implicit `"default"` scratchpad or an exact configured scratchpad name. Hidden scratchpads stay hidden and do not take focus. |
 | `default_fullscreen` | bool | Open fullscreen across the entire output, ignoring layout struts and layer-shell exclusive zones. |
 | `default_floating` | bool | Force floating (`true`) or force tiling (`false`). |
 | `default_maximize` | bool | Open maximized. A tiled column still respects layout struts and gaps. Parented transient dialogs keep their natural size. |
@@ -144,6 +145,38 @@ name. Integer positions can infer an output only when exactly one static
 inventory owns that position. Otherwise Umbriel keeps the launch output and
 resolves the target there. If it does not exist there, Umbriel keeps the normal
 workspace placement.
+
+## Scratchpad placement
+
+`default_scratchpad` stores a matching window directly in a scratchpad when it
+opens:
+
+```toml
+[[scratchpad]]
+name = "terminal"
+
+[[window_rule]]
+match.app_id = "^scratchpad-terminal$"
+default_scratchpad = "terminal"
+default_output = "DP-1"
+default_workspace = 2
+```
+
+With no `[[scratchpad]]` definitions, the only valid target is `"default"`.
+With named definitions, the value must exactly match one of their names.
+Unknown names are ignored and reported in the configuration diagnostics.
+
+A hidden scratchpad remains hidden and the new window does not take focus. If
+the selected scratchpad is already visible, the window joins it where it is
+currently shown. `default_output` and `default_workspace` select the window's
+saved restore destination. `default_floating` selects whether restoring it
+returns it tiled or floating.
+
+Scratchpad presentation takes precedence over `default_pinned`,
+`default_fullscreen`, `default_maximize`, and `default_maximize_to_edges`.
+The enabled `animation.scratchpad` fullscreen, maximize, or scale setting also
+takes precedence over opening size and position settings. A matching title
+that arrives just after mapping can still select the scratchpad rule.
 
 ## Floating position
 

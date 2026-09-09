@@ -67,6 +67,30 @@ On config reload, windows in a removed scratchpad return to their individually
 saved outputs and workspaces. This also happens to windows in the implicit
 `default` scratchpad when the first named definition is added.
 
+## Assigning new windows automatically
+
+Use the opening-only `default_scratchpad` window rule to store matching windows
+as soon as they open:
+
+```toml
+[[scratchpad]]
+name = "terminal"
+
+[[window_rule]]
+match.app_id = "^scratchpad-terminal$"
+default_scratchpad = "terminal"
+```
+
+Launch this example with `foot --app-id scratchpad-terminal`. The
+window opens hidden in `terminal`, ready for `scratchpad-toggle:terminal`.
+With no named definitions, use `default_scratchpad = "default"` instead.
+
+The window remembers the output, workspace, and tiled or floating state it
+would otherwise have opened with. `default_output`, `default_workspace`, and
+`default_floating` therefore control where and how it returns when restored.
+If the scratchpad is already visible, the new window joins it without hiding
+the existing members.
+
 ## Actions
 
 | Action | What it does |
