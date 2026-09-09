@@ -92,10 +92,18 @@ just install
 
 ## Starting Umbriel
 
-Installed display-manager sessions use `start-umbriel`. When a systemd user
-manager is available, the launcher runs Umbriel as a user service so the
-session inherits variables from `environment.d`. On other init systems it
-starts the compositor directly.
+Installed display-manager sessions use `start-umbriel`. For supported account
+shells listed in `/etc/shells`, including bash, zsh, and fish, the launcher
+enters the configured shell as a noninteractive login shell before starting a
+native session. Exports from its login profile, such as `~/.zprofile` for zsh,
+are inherited by Umbriel and the session. Interactive startup files such as
+`~/.zshrc` are not read. Starting `start-umbriel` from a TTY performs this step
+even if the TTY login already loaded the profile.
+
+When a systemd user manager is available, the launcher imports that environment
+and runs Umbriel as a user service. This also includes variables from
+`environment.d`. On other init systems it starts the compositor directly with
+the login environment.
 
 Run `umbriel` directly for nested development sessions or explicit unmanaged
 startup.

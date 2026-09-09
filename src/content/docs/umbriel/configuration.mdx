@@ -196,8 +196,9 @@ GTK_THEME = "Adwaita:dark"
 QT_QPA_PLATFORMTHEME = "qt5ct"
 ```
 
-Umbriel exports these variables to itself and commands it starts. In a native
-session, it also publishes them to the systemd user manager before
+Umbriel exports these variables to itself and commands it starts. They override
+values inherited from the login profile loaded by `start-umbriel`. In a native
+session, Umbriel also publishes them to the systemd user manager before
 `umbriel-session.target` starts. Systemd session services such as Noctalia
 inherit the same values, as do applications they launch. D-Bus receives the
 graphical connection variables but not arbitrary configured variables, because
