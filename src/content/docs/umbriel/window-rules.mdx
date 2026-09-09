@@ -126,21 +126,24 @@ default_workspace = 2       # Position 2
 # default_workspace = "CHAT" # Workspace named "CHAT"
 ```
 
+Action strings carry the same distinction with different syntax:
+`workspace-switch:2` selects position 2, while `workspace-switch:"2"`
+selects the exact name `"2"`.
+
 On a dynamic output, an integer beyond the current workspace count selects the
 last workspace. A string never clamps to another name. A name such as `"CHAT"`
-therefore needs to exist already, normally in a static output inventory such as
-`workspaces = ["WEB", "CHAT"]`. The setting does not add named workspaces to a
-dynamic output.
+can come from a static name list or from a name-based `[[workspace]]` entry that
+materializes it on a dynamic output. `default_workspace` itself still selects
+only an existing workspace and never creates one.
 
 An explicit `default_output` selects the output first and scopes either form of
-`default_workspace` to it. Without `default_output`, a target owned by exactly
-one static output inventory also selects that output. For example, if only
-`DP-1` has a fourth configured workspace, `default_workspace = 4` opens there
-even when the window was launched from another output. The same applies to an
-exact name such as `"CHAT"` when only one static inventory contains it. If
-several static outputs contain the position or name, Umbriel keeps the launch
-output and resolves the target there. If the target does not exist there,
-Umbriel keeps the normal workspace placement.
+`default_workspace` to it. Without `default_output`, an exact name found on
+exactly one live output selects that output. If several outputs contain the
+same output-local name, Umbriel uses the launch output when it contains that
+name. Integer positions can infer an output only when exactly one static
+inventory owns that position. Otherwise Umbriel keeps the launch output and
+resolves the target there. If it does not exist there, Umbriel keeps the normal
+workspace placement.
 
 ## Floating position
 

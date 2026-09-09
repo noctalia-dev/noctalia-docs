@@ -19,7 +19,7 @@ are required, `[bracket]` forms are optional.
 |------|---------|
 | `<cmd>` | Command line, run through the shell: `spawn:kitty` |
 | `<name>` | Submap to enter; `submap:reset` leaves one level |
-| `<workspace>[/<output>]` | Workspace name or 1-based position, optionally qualified by output: `workspace-switch:CHAT/HDMI-A-1` |
+| `<workspace>[/<output>]` | Bare digits select a 1-based position, other text selects a name, and double quotes force a name; append `/output` to scope either form |
 | `<window-id>` | Window id from `umbriel windows` |
 | `[<window-id>]` | The same id; the bare action targets the focused window |
 | `[<output>]` | Connector or monitor name. Bare `dpms-off` and `dpms-on` target every configured output |
@@ -140,7 +140,7 @@ multi-output behavior.
 
 ## Workspaces
 
-Selector resolution, including numeric names and `/output` qualifiers, is
+Selector resolution, including forced numeric names and `/output` qualifiers, is
 described in [Workspace selectors](/umbriel/workspaces/#workspace-selectors).
 
 | Action | Effect |

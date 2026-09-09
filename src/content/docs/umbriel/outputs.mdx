@@ -92,7 +92,7 @@ output is reconfigured, so reconnecting the display or reloading the configurati
 | `direct_scanout`                             | bool                              | `true`      | Permit eligible client buffers to bypass composition on this output. Set to `false` to always composite.                                            |
 | `hdr`                                        | string                            | `"off"`     | HDR policy: `"off"`, `"on"`, `"auto"`, or `"fullscreen"`.                                                                                           |
 | `sdr_white`                                  | float                             | `203`       | SDR reference white in cd/m2 while the output is in HDR mode (80-1000).                                                                             |
-| `workspaces`                                 | int, string array, or `"dynamic"` | `"dynamic"` | Dynamic numbered workspaces, a static count from 1 to 64, or a static ordered list of 1 to 64 names.                                                |
+| `workspaces`                                 | int, string array, or `"dynamic"` | `"dynamic"` | A dynamic inventory, which may include names declared by `[[workspace]]`, 1 to 64 anonymous fixed positions, or a static ordered list of 1 to 64 names. |
 | `min_workspaces`                             | int                               | `1`         | Workspace count a dynamic output never shrinks below (1-64). Rejected together with a static `workspaces` inventory.                                |
 | `workspace_axis`                             | string                            | `"vertical"` | Axis the output's workspaces are arranged along: `"vertical"` or `"horizontal"`. The scrolling strip runs perpendicular to it. See [Workspace axis](/umbriel/workspaces/#workspace-axis). |
 | `transform`                                  | string                            | `"normal"`  | Output rotation/flip.                                                                                                                               |
@@ -100,8 +100,9 @@ output is reconfigured, so reconnecting the display or reloading the configurati
 
 ### Workspace count
 
-`workspaces` chooses the model: omitted or `"dynamic"` for dynamic numbered
-workspaces, a count or ordered name list for a static inventory.
+`workspaces` chooses the model: omitted or `"dynamic"` for dynamic workspaces,
+an integer count for anonymous fixed positions, or an ordered string list for
+named static workspaces.
 
 On a dynamic output, `min_workspaces` is a floor on the count. The output keeps
 that many workspaces while they are empty, still adds a trailing empty one above
@@ -115,6 +116,15 @@ min_workspaces = 3
 The floor is per output. Setting it alongside a static `workspaces` inventory is
 a configuration error, since that inventory already states an exact count. See
 [Workspaces](/umbriel/workspaces/#choose-a-workspace-model).
+
+A name-based `[[workspace]]` entry adds a persistent named member to matching
+dynamic outputs. An entry without `output` applies independently to every
+dynamic output. These named members remain empty without being pruned. Below
+the 64-workspace limit, they do not replace the trailing empty anonymous
+workspace or the optional leading one. Static inventories remain exact in the
+configuration: their workspace rules can customize existing members but cannot
+add new ones. See
+[Persistent names in a dynamic inventory](/umbriel/workspaces/#persistent-names-in-a-dynamic-inventory).
 
 ### Initial scrolling width
 
