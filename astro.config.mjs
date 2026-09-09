@@ -175,6 +175,7 @@ export default defineConfig({
             { label: "Outputs", link: "umbriel/outputs/" },
             { label: "Keybinds", link: "umbriel/keybinds/" },
             { label: "Actions", link: "umbriel/actions/" },
+            { label: "IPC", link: "umbriel/ipc/" },
             { label: "Input", link: "umbriel/input/" },
             { label: "Appearance", link: "umbriel/appearance/" },
             { label: "Animation", link: "umbriel/animation/" },
