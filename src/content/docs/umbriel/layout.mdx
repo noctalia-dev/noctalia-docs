@@ -89,14 +89,14 @@ horizontally scrolls vertically.
 [layout.scrolling]
 default_width_fraction = 0.5         # remove to let clients choose, 0.1-1.0
 center_underfull_strip = true
-center_focused = false
+center_focused = "never"             # "never", "always", or "on_overflow"
 ```
 
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
 | `default_width_fraction` | float | unset | Initial strip-axis extent for new columns (0.1-1.0). The packaged config sets `0.5`; a matching output or workspace rule can override it. When it is unset at every level, the client chooses its initial extent. |
 | `center_underfull_strip` | bool | `true` | Center the complete strip when it is shorter than the viewport. Disable to align it at the start edge. |
-| `center_focused` | bool | `false` | Always center the focused column. |
+| `center_focused` | string | `"never"` | When a focus change centers the newly focused column. `"never"` only scrolls far enough to reveal it, `"always"` centers it, and `"on_overflow"` centers it when it cannot share the viewport with the neighboring column on the side focus came from. |
 
 ### Horizontal and vertical scrolling
 
