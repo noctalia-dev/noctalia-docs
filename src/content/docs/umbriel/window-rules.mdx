@@ -172,6 +172,10 @@ currently shown. `default_output` and `default_workspace` select the window's
 saved restore destination. `default_floating` selects whether restoring it
 returns it tiled or floating.
 
+Without a scratchpad geometry override, `default_size`, `default_width`,
+`default_height`, and `default_position` set the window's initial scratchpad
+geometry using the assigned output's usable area.
+
 Scratchpad presentation takes precedence over `default_pinned`,
 `default_fullscreen`, `default_maximize`, and `default_maximize_to_edges`.
 The enabled `animation.scratchpad` fullscreen, maximize, or scale setting also
