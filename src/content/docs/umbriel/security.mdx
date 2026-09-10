@@ -35,6 +35,11 @@ hidden from restricted clients until it has received a security review.
 Trusted host services such as xdg-desktop-portal can mediate capture and other
 privileged operations for a sandboxed application.
 
+Restricted clients receive the xdg-foreign exporter but not the importer. A
+sandboxed application can export one of its windows and hand the handle to a
+portal, which imports it to parent its dialog. Parenting a window to another
+client's window stays with unrestricted processes.
+
 ## Per-application grants
 
 Some protocols have no portal equivalent. A status bar needs layer-shell, a
