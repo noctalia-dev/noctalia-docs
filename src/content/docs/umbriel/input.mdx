@@ -59,6 +59,11 @@ their own XKB keymaps, and Umbriel attaches each device to the seat only after
 its first usable keymap is ready. Applications therefore never receive the
 temporary empty keymap from a virtual keyboard that is still initializing.
 
+If the current keyboard disappears, Umbriel immediately selects another
+connected keyboard with a usable keymap, when available. Newly opened
+applications receive that keymap without waiting for keyboard input, including
+when an input method destroys its virtual keyboard.
+
 `layout` takes a comma-separated list to load several layouts at once
 (`layout = "us,de"`, optionally with a matching `variant = ",nodeadkeys"`). The
 first entry is active at startup. Switch between them with the
