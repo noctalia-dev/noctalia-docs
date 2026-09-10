@@ -21,7 +21,7 @@ printf '{"cmd":"workspaces"}\n' | socat -t 5 STDIO "$UMBRIEL_SOCKET"
 | Request | CLI | Reply |
 | ------- | --- | ----- |
 | `{"cmd":"windows"}` | `umbriel windows --json` | window list with ids, app ids, titles, client pids, geometry, workspace ids, and scratchpad membership |
-| `{"cmd":"workspaces"}` | `umbriel workspaces --json` | workspace list with names, named flags, indices, outputs, active/focused flags, layout modes |
+| `{"cmd":"workspaces"}` | `umbriel workspaces --json` | workspace list with names, named flags, indices, outputs, active/focused/occupied flags, layout modes |
 | `{"cmd":"submap"}` | `umbriel submap --json` | active keybind submap, or `null` |
 | `{"cmd":"layers"}` | `umbriel layers --json` | layer-shell surfaces |
 | `{"cmd":"msg","arg":"<action>"}` | `umbriel msg <action>` | runs an [action](/umbriel/actions/) |
@@ -50,6 +50,11 @@ dynamic inventory. Clients should use `named` rather than guessing from the
 workspace can change `name` and `index` when it moves or when dynamic neighbors
 are pruned; its `id` remains stable for that workspace's lifetime.
 
+Each workspace entry also carries an `occupied` boolean: `true` while the
+workspace holds at least one window, including windows that are not currently
+visible. A window stored in a scratchpad belongs to no workspace, so it does
+not make its return destination occupied.
+
 ## Event stream
 
 ```json
@@ -66,7 +71,7 @@ line is `{"event":"<family>","data":…}`.
 | `overview` | the overview opening or closing |
 | `keyboard_layout` | layout switches; skipped in the initial state when no keyboard exists |
 | `windows` | window open, close, focus, title, app id, geometry, workspace, scratchpad membership, floating state |
-| `workspaces` | layout mode, activation, names, named status, indices, and workspace or output membership |
+| `workspaces` | layout mode, activation, occupancy, names, named status, indices, and workspace or output membership |
 | `submap` | the active keybind submap changing; `null` is the default context |
 
 Subscribing to an unknown family answers
