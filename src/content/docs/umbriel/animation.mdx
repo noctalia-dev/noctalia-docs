@@ -227,11 +227,13 @@ Write GLSL ES 1.00 with the entry point `vec4 animation(vec2 uv)`. Umbriel suppl
 | --- | --- |
 | `uv` | Normalized target coordinates: top-left `(0, 0)`, bottom-right `(1, 1)`, independent of output rotation |
 | `umbriel_sample(vec2 uv)` | Sample the rendered target; coordinates outside the target/output return transparent black |
+| `umbriel_sample_previous(vec2 uv)` | Sample this effect's prior successfully submitted result; the first sample uses the current rendered target |
 | `umbriel_size` | Current target bounding width and height in logical units |
 | `umbriel_progress` | Eased transition progress, normally 0 to 1; springs and overshooting curves may exceed that range |
 | `umbriel_clamped_progress` | Eased progress clamped to 0 to 1 |
 | `umbriel_linear_progress` | Timeline fraction before easing |
 | `umbriel_direction` | `1` for opening/showing/focusing, `-1` for closing/hiding/unfocusing; movement uses the sign of its controlling scalar, overview settling uses `1` |
+| `umbriel_random_seed` | Four independent pseudorandom values in `[0, 1)`, stable for one transition and refreshed for the next transition |
 
 Progress always advances from the transition's start toward its end, including
 when closing. For a shared show/hide shader, use
@@ -244,7 +246,30 @@ especially for borders: a shader returning an opaque constant can fill the
 otherwise transparent center of a border's rectangular target. Samples use the
 compositor's working color space: sRGB for ordinary SDR composition and linear
 light when the color-management pass uses an FP16 intermediate target.
-There is no previous-frame sampler.
+
+Calling `umbriel_sample_previous` opts that effect into target-local feedback.
+It samples the prior post-shader result for the same scene target, effect slot,
+output, and renderer. It is not a copy of the desktop or output. On the first
+rendered frame, it samples the current unprocessed target, so a shared shader
+can always start from valid content. Coordinates outside the target return
+transparent black.
+
+Feedback follows the target when it moves. If its size changes, the prior result
+is resampled over the new normalized target coordinates. A new transition or
+shader starts fresh, while an interrupted effect keeps its result when Umbriel
+transfers it into a closing snapshot. Output rotation, working color format, or
+renderer changes also start fresh.
+
+Feedback keeps two buffers for each active target, event, and output that uses
+it. Their size follows the target, and color-managed composition uses FP16
+buffers. Avoid enabling feedback in effects that do not need it, especially on
+large workspace or overview targets. If those buffers cannot be allocated,
+Umbriel still runs the shader with the current target as the previous sample.
+
+`umbriel_random_seed` is intended for visual variation, not cryptography. Its
+four channels remain unchanged throughout a transition, including spring
+oscillation. If an active effect is transferred into a closing snapshot, that
+effect keeps its seed; the new closing transition receives its own seed.
 
 ### Targets and composition
 
