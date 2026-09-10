@@ -96,6 +96,10 @@ opening settings do not overwrite user changes made in the meantime.
 | `default_scrolling_column` | string | Scrolling windows only. Place windows with the same non-empty name in one column. Floating windows and other layout modes ignore it. |
 | `default_scrolling_column_order` | int | Scrolling windows only. Position within `default_scrolling_column`, independent of launch timing. Lower values open higher in horizontal scrolling and farther left in vertical scrolling. Windows without an order follow ordered windows. |
 
+Parented toplevels, usually dialogs, float by default even when their parent is
+still opening. Set `default_floating = false` in a matching rule to force one to
+tile instead.
+
 For tiled windows, `default_maximize` expands the column to the full width
 inside configured struts and gaps; for floating windows, it fills the usable
 area. Client maximize requests made before the window maps are honored only when
