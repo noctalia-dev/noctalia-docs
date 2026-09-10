@@ -192,8 +192,8 @@ renderer design.
 
 ```toml
 [environment]
-GTK_THEME = "Adwaita:dark"
-QT_QPA_PLATFORMTHEME = "qt5ct"
+ELECTRON_OZONE_PLATFORM_HINT = "auto"
+SDL_VIDEODRIVER = "wayland"
 ```
 
 Umbriel exports these variables to itself and commands it starts. They override
