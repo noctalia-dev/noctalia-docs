@@ -228,7 +228,8 @@ windows, that area fills the complete content box.
 [layout.master]
 position = "left"                   # "left" or "right"
 default_width_fraction = 0.55       # 0.1-0.9
-new_on_top = true                    # place new windows at the top of the stack
+new_on_top = true                   # place new windows at the top of the stack
+new_becomes_master = false          # new windows take the master slot
 ```
 
 | Key | Type | Default | Description |
@@ -236,11 +237,14 @@ new_on_top = true                    # place new windows at the top of the stack
 | `position` | string | `"left"` | Side occupied by the master area: `"left"` or `"right"`. |
 | `default_width_fraction` | float | `0.55` | Initial fraction assigned to the master area when both areas exist (0.1-0.9). |
 | `new_on_top` | bool | `true` | Place new windows at the top of the stack. Disable to place them at the bottom. |
+| `new_becomes_master` | bool | `false` | Give the master slot to each new window and move the last master row to the stack top. |
 
 ### Behavior
 
 The first window becomes master. A new window also becomes master when the
-master area is empty. Otherwise it joins the top of the stack when
+master area is empty. With `new_becomes_master = true` every new window takes
+the top master slot and the last master row moves to the stack top, leaving the
+master count unchanged. Otherwise a new window joins the top of the stack when
 `new_on_top = true`, or the bottom when it is false. Removing the final master
 window promotes the top stack window. Moving every window out of master does
 not promote one, so the remaining stack stays full-width until another window
