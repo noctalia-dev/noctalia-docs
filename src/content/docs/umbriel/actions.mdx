@@ -240,6 +240,10 @@ their visual directions; see [Vertical strips](/umbriel/layout/#vertical-strips)
   `window-swap-next` and `window-swap-previous` exchange the focused tiled
   window with its layout-order neighbor, wrap at both ends, and keep focus on
   the moved window.
+- **Focus memory.** Directional focus that leaves the current group lands on
+  the window that was focused there most recently: the target column in
+  scrolling and master, the split it enters in dwindle. When nothing in that
+  group has been focused yet, it lands on the geometric neighbor.
 - **Workspace order.** `workspace-next`, `workspace-previous`, `workspace-move-
   up`, and `workspace-move-down` never wrap: on the first workspace, the
   previous forms are silent no-ops. On a dynamic output, `workspace-next`
