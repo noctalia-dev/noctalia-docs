@@ -297,6 +297,23 @@ space above itself instead. In master and dwindle, a window with no neighbor on
 the stacking axis has nothing to trade space with, so the height actions leave
 it unchanged.
 
+### Client minimum sizes
+
+A client can keep a buffer larger than its assigned tile, including when its
+minimum size exceeds the available space. Umbriel clips that content to the
+tile at rest. Interactive resize may temporarily scale the buffer; releasing
+the grab restores unscaled content for the window and its resized neighbors,
+without waiting for another client commit.
+
+Vesktop enforces a 940×500 logical-pixel minimum by default. To allow smaller
+tiles, open **User Settings**, select **Vesktop** in the left sidebar under
+**Vencord Settings** (below **Backup & Restore**), then enable
+**Behaviour → Disable minimum window size** (`disableMinSize`). Open this page
+directly: the settings search does not find this option.
+
+This removes Vesktop's minimum-size constraint, but does not guarantee that
+all of its interface adapts to very narrow or short tiles.
+
 ### Floating windows
 
 All of the width and height actions resize a focused floating window directly,
