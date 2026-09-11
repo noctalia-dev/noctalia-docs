@@ -122,7 +122,7 @@ Sizing rules per layout live in [Sizing behavior](/umbriel/layout/#sizing-behavi
 | `window-toggle-fullscreen` | Toggle fullscreen or exit a window covering the focus |
 | `window-toggle-maximize` | Toggle full width for the focused column |
 | `window-toggle-maximize-to-edges` | Toggle maximize without gaps, struts, or borders |
-| `window-toggle-pinned` | Pin the focused window above other windows |
+| `window-toggle-pinned` | Pin the focused window above other windows, or restore its pre-pin tiled or floating state |
 
 ## Scratchpad
 
@@ -261,8 +261,12 @@ their visual directions; see [Vertical strips](/umbriel/layout/#vertical-strips)
   slightly below and to the right of its tiled position while keeping it on-
   screen. `window-toggle-pinned` floats the window and keeps it above fullscreen
   windows on its output, visible across workspace switches and hidden for as
-  long as the overview is open. A fullscreen window cannot be pinned, and making
-  a pinned window fullscreen drops the pin.
+  long as the overview is open. Unpinning restores the state from before it was
+  pinned: a tiled window returns to its layout, while a floating window remains
+  floating with its saved geometry. Use `window-toggle-floating` to unpin and
+  place a pinned window in the layout regardless of its pre-pin state. A
+  fullscreen window cannot be pinned, and making a pinned window fullscreen
+  drops the pin.
 - **Unavailable actions.** When an action has no meaning in the active layout,
   its keybind does nothing and `umbriel msg` returns an error naming the
   requirement.
