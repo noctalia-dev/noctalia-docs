@@ -94,6 +94,7 @@ export default defineConfig({
                 { label: "How configuration works", link: "noctalia/configuration/" },
                 { label: "Shell", link: "noctalia/configuration/shell/" },
                 { label: "Date format tokens", link: "noctalia/configuration/date-format-tokens/" },
+                { label: "Secret Service & keyrings", link: "noctalia/configuration/secret-service/" },
               ],
             },
             {
