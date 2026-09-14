@@ -172,5 +172,11 @@
     "noctaliaVersion": null,
     "feature": "get-color",
     "introduced": "`noctalia.getColor(role)` for reading colors from the active theme palette."
+  },
+  {
+    "level": 32,
+    "noctaliaVersion": null,
+    "feature": "container-tooltip",
+    "introduced": "The `tooltip` prop on `ui.box`, `ui.row`, `ui.column`, and `ui.image`, shown on hover."
   }
 ]
