@@ -96,7 +96,7 @@ output is reconfigured, so reconnecting the display or reloading the configurati
 | `min_workspaces`                             | int                               | `1`         | Workspace count a dynamic output never shrinks below (1-64). Rejected together with a static `workspaces` inventory.                                |
 | `workspace_axis`                             | string                            | `"vertical"` | Axis the output's workspaces are arranged along: `"vertical"` or `"horizontal"`. The scrolling strip runs perpendicular to it. See [Workspace axis](/umbriel/workspaces/#workspace-axis). |
 | `transform`                                  | string                            | `"normal"`  | Output rotation/flip.                                                                                                                               |
-| `layout.scrolling.default_width_fraction`    | float                             | inherited   | Initial scrolling strip-axis extent for new columns on this output (0.1-1.0). Inherits the global value when omitted.                               |
+| `layout.scrolling.default_extent_fraction`    | float                             | inherited   | Initial scrolling strip-axis extent for new columns on this output (0.1-1.0). Inherits the global value when omitted.                               |
 
 ### Workspace count
 
@@ -132,7 +132,7 @@ Override the global initial scrolling width for every workspace on one output:
 
 ```toml
 [output.DP-1.layout.scrolling]
-default_width_fraction = 0.4
+default_extent_fraction = 0.4
 ```
 
 The output name uses the same connector or monitor identity matching as the

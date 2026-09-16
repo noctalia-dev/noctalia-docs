@@ -110,7 +110,7 @@ honored.
 |-----|------|--------|-------------|
 | `default_floating_size_px` | table | Floating | Initial logical-pixel size as `{ width = int, height = int }`. Each axis is optional and clamped to the client's min/max hints. A configured pixel axis takes precedence over the same axis in `default_floating_size`. |
 | `default_floating_size` | table | Floating | Initial fractional size as `{ width = float, height = float }`. Each optional axis is a fraction (0.1-1.0) of the corresponding usable-area axis. |
-| `default_scrolling_extent_px` | int | Scrolling | Initial extent in logical pixels along the scrolling axis. Overrides `layout.scrolling.default_width_fraction`, and takes precedence over `default_scrolling_extent`. |
+| `default_scrolling_extent_px` | int | Scrolling | Initial extent in logical pixels along the scrolling axis. Overrides `layout.scrolling.default_extent_fraction`, and takes precedence over `default_scrolling_extent`. |
 | `default_scrolling_extent` | float | Scrolling | Initial extent as a fraction (0.1-1.0) of scrolling-axis extent. |
 | `default_position` | table | Floating | Initial position in pixels, from the given anchor point: `{ x = int, y = int, anchor = string }`. |
 
@@ -140,7 +140,7 @@ fill the viewport. A vertical strip applies the fraction to lane height. Existin
 named columns keep their established extent.
 
 If no default scrolling extent rule nor a matching
-`layout.scrolling.default_width_fraction` is set, a scrolling window chooses
+`layout.scrolling.default_extent_fraction` is set, a scrolling window chooses
 its initial logical extent.
 
 ### Floating position
@@ -322,7 +322,7 @@ with these settings right away, in the same configure that carries its first
 size, so its first frame is already the one the rule asks for. The rule still
 owns that state: the window gives it up when a second window arrives. When the
 window's normal rules set no default extent, the extent it returns to is
-`layout.scrolling.default_width_fraction`, because the alone extent, not the
+`layout.scrolling.default_extent_fraction`, because the alone extent, not the
 client's own preference, sized the window as it opened.
 
 The rule is compatible with other matches.

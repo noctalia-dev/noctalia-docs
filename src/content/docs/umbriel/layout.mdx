@@ -87,14 +87,14 @@ horizontally scrolls vertically.
 
 ```toml
 [layout.scrolling]
-default_width_fraction = 0.5         # remove to let clients choose, 0.1-1.0
+default_extent_fraction = 0.5         # remove to let clients choose, 0.1-1.0
 center_underfull_strip = true
 center_focused = "never"             # "never", "always", or "on_overflow"
 ```
 
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
-| `default_width_fraction` | float | unset | Initial strip-axis extent for new columns (0.1-1.0). The packaged config sets `0.5`; a matching output or workspace rule can override it. When it is unset at every level, the client chooses its initial extent. |
+| `default_extent_fraction` | float | unset | Initial strip-axis extent for new columns (0.1-1.0). The packaged config sets `0.5`; a matching output or workspace rule can override it. When it is unset at every level, the client chooses its initial extent. |
 | `center_underfull_strip` | bool | `true` | Center the complete strip when it is shorter than the viewport. Disable to align it at the start edge. |
 | `center_focused` | string | `"never"` | When a focus change centers the newly focused column. `"never"` only scrolls far enough to reveal it, `"always"` centers it, and `"on_overflow"` centers it when it cannot share the viewport with the neighboring column on the side focus came from. |
 
@@ -117,7 +117,7 @@ edge.
 
 ### Scrolling behavior
 
-The packaged config sets `default_width_fraction = 0.5`, so new columns start at
+The packaged config sets `default_extent_fraction = 0.5`, so new columns start at
 half the viewport. If the option is omitted, Umbriel leaves the strip-axis
 extent unconstrained during the initial configure and retains the logical size
 chosen by the client. A numeric `default_scrolling_extent` window rule takes precedence.
@@ -135,10 +135,10 @@ that output's section:
 
 ```toml
 [output.DP-1.layout.scrolling]
-default_width_fraction = 0.4
+default_extent_fraction = 0.4
 
 [output."Microstep MSI G2712F CD6T084401192".layout.scrolling]
-default_width_fraction = 0.6
+default_extent_fraction = 0.6
 ```
 
 Connector and monitor names follow the normal [output identity](/umbriel/outputs/)
@@ -148,7 +148,7 @@ match the same display.
 The initial width is resolved from the global setting, then the matching output
 setting, then a matching workspace rule without an `output`, and finally a
 matching workspace rule with an `output`. Each later value takes precedence.
-Only `default_width_fraction` has this output-level layout override; the other
+Only `default_extent_fraction` has this output-level layout override; the other
 layout settings remain global or per workspace.
 
 Changing any of these defaults on reload affects columns created afterward. It
