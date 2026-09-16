@@ -384,10 +384,10 @@ or column move to another workspace or output, and a foreign-toplevel
 activation request from a dock or taskbar. This applies whether the matching
 action comes from a keybind, wheel bind, or IPC. Pointer-driven focus, automatic
 focus after a window closes, gestures, and overview selection do not warp the
-cursor. `window-focus:<id>` remains focus-only; use
-`window-focus-warp:<id>` when an individual id-based request must always move
-the cursor. Either action summons a target that is hidden in a scratchpad to
-the output under the pointer before focusing it.
+cursor. `window-focus:<id>` follows this setting, while
+`window-focus-warp:<id>` always moves the cursor regardless of the setting.
+Either action summons a target that is hidden in a scratchpad to the output
+under the pointer before focusing it.
 
 ### Focus
 
