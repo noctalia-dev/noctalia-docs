@@ -109,6 +109,26 @@ with the table form:
 "XF86MonBrightnessDown" = { action = "spawn:noctalia msg brightness-down 10", allow_when_locked = true }
 ```
 
+## Keyboard shortcuts inhibition
+
+Applications such as games and remote desktop clients can ask Umbriel to pass
+their keyboard shortcuts through while the requesting surface has keyboard
+focus. The request applies only to keyboard binds. Pointer and wheel binds are
+unchanged.
+
+Use `allow_when_inhibited = true` for bindings that must remain available. In
+particular, configure an escape binding that toggles the focused surface's
+inhibitor:
+
+```toml
+"Mod+Shift+Escape" = { action = "shortcuts-inhibit-toggle", allow_when_inhibited = true, repeat = false }
+```
+
+The action sends `inactive` when disabling an inhibitor and `active` when
+enabling it again. It does nothing when the focused surface has not requested
+shortcuts inhibition. Switching focus makes an active inhibitor irrelevant,
+but does not deactivate it.
+
 ## Cooldown
 
 Set `cooldown_ms` to suppress repeated bind actions for the configured duration. Matching input remains consumed while the cooldown is active, and suppressed events do not extend it.
