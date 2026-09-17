@@ -406,7 +406,8 @@ Mapping windows and switching workspaces can change which window is under a
 stationary pointer. The existing focus remains until the next pointer motion,
 which selects the window under the pointer without requiring a border crossing.
 Layout scrolling, resizing, column movement, and fullscreen exit behave the same
-way when they move or reveal another window beneath the pointer.
+way when they move or reveal another window beneath the pointer. This includes a
+browser or media player leaving client-requested video fullscreen.
 Finishing a client data drag performs the same refresh at the unchanged cursor
 position, so dropping over another window selects it immediately.
 
