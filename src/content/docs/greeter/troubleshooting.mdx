@@ -68,11 +68,18 @@ greetd must launch `noctalia-greeter-session`, not the `noctalia-greeter` client
 
 ### Wrong size or only one monitor looks right
 
-Check that `[output].name` matches a connector reported by `noctalia-greeter outputs`. Review the configured layout and scales when using more than one monitor. See [Displays](/greeter/displays/).
+Check that `[output].name` matches a connector or stable identifier reported by
+`noctalia-greeter outputs --details`. Review the configured layout and scales
+when using more than one monitor. See [Displays](/greeter/displays/).
 
 ### Blank flash or modeset during login
 
-The greeter and desktop session may be selecting different DRM modes. Set `[output].width` and `[output].height` to the desktop's resolution; both values are required. See [Match the desktop output mode](/greeter/displays/#match-the-desktop-output-mode).
+The greeter and desktop session may be selecting different DRM modes. Set
+`[output].width`, `[output].height`, and `[output].refresh_rate` to the desktop's
+mode; both dimensions are required when either is set. See
+[Match the desktop output mode](/greeter/displays/#match-the-desktop-output-mode).
+For monitors with different refresh rates, set `[output].refresh_rate` to a
+mapping such as `"DP-1:120; HDMI-A-1:60"`.
 
 ### Screen never blanks
 
