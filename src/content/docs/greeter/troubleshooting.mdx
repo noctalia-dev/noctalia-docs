@@ -74,7 +74,8 @@ when using more than one monitor. See [Displays](/greeter/displays/).
 
 ### Blank flash or modeset during login
 
-The greeter and desktop session may be selecting different DRM modes. Set
+The greeter uses each display's complete EDID-preferred mode by default. If the
+desktop session uses a different DRM mode, set
 `[output].width`, `[output].height`, and `[output].refresh_rate` to the desktop's
 mode; both dimensions are required when either is set. See
 [Match the desktop output mode](/greeter/displays/#match-the-desktop-output-mode).

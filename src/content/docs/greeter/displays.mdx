@@ -84,9 +84,9 @@ one ready output. See [Sync with Noctalia](/greeter/sync/). Values declared in
 
 ## Match the desktop output mode
 
-By default, the compositor uses each display's EDID-preferred resolution and
-then selects the highest advertised refresh rate at that size. If this differs
-from the desktop session, the display may flash or modeset during login.
+By default, the compositor uses each display's complete EDID-preferred mode,
+including its refresh rate. This avoids selecting a higher advertised rate that
+a bandwidth-limited dock or MST link cannot drive.
 
 Set both `width` and `height` to request a particular resolution:
 
@@ -125,8 +125,8 @@ which changes the size of the greeter interface. Mode dimensions are selected
 before any output rotation is applied.
 :::
 
-Match the resolution to the desktop session to avoid an unnecessary resolution
-change when logging in.
+Match the resolution and refresh rate to the desktop session to avoid an
+unnecessary mode change when logging in.
 
 ## Rotate an output
 
