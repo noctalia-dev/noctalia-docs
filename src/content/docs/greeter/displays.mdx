@@ -42,8 +42,10 @@ name = "DP-2"
 ```
 
 The compositor disables all other connectors at the KMS level while the
-greeter is running. If `name` is empty, missing, invalid, or refers to a
-disconnected monitor, the greeter falls back to all connected outputs.
+greeter is running. A non-selected connector that is already disabled remains
+off without a temporary modeset. If `name` is empty, missing, invalid, or
+refers to a disconnected monitor, the greeter falls back to all connected
+outputs.
 
 ## Arrange multiple monitors
 
