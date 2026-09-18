@@ -36,8 +36,28 @@ The greeter works without a mouse.
 The compositor loads its XKB keymap in this order:
 
 1. `[keyboard].layout`, `[keyboard].variant`, and `[keyboard].options` in `greeter.toml`
-2. `XKB_DEFAULT_LAYOUT`, `XKB_DEFAULT_VARIANT`, and `XKB_DEFAULT_OPTIONS` from the session environment
-3. The system default keymap
+2. `XKB_DEFAULT_MODEL`, `XKB_DEFAULT_LAYOUT`, `XKB_DEFAULT_VARIANT`, and `XKB_DEFAULT_OPTIONS` from the session environment
+3. XKB settings discovered from common system configuration files
+4. The xkbcommon default keymap
+
+System discovery does not depend on a particular distribution or init system.
+The compositor recognizes `XKBMODEL`, `XKBLAYOUT`, `XKBVARIANT`, and
+`XKBOPTIONS` assignments (including their underscore-separated forms) in
+`/etc/default/keyboard`, `/etc/vconsole.conf`, and `/etc/sysconfig/keyboard`.
+It also recognizes standard `XkbModel`, `XkbLayout`, `XkbVariant`, and
+`XkbOptions` entries in the usual system Xorg configuration and
+`xorg.conf.d` locations under `/etc`, `/usr/local/share`, and `/usr/share`.
+These files are parsed as data and are never executed.
+
+A console-only `KEYMAP` value is not used because console keymap names cannot
+be mapped reliably to XKB layouts across distributions. Systems that only store
+a console keymap should provide one of the XKB forms above or use
+`greeter.toml`.
+
+Terminal greeters such as `tuigreet` receive input through the virtual
+terminal's kernel keymap. Noctalia Greeter is a Wayland compositor and receives
+raw input events instead, so it needs an XKB configuration from one of the
+sources above.
 
 Set the layout in `/var/lib/noctalia-greeter/greeter.toml`:
 
