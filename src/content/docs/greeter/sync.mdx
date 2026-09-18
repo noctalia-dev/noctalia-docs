@@ -65,7 +65,11 @@ legacy path.
 
 Sync installs wallpaper files under `/var/lib/noctalia-greeter/` and merges appearance and output values into `/var/lib/noctalia-greeter/sync.toml`. It never overwrites declarative `greeter.toml`.
 
-When the same value exists in both files, `greeter.toml` wins. In particular, a complete `[appearance.palette]` in `greeter.toml` selects that entire declarative appearance, including its wallpaper settings, ahead of the appearance in `sync.toml`.
+When the same value exists in both files, `greeter.toml` wins. Palette and
+wallpaper precedence are resolved independently: a complete
+`[appearance.palette]` selects the declarative **Synced** colors, while
+`[appearance.wallpaper]` and per-output wallpaper values override matching
+Sync wallpaper values even when a built-in color scheme is selected.
 
 With a current Shell and greeter:
 
@@ -78,7 +82,12 @@ With a current Shell and greeter:
 
 Each greeter view uses the wallpaper for its connector when one exists, then falls back to `[appearance.wallpaper]`. A connector pinned with `[output].name` uses its matching entry. See [Displays](/greeter/displays/) for connector and layout settings.
 
-You do not need to add wallpaper keys to `greeter.toml` for Sync. To override them declaratively, use an absolute image path or `color:#RRGGBB`; `fill_mode` accepts `center`, `crop`, `fit`, `stretch`, `repeat`, or `span`:
+You do not need to add wallpaper keys to `greeter.toml` for Sync. To override
+them declaratively, use an absolute image path or `color:#RRGGBB`; `fill_color`
+can also be used by itself for a solid background. Wallpaper settings do not
+require a complete palette and apply with both built-in and **Synced** color
+schemes. `fill_mode` accepts `center`, `crop`, `fit`, `stretch`, `repeat`, or
+`span`:
 
 ```toml
 [appearance.wallpaper]

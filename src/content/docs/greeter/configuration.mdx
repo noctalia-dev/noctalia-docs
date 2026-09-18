@@ -29,6 +29,10 @@ On NixOS, use `services.displayManager.noctalia-greeter.settings` with both the 
 
 The **Synced** scheme uses a complete `[appearance.palette]` from `greeter.toml` when present, otherwise the same keys from `sync.toml`. Legacy live `appearance.json` is migrated into `sync.toml` once. See [Sync with Noctalia](/greeter/sync/) for the complete precedence and authorization model.
 
+Wallpaper configuration is independent of the selected color scheme and does
+not require an `[appearance.palette]`. A wallpaper declared in `greeter.toml`
+therefore also works with built-in schemes such as `Noctalia`.
+
 ## Keys the greeter remembers
 
 When you change the selected session or color scheme on the login screen, the greeter writes:
@@ -57,7 +61,7 @@ Set these keys in `greeter.toml`. A command-line `--session` or `--user` value t
 | `[appearance].corner_radius_scale` | Corner-radius scale for the Synced appearance |
 | `[appearance].font_family` | Fontconfig family for the Synced appearance |
 | `[appearance.palette]` | Complete Synced palette; takes precedence over Sync appearance |
-| `[appearance.wallpaper]` | Default wallpaper `path`, `fill_mode`, and `fill_color`; `fill_mode` accepts `center`, `crop`, `fit`, `stretch`, `repeat`, or `span` |
+| `[appearance.wallpaper]` | Default wallpaper `path`, `fill_mode`, and `fill_color`; `fill_color` also works without an image, and `fill_mode` accepts `center`, `crop`, `fit`, `stretch`, `repeat`, or `span` |
 | `[appearance.wallpapers.<connector>]` | Per-output wallpaper override using the same fill modes |
 | `[output].name` | Connector or stable EDID identifier on which to pin the greeter |
 | `[output].layout` | Multi-monitor positions; overrides synced layout |
