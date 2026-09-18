@@ -98,6 +98,22 @@ theme = "Adwaita"
 size = 24
 ```
 
+`theme` must be the exact, case-sensitive name of the directory that directly
+contains the theme's `cursors/` directory. It is not necessarily the name shown
+by desktop appearance settings. For example, Arch Linux installs the Breeze
+cursor theme as `breeze_cursors`, not `Breeze`:
+
+```toml
+[cursor]
+theme = "breeze_cursors"
+size = 24
+```
+
+Install the matching system package first (`breeze-cursors` for that example,
+or `adwaita-cursors` for `Adwaita` on Arch Linux). To inspect installed names,
+find `cursors` directories under `/usr/share/icons`; use the name of their
+parent directory.
+
 If the theme is outside the default icon search paths, set the directory that contains it:
 
 ```toml
@@ -108,6 +124,10 @@ path = "/usr/share/icons"
 ```
 
 The path must be readable by the greetd session user. A cursor theme installed only in your personal home directory is normally unavailable to the greeter.
+
+If the named theme cannot be loaded, wlroots uses its built-in fallback. That
+fallback looks like a default cursor and can appear too small on scaled outputs;
+the compositor logs an error identifying the missing theme.
 
 ### Environment variables
 

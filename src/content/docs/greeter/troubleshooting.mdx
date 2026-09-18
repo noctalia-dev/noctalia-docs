@@ -243,4 +243,15 @@ Install and enable AccountsService, commonly provided by an `accountsservice` pa
 
 ### Cursor theme is missing or falls back to the default
 
-Set `[cursor].theme` and, optionally, `[cursor].size` in `greeter.toml`. If the theme is outside the default search path, also set `[cursor].path`. The path and theme files must be readable by the greetd user; a theme installed only in your home directory is normally unavailable. See [Cursor theme](/greeter/input/#cursor-theme).
+Set `[cursor].theme` to the exact, case-sensitive directory name of an installed
+XCursor theme, not its desktop display name. For example, Arch Linux's Breeze
+package uses `breeze_cursors`, not `Breeze`. If the theme is outside the default
+search path, also set `[cursor].path`. The path and theme files must be readable
+by the greetd user; a theme installed only in your home directory is normally
+unavailable.
+
+When a requested theme is unavailable, the compositor logs `cursor theme ...
+was not found` and wlroots uses a built-in fallback. The fallback may appear too
+small on scaled outputs even when `[cursor].size` is set. Install the theme for
+the system, correct its name or search path, and restart greetd. See
+[Cursor theme](/greeter/input/#cursor-theme).
