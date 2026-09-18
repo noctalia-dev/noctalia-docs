@@ -109,6 +109,39 @@ This command terminates greeter and compositor processes and stops greetd, so us
 
 greetd did not answer a request before the watchdog expired. Inspect the greetd journal for a stalled or crashed PAM or session worker, then restart greetd. `[auth].request_timeout` controls the watchdog; its default is `60` seconds, and `0` disables it. See [Configuration](/greeter/configuration/).
 
+### Fingerprint blocks password login
+
+PAM authentication is serialized. While `pam_fprintd` is waiting for a
+fingerprint, it cannot check a password at the same time. The greetd IPC also
+exposes one PAM conversation, so the greeter cannot safely bypass the active
+fingerprint module or start a parallel password stack. This is an upstream PAM
+limitation documented by [`pam_fprintd(8)`](https://manpages.debian.org/testing/libpam-fprintd/pam_fprintd.8.en.html)
+and the [greetd IPC protocol](https://manpages.debian.org/testing/greetd/greetd-ipc.7.en.html).
+
+Fedora's Authselect profiles place `pam_fprintd` before `pam_unix` when the
+`with-fingerprint` feature is enabled. A password typed before authentication
+starts remains queued until the fingerprint attempt succeeds, fails, or times
+out; it has not yet been accepted or rejected by `pam_unix`.
+
+Choose the behavior that fits the system:
+
+- Scan a finger, or wait for the fingerprint module to time out before the PAM
+  stack reaches its password module.
+- If fingerprint login is not needed anywhere, disable the Fedora Authselect
+  feature with `sudo authselect disable-feature with-fingerprint`.
+- To change only greetd, create and maintain a dedicated, fingerprint-free PAM
+  service for greetd. Follow the distribution's PAM/Authselect documentation;
+  do not directly edit Fedora's generated `system-auth` file because Authselect
+  will overwrite it.
+- A custom Authselect profile can instead give `pam_fprintd` a shorter
+  `timeout` or fewer `max-tries`, reducing the delay before password fallback.
+
+`[auth].allow_empty_password = true` only permits submitting an empty password
+field so fingerprint or smartcard PAM can start. It does not make fingerprint
+and password authentication parallel. Keep `[auth].request_timeout` longer
+than the configured `pam_fprintd` timeout, or set it to `0`, so the greeter's
+watchdog does not expire before PAM reaches the password fallback.
+
 ### Wrong session is selected on startup
 
 Use the desktop entry's exact **`Name=`** value from `noctalia-greeter sessions`, not its `.desktop` filename. Command-line `--session` takes precedence over `[session].default`, which takes precedence over the last-used `[session].last` value in `sync.toml`.
