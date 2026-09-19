@@ -81,6 +81,41 @@ sudo apt install umbriel
 
 The repository provides `amd64` and `arm64` packages only.
 
+## GNU Guix
+
+Umbriel and its XDG portal may be installed through the third-party `midnight` guix channel.
+
+First, add the following to your channels list in `~/.config/guix/channels.scm`:
+
+```scheme
+(channel
+    (name 'midnight)
+    (url "https://codeberg.org/stampede/midnight.git")
+    (branch "main")
+    (introduction
+        (make-channel-introduction
+            "d97d1568954cfcbf543c9fcdfd5771e2b730ae19"
+            (openpgp-fingerprint
+                "640A 2C3C E948 22D3 394B 40C3 CAFA EECA 00FF 9B1E"))))
+```
+
+Then, run `guix pull` to update your channels (or optionally run `guix pull --select=midnight` instead to only pull this channel). Then you're free to install the package however you want, whether that be using `guix insall umbriel xdg-desktop-portal-umbriel` or adding them to your declarative config.
+
+It is highly recommended to add the umbriel package to your system configuration rather than your home one, so that the `.desktop` file provided by the package may be picked up by your greeter/display manager, and be displayed in your list of available sessions. Like so:
+
+```scheme
+(use-modules (midnight packages umbriel)
+             ...)
+
+(operating-system
+    (packages
+        (list 
+            umbriel
+            xdg-desktop-portal-umbriel
+            ...))
+    ...)
+```
+
 ## Manual build
 
 Manual installations have no automatic upgrade path. Prefer a distribution
