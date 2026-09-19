@@ -83,17 +83,26 @@ curve = "easeout"
 Each event table accepts `enabled`, `duration_ms`, and `curve`. The following
 fields are specific to individual event tables:
 
-| Table                       | Additional fields                                                                     | Transition                                                                                                    |
-| --------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `[animation.windows_in]`    | `style` (`popin`, `zoom`, `slide`, `fade`, or `none`); `scale` (0.1-1.0, for `popin`) | Window open.                                                                                                  |
-| `[animation.windows_out]`   | `style` (`fade` or `slide`)                                                           | Window close, using a scene snapshot.                                                                         |
-| `[animation.windows_move]`  | None                                                                                  | Window move, resize, and floating maximize transitions, including visible scratchpad size actions.            |
-| `[animation.workspaces]`    | None                                                                                  | Workspace switch.                                                                                             |
-| `[animation.overview]`      | `workspace_curve` (default `spring:1,1000`)                                           | Overview open and close; `workspace_curve` moves the filmstrip between workspace previews.                    |
-| `[animation.scratchpad]`    | `dim` (0.0-1.0); `blur`; `scale` (0.0-1.0); `maximize`; `fullscreen`                  | Scratchpad show, hide, and backdrop.                                                                          |
-| `[animation.border]`        | None                                                                                  | Focus-ring color transition in OkLab color space, beginning from the current border color when focus changes. |
-| `[animation.dim_unfocused]` | `dim` (0.0-1.0)                                                                       | Unfocused-window opacity. `dim = 0` disables it.                                                              |
-| `[animation.layers]`        | None                                                                                  | Layer-shell surface map and unmap fades.                                                                      |
+| Table                       | Additional fields                                                                     | Transition                                                                                                                                                                     |
+| --------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `[animation.windows_in]`    | `style` (`popin`, `zoom`, `slide`, `fade`, or `none`); `scale` (0.1-1.0, for `popin`) | Window open. A tiled window grows into the slot the layout opens for it; `popin` and `zoom` scale inside that slot, and `slide` only fades for tiled windows.                    |
+| `[animation.windows_out]`   | `style` (`fade` or `slide`)                                                           | Window close, using a scene snapshot that shrinks along with the layout.                                                                                                       |
+| `[animation.windows_move]`  | None                                                                                  | Window move, resize, layout reflow, maximize and restore, and floating maximize transitions, including visible scratchpad size actions.                                        |
+| `[animation.workspaces]`    | None                                                                                  | Workspace switch.                                                                                                                                                              |
+| `[animation.overview]`      | `workspace_curve` (default `spring:1,1000`)                                           | Overview open and close; `workspace_curve` moves the filmstrip between workspace previews.                                                                                     |
+| `[animation.scratchpad]`    | `dim` (0.0-1.0); `blur`; `scale` (0.0-1.0); `maximize`; `fullscreen`                  | Scratchpad show, hide, and backdrop.                                                                                                                                           |
+| `[animation.border]`        | None                                                                                  | Focus-ring color transition in OkLab color space, beginning from the current border color when focus changes.                                                                  |
+| `[animation.dim_unfocused]` | `dim` (0.0-1.0)                                                                       | Unfocused-window opacity. `dim = 0` disables it.                                                                                                                               |
+| `[animation.layers]`        | None                                                                                  | Layer-shell surface map and unmap fades.                                                                                                                                       |
+
+The tiled windows and closing snapshots on a workspace animate from one shared
+transition on the `windows_move` timeline: every box interpolates between the
+layout it left and the layout it reached with the same progress, so the gaps
+between them survive the whole motion, including when a new layout action
+interrupts a running one. Consume, expel, swaps and column moves complete in
+that same single transition, with the moving window drawn above the neighbours
+it passes over. The geometry progress is clamped, so an overshooting curve
+cannot make tiles cross; shaders still see the unclamped progress.
 
 `workspace_curve` covers every way the filmstrip moves: a wheel notch, a
 keyboard action, and the release of a touchpad gesture. A spring curve settles
