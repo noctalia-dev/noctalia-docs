@@ -337,7 +337,7 @@ in the output's native format.
 
 ## Disabling an output
 
-Set `enabled = false` on an output section to turn the monitor off. The
+Set `enabled = false` on an output section for a persistent disabled state. The
 connector is powered down, the output leaves the output layout, and its
 workspaces no longer appear in the overview. The output's workspaces and their
 windows are preserved, so setting `enabled = true` back (or removing the key)
@@ -354,7 +354,9 @@ enabled = false
 ```
 
 Changing `enabled` applies on the next config reload, like the other output
-settings. Only the config file can disable an output; see below.
+settings. Output-management clients can override this state at runtime as
+described below. A later reload that changes output settings reapplies the TOML
+policy.
 
 ## Display power management
 
@@ -383,14 +385,23 @@ by these actions.
 ## Live reconfiguration
 
 Umbriel implements `wlr-output-management-unstable-v1`, so tools such as
-`wlr-randr`, `kanshi`, and `wdisplays` can query and change mode, position,
-scale, transform, and adaptive sync at runtime without editing the config file.
-`umbriel outputs` only reads from this protocol; it does not send configuration
-requests itself.
+`wlr-randr`, `kanshi`, and `wdisplays` can query and change enabled state, mode,
+position, scale, transform, and adaptive sync at runtime without editing the
+config file. `umbriel outputs` only reads from this protocol; it does not send
+configuration requests itself.
 
-Requests that disable an output through this protocol are rejected: the
-protocol commit would bypass the layout and overview handling that the config
-`enabled` key performs. Use `enabled = false` instead.
+Disabling an output through this protocol uses the same desktop lifecycle as
+`enabled = false`: it leaves the layout, its windows move to a live output, and
+its preserved workspaces and windows return when the output is enabled again.
+This is logical disablement, not DPMS, so input activity does not enable it.
+The runtime state remains in effect until another output-management request or
+an output-settings config reload replaces it.
+
+A DPMS-off output remains logically enabled and advertised to these clients.
+Transactions that keep its hardware properties unchanged can still move or
+disable it without waking the monitor. A request to change its mode, scale,
+transform, or adaptive sync is rejected until the output is powered on, rather
+than silently changing its DPMS state.
 
 ## Multi-monitor example
 
