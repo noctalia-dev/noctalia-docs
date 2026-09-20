@@ -86,7 +86,7 @@ fields are specific to individual event tables:
 | Table                       | Additional fields                                                                     | Transition                                                                                                                                                                     |
 | --------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `[animation.windows_in]`    | `style` (`popin`, `zoom`, `slide`, `fade`, or `none`); `scale` (0.1-1.0, for `popin`) | Window open. A tiled opener uses its current final layout box while this transition runs independently of neighbouring reflow. `popin` and `zoom` scale inside that box. `slide` rises into place for floating and fullscreen windows and becomes visible sooner than `fade`; tiled windows use the same quicker fade without leaving their slot. |
-| `[animation.windows_out]`   | `style` (`fade` or `slide`)                                                           | Window close, using a scene snapshot that keeps its captured box while this transition runs independently of neighbouring reflow. This also applies to a card closed from overview. `slide` moves down and retains more opacity during that motion than `fade`. |
+| `[animation.windows_out]`   | `style` (`fade` or `slide`)                                                           | Window close, using a scene snapshot with a fixed shader canvas. During tiled reflow, `windows_move` drives a separate vacancy mask while `windows_out` keeps its own timeline. A card closed from overview uses this event independently. `slide` moves down and retains more opacity during that motion than `fade`. |
 | `[animation.windows_move]`  | None                                                                                  | Window move, resize, established-window layout reflow, maximize and restore, and floating maximize transitions, including visible scratchpad size actions.                     |
 | `[animation.workspaces]`    | None                                                                                  | Workspace switch.                                                                                                                                                              |
 | `[animation.overview]`      | `workspace_curve` (default `spring:1,1000`)                                           | Entering and leaving overview; `workspace_curve` moves the filmstrip between workspace previews. Closing a window card uses `windows_out`.                                     |
@@ -99,18 +99,40 @@ Established tiled windows animate layout changes through one shared
 `windows_move` geometry transition: every participating box interpolates
 between the layout it left and the layout it reached with the same progress.
 An opening tile is instead presented in its current final slot while
-`windows_in` runs, and a closing snapshot keeps its captured box while
-`windows_out` runs. Each lifecycle effect uses its own duration and curve, so it
-does not slow down or speed up the reflow of established neighbours.
+`windows_in` runs. Its established neighbours reflow concurrently with their
+own `windows_move` duration and curve.
 
-The stable lifecycle boxes can temporarily overlap established tiles while
-those tiles move to their new layout. This is intentional: it preserves the
-opening shader's full target box, the closing snapshot's captured shape, and
-the independent timing of all three events. Consume, expel, swaps, and column
-moves complete in a single `windows_move` transition, with the moving window
-drawn above the neighbours it passes over. Geometry progress is clamped, so an
-overshooting curve cannot make established tiles cross; shaders still see
-their own unclamped progress.
+A normal tiled close does not delay the new layout. Its snapshot keeps the
+captured shader canvas fixed while established neighbours immediately reflow
+with `windows_move`. A separate vacancy mask over the snapshot shares that
+geometry progress, so the closing pixels and live tiles do not occupy the same
+space. The mask affects only the final composite: a custom `windows_out` shader
+continues to sample the complete captured canvas, and feedback history keeps
+the same target size.
+
+`windows_out` and `windows_move` retain their separately configured durations
+and curves. If movement finishes first, the now-empty visible mask stops
+compositing the close snapshot, but its custom shader and feedback history keep
+running until `windows_out` completes. If `windows_out` finishes first, the
+snapshot disappears while established tiles finish their movement. Overlapping
+closes keep independent close timelines and rebase the shared layout motion
+from the boxes currently on screen. New tiled windows are admitted immediately:
+the opener owns its final slot through `windows_in`, while established peers use
+`windows_move`. A close that caused no layout reflow keeps its full mask through
+later unrelated layout changes; it begins vacating only if live final geometry
+claims its presented region.
+
+Every ordinary view close snapshot remains owned by its source workspace. It
+follows workspace-slide translation and the workspace's visibility until its
+lifecycle ends. A card closed from overview is independent of workspace vacancy
+motion and continues to use `windows_out` without changing overview motion.
+
+Closing during consume, expel, or another active layout transition rebases the
+survivors and close mask from their current presentations onto one shared
+`windows_move` timeline. Swaps and column moves likewise draw the moving window
+above the neighbours it passes over. Geometry progress is clamped, so an
+overshooting curve cannot make established tiles cross; shaders still see their
+own unclamped progress.
 
 `workspace_curve` covers every way the filmstrip moves: a wheel notch, a
 keyboard action, and the release of a touchpad gesture. A spring curve settles
@@ -301,6 +323,12 @@ A window's scene subtree, including its subsurfaces and border, is processed as
 one target. Borders can also have their own inner effect. Workspace effects
 process the output's workspace view root, and overview effects process each
 output's overview tree. Scratchpad backdrops have their own targets.
+
+For a tiled close, the vacancy mask is applied after the closing shader rather
+than to its input. The shader therefore keeps the captured size and sampling
+coordinates while `windows_move` changes only how much of its result is visible.
+An empty visible mask still evaluates the custom shader and advances its
+feedback history until the `windows_out` lifecycle completes.
 
 Window shadows follow the alpha silhouette produced by active window or border
 shaders, including reveal masks and squash effects. The compositor applies the
