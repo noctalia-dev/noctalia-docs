@@ -85,29 +85,32 @@ fields are specific to individual event tables:
 
 | Table                       | Additional fields                                                                     | Transition                                                                                                                                                                     |
 | --------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `[animation.windows_in]`    | `style` (`popin`, `zoom`, `slide`, `fade`, or `none`); `scale` (0.1-1.0, for `popin`) | Window open. When tiled layout reflow is animated, an insertion cannot finish growing into its slot before this transition. `popin` and `zoom` also scale inside that slot. `slide` rises into place for floating and fullscreen windows and becomes visible sooner than `fade`; tiled windows use the same quicker fade without leaving their slot. |
-| `[animation.windows_out]`   | `style` (`fade` or `slide`)                                                           | Window close, using a scene snapshot. When a live tiled view reflows, the snapshot shrinks with that reflow; when no live tiled view moves, it keeps its captured box. `slide` moves down and retains more opacity during that motion than `fade`. A tiled snapshot remains present for this full transition even when its configured `windows_move` transition is shorter. |
-| `[animation.windows_move]`  | None                                                                                  | Window move, resize, layout reflow, maximize and restore, and floating maximize transitions, including visible scratchpad size actions.                                        |
+| `[animation.windows_in]`    | `style` (`popin`, `zoom`, `slide`, `fade`, or `none`); `scale` (0.1-1.0, for `popin`) | Window open. A tiled opener uses its current final layout box while this transition runs independently of neighbouring reflow. `popin` and `zoom` scale inside that box. `slide` rises into place for floating and fullscreen windows and becomes visible sooner than `fade`; tiled windows use the same quicker fade without leaving their slot. |
+| `[animation.windows_out]`   | `style` (`fade` or `slide`)                                                           | Window close, using a scene snapshot that keeps its captured box while this transition runs independently of neighbouring reflow. This also applies to a card closed from overview. `slide` moves down and retains more opacity during that motion than `fade`. |
+| `[animation.windows_move]`  | None                                                                                  | Window move, resize, established-window layout reflow, maximize and restore, and floating maximize transitions, including visible scratchpad size actions.                     |
 | `[animation.workspaces]`    | None                                                                                  | Workspace switch.                                                                                                                                                              |
-| `[animation.overview]`      | `workspace_curve` (default `spring:1,1000`)                                           | Overview open and close; `workspace_curve` moves the filmstrip between workspace previews.                                                                                     |
+| `[animation.overview]`      | `workspace_curve` (default `spring:1,1000`)                                           | Entering and leaving overview; `workspace_curve` moves the filmstrip between workspace previews. Closing a window card uses `windows_out`.                                     |
 | `[animation.scratchpad]`    | `dim` (0.0-1.0); `blur`; `scale` (0.0-1.0); `maximize`; `fullscreen`                  | Scratchpad show, hide, and backdrop.                                                                                                                                           |
 | `[animation.border]`        | None                                                                                  | Focus-ring color transition in OkLab color space, beginning from the current border color when focus changes.                                                                  |
 | `[animation.dim_unfocused]` | `dim` (0.0-1.0)                                                                       | Unfocused-window opacity. `dim = 0` disables it.                                                                                                                               |
 | `[animation.layers]`        | None                                                                                  | Layer-shell surface map and unmap fades.                                                                                                                                       |
 
-The tiled windows and closing snapshots on a workspace animate from one shared
-geometry transition: every box interpolates between the layout it left and the
-layout it reached with the same progress, so the gaps between them survive the
-whole motion, including when a new layout action interrupts a running one.
-Geometry normally follows `windows_move`, but a participating opener limits
-that shared progress to `windows_in`, and a participating close snapshot limits
-it to `windows_out`. A longer lifecycle effect therefore remains coordinated
-without letting tiles move through one another. When a live tiled view reflows,
-a closing snapshot shrinks with that reflow; when no live tiled view moves, it
-stays in its captured box while the close effect runs. Consume, expel, swaps and column moves complete in
-that same single transition, with the moving window drawn above the neighbours
-it passes over. Geometry progress is clamped, so an overshooting curve cannot
-make tiles cross; shaders still see their own unclamped progress.
+Established tiled windows animate layout changes through one shared
+`windows_move` geometry transition: every participating box interpolates
+between the layout it left and the layout it reached with the same progress.
+An opening tile is instead presented in its current final slot while
+`windows_in` runs, and a closing snapshot keeps its captured box while
+`windows_out` runs. Each lifecycle effect uses its own duration and curve, so it
+does not slow down or speed up the reflow of established neighbours.
+
+The stable lifecycle boxes can temporarily overlap established tiles while
+those tiles move to their new layout. This is intentional: it preserves the
+opening shader's full target box, the closing snapshot's captured shape, and
+the independent timing of all three events. Consume, expel, swaps, and column
+moves complete in a single `windows_move` transition, with the moving window
+drawn above the neighbours it passes over. Geometry progress is clamped, so an
+overshooting curve cannot make established tiles cross; shaders still see
+their own unclamped progress.
 
 `workspace_curve` covers every way the filmstrip moves: a wheel notch, a
 keyboard action, and the release of a touchpad gesture. A spring curve settles
