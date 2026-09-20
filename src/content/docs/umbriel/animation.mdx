@@ -103,14 +103,15 @@ An opening tile is instead presented in its current final slot while
 `windows_out` runs. Each lifecycle effect uses its own duration and curve, so it
 does not slow down or speed up the reflow of established neighbours.
 
-The stable lifecycle boxes can temporarily overlap established tiles while
-those tiles move to their new layout. This is intentional: it preserves the
-opening shader's full target box, the closing snapshot's captured shape, and
-the independent timing of all three events. Consume, expel, swaps, and column
-moves complete in a single `windows_move` transition, with the moving window
-drawn above the neighbours it passes over. Geometry progress is clamped, so an
-overshooting curve cannot make established tiles cross; shaders still see
-their own unclamped progress.
+An opener's stable box can temporarily overlap established tiles while they
+move to their new layout, with the opener drawn above them. A tiled close
+snapshot instead stays beneath the live workspace, so survivors progressively
+cover it as they enter the vacated area. Both policies preserve the lifecycle
+shader's stable canvas and the independent timing of all three events.
+Consume, expel, swaps, and column moves complete in a single `windows_move`
+transition, with the farther-travelling live window drawn above the neighbours
+it passes over. Geometry progress is clamped, so an overshooting curve cannot
+make established tiles cross; shaders still see their own unclamped progress.
 
 `workspace_curve` covers every way the filmstrip moves: a wheel notch, a
 keyboard action, and the release of a touchpad gesture. A spring curve settles
