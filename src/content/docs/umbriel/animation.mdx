@@ -97,7 +97,7 @@ fields are specific to individual event tables:
 
 | Table                       | Additional fields                                                                     | Transition                                                                                                                                                                     |
 | --------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `[animation.windows_in]`    | `style` (`popin`, `zoom`, `slide`, `fade`, or `none`); `scale` (0.1-1.0, for `popin`) | Window open. A tiled opener waits for the neighbour reflow its admission caused, then runs `windows_in` in its settled slot. `popin` and `zoom` scale inside that slot. `slide` rises into place for floating and fullscreen windows and becomes visible sooner than `fade`; tiled windows use the same quicker fade without leaving their slot. |
+| `[animation.windows_in]`    | `style` (`popin`, `zoom`, `slide`, `fade`, or `none`); `scale` (0.1-1.0, for `popin`) | Window open. A tiled opener waits for the neighbour reflow its admission caused, then runs `windows_in` in its settled slot. `popin` and `zoom` scale inside that slot, and inside the output box for a window that opens fullscreen. `slide` rises into place for floating and fullscreen windows and becomes visible sooner than `fade`; tiled windows use the same quicker fade without leaving their slot. |
 | `[animation.windows_out]`   | `style` (`fade`, `slide`, `popin`, or `zoom`); `scale` (0.1-1.0, for `popin`)         | Window close, using a scene snapshot. The snapshot keeps its captured geometry above the live windows for its whole lifecycle. `popin` and `zoom` shrink it toward its centre while it fades, `slide` moves down and retains more opacity during that motion than `fade`. A card closed from overview uses this event independently. |
 | `[animation.windows_move]`  | None                                                                                  | Window move, resize, established-window layout reflow, maximize and restore, and floating maximize transitions, including visible scratchpad size actions.                     |
 | `[animation.workspaces]`    | None                                                                                  | Workspace switch.                                                                                                                                                              |
@@ -120,6 +120,12 @@ a workspace or with `windows_move` disabled. An opener admitted while another
 motion is still running waits for that motion. A fading close snapshot never
 delays a reveal. A window opened while the overview is showing follows the same
 reveal on its card.
+
+A window that opens fullscreen, whether by client request or through
+`default_fullscreen`, scales from the centre of its output, and its black
+fullscreen surround scales with it rather than covering the output for the
+whole transition. A window that opens with `default_maximize` reflows its
+neighbours on `windows_move` like any other admission.
 
 A tiled close snapshot keeps its captured geometry and draws above the live
 windows for its whole lifecycle, with its natural `windows_out` curve and
