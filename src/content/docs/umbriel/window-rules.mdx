@@ -42,6 +42,13 @@ empty string matches a pattern that accepts the empty string. `match.title =
 "^$"` therefore selects windows whose title is empty, such as Firefox's browser
 toolbox, and never selects windows that are simply waiting to be titled.
 
+A title is volatile. Chromium and Electron windows carry the application name
+as their title until the page sets a real one, and they open a new window when
+they are restored from a tray icon, so a title that only appeared while the app
+started is gone by then. Match `app_id` for placement settings such as
+`default_workspace`, and keep `match.title` for windows a title genuinely
+identifies, such as dialogs.
+
 Run `umbriel windows` to inspect open windows. Its human-readable output adds
 suffixes such as `[xdg_tag=proton-game]` and `[content_type=game]` when those
 values are present. The JSON form, `umbriel windows --json`, always reports
