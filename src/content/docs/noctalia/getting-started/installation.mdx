@@ -14,7 +14,6 @@ Noctalia is available on the following distributions. Choose your platform below
 - [Fedora](#fedora)
 - [openSUSE](#opensuse)
 - [Gentoo](#gentoo)
-- [Void Linux](#void)
 - [GNU Guix](#guix)
 - [Debian](#debian) (including Ubuntu)
 
@@ -135,28 +134,6 @@ emerge --ask gui-apps/noctalia
 
 ## Void Linux {#void}
 
-Noctalia is available through a custom XBPS repository.
-
-**Step 1**: Add the repository source
-
-```bash
-echo "repository=https://repo.voiders.dev" | sudo tee /etc/xbps.d/10-voiders-community.conf
-```
-
-**Step 2**: Sync and install Noctalia
-
-```bash
-sudo xbps-install -S
-sudo xbps-install noctalia
-```
-
-:::note
-If Noctalia fails to run, install the `sdbus-c++` package.
-:::
-
-### Alternative: Build from source using xbps-src
-
-```
 # Install git, wget
 sudo xbps-install git wget
 
