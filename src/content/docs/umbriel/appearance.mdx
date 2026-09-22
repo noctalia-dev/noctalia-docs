@@ -150,6 +150,8 @@ offset_y = 2
 | `offset_x` | `2` | Horizontal offset from -200 to 200. |
 | `offset_y` | `2` | Vertical offset from -200 to 200. |
 
-Shadows are hidden for fullscreen windows. During a
+A window's shadow falls on everything below it, including other floating,
+pinned, or scratchpad windows it overlaps. Tiled windows never shadow each
+other. Shadows are hidden for fullscreen windows. During a
 [custom window animation](/umbriel/animation/#custom-glsl-shaders), the shadow follows
 the visible shape produced by the shader.
