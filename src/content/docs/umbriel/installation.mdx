@@ -109,7 +109,7 @@ It is highly recommended to add the umbriel package to your system configuration
 
 (operating-system
     (packages
-        (list 
+        (list
             umbriel
             xdg-desktop-portal-umbriel
             ...))
@@ -152,10 +152,21 @@ are inherited by Umbriel and the session. Interactive startup files such as
 `~/.zshrc` are not read. Starting `start-umbriel` from a TTY performs this step
 even if the TTY login already loaded the profile.
 
-When a systemd user manager is available, the launcher imports that environment
-and runs Umbriel as a user service. This also includes variables from
-`environment.d`. On other init systems it starts the compositor directly with
-the login environment.
+For a native launch with a reachable systemd user manager, the launcher imports
+that environment and runs Umbriel as a user service. This also includes
+variables from `environment.d`. Without one, and for nested launches, it starts
+the compositor directly with the login environment.
+
+In a managed native session, Umbriel uses `systemd-run` to place the `-s`
+startup command and each autostart, event hook, and `spawn:` command in a
+separate transient scope under `app.slice`. This requires systemd 254 or newer.
+Each scope is part of `umbriel-session.target` and bound to the systemd unit
+that owns the compositor, normally `umbriel.service`. Stopping either one, or
+an unexpected compositor exit, cleans up the scope, even if the session target
+failed to activate. An application failure or OOM kill does not propagate back
+to `umbriel.service`. `systemd-run` starts the command only after scope creation
+succeeds. Direct and nested sessions do not invoke it and launch these commands
+as ordinary compositor children.
 
 Run `umbriel` directly for nested development sessions or explicit unmanaged
 startup.

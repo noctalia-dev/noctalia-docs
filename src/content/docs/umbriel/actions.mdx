@@ -243,7 +243,15 @@ their visual directions; see [Vertical strips](/umbriel/layout/#vertical-strips)
   matching `DESKTOP_STARTUP_ID` to the command. A single-instance application
   can pass that token to its existing window so Umbriel reveals it, including
   when the window remaps after hiding in a tray. Startup commands from
-  `general.autostart` receive no launch token.
+  `general.autostart` receive no launch token. In a managed native session,
+  every `spawn:` command runs in a separate transient scope under `app.slice`.
+  The scope is part of `umbriel-session.target` and bound to the compositor's
+  systemd unit, normally `umbriel.service`, so stopping either one or an
+  unexpected compositor exit cleans it up. An application failure or OOM kill
+  does not propagate back to the compositor unit. Umbriel
+  uses `systemd-run` 254 or newer, which starts the command only after scope
+  creation succeeds. Direct and nested sessions use ordinary child processes
+  instead.
 - **Quitting.** Bare `session-quit` opens an on-screen confirmation: Enter or
   the quit bind confirms, any other key or a click cancels, and a second
   `session-quit` also quits. While the session is locked it quits without the
