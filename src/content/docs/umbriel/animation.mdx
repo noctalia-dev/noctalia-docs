@@ -14,18 +14,19 @@ curve = "easeout"
 
 [animation.windows_in]
 enabled = true
-curve = "spring:1,1900"
+curve = "spring:1,900"
 style = "popin"
-scale = 0.85
+scale = 0.5
 
 [animation.windows_out]
 enabled = true
-curve = "spring:1,900"
-style = "fade"
+curve = "spring:1,1400"
+style = "popin"
+scale = 0.8
 
 [animation.windows_move]
 enabled = true
-curve = "spring:1,4400"
+curve = "spring:1,1100"
 
 [animation.workspaces]
 enabled = true
@@ -84,7 +85,8 @@ chooses its own duration, so `duration_ms` has no effect on that event.
 
 `windows_in` accepts `popin`, `zoom`, `slide`, `fade`, or `none`.
 `windows_out` accepts `fade`, `slide`, `popin`, or `zoom`. `scale` applies to
-`popin`.
+`popin`: an opening window grows from it to full size, and a closing window
+shrinks toward it, while both fade.
 
 `animation.overview.workspace_curve` controls filmstrip movement after wheel,
 keyboard, and touchpad navigation.
