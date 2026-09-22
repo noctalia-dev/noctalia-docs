@@ -43,8 +43,13 @@ match.sandbox_engine = 'org\.flatpak'
 match.app_id = 'org\.example\.ClipboardManager'
 allow_globals = [
   "ext_data_control_manager_v1",
+  "zwlr_data_control_manager_v1",
 ]
 ```
+
+Umbriel supports both data-control variants. Existing clipboard managers often
+use the `zwlr_` variant, so grant both unless the application is known to use
+only `ext_`.
 
 | Selector | Description |
 | --- | --- |
