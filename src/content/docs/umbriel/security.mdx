@@ -3,6 +3,22 @@ title: Sandboxed Wayland clients
 description: Understand Umbriel security-context support and the capabilities restricted for sandboxed Wayland clients.
 ---
 
+## Session locking
+
+Umbriel keeps the current desktop visible while an `ext-session-lock-v1` client
+prepares a mapped lock surface for every active output. The client has up to
+three seconds to provide those surfaces. Umbriel then switches every output to
+the lock scene and reports the session as locked only after each active output
+has presented a secure frame.
+
+If a client stalls or omits an output, the handoff continues after the deadline
+with an opaque compositor-owned blank. Its RGB color comes from
+`[colors].backdrop`; its alpha is always fully opaque. A client that exits after
+the secure handoff leaves this blank in place, so the desktop cannot be exposed
+by a crashed locker.
+
+## Sandboxed Wayland clients
+
 Umbriel supports version 1 of the
 [Wayland security-context protocol](https://wayland.app/protocols/security-context-v1).
 It is always enabled.
@@ -12,7 +28,7 @@ the sandbox engine, application, and instance. Umbriel then limits the
 protocols available through that connection. This does not create the sandbox
 or display permission prompts.
 
-## Restricted capabilities
+### Restricted capabilities
 
 Restricted clients retain the protocols needed for ordinary windows, rendering,
 focused input, clipboard use, output discovery, idle inhibition, and activation.
@@ -32,7 +48,7 @@ operations for a sandboxed application.
 New protocols remain hidden from restricted clients until they receive a
 security review.
 
-## Per-application grants
+### Per-application grants
 
 Use `[[security_context_rule]]` when a sandboxed application genuinely needs a
 protocol without a portal equivalent:
@@ -69,7 +85,7 @@ only to new connections, so restart an application after changing its grants.
 
 Invalid entries are ignored with a configuration warning.
 
-## Security boundary
+### Security boundary
 
 The protocol restricts one Wayland connection. It does not restrict files,
 processes, devices, networking, D-Bus, X11, or other host interfaces.
