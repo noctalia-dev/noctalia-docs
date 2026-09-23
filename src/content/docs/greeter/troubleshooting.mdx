@@ -31,6 +31,9 @@ The service may have a different unit name on a distribution-provided setup. On 
 | `stderr`              | Send informational and debug messages to stdout, and warnings and errors to stderr |
 | An absolute file path | Append to that file and continue logging through syslog                            |
 
+`WLR_LOG` controls messages from the bundled wlroots compositor. Accepted values are
+`silent`, `error`, `info`, and `debug`; the session wrapper defaults to `error`.
+
 For temporary console diagnostics, add the variable to the greetd session command:
 
 ```toml
