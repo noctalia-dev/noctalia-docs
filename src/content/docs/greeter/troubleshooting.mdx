@@ -82,6 +82,28 @@ mode; both dimensions are required when either is set. See
 For monitors with different refresh rates, set `[output].refresh_rate` to a
 mapping such as `"DP-1:120; HDMI-A-1:60"`.
 
+### Atomic commit failure during direct scan-out
+
+Noctalia Greeter disables wlroots direct scan-out by default. The optimization
+is not needed for a short-lived login session, and avoiding it removes a
+driver-sensitive path from multi-output presentation. An explicit
+`WLR_SCENE_DISABLE_DIRECT_SCANOUT` value is still honored; set it to `0` only
+when testing direct scan-out deliberately.
+
+On version 1.5.0, `Atomic commit failed` followed by `Direct scan-out disabled`
+means wlroots rejected the optional scan-out path and attempted compositing as
+a fallback; those two lines alone do not identify why the greeter later exited.
+Upgrade first. To test the same mitigation temporarily on 1.5.0, use:
+
+```toml
+[default_session]
+command = "env WLR_SCENE_DISABLE_DIRECT_SCANOUT=1 /usr/bin/noctalia-greeter-session"
+```
+
+If the current version still exits, capture the subsequent compositor line
+reporting the greeter's exit status or signal and any Wayland or EGL error from
+the greeter process. Those later lines identify the actual exit path.
+
 ### Screen never blanks
 
 Set `[idle].timeout` in `greeter.toml`. The default is `0`, which disables blanking. Pointer motion does not reset the timer while the display is on. See [Blank displays when idle](/greeter/displays/#blank-displays-when-idle).
