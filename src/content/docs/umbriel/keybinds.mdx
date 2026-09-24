@@ -55,14 +55,16 @@ application. Unbound input is delivered normally.
 
 ## Repeat
 
-Binds repeat using the configured keyboard rate and delay. Disable repeat for
-one bind with the table form:
+Binds repeat using the configured keyboard rate and delay, including `spawn:`
+binds, so held volume and brightness keys keep stepping. Disable repeat for one
+bind, such as a launcher, with the table form:
 
 ```toml
 "Mod+Return" = { action = "spawn:kitty", repeat = false }
 ```
 
-Scratchpad visibility and cycling actions never repeat.
+Scratchpad visibility and cycling actions never repeat. The built-in `Mod+Q`
+and `Mod+O` binds do not repeat either.
 
 ## Allow when locked
 
