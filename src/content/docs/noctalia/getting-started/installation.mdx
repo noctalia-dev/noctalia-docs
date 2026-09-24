@@ -132,29 +132,6 @@ emerge --ask gui-apps/noctalia
 
 ---
 
-## Void Linux {#void}
-
-# Install git, wget
-sudo xbps-install git wget
-
-# Set up the Void packages tree
-git clone --depth 1 https://github.com/void-linux/void-packages.git
-cd void-packages
-./xbps-src binary-bootstrap
-
-# Copy Noctalia build templates
-mkdir srcpkgs/noctalia
-wget https://git.voiders.dev/voiders-community/repository/raw/branch/main/pkgs/noctalia/template -P srcpkgs/noctalia/
-
-# Build the packages
-./xbps-src pkg noctalia
-
-# Install the built packages
-sudo xbps-install --repository=hostdir/binpkgs noctalia
-```
-
----
-
 ## GNU Guix {#guix}
 
 The Git repository of Noctalia is also available as a [Guix channel](https://guix.gnu.org/manual/devel/en/html_node/Channels.html).  It provides a `(noctalia)` [module](https://guix.gnu.org/manual/devel/en/html_node/Package-Modules.html) with the `noctalia-git` package.
