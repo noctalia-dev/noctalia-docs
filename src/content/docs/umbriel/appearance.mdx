@@ -87,11 +87,12 @@ opaque_fullscreen = true
 | `outer_border_width` | `0` | Outer ring width in logical pixels. |
 | `corner_radius` | `10` | Radius of the complete decorated window. |
 | `drag_opacity` | `0.75` | Opacity while dragging a window. |
-| `opaque_fullscreen` | `true` | Ignore window rule `opacity` for fullscreen windows. |
+| `opaque_fullscreen` | `true` | Draw fullscreen windows over the backdrop and ignore window rule `opacity`. |
 
-With `opaque_fullscreen = false`, a fullscreen window whose rule opacity is
-below 1 keeps it and shows the desktop behind it instead of the backdrop.
-Other fullscreen windows stay opaque and skip blur.
+With `opaque_fullscreen = false`, a fullscreen window that is translucent shows
+the desktop behind it instead of the backdrop, and can be blurred. A window is
+translucent when its rule opacity is below 1 or the application itself draws
+transparent content. Other fullscreen windows stay opaque and skip blur.
 
 Set `prefer_no_csd = false` to let newly connected applications draw their own
 decorations. Restart applications after changing it because decoration protocol
