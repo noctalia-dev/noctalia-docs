@@ -101,7 +101,7 @@ honor_restored_maximize = false
 | `xwayland` | bool | `true` | Start xwayland-satellite for X11 applications. Changes require a restart. |
 | `show_cheatsheet` | bool | `true` | Show the keybind cheatsheet when Umbriel starts. |
 | `focus_on_activate` | bool | `false` | Let application activation requests focus and reveal their target. |
-| `honor_restored_maximize` | bool | `false` | Honor maximize requests made before a window first appears. |
+| `honor_restored_maximize` | bool | `false` | Honor maximize requests an application makes while its window opens, until it acknowledges its opening layout. |
 
 `xwayland-satellite` must be installed and available on `PATH` when X11 support
 is enabled.
