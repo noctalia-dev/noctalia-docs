@@ -111,6 +111,10 @@ When focus moves to a hidden column, Umbriel scrolls just far enough to reveal
 it. Dragged windows show an insertion preview and can be dropped into a new or
 existing column.
 
+Closing a focused column moves focus to the nearest surviving column. When that
+column contains stacked windows, Umbriel restores its most recently focused
+member instead of always selecting its first row.
+
 ## Vertical strips
 
 With horizontal workspaces, screen directions remain literal:
