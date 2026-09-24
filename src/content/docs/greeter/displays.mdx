@@ -29,13 +29,19 @@ noctalia-greeter outputs --details
 The first column is the connector name, such as `DP-1` or `HDMI-A-1`. When the
 display exposes EDID identity data, the second column is a stable identifier
 made from its manufacturer, model, and serial number. Either value can be used
-for `[output].name`. Layout, transform, scale, and per-output wallpaper entries
-continue to use connector names.
+for `[output].name` and for entries in `layout`, `transforms`, and `scales`.
+Per-output wallpaper entries continue to use connector names.
 
 ## Choose which monitors show the greeter
 
 By default, the greeter shows the same login interface on every connected
 monitor. Each display uses its own resolution and scale.
+
+On laptops, the compositor follows the libinput lid switch. While the lid is
+closed and an external display can be enabled, internal `eDP-*` and `LVDS-*`
+outputs are disabled and removed from the greeter layout. They return when the
+lid opens or the last usable external display disappears. An explicit
+`[output].name` pin takes precedence over automatic lid handling.
 
 To show it on only one monitor, pin that connector:
 
@@ -72,9 +78,20 @@ scales = "DP-1:1; DP-2:1"
 
 `layout` coordinates are logical pixels. Use matching per-output `scales` so
 the configured edges remain adjacent and the pointer can move naturally
-between monitors. When `layout` is set but a connector has no matching scale,
-that connector uses scale `1.0` instead of automatic DPI scaling. A global
-`scale` setting overrides all per-output scales.
+between monitors. Entries may use connector names or stable identifiers. Use
+semicolons between entries when identifiers contain spaces:
+
+```toml
+[output]
+layout = "Dell Inc. DELL U2723QE ABC123:0,0; LG Electronics LG HDR 4K XYZ789:2560,0"
+scales = "Dell Inc. DELL U2723QE ABC123:1.25; LG Electronics LG HDR 4K XYZ789:1.5"
+```
+
+When a configured layout entry has no matching scale, that output uses scale
+`1.0` to preserve its recorded logical coordinates. Connected outputs omitted
+from the layout are placed after the rightmost configured output and retain
+automatic DPI scaling. A global `scale` setting overrides all per-output
+scales.
 
 Noctalia can copy layout, transform, and effective scale values from the
 desktop session through xdg-output. It records a layout only when multiple
@@ -159,8 +176,8 @@ results match. Automatic scale is capped at `2`.
 Scale is resolved independently for each output in this order:
 
 1. Global `[output].scale` in `greeter.toml`
-2. A connector entry in `[output].scales` from `greeter.toml`, then `sync.toml`
-3. Scale `1.0` when `[output].layout` applies but the connector has no scale
+2. A connector or stable-identifier entry in `[output].scales` from `greeter.toml`, then `sync.toml`
+3. Scale `1.0` when the output has a matching `[output].layout` entry but no scale
 4. Automatic scale from display geometry
 
 Set different scales per connector:
