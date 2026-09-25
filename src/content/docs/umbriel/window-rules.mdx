@@ -155,10 +155,26 @@ and sets its extent.
 | `vrr` | Override the focused output's VRR policy. |
 | `tearing` | Request or veto asynchronous presentation. |
 | `hdr` | Override the focused output's HDR policy. |
+| `border_color_focused` | Override `colors.border.focused`. |
+| `border_color_unfocused` | Override `colors.border.unfocused`. |
+| `border_color_outer` | Override `colors.border.outer`. |
 
 These values refresh when matching identity or state changes. Fullscreen
 bypasses rule opacity unless
 [`appearance.opaque_fullscreen`](/umbriel/appearance/#window-appearance) is `false`.
+
+### Border colors
+
+Each `border_color_*` key is independent: an unset key keeps the
+[`[colors.border]`](/umbriel/appearance/#border-colors) color. Combined with the state
+selectors, they tell floating, pinned, or scratchpad windows apart:
+
+```toml
+[[window_rule]]
+match.is_scratchpad = true
+border_color_focused = "#E5C07BFF"
+border_color_unfocused = "#5C4A2AFF"
+```
 
 ## The only window in the workspace
 

@@ -133,12 +133,14 @@ has deliberately moved it elsewhere.
 
 ## Appearance and window actions
 
-Scratchpad windows use dedicated border colors:
+Scratchpad windows use the regular border colors unless a
+[window rule](/umbriel/window-rules/#border-colors) matches them:
 
 ```toml
-[colors.border]
-scratchpad_focused = "#E5C07BFF"
-scratchpad_unfocused = "#5C4A2AFF"
+[[window_rule]]
+match.is_scratchpad = true
+border_color_focused = "#E5C07BFF"
+border_color_unfocused = "#5C4A2AFF"
 ```
 
 Show and hide transitions, backdrop dimming and blur, and optional entry sizing

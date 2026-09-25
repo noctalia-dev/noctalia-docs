@@ -42,13 +42,12 @@ Colors use `#RRGGBB` or `#RRGGBBAA`.
 [colors.border]
 focused = "#7AA3FFFF"
 unfocused = "#292933FF"
-scratchpad_focused = "#E5C07BFF"
-scratchpad_unfocused = "#5C4A2AFF"
 outer = "#1A1A1FFF"
 ```
 
-The first four values select focused and unfocused colors for regular and
-scratchpad windows. `outer` colors the optional outer border.
+`focused` and `unfocused` color the inner border; `outer` colors the optional
+outer border. A [window rule](/umbriel/window-rules/#border-colors) can override any of
+them for the windows it matches.
 
 ### Overview colors
 
