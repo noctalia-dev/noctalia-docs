@@ -26,6 +26,9 @@ sound_theme          = "freedesktop"
   (screenshots). If a theme lacks the exact event, its trailing dash components are stripped (e.g.
   `message-new-instant`, then `message-new`, then `message`) before trying parent themes.
 
+Noctalia reconnects automatically if the PipeWire daemon restarts or is temporarily unavailable. Audio devices and
+controls disappear while the daemon is offline and repopulate after PipeWire and its session manager are ready again.
+
 ## Related IPC
 
 For output and microphone commands, default steps, mute behavior, and overdrive limits, see:
