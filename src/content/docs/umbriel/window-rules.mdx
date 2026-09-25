@@ -173,7 +173,8 @@ default_maximize = true
 
 It can apply fullscreen, maximize-to-edges, maximize, or a scrolling extent.
 The effect is removed when another tiled window appears and restored when the
-window becomes alone again.
+window becomes alone again. A window that opens with `default_pinned = true`
+opens floating, so it never opens in the alone state.
 
 Combine it with other selectors when only one application should receive the
 behavior:
