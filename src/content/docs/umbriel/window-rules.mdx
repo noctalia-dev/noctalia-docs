@@ -158,6 +158,9 @@ and sets its extent.
 | `border_color_focused` | Override `colors.border.focused`. |
 | `border_color_unfocused` | Override `colors.border.unfocused`. |
 | `border_color_outer` | Override `colors.border.outer`. |
+| `border_width` | Override `appearance.border_width`, 0 to 100. |
+| `corner_radius` | Override `appearance.corner_radius`, 0 to 100. |
+| `shadow` | Override `appearance.shadow.enabled`. |
 
 These values refresh when matching identity or state changes. Fullscreen
 bypasses rule opacity unless
@@ -174,6 +177,25 @@ selectors, they tell floating, pinned, or scratchpad windows apart:
 match.is_scratchpad = true
 border_color_focused = "#E5C07BFF"
 border_color_unfocused = "#5C4A2AFF"
+```
+
+### Decoration
+
+`border_width`, `corner_radius`, and `shadow` change what Umbriel draws around
+the windows a rule matches. Layout spacing keeps using the global border
+widths, so a rule never moves other windows: a thinner border leaves its gap
+empty, and a thicker one draws into the gap. `outer_border_width` and the
+shadow's softness, offsets, and color stay global.
+
+An application that draws its own rounded corners and shadow looks best
+without Umbriel's:
+
+```toml
+[[window_rule]]
+match.app_id = "^org[.]gnome[.]TextEditor$"
+border_width = 0
+corner_radius = 0
+shadow = false
 ```
 
 ## The only window in the workspace
