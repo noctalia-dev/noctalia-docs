@@ -46,6 +46,7 @@ and positions when the output becomes available again.
 | `sdr_white` | float | `203` | SDR reference white in cd/m² while HDR is active. |
 | `workspaces` | int, string array, or `"dynamic"` | `"dynamic"` | Workspace inventory for this output. |
 | `min_workspaces` | int | `1` | Minimum count for a dynamic output. |
+| `cyclic_workspaces` | bool | `false` | Wrap a workspace step around the ends of the inventory. |
 | `workspace_axis` | string | `"vertical"` | Workspace arrangement axis. |
 | `layout.scrolling.default_extent_fraction` | float | inherited | Initial scrolling-column extent on this output. |
 
@@ -70,6 +71,27 @@ min_workspaces = 3
 Do not combine `min_workspaces` with a fixed workspace inventory. See
 [Workspaces](/umbriel/workspaces/#choose-a-workspace-model) for naming, lifecycle, and
 workspace rules.
+
+### Cyclic workspaces
+
+With `cyclic_workspaces = true`, a workspace step past either end of the
+inventory wraps to the other end:
+
+```toml
+[output.DP-1]
+workspaces = 3
+cyclic_workspaces = true
+```
+
+This applies to `workspace-next`/`previous`,
+`window-move-to-workspace-next`/`previous`,
+`window-move-to-workspace-silent-next`/`previous`,
+`window-move-or-workspace-up`/`down` at the column edge, and
+`column-move-to-workspace-next`/`previous`.
+
+On a dynamic output, the trailing empty workspace is the last one. Stepping
+forward from the last populated workspace enters it, and one more step wraps to
+the first. A static inventory wraps directly at both ends.
 
 ### Initial scrolling width
 
