@@ -40,23 +40,22 @@ new_exits_fullscreen = []  # "tiled", "floating", "pinned", "all", or an array s
 
 ### Leaving fullscreen
 
-A window arrives on a workspace when it opens there, is moved there from
-another workspace or output, is dropped there by drag-and-drop, or returns
-there from a scratchpad. When the arriving window's kind is selected by
-`new_exits_fullscreen`, every other fullscreen window on the workspace leaves
-fullscreen.
+`new_exits_fullscreen` selects which kinds of window make a fullscreen window
+leave fullscreen when they arrive on its workspace. A window arrives when it
+opens there, is moved there from another workspace or output, is dropped there
+by drag-and-drop, or returns there from a scratchpad.
 
 | Value | Arriving window |
 | --- | --- |
-| `"tiled"` | A tiled window. |
+| `"tiled"` | A tiled window in the Dwindle or Master layout. |
 | `"floating"` | A floating window that is not pinned. |
 | `"pinned"` | A pinned window. |
 | `"all"` | Any window. |
 
 A string selects one kind and an array selects several. The empty array, the
-default, disables the behavior. In the scrolling layout a new tiled column opens
-beside the fullscreen column rather than beneath it, so `"tiled"` is mainly
-useful with Dwindle and Master.
+default, disables the behavior. In the scrolling layout a tiled window opens as
+a column beside the fullscreen one and the strip scrolls to it, so it never
+exits fullscreen.
 
 ### Struts
 
