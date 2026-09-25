@@ -159,6 +159,7 @@ and sets its extent.
 | `border_color_unfocused` | Override `colors.border.unfocused`. |
 | `border_color_outer` | Override `colors.border.outer`. |
 | `border_width` | Override `appearance.border_width`, 0 to 100. |
+| `outer_border_width` | Override `appearance.outer_border_width`, 0 to 100. |
 | `corner_radius` | Override `appearance.corner_radius`, 0 to 100. |
 | `shadow` | Override `appearance.shadow.enabled`. |
 
@@ -181,11 +182,11 @@ border_color_unfocused = "#5C4A2AFF"
 
 ### Decoration
 
-`border_width`, `corner_radius`, and `shadow` change what Umbriel draws around
-the windows a rule matches. Layout spacing keeps using the global border
-widths, so a rule never moves other windows: a thinner border leaves its gap
-empty, and a thicker one draws into the gap. `outer_border_width` and the
-shadow's softness, offsets, and color stay global.
+`border_width`, `outer_border_width`, `corner_radius`, and `shadow` change what
+Umbriel draws around the windows a rule matches. Layout spacing keeps using the
+global border widths, so a rule never moves other windows: a thinner border
+leaves its gap empty, and a thicker one draws into the gap. The shadow's
+softness, offsets, and color stay global.
 
 An application that draws its own rounded corners and shadow looks best
 without Umbriel's:
