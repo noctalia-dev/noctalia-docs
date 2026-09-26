@@ -220,6 +220,21 @@ The output leaves the desktop, but its workspaces and windows are retained and
 return when it is enabled again. Output-management tools can temporarily
 override this state until a later configuration reload reapplies the file.
 
+Use the logical output actions for the same temporary change without an
+external output-management tool:
+
+```sh
+umbriel msg output-disable:eDP-1
+umbriel msg output-enable:eDP-1
+umbriel msg output-toggle:eDP-1
+```
+
+These actions remove and restore the output as part of the desktop layout.
+Windows move to another enabled output while their home is unavailable, then
+return when it is enabled again. A disabled output is also absent from
+whole-desktop screenshots. The actions can be used directly by
+[lid event commands](/umbriel/configuration/#events).
+
 ## Display power management
 
 Use DPMS actions to power monitors off without removing their workspaces:
@@ -232,7 +247,8 @@ umbriel msg dpms-on:DP-1
 
 The bare actions target every configured output. Input wakes all monitors when
 every output is powered off. Outputs disabled with `enabled = false` are not
-affected.
+affected. DPMS does not remove an output from the logical desktop, move its
+windows, or exclude it from a whole-desktop capture.
 
 ## Live reconfiguration
 

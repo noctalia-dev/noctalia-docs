@@ -20,6 +20,7 @@ are required, `[bracket]` forms are optional.
 | `<cmd>` | Command line, run through the shell: `spawn:kitty` |
 | `<name>` | Submap to enter; `submap:reset` leaves one level |
 | `<workspace>[/<output>]` | Bare digits select a 1-based position, other text selects a name, and double quotes force a name; append `/output` to scope either form |
+| `<output>` | Connector or monitor name from `umbriel outputs` |
 | `<window-id>` | Window id from `umbriel windows` |
 | `[<window-id>]` | The same id; the bare action targets the focused window |
 | `[<output>]` | Connector or monitor name. Bare `dpms-off` and `dpms-on` target every configured output |
@@ -201,6 +202,9 @@ are described in [Overview](/umbriel/workspaces-overview/).
 | `dpms-off:[<output>]` | Power off one output, or every output when bare |
 | `dpms-on:[<output>]` | Power on one output, or every output when bare |
 | `keyboard-layout-next` | Switch one keyboard to its next configured layout |
+| `output-disable:<output>` | Remove an output from the desktop |
+| `output-enable:<output>` | Add an output to the desktop |
+| `output-toggle:<output>` | Add or remove an output from the desktop |
 | `session-quit:[skip-confirmation]` | Quit the session, confirming first unless told to skip |
 | `shortcuts-inhibit-toggle` | Toggle shortcuts inhibition for the focused surface |
 | `submap:<name>` | Enter a submap layer, or leave one with 'reset' |

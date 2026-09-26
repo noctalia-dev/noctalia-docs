@@ -168,6 +168,15 @@ lid_close = "notify-send 'The laptop lid is closed!'"
 lid_open = "notify-send 'The laptop lid is open!'"
 ```
 
+Logical output actions can remove the laptop panel from the desktop instead of
+merely powering it off:
+
+```toml
+[events]
+lid_close = "umbriel msg output-disable:eDP-1"
+lid_open = "umbriel msg output-enable:eDP-1"
+```
+
 ## Scratchpads
 
 With no `[[scratchpad]]` entries, Umbriel provides one implicit scratchpad named
