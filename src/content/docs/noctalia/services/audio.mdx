@@ -21,6 +21,9 @@ sound_theme          = "freedesktop"
   Exact format support depends on the distribution's libsndfile build.
 - `sound_theme` selects an installed sound theme. Themes inherit from their declared parents and fall back
   to `freedesktop`; shell sounds are loaded from each theme's `stereo` directory.
+  Premade themes are available on [Pling](https://www.pling.me/browse?cat=316&ord=rating); install them under
+  `~/.local/share/sounds/<theme-name>/`. To create your own, follow the
+  [freedesktop Sound Theme Specification](https://specifications.freedesktop.org/sound-theme/0.2/).
 - Shell sounds use these theme events: `message-new-instant` (notifications), `audio-volume-change` (volume
   changes), `power-plug` / `power-unplug` (laptop charger connected or removed), and `screen-capture`
   (screenshots). If a theme lacks the exact event, its trailing dash components are stripped (e.g.
