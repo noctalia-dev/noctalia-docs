@@ -180,6 +180,7 @@ export default defineConfig({
             { label: "Input", link: "umbriel/input/" },
             { label: "Appearance", link: "umbriel/appearance/" },
             { label: "Animation", link: "umbriel/animation/" },
+            { label: "Effects", link: "umbriel/effects/" },
             { label: "Layout", link: "umbriel/layout/" },
             { label: "Workspaces", link: "umbriel/workspaces/" },
             { label: "Workspaces Overview", link: "umbriel/workspaces-overview/" },
