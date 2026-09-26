@@ -26,6 +26,13 @@ Use a monitor identity when settings should follow one display between ports.
 Use a connector when settings belong to a physical port. If both match, the
 monitor section wins. Matching is case-insensitive.
 
+Without a matching output section, Umbriel enables outputs that advertise a
+preferred mode, a display identity, or no fixed mode list. A connector that
+advertises modes but provides neither a preferred mode nor an identity stays
+disabled. This avoids activating stale connector state reported by some DRM
+drivers. Add a matching output section with `enabled = true` to enable such a
+display explicitly.
+
 When an output disconnects or is disabled, Umbriel temporarily moves its
 workspaces and windows to another enabled output. They return with their layout
 and positions when the output becomes available again.
