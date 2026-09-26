@@ -11,6 +11,7 @@ Configure keyboard, pointer, touchpad, tablet, cursor, and focus behavior under
 ```toml
 [input]
 middle_click_paste = false
+client_window_drag = true
 window_drag_toggle = "none"
 ```
 
@@ -18,6 +19,11 @@ window_drag_toggle = "none"
 Shift+Insert. The regular Ctrl+C and Ctrl+V clipboard is unaffected.
 Applications started while primary selection is disabled must be restarted
 after it is re-enabled.
+
+`client_window_drag = false` ignores move requests from applications, such as
+dragging a client-side title bar or the empty tab strip of Chromium, Firefox,
+or Electron apps. Windows then move only with Mod+drag or keybinds.
+Resizing from client-side borders is unaffected.
 
 `window_drag_toggle` controls what pressing the other main mouse button does
 during a window drag:
