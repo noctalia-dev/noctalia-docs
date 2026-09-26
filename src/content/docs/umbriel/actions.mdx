@@ -36,6 +36,28 @@ are required, `[bracket]` forms are optional.
 |--------|--------|
 | `spawn:<cmd>` | Run a command with a launch activation token |
 
+## Screencasting
+
+Select one screen or window normally. The selected source starts sharing immediately, and the actions below can later
+change it while keeping the same PipeWire stream alive. Shares containing several selected sources remain fixed.
+
+The first set or follow action during an active share opens an Umbriel confirmation panel. Enter, or repeat a
+target-changing action, to approve it. Any other key or pointer click dismisses the panel and cancels only that pending
+action. A later action asks again. Once approved, target changes are immediate until the share ends. Set
+[`screencast.disable_dynamic_confirmation`](/umbriel/configuration/#screencast) to `true` to skip this protection.
+
+Changing a window stream to an output, or an output stream to a window, is supported. Follow mode lasts only for the
+active portal session. Be careful with window following because focusing a private window immediately shares it.
+
+| Action | Effect |
+|--------|--------|
+| `screencast-clear` | Pause the screencast and stop following |
+| `screencast-follow-output` | Follow the focused output |
+| `screencast-follow-stop` | Stop following and keep the current target |
+| `screencast-follow-window` | Follow the focused window |
+| `screencast-set-output:[<output>]` | Share the focused output, or the selected output |
+| `screencast-set-window:[<window-id>]` | Share the focused window, or the selected window |
+
 ## Focus
 
 | Action | Effect |

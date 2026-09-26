@@ -180,6 +180,22 @@ lid_close = "umbriel msg output-disable:eDP-1"
 lid_open = "umbriel msg output-enable:eDP-1"
 ```
 
+## Screencast
+
+Target-changing screencast actions ask for confirmation the first time they are
+used during an active single-source share. Dismissing the panel cancels only the
+pending action, so invoking one again asks again. Approval lasts until the share
+ends.
+
+```toml
+[screencast]
+disable_dynamic_confirmation = false
+```
+
+| Key | Type | Default | Description |
+| --- | --- | --- | --- |
+| `disable_dynamic_confirmation` | bool | `false` | Apply set and follow actions immediately without first confirming them. This can expose another window or output after an accidental key press. |
+
 ## Scratchpads
 
 With no `[[scratchpad]]` entries, Umbriel provides one implicit scratchpad named
