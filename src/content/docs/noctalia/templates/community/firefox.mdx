@@ -35,6 +35,8 @@ No separate Python package. Noctalia is the native messaging host.
 3. **Apply a theme** (change wallpaper / palette, or re-apply templates) so Noctalia writes `colors.json` and runs
    `firefox-theme`. That installs the user-local native messaging manifest when needed:
    `~/.mozilla/native-messaging-hosts/pywalfox.json` → your `noctalia` binary.
+   Noctalia-managed manifests are refreshed automatically when the executable path changes, including across NixOS
+   store generations. Manifests installed by other Pywalfox hosts are left untouched.
 
 4. **Restart Firefox** once after the manifest is first installed so it picks up the host.
 
