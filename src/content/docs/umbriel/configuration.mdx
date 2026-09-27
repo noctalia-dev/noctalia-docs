@@ -41,11 +41,25 @@ closes after ten seconds; an error remains until the next successful reload.
 Check a file without starting the compositor:
 
 ```sh
-umbriel validate
+umbriel config validate
 ```
 
 The command prints every diagnostic with its file, line, and column, and exits
 nonzero when it finds a problem.
+
+List every configuration key the installed binary accepts:
+
+```sh
+umbriel config schema
+umbriel config schema --json
+```
+
+Without `--json` it prints how many options each section has. With `--json` it
+prints each key's path, type, range, accepted values, format, and built-in
+default, plus the binary's `version` and `revision` (`null` for a build outside
+git). `name[]` marks the entries of an array of tables, such as
+`window_rule[].match.app_id`, and `<name>` a name you choose, such as
+`output.<name>.scale`.
 
 ## Include
 
