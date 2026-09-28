@@ -370,6 +370,8 @@ hide_delay_ms = 1400     # time before a popup starts hiding; range 250 to 10000
 scale = 1.0              # OSD size multiplier on top of shell.ui_scale
 background_opacity = 0.97 # background opacity of OSD popups
 border = true            # outline around OSD popup cards; set false for a borderless look
+border_color = "outline" # outline color: theme color role (e.g. "primary") or hex (e.g. "#a8b185")
+border_width = 1         # outline stroke width in px; raise for a thicker outline
 offset_x = 20            # absolute horizontal margin from the screen edge
 offset_y = 8             # absolute vertical margin from the screen edge
 # monitors = ["DP-1"]    # connector names; omit or leave empty for all monitors
@@ -404,7 +406,8 @@ volume, brightness, and lock-key popups 25% larger than the default). `monitors`
 connector names (same matching rules as notification toasts and the dock);
 leave it empty to show on every connected output. If none of the configured monitors are connected, OSD falls back to all
 outputs until one reconnects. `background_opacity` sets popup background opacity, `border` draws the card outline (default
-`true`; set `false` for a borderless look), and `offset_x` / `offset_y` are the
+`true`; set `false` for a borderless look), `border_color` sets its color (theme color role or hex, default `outline`),
+`border_width` sets its width in logical pixels (0 to 6, default `1`), and `offset_x` / `offset_y` are the
 absolute margins from the screen edge for the chosen `position`.
 Each popup kind can be toggled independently under `[osd.kinds]`. The volume master toggle enables both output and input
 OSDs by default; set `volume_output` or `volume_input` to `false` to disable one side only. `media = false` disables
