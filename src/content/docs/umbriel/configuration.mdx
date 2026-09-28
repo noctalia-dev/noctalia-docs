@@ -185,6 +185,13 @@ lid_close = "notify-send 'The laptop lid is closed!'"
 lid_open = "notify-send 'The laptop lid is open!'"
 ```
 
+Umbriel runs the command for the current lid state once during startup, after
+the compositor IPC socket is ready, then runs commands when that state changes.
+This also handles signing in while the lid is already closed or already open.
+If the system reports more than one lid switch, the combined state remains
+closed while any switch is closed. Device removal and re-addition during
+suspend do not repeat a command unless the combined state actually changed.
+
 Logical output actions can remove the laptop panel from the desktop instead of
 merely powering it off:
 
