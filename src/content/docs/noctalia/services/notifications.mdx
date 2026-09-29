@@ -13,6 +13,7 @@ show_actions             = true        # show action buttons; when false, clicki
 position                 = "top_right" # top_right | top_left | top_center | bottom_right | bottom_left | bottom_center
 layer                    = "top"       # top | overlay; overlay appears above fullscreen apps
 scale                    = 1.0         # toast size multiplier on top of shell.ui_scale
+width                    = 360         # toast width in pixels before scaling (240–500)
 background_opacity       = 0.97        # toast card background alpha; lower values let compositor blur show through
 border                   = true        # outline around toast cards; set false for a borderless look
 border_color             = "outline"   # outline color: theme color role (e.g. "primary") or hex (e.g. "#a8b185")
@@ -58,6 +59,7 @@ play_sound      = true
 - `border_width` sets the toast outline stroke width in logical px (scaled with the toast `scale`), 0 to 6 in 0.5 steps; 0 hides the outline. Defaults to 1 px. Critical toasts use at least the emphasized 3 px width, or `border_width` when it is larger. Configure in **Settings → Notifications → Toasts**.
 - `history_retention_hours = 0` (default) keeps notification history entries forever. Set to a positive integer (1–8760) to automatically remove entries older than that many hours from control-center history. Active on-screen toasts are never removed. Configure in **Settings → Notifications → History**.
 - `max_visible = 0` (default) fills all available vertical screen space with notification toasts. Set to a positive integer (1–20) to limit how many toasts are visible at once; excess toasts are queued off-screen and promoted when slots free up. Configure in **Settings → Notifications → Toasts**.
+- `width = 360` (default) toast width in pixels before `scale` (`240`–`500`). Configure in **Settings → Notifications → Toasts**.
 
 ## Filtering
 
