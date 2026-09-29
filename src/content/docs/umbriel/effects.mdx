@@ -283,8 +283,8 @@ Every kind sees:
 | --- | --- |
 | `umbriel_sample(vec2 uv)` | The input under the drawn rectangle: the captured window for animations, the native ring for borders, the pixels already on screen for window, screen, and cursor effects. |
 | `umbriel_sample_previous(vec2 uv)` | This effect's previous result. Using it allocates two extra buffers for each window or output it runs on. |
-| `umbriel_size` | Drawn width and height in logical pixels. |
-| `umbriel_scale` | Buffer pixels per logical pixel. |
+| `umbriel_size` | Drawn width and height in effect logical pixels, before overview zoom. |
+| `umbriel_scale` | Buffer pixels per effect logical pixel, including overview zoom. |
 | `umbriel_expand` | How far the drawn rectangle extends past the window on each side, as a fraction of its width and height. `(0, 0)` except for an animation running while drag physics deforms the window. |
 | `umbriel_time` | Seconds on the animation clock, times the border's `speed`. Held as a single-precision float that is never wrapped, so fine time-based motion loses precision after long uptimes. `sin` and `cos` reduce their argument to one revolution, so they stay correct at large angles. |
 | `umbriel_palette_count` | `4` for palette presets, `0` otherwise. |
