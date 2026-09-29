@@ -374,6 +374,7 @@ background_opacity = 0.97 # background opacity of OSD popups
 border = true            # outline around OSD popup cards; set false for a borderless look
 border_color = "outline" # outline color: theme color role (e.g. "primary") or hex (e.g. "#a8b185")
 border_width = 1         # outline stroke width in px; raise for a thicker outline
+follow_focused_output = false # show a new OSD on the focused output; keep it pinned until it disappears
 offset_x = 20            # absolute horizontal margin from the screen edge
 offset_y = 8             # absolute vertical margin from the screen edge
 # monitors = ["DP-1"]    # connector names; omit or leave empty for all monitors
@@ -407,7 +408,9 @@ already running timer. `scale` multiplies the effective OSD size on top of `shel
 volume, brightness, and lock-key popups 25% larger than the default). `monitors` limits OSD popups to the listed
 connector names (same matching rules as notification toasts and the dock);
 leave it empty to show on every connected output. If none of the configured monitors are connected, OSD falls back to all
-outputs until one reconnects. `background_opacity` sets popup background opacity, `border` draws the card outline (default
+outputs until one reconnects. `follow_focused_output = true` instead starts each OSD popup on the currently focused output and
+keeps it there until it disappears; if that output disconnects, the visible popup moves to the current focused output. This option
+takes precedence over `monitors`. `background_opacity` sets popup background opacity, `border` draws the card outline (default
 `true`; set `false` for a borderless look), `border_color` sets its color (theme color role or hex, default `outline`),
 `border_width` sets its width in logical pixels (0 to 6, default `1`), and `offset_x` / `offset_y` are the
 absolute margins from the screen edge for the chosen `position`.
