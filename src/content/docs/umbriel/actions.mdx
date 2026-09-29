@@ -285,7 +285,13 @@ See [Layout](/umbriel/layout/) for geometry, directions, and resizing behavior.
   [Scratchpads](/umbriel/scratchpads/).
 - An action unavailable in the active layout does nothing from a keybind and
   returns an explanatory error through `umbriel msg`.
-- `spawn:` supplies an activation token so the launched application can request
-  focus. Autostart commands do not receive one.
+- `spawn:` supplies an activation token and records the pointer-preferred
+  output and its active workspace. The launched application's first window opens there even if you
+  switch workspaces while it starts. Opening on a workspace you left is
+  silent, and explicit `default_output`, `default_workspace`, and
+  `default_scratchpad` window rules take precedence. `focus_on_activate`
+  controls whether an activation request focuses the window, not the recorded
+  launch destination. Autostart commands do not receive a token or recorded
+  placement.
 - Bare `session-quit` asks for confirmation. Use
   `session-quit:skip-confirmation` only when an immediate exit is intended.
