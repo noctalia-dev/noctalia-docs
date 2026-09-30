@@ -53,8 +53,14 @@ floating or pinned state that it creates.
 | `default_scrolling_column` | Join matching windows into one named scrolling column. |
 | `default_scrolling_column_order` | Set order inside a named scrolling column. |
 
-These values apply once when a window opens. Umbriel checks once more when the
-first title arrives because some applications set it after mapping.
+These values apply once when a window opens. Umbriel checks opening rules again
+when the first post-map title arrives and when the effective content type first
+changes from `none` to a non-`none` type. This covers applications that publish
+their initial identity late, including Wine and Proton rendering children.
+Each selected opening value applies at most once across those checks, so one
+identity signal cannot replay it over a later compositor action.
+Later identity changes refresh only the settings that update while a window is
+open.
 
 Dialogs float by default. Use `default_floating = false` in a matching rule to
 force one into the layout.
