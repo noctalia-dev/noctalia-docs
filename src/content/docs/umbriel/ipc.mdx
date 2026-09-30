@@ -29,8 +29,8 @@ Replies use `{"ok": ...}` or `{"err": "..."}`.
 | `{"cmd":"msg","arg":"<action>"}` | `umbriel msg <action>` |
 
 Window entries include IDs, application identity, process ID, geometry,
-workspace, and scratchpad membership. XWayland windows report an unknown client
-PID because they share the xwayland-satellite connection.
+workspace, and scratchpad membership. X11 windows report the process ID they
+publish as `_NET_WM_PID`, or `-1` when they publish none.
 
 Workspace entries include a stable ID, display name, index, output, layout,
 occupancy, and active and focused states. Use the `named` boolean instead of

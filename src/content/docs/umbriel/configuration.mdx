@@ -106,6 +106,7 @@ is unavailable.
 autostart = ["noctalia", "kitty"]
 mod_key = "Super"
 xwayland = true
+xwayland_native_resolution = false
 show_cheatsheet = true
 focus_on_activate = false
 honor_restored_maximize = false
@@ -115,13 +116,22 @@ honor_restored_maximize = false
 | --- | --- | --- | --- |
 | `autostart` | string array | `[]` | Commands started once with the session. Changes require a restart. |
 | `mod_key` | string | Super, or Alt when nested | Modifier represented by `Mod` in keybinds. |
-| `xwayland` | bool | `true` | Start xwayland-satellite for X11 applications. Changes require a restart. |
+| `xwayland` | bool | `true` | Start Xwayland lazily for X11 applications. Changes require a restart. |
+| `xwayland_native_resolution` | bool | `false` | Show outputs to X11 applications at their physical resolution, so they render sharp on scaled outputs. Changes require a restart. |
 | `show_cheatsheet` | bool | `true` | Show the keybind cheatsheet when Umbriel starts. |
 | `focus_on_activate` | bool | `false` | Let application activation requests focus and reveal their target. |
 | `honor_restored_maximize` | bool | `false` | Honor maximize requests an application makes while its window opens, until it acknowledges its opening layout. |
 
-`xwayland-satellite` must be installed and available on `PATH` when X11 support
-is enabled.
+`Xwayland` must be installed and available on `PATH` when X11 support is
+enabled. It starts when the first X11 application connects.
+
+X11 applications have no per-output scale. By default they see every output at
+its logical size, and Umbriel upscales their windows on outputs with a scale
+above 1, which looks soft. With `xwayland_native_resolution = true` they see
+each output at its physical size instead: a `3840x2160` output at scale `1.25`
+appears to them as `3840x2160` rather than `3072x1728`. Their windows render at
+one pixel per screen pixel and stay sharp, but X11 applications that do not
+scale their own interface look smaller on scaled outputs. Games benefit most.
 
 ## DRM devices
 
