@@ -178,17 +178,26 @@ Dwindle recursively splits tiles into independently sized regions.
 ```toml
 [layout.dwindle]
 preserve_split = false
+new_toward_cursor = false
 ```
 
 | Key | Default | Description |
 | --- | --- | --- |
 | `preserve_split` | `false` | Keep each split direction fixed after creation. |
+| `new_toward_cursor` | `false` | Place a new window on the half of the focused tile nearer the pointer. |
 
 ### Behavior
 
 A new window splits the focused tile along its longer edge. Without
 `preserve_split`, split directions may adapt as geometry changes. Enable it for
 stable, manually shaped regions.
+
+The new window takes the right or bottom half of the split by default. With
+`new_toward_cursor`, it takes the half on the pointer's side of the tile's
+center instead, so the pointer stays over the new window when it was over the
+focused tile. The focused tile is still the one that splits, and the split axis
+does not change. When the pointer is on another output or the overview is
+open, the default applies.
 
 Dwindle has no multi-window columns. Moving one into Dwindle places its windows
 as separate tiles.
