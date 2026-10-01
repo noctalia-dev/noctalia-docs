@@ -85,6 +85,10 @@ Bind `keyboard-layout-next` to cycle configured physical keyboard layouts:
 Physical keyboards that provide the selected layout stay synchronized. Virtual
 keyboards retain their application-provided keymap.
 
+When an input method removes its virtual keyboard, Umbriel restores the keyboard
+that supplied the input. Held shortcut modifiers stay active until they are
+released, even when another connected keyboard is idle.
+
 #### Tracking the layout per window
 
 `track_layout` accepts:
