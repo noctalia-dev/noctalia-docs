@@ -199,6 +199,17 @@ focused tile. The focused tile is still the one that splits, and the split axis
 does not change. When the pointer is on another output or the overview is
 open, the default applies.
 
+Directional moves (`window-move-left`, `window-move-right`, `window-move-up`,
+`window-move-down`, their `-or-output` and `-or-workspace` variants, and
+`column-move-left` and `column-move-right`, which do the same here) take
+the window out of its tile and split the tile it moves into. That tile splits
+along its longer edge, and the window takes the half nearer where it came
+from. The tile it left goes back to its sibling, so windows it passes through
+only shrink while it is inside them and keep their place in the layout. Moving
+toward a single neighbor that shares its split trades sides with that neighbor.
+To exchange two windows without changing any tile, use the `window-swap-*`
+actions.
+
 Dwindle has no multi-window columns. Moving one into Dwindle places its windows
 as separate tiles.
 

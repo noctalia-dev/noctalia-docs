@@ -139,12 +139,14 @@ Sizing rules per layout live in [Sizing behavior](/umbriel/layout/#sizing-behavi
 | `window-modify-width-left:<delta>` | Resize the focused column from its left edge |
 | `window-modify-width-right:<delta>` | Resize the focused column from its right edge |
 | `window-move-down` | Move the focused window down in its column |
+| `window-move-left` | Move the focused window left |
 | `window-move-or-output-down` | Move down, or the column to the output below |
 | `window-move-or-output-left` | Move the column left, or to the output left |
 | `window-move-or-output-right` | Move the column right, or to the output right |
 | `window-move-or-output-up` | Move up, or the column to the output above |
 | `window-move-or-workspace-down` | Move down, or to the next workspace at the edge |
 | `window-move-or-workspace-up` | Move up, or to the previous workspace at the edge |
+| `window-move-right` | Move the focused window right |
 | `window-move-to-output-down` | Move the focused window to the output below |
 | `window-move-to-output-left` | Move the focused window to the output left |
 | `window-move-to-output-next` | Move the focused window to the next output |
@@ -154,8 +156,12 @@ Sizing rules per layout live in [Sizing behavior](/umbriel/layout/#sizing-behavi
 | `window-move-up` | Move the focused window up in its column |
 | `window-set-primary-extent:<fraction>` | Set the focused area's primary extent fraction |
 | `window-set-secondary-extent:<fraction>` | Set the focused area's secondary extent fraction |
+| `window-swap-down` | Swap with the window below |
+| `window-swap-left` | Swap with the window to the left |
 | `window-swap-next` | Swap with the next window in layout order |
 | `window-swap-previous` | Swap with the previous window in layout order |
+| `window-swap-right` | Swap with the window to the right |
+| `window-swap-up` | Swap with the window above |
 
 ## Windows
 
@@ -266,7 +272,8 @@ Column and extent actions adapt to the active layout:
 
 | Action group | Scrolling | Dwindle | Master |
 | --- | --- | --- | --- |
-| Column movement | Reorders columns | Swaps neighboring tiles | Exchanges master and stack contents |
+| Column movement | Reorders columns | Same as window left/right | Exchanges master and stack contents |
+| Window left/right | Expels the window or stacks it into the neighboring column; moves it along its lane in a vertical strip | Moves the window into the neighboring tile | Moves between master and stack |
 | Consume and expel | Joins or splits columns | Swaps directional neighbors | Moves between master and stack |
 | Primary extent | Changes column width | Adjusts horizontal splits | Changes master fraction |
 | Secondary extent | Changes a row | Adjusts vertical splits | Changes a row |
