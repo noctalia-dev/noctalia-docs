@@ -30,7 +30,11 @@ Replies use `{"ok": ...}` or `{"err": "..."}`.
 
 Window entries include IDs, application identity, process ID, geometry,
 workspace, and scratchpad membership. X11 windows report the process ID they
-publish as `_NET_WM_PID`, or `-1` when they publish none.
+publish as `_NET_WM_PID`, or `-1` when they publish none. A member of a
+[tab group](/umbriel/layout/#tab-groups) reports `tabbed`, its place among the group's
+tabs as `tab_index` (from 0, `-1` outside a group), and `tab_hidden` while its
+group shows another tab; the plain listing marks it `tab` instead of
+`tile`.
 
 Workspace entries include a stable ID, display name, index, output, layout,
 occupancy, and active and focused states. Use the `named` boolean instead of
