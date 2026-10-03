@@ -65,7 +65,7 @@ Set these keys in `greeter.toml`. A command-line `--session` or `--user` value t
 | `[appearance.wallpaper]` | Default wallpaper `path`, `fill_mode`, and `fill_color`; `fill_color` also works without an image, and `fill_mode` accepts `center`, `crop`, `fit`, `stretch`, `repeat`, or `span` |
 | `[appearance.wallpapers.<connector>]` | Per-output wallpaper override using the same fill modes |
 | `[clock].enabled` | Show the clock; defaults to `true` |
-| `[clock].position` | `above-panel` (default), `top-left`, `top-right`, `bottom-left`, or `bottom-right` |
+| `[clock].position` | `above-panel` (default), `top-left`, `top-center`, `top-right`, `bottom-left`, `bottom-center`, or `bottom-right` |
 | `[clock].time_format` | Time line format; defaults to `{:%H:%M}` |
 | `[clock].date_format` | Date line format; defaults to `%A, %x` |
 | `[output].name` | Connector or stable EDID identifier on which to pin the greeter |
@@ -173,7 +173,7 @@ date_format = "%A, %x"
 
 Formats accept the same forms as Noctalia: bare `strftime` patterns such as `%H:%M`, or C++ chrono fields such as `{:%H:%M}`. Literal text is preserved, `\n` adds a line break, `%%` prints `%`, and `{{` / `}}` print braces. Common tokens include `%H` (24-hour hour), `%I` (12-hour hour), `%M` (minute), `%S` (second), `%p` (AM/PM), `%A` (weekday), `%B` (month), `%d` (day), `%Y` (year), and `%x` (locale date). Names and locale-preferred values follow the system's `LC_TIME`; the timezone follows the greeter host.
 
-Set either format to an empty string to hide only that line, or set `enabled = false` to disable the clock. The four corner positions use the same names as the power and scheme controls. When multiple elements use one corner, they stack inward in this order: scheme selector, power buttons, clock. On a display too short to fit the centered clock safely above the login panel, the date is omitted first; the clock is hidden only if the time line still cannot fit without overlap.
+Set either format to an empty string to hide only that line, or set `enabled = false` to disable the clock. The four corner positions use the same names as the power and scheme controls. When multiple elements use one corner, they stack inward in this order: scheme selector, power buttons, clock. `top-center` stays below a configuration-error banner. `bottom-center` occupies the logo's bottom-center slot when `[appearance].hide_logo = true`; with the logo visible, the clock stacks directly above it. On a display too short to fit a centered clock without touching the login panel, the date is omitted first; the clock is hidden only if the time line still cannot fit without overlap.
 
 ## Full example
 
