@@ -55,6 +55,32 @@ For a source checkout, `sudo ./scripts/setup_greeter_system.sh` performs the com
 
 Treat this like a blank screen: inspect the current-boot logs, confirm that the state directory was recreated with the right owner, and check that referenced wallpaper files still exist. A tmpfiles rule that assumes a different greeter account can recreate the directory with the wrong ownership.
 
+### Intel eDP stays black until a VT switch
+
+If the compositor log shows a successful output modeset and first frame, but an
+internal Intel display remains black until switching to another VT and back,
+inspect the kernel journal:
+
+```sh
+journalctl -b -k | grep -F "Selective fetch area calculation failed"
+```
+
+This can indicate an i915 Panel Self Refresh 2 (PSR2) selective-fetch problem,
+particularly on Meteor Lake laptops. The warning alone does not prove the
+cause, because i915 normally falls back to a full update. Update the kernel and
+firmware first. As a diagnostic, temporarily add this kernel parameter in the
+bootloader:
+
+```text
+i915.enable_psr2_sel_fetch=0
+```
+
+If that makes the greeter visible on the first modeset, persist the parameter
+through the distribution's bootloader configuration and report the hardware
+and kernel version to the distribution or Intel DRM maintainers. The parameter
+disables a display power-saving optimization and may increase power use. See
+the related [upstream Intel DRM PSR report](https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/11762).
+
 ### Failed to spawn client or wrong executable path
 
 The greetd `command` must use the full installed path to `noctalia-greeter-session`, often `/usr/bin/noctalia-greeter-session` for a package and `/usr/local/bin/noctalia-greeter-session` for a manual install. Find it with:
