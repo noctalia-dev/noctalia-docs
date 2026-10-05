@@ -144,6 +144,8 @@ size = 24
 path = "/usr/share/icons"
 ```
 
+If the path contains no cursor theme (no `<path>/*/cursors` directory, for any theme name), the greeter also tries `<path>/share/icons`, so a package or prefix root (such as a Nix store path) works too. If neither contains any cursor theme, an error is logged and the path is used as given. A colon-separated list of directories is used as is, without this check.
+
 The path must be readable by the greetd session user. A cursor theme installed only in your personal home directory is normally unavailable to the greeter.
 
 If the named theme cannot be loaded, wlroots uses its built-in fallback. That
@@ -193,18 +195,17 @@ services.displayManager.noctalia-greeter = {
 
 ### Project flake module
 
-The project flake module provides a `cursorTheme.package` convenience option. It fills `cursor.path`, while other cursor values like `theme` and `size` go under `settings.cursor`:
+Configure the greeter through `settings`:
 
 ```nix
 services.displayManager.noctalia-greeter = {
   enable = true;
 
-  cursorTheme.package = pkgs.bibata-cursors;
-
   settings = {
     cursor = {
       theme = "Bibata-Modern-Ice";
       size = 24;
+      path = pkgs.bibata-cursors;
     };
     keyboard = {
       layout = "us,cz";
