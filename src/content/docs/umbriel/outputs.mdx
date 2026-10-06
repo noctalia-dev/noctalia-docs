@@ -220,6 +220,10 @@ session environment values.
 Screenshots from normal screencopy clients receive an SDR view while HDR is
 active.
 
+Gamma-control adjustments such as Night Light are suspended while HDR is
+active. Umbriel keeps the client's latest gamma table and restores it when the
+output returns to SDR.
+
 ### Bit depth
 
 Set `bit_depth = 10` to request a 10-bit SDR compositor render format:
