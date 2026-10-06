@@ -19,10 +19,15 @@ blur_popups = true
 | Selector | Type | Description |
 |----------|------|-------------|
 | `match.namespace` | regex | Match the layer surface namespace. |
+| `match.layer` | enum | Match `"background"`, `"bottom"`, `"top"`, or `"overlay"`. |
+| `match.at_startup` | bool | Match during or after the first 60 seconds. |
 
 Regular expressions match any part of a namespace. Use `^` and `$` for an
 exact match. The selector takes either one pattern or an array of them, and any
 one of them matching is enough.
+
+Selectors are optional: a rule without them matches every layer surface, and
+every matching rule contributes its values.
 
 ## Effects
 
