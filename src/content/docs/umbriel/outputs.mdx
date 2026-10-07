@@ -11,6 +11,7 @@ monitor identity:
 mode = "3840x2160@165"
 position = [0, 0]
 scale = 1.25
+focus_at_startup = true
 ```
 
 Run `umbriel outputs` inside a session to list names and available modes. The
@@ -42,6 +43,7 @@ and positions when the output becomes available again.
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
 | `enabled` | bool | `true` | Turn the monitor on or off. |
+| `focus_at_startup` | bool | `false` | Move the mouse cursor to this monitor on startup. |
 | `mode` | string | preferred | Resolution and optional refresh rate, such as `"2560x1440@165"`. |
 | `position` | `[x, y]` | automatic | Top-left position in logical coordinates. |
 | `scale` | float | `1.0` | Output scale from 0.25 to 4.0. |
