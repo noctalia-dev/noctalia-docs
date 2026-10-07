@@ -204,7 +204,8 @@ only where a surface is transparent.
 
 Optimized blur samples the background beneath the window stack. Set it to
 `false` when translucent surfaces should blur the surfaces directly behind
-them, at a higher rendering cost.
+them, at a higher rendering cost. The shared background cache follows
+background layer-shell updates, including animated map and unmap transitions.
 
 ### Shadow
 
