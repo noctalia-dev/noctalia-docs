@@ -320,6 +320,12 @@ does not change focus. This follows the actual seat focus across tiled,
 floating, and pinned windows, including pinned windows whose owning workspace
 is inactive.
 
+After a touchpad layout swipe, the gesture-selected window keeps focus through
+release. The next real pointer motion can focus the window now beneath the
+pointer, even when the layout moved it there without a border crossing. A
+pointer-bound layout drag instead waits for a real border crossing so release
+jitter cannot immediately undo its selection.
+
 `follows_mouse_max_scroll` limits how far Umbriel may scroll a layout to reveal
 that window, measured in viewport widths. `0.0` allows only fully visible
 windows. Omit the key for no limit.
