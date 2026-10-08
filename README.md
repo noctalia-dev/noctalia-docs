@@ -3,6 +3,14 @@
 
 All documentation in this repository is synchronized from the relevant external Noctalia repositories. This repository is used as the published documentation mirror, so pull requests and issues are disabled here. To propose a documentation change, update the corresponding source repository instead.
 
+## Dependency maintenance
+
+Use Node.js 22.12.0 or newer and `npm ci` to install the dependency versions recorded in `package-lock.json`. Run `npm audit` after dependency updates and `npm run build` to verify the documentation build.
+
+The scoped `postcss-selector-parser` override in `package.json` keeps Expressive Code's `postcss-nested` dependency on a version patched for [GHSA-rj75-hqrm-r3gf](https://github.com/advisories/GHSA-rj75-hqrm-r3gf). Remove the override once the upstream dependency resolves to version 7.1.6 or newer without it. Avoid `npm audit fix --force`: its proposed Starlight downgrade is not a compatible security upgrade.
+
+Commit and push dependency updates to this repository's `main` branch before deployment. The deployment and content-sync scripts reset the checkout to `origin/main`, discarding uncommitted changes.
+
 ## 🧞 Commands
 
 All commands are run from the root of the project, from a terminal:

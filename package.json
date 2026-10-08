@@ -13,12 +13,12 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/markdown-remark": "^7.2.2",
-    "@astrojs/starlight": "^0.41.1",
-    "@tabler/icons-webfont": "^3.46.0",
-    "astro": "^7.1.6",
+    "@astrojs/markdown-remark": "^7.3.2",
+    "@astrojs/starlight": "^0.41.11",
+    "@tabler/icons-webfont": "^3.49.0",
+    "astro": "^7.3.8",
     "remark-custom-heading-id": "^2.0.0",
-    "sharp": "^0.35.3"
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@fontsource/inter": "^5.2.8",
@@ -26,5 +26,10 @@
     "@types/react": "^19.2.14",
     "react": "^19.2.5",
     "satori": "^0.26.0"
+  },
+  "overrides": {
+    "postcss-nested": {
+      "postcss-selector-parser": "^7.1.6"
+    }
   }
 }
