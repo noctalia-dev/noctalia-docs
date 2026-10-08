@@ -112,6 +112,8 @@ NetworkManager is preferred and followed on the system bus: when it starts after
 
 The current connection line lists the IPv4 address, signal strength, radio band, and external IP. The band (`2.4 GHz`, `5 GHz`, `6 GHz`, or `60 GHz`) is shown only when the backend reports the connection frequency. NetworkManager and wpa_supplicant report it; iwd reports it when Station diagnostics provide a positive frequency.
 
+Clicking a secured network you have not joined, or a password request from the backend while the tab is open, shows a password prompt above the network list and focuses its first text field, so you can type right away. The eye button shows the password as plain text; copy and cut stay blocked while it is visible.
+
 ### Enterprise Wi-Fi (802.1X)
 
 Clicking a WPA2/WPA3-Enterprise network opens a credential form instead of the pre-shared-key field: EAP method (PEAP or TTLS), inner authentication, identity, anonymous identity, server domain suffix, and CA certificate path. The password field below the form is the one used for the EAP login.
