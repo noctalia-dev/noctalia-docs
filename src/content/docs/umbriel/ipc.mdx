@@ -172,8 +172,17 @@ umbriel subscribe workspaces |
 
 `umbriel outputs`, `umbriel color`, `umbriel tearing`, `umbriel layers`, and
 `umbriel keyboard-layouts` print human-readable state. Each accepts `--json`.
+
+## Config commands
+
 `umbriel config validate` checks a configuration and `umbriel config schema`
 lists the keys it accepts, both without a running compositor.
+
+`umbriel config-replace <path>` loads and watches a different configuration file
+in the running compositor. The path must be absolute. On success, the new file
+and its includes replace the previous watch set, and later reloads use the new
+file. A missing, unreadable, or invalid file returns an error and leaves the
+active configuration and watch set unchanged. Warnings do not reject a replacement.
 
 ## Virtual outputs
 
