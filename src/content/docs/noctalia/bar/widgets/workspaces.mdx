@@ -19,7 +19,7 @@ Pill styling and `capsule_radius` apply only when `style = "regular"`.
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `style` | string | `"regular"` | Pill style: `"regular"` (animated pills), `"minimal"` (labels drawn without pill backgrounds), or `"focus_hint"` (inactive dots + expanded active pill with focused app icon). |
+| `style` | string | `"regular"` | Pill style: `"regular"` (animated pills), `"minimal"` (labels drawn without pill backgrounds, colored with the focused, occupied, empty, and urgent colors), or `"focus_hint"` (inactive dots + expanded active pill with focused app icon). |
 | `show_labels` | bool | `true` | Draw text labels on workspaces. Minimal renders labels and nothing else, so turning them off leaves its workspaces as empty slots. |
 | `show_icons` | bool | `true` | Draw the focused app icon on the active pill. Focus Hint only; the other styles never draw app icons. |
 | `label_source` | string | `"id"` | What labels show: `"id"` (workspace number, falling back to its name when no numeric identity exists) or `"name"` (workspace name). |

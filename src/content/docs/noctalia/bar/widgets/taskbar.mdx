@@ -37,7 +37,7 @@ With grouping, `workspace_group_content` chooses what each capsule shows for its
 | `window_title_max_width` | int | `100` | Maximum width of each window title in pixels when titles are enabled. |
 | `taskbar_max_width` | int | `8192` | Total taskbar width budget in pixels; titles shrink to fit and disappear when space is too narrow. |
 | `show_workspace_label` | bool | `true` | When `group_by_workspace` is on, show the workspace tag pill on each capsule. Set `false` for groups without the label. |
-| `minimal` | bool | `false` | With workspace grouping and labels enabled, draw text-only labels without colored disc backgrounds. |
+| `minimal` | bool | `false` | With workspace grouping and labels enabled, draw text-only labels without colored disc backgrounds. Labels use the focused, occupied, empty, and urgent colors. |
 | `workspace_label_placement` | string | `corner` | With grouping: `corner`, `centered` (on the pill edge), or `inside` (first tile in the pill). Requires `show_workspace_label`. |
 | `hide_empty_workspaces` | bool | `false` | When `group_by_workspace` is on, do not show capsules for workspaces that have no windows in the taskbar list. |
 | `workspace_group_capsule` | bool | `true` | Draw the background/border capsule around each workspace group. Set `false` for grouped icons and labels only. |
