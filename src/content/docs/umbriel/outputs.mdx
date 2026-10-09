@@ -232,8 +232,10 @@ Run `umbriel color` to inspect the metadata in the active output description.
 The JSON form reports `mastering_display_primaries`, `mastering_luminance`,
 `max_cll`, and `max_fall` for each output.
 
-Screenshots from normal screencopy clients receive an SDR view while HDR is
-active.
+Shared-memory screenshots from normal screencopy and image-copy clients receive
+an 8-bit SDR view while HDR is active. DMA-BUF capture may retain 10-bit
+storage while still containing SDR values. Export-DMA-BUF bypasses the SDR
+capture view and retains the output's native HDR representation.
 
 Gamma-control adjustments such as Night Light are suspended while HDR is
 active. Umbriel keeps the client's latest gamma table and restores it when the
@@ -288,10 +290,13 @@ the client buffer format to exactly match what KMS accepts for the plane. Set
 
 #### Screencopy and capture
 
-Screencopy clients such as `grim` and Noctalia receive raw buffers in the
-output's active 10-bit render format (XR30 or XB30) when 10-bit SDR is active.
-Unlike HDR capture, the pixels are not converted to an 8-bit SDR format first.
-Tools that do not handle 10-bit formats may produce undesired output.
+Shared-memory captures through screencopy and image-copy use an 8-bit format
+even when the output render format is XR30 or XB30. This applies to both 10-bit
+SDR outputs and the SDR capture view produced while HDR is active, improving
+compatibility with clients whose shared-memory paths assume 8-bit pixels.
+DMA-BUF capture may retain the negotiated 10-bit storage format. During HDR,
+that buffer still contains Umbriel's SDR capture view. Export-DMA-BUF alone
+bypasses the conversion and exposes the displayed native representation.
 
 ## Virtual outputs
 
