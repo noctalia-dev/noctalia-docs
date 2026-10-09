@@ -119,6 +119,29 @@ A source `name` is its identity, so duplicate names in `[[plugins.source]]` are 
 a git source with the same name but a different `location` deletes Noctalia's app-managed repo cache and exported
 runtime files for that source, then re-fetches from the new location when needed.
 
+## Recommendations and discovery
+
+In **Settings → Plugins → Plugin Store**, open an installed plugin and click the **thumbs-up** button to recommend it.
+The number inside is its recommendation count. A filled thumb shows your recommendation, and the store tile highlights
+it too. Click again to withdraw it.
+
+You can recommend installed plugins from the built-in **official** and **community** sources. Custom-source and deprecated
+plugins cannot receive new recommendations. Disabling or uninstalling a plugin keeps your recommendation. If a plugin
+leaves the catalog, it stays visible as **Not listed** until you withdraw your recommendation.
+
+Use **Most recommended** to browse by total count or **Trending** to find plugins receiving recent recommendations.
+You can still sort by newest added. Counts help with discovery; they aren't a quality rating. If a recommendation fails,
+your previous state stays unchanged and you can retry. If counts are unavailable, you can keep browsing and installing.
+
+### Privacy
+
+No account is needed. Clicking the thumb sends your choice and a private identifier specific to that plugin to Noctalia's
+service. This is separate from startup telemetry and does not send an inventory of installed plugins.
+Recommendations stay until you withdraw them; the service keeps a removal record for 30 days. Deleting Noctalia's saved
+state means you can no longer withdraw earlier recommendations. See the [privacy policy](https://noctalia.dev/privacy).
+
+**Offline Mode** disables recommendation changes and count updates. It does not save changes to send later.
+
 ## Updating
 
 `noctalia msg plugins update <source>` updates the source and hot-reloads its enabled plugins. The global
