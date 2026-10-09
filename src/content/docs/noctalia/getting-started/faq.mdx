@@ -400,6 +400,41 @@ sudo sv restart wpa_supplicant
 
 </FaqItem>
 
+<FaqItem question="Why does connecting to Wi-Fi hang or fail as not authorized?" id="networkmanager-polkit">
+
+Some distributions, openSUSE among them, require polkit authorization before NetworkManager adds or activates a connection. If no polkit agent answers that prompt, the request either fails as not authorized or waits until the D-Bus timeout (about 25 seconds) and then fails. Noctalia shows a notification in both cases.
+
+**Option 1: enable Noctalia's polkit agent (recommended)**
+
+Set `shell.polkit_agent = true` (Settings → Security). Noctalia then shows the authentication prompt itself. Your system's polkit policy stays unchanged. Skip this if another desktop agent already handles prompts in your session.
+
+**Option 2: allow NetworkManager actions without a prompt**
+
+A polkit rule can authorize NetworkManager actions for a group. This lets every member of that group change network settings without a password, so use a group limited to trusted administrators. The group is usually `wheel` on openSUSE, Fedora, and Arch, and often `netdev` on Debian and Ubuntu; check that your user belongs to it with `id`.
+
+```js title="/etc/polkit-1/rules.d/49-networkmanager.rules"
+polkit.addRule(function (action, subject) {
+  var allowed = [
+    "org.freedesktop.NetworkManager.enable-disable-network",
+    "org.freedesktop.NetworkManager.enable-disable-wifi",
+    "org.freedesktop.NetworkManager.enable-disable-wwan",
+    "org.freedesktop.NetworkManager.network-control",
+    "org.freedesktop.NetworkManager.settings.modify.own",
+    "org.freedesktop.NetworkManager.settings.modify.system",
+    "org.freedesktop.NetworkManager.wifi.scan",
+    "org.freedesktop.NetworkManager.wifi.share.open",
+    "org.freedesktop.NetworkManager.wifi.share.protected",
+  ];
+  if (allowed.indexOf(action.id) >= 0 && subject.isInGroup("wheel")) {
+    return polkit.Result.YES;
+  }
+});
+```
+
+polkit reloads rules automatically; no restart is needed.
+
+</FaqItem>
+
 <FaqItem question="Why can't I connect to my VPN in NetworkManager?">
 
 By default, NetworkManager generates VPN system connections for the current user only. This saves secrets to `nm-applet`. If you have `nm-applet` this should work fine, however if you don't have it you will need to create the system connection for all users. 
