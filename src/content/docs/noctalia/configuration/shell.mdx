@@ -442,7 +442,7 @@ When enabled and `wlr-screencopy` is available, Noctalia can capture the desktop
 
 Configure under **`[lockscreen]`** in TOML, or use **Settings → Security → Lock Screen**. The **Desktop capture** and transition controls appear only when your compositor supports screencopy. Use **Wallpaper** to pick a custom lock screen image (empty uses the desktop wallpaper per output).
 
-Lock screen transitions have their own effect pool, duration, and edge smoothness. They do not read or modify the settings under **`[wallpaper]`**. Set `transition = []` to disable lock and unlock animations. A lock triggered before suspend or hibernate is shown fully on wake without replaying its lock animation; unlocking still uses the configured transition.
+Lock screen transitions have their own effect pool, duration, and edge smoothness. They do not read or modify the settings under **`[wallpaper]`**. Set `transition = []` to disable lock and unlock animations.
 
 ```toml
 [lockscreen]
