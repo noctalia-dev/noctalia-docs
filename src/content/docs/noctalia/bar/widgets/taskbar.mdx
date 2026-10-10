@@ -19,6 +19,7 @@ When grouped app collapsing is enabled, multi-window app tiles also show compact
 **Workspace grouping** (`group_by_workspace` and related options) needs per-window workspace assignment from the compositor, not just a workspace list. Without it, the taskbar stays flat and those settings are hidden in the GUI (config keys are accepted but ignored). LabWC is a common example ([discussion #2924](https://github.com/labwc/labwc/discussions/2924)); use the **workspaces** widget for switching there.
 
 When `group_by_workspace` is enabled, workspace **disc indicators** (the small numbered/name tags) and optional **group capsules** (the background around each workspace's icon row) use the taskbar widget's resolved `capsule_radius`.
+On niri, named workspaces use their names for these tags; unnamed workspaces use their numeric index.
 Set `[widget.taskbar].capsule_radius` for just the taskbar, or `[bar.<name>].capsule_radius` as the bar default.
 Set `show_workspace_label = false` to hide workspace disc indicators (icons only).
 Set `workspace_group_capsule = false` to drop the group background/border while keeping grouping and disc labels.
