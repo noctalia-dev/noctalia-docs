@@ -231,6 +231,10 @@ Umbriel writes its main log to `$XDG_CACHE_HOME/umbriel/umbriel.log`. If
 `~/.cache/umbriel/umbriel.log`. The previous file is retained as
 `umbriel.log.1` when the current log reaches 1 MiB.
 
+Messages from wlroots appear with the `[wlr]` tag at info level and above. To
+include wlroots debug output when reporting a rendering or display problem,
+start Umbriel with `UMBRIEL_WLR_DEBUG=1` set in its environment.
+
 When standard output or standard error is connected to a TTY, raw writes from
 Umbriel and its child processes are redirected to
 `$XDG_CACHE_HOME/umbriel/umbriel-stderr.log`, or
