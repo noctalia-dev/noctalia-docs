@@ -105,6 +105,7 @@ open_near_click_session        = false  # attached/floating: follow the bar clic
 width = 760                # panel width in pixels (560–1100)
 search_position = "bottom" # top | bottom; whole launcher toolbar position
 default_view   = "recent" # recent | pinned | all_apps | categories
+category_icons_only = false # show app category icons without text labels
 show_settings_button = true # show the Settings shortcut
 show_session_button = true # show the session-actions shortcut
 show_icons      = true   # show application icons in launcher results
@@ -270,6 +271,7 @@ Notes:
 - `shell.launcher.width` sets the launcher panel width in pixels from `560` to `1100` (default `760`).
 - `shell.launcher.search_position` places the complete launcher toolbar at the `top` or `bottom` (default). `show_settings_button` and `show_session_button` independently control its shortcuts.
 - `shell.launcher.default_view` chooses the view shown when opening without a search: `recent` (default), `pinned`, `all_apps`, or `categories`. If the selected view has no entries, the launcher opens **All Apps**.
+- `shell.launcher.category_icons_only` hides text labels on app category tabs such as Internet and Games, keeping full names in hover tooltips. Disabled by default; category tabs show icons and text. It does not change the main view tabs.
 - `shell.launcher.show_icons` toggles application icons in launcher result rows. Prefixed-provider rows (for example emoji) still show their leading character when icons are hidden.
 - `shell.launcher.show_app_origin_indicator` toggles the package-origin overlays on application results, such as Flatpak, Snap, Nix, and AppImage.
 - `shell.launcher.compact` uses smaller icons, tighter padding, and single-line rows (subtitles hidden).
