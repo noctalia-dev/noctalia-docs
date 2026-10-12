@@ -21,11 +21,12 @@ default_view = "recent"
 show_settings_button = true
 show_session_button = true
 app_grid = false
+track_usage = true
 ```
 
 `width` sets the panel width from 560 to 1100 pixels. At narrower widths, the view tabs use icons with full-name tooltips so the navigation stays on one row. `search_position = "top"` moves the whole toolbar above the results. `default_view` accepts `recent`, `pinned`, `all_apps`, or `categories`; when a conditional view is unavailable, the launcher opens All Apps. **All Apps** stays flat, while **Categories** adds a second row for switching between desktop-entry categories. Hover a view or category tab to see its full name. `app_grid` switches application browsing, global search results, and the provider overview between rows and an icon grid. Search results from an explicitly selected or prefixed provider remain rows.
 
-The view tabs sit on the left, with buttons on the right to toggle usage-based ordering and grid view without opening Settings. The grid/list button shows the layout it will switch to: a list icon while grid view is active, and a grid icon while list view is active. The ordering button also shows the ordering it will switch to: an alphabetical icon while frequency sorting is active, and a frequency icon while default ordering is active. The selected result stays visible when you change ordering. The ordering button appears for All Apps, Categories, and search results. It is hidden for Recent, Pinned, Providers, and session actions, where changing the order does not apply. They change the same persistent options shown under **Settings → Panels → Launcher**.
+The view tabs sit on the left, with buttons on the right to toggle usage-based ordering and grid view without opening Settings. The grid/list button shows the layout it will switch to: a list icon while grid view is active, and a grid icon while list view is active. The ordering button also shows the ordering it will switch to: an alphabetical icon while frequency sorting is active, and a frequency icon while default ordering is active. Turning usage ordering off keeps recording frequency and recent launches. The selected result stays visible when you change ordering. The ordering button appears for All Apps, Categories, and search results while `track_usage` is enabled. It is hidden for Recent, Pinned, Providers, and session actions, where changing the order does not apply. The buttons change the same persistent options shown under **Settings → Panels → Launcher**.
 
 ## How search works
 
@@ -89,7 +90,7 @@ A quick way to find and copy emojis.
 
 - **Prefix**: `/emo `
 - **Functionality**: Searches `emoji.json` by name, category, and keywords. Activating a result copies the emoji character directly to your clipboard.
-- **Usage**: The **Recently Used** filter lists recent picks newest first. With `shell.launcher.sort_by_usage` enabled, frequently copied emojis also rise to the top of an empty `/emo` query.
+- **Usage**: With `shell.launcher.track_usage` enabled, the **Recently Used** filter lists recent picks newest first. When `shell.launcher.sort_by_usage` is also enabled, frequently copied emojis rise to the top of an empty `/emo` query.
 
 Example: `/emo heart`
 
@@ -235,7 +236,7 @@ supports readline-style shortcuts. Otherwise `Ctrl+A` selects all and `Ctrl+U` c
 The launcher itself is mostly automatic, but its behavior is influenced by other sections of your config:
 
 - **[Keybinds](/noctalia/configuration/shell/#keybinds)**: Customize navigation (`up`, `down`) and activation (`validate`, `cancel`).
-- **[Shell](/noctalia/configuration/shell/#shell-settings)**: `ui_scale` and `font_family` affect the launcher's appearance. `shell.launcher.width`, `search_position`, `default_view`, `show_settings_button`, and `show_session_button` configure the panel, toolbar, and opening view. `show_icons`, `show_app_origin_indicator`, `compact`, `app_grid`, `show_app_actions`, `sort_by_usage`, `pinned`, `fetch_exchange_rates`, and `auto_paste` adjust result layout, origin overlays, action search, ordering, pinning, currency rate refresh, and paste-after-copy (Settings → Launcher). `[shell.launcher.dmenu.entry.<id>]` adds custom dmenu-style providers backed by a shell command.
+- **[Shell](/noctalia/configuration/shell/#shell-settings)**: `ui_scale` and `font_family` affect the launcher's appearance. `shell.launcher.width`, `search_position`, `default_view`, `show_settings_button`, and `show_session_button` configure the panel, toolbar, and opening view. `show_icons`, `show_app_origin_indicator`, `compact`, `app_grid`, `show_app_actions`, `track_usage`, `sort_by_usage`, `pinned`, `fetch_exchange_rates`, and `auto_paste` adjust result layout, origin overlays, action search, usage history and ordering, pinning, currency rate refresh, and paste-after-copy (Settings → Launcher). `[shell.launcher.dmenu.entry.<id>]` adds custom dmenu-style providers backed by a shell command.
 - **[Wallpaper](/noctalia/desktop/wallpaper/)**: Defines the search paths for the Wallpaper provider.
 - **[Session actions](/noctalia/configuration/shell/#session-panel)**: Defines the actions shown by the Session provider.
 
