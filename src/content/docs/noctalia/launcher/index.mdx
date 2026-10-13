@@ -9,24 +9,29 @@ The Noctalia launcher is a centralized search interface that provides quick acce
 
 ## Layout
 
-The launcher combines search with compact views for Recent, Pinned, All Apps, Categories, and Providers. The Pinned view appears when at least one app is pinned. The profile, search field, Settings shortcut, and session shortcut share one toolbar that can sit above or below the results. The toolbar's outer edges align with the view tabs and results area.
+The launcher has two layouts, selected with `shell.launcher.layout`.
+
+- **Full** (default) combines search with compact views for Recent, Pinned, All, Categories, and Providers. The Pinned view appears when at least one app is pinned. The profile, search field, Settings shortcut, and session shortcut share one toolbar that can sit above or below the results. The toolbar's outer edges align with the view tabs and results area.
+- **Simple** shows a search field on top, an optional row of category chips (All, Recently Used, and app categories), and the results, at a fixed 560 × 500 size. Pinned apps lead the list when the search is empty. Set `categories = false` to hide the chip row.
 
 Configure the layout under **Settings → Panels → Launcher**, or in your config:
 
 ```toml
 [shell.launcher]
+layout = "full"
 width = 760
 search_position = "bottom"
 default_view = "recent"
+categories = true
 show_settings_button = true
 show_session_button = true
 app_grid = false
 track_usage = true
 ```
 
-`width` sets the panel width from 560 to 1100 pixels. At narrower widths, the view tabs use icons with full-name tooltips so the navigation stays on one row. `search_position = "top"` moves the whole toolbar above the results. `default_view` accepts `recent`, `pinned`, `all_apps`, or `categories`; when a conditional view is unavailable, the launcher opens All Apps. **All Apps** stays flat, while **Categories** adds a second row for switching between desktop-entry categories. Hover a view or category tab to see its full name. `app_grid` switches application browsing, global search results, and the provider overview between rows and an icon grid. Search results from an explicitly selected or prefixed provider remain rows.
+`width`, `search_position`, `default_view`, and the shortcut toggles apply to the Full layout; `categories` applies to the Simple layout. `width` sets the panel width from 560 to 1100 pixels. At narrower widths, the view tabs use icons with full-name tooltips so the navigation stays on one row. `search_position = "top"` moves the whole toolbar above the results. `default_view` accepts `recent`, `pinned`, `all`, or `categories`; when a conditional view is unavailable, the launcher opens All. **All** stays flat, while **Categories** adds a second row for switching between desktop-entry categories. Hover a view or category tab to see its full name. `app_grid` switches application browsing, global search results, and the provider overview between rows and an icon grid. Search results from an explicitly selected or prefixed provider remain rows.
 
-The view tabs sit on the left, with buttons on the right to toggle usage-based ordering and grid view without opening Settings. The grid/list button shows the layout it will switch to: a list icon while grid view is active, and a grid icon while list view is active. The ordering button also shows the ordering it will switch to: an alphabetical icon while frequency sorting is active, and a frequency icon while default ordering is active. Turning usage ordering off keeps recording frequency and recent launches. The selected result stays visible when you change ordering. The ordering button appears for All Apps, Categories, and search results while `track_usage` is enabled. It is hidden for Recent, Pinned, Providers, and session actions, where changing the order does not apply. The buttons change the same persistent options shown under **Settings → Panels → Launcher**.
+In the Full layout, the view tabs sit on the left, with buttons on the right to toggle usage-based ordering and grid view without opening Settings. The grid/list button shows the layout it will switch to: a list icon while grid view is active, and a grid icon while list view is active. The ordering button also shows the ordering it will switch to: an alphabetical icon while frequency sorting is active, and a frequency icon while default ordering is active. Turning usage ordering off keeps recording frequency and recent launches. The selected result stays visible when you change ordering. The ordering button appears for All, Categories, and search results while `track_usage` is enabled. It is hidden for Recent, Pinned, Providers, and session actions, where changing the order does not apply. The buttons change the same persistent options shown under **Settings → Panels → Launcher**.
 
 ## How search works
 
@@ -43,7 +48,7 @@ The launcher tracks how often you activate specific results (applications and wa
 
 ### Application categories
 
-The **Categories** view, marked with a tag icon, lets you switch between desktop-entry categories such as Internet, Development, Games, Office, System, and Utilities. Category tabs show icons and text by default. Enable **Category Icons Only** in **Settings → Panels → Launcher** (`shell.launcher.category_icons_only = true`) to hide their text labels; hover tooltips still show the full names. This setting applies only to app category tabs. **All Apps** remains an uninterrupted list or grid.
+The **Categories** view, marked with a tag icon, lets you switch between desktop-entry categories such as Internet, Development, Games, Office, System, and Utilities. Category tabs show icons and text by default. Enable **Category Icons Only** in **Settings → Panels → Launcher** (`shell.launcher.category_icons_only = true`) to hide their text labels; hover tooltips still show the full names. This setting applies only to app category tabs (and to the category chips in the Simple layout). **All** remains an uninterrupted list or grid.
 
 :::note[Application options]
 
@@ -236,7 +241,7 @@ supports readline-style shortcuts. Otherwise `Ctrl+A` selects all and `Ctrl+U` c
 The launcher itself is mostly automatic, but its behavior is influenced by other sections of your config:
 
 - **[Keybinds](/noctalia/configuration/shell/#keybinds)**: Customize navigation (`up`, `down`) and activation (`validate`, `cancel`).
-- **[Shell](/noctalia/configuration/shell/#shell-settings)**: `ui_scale` and `font_family` affect the launcher's appearance. `shell.launcher.width`, `search_position`, `default_view`, `show_settings_button`, and `show_session_button` configure the panel, toolbar, and opening view. `show_icons`, `show_app_origin_indicator`, `compact`, `app_grid`, `show_app_actions`, `track_usage`, `sort_by_usage`, `pinned`, `fetch_exchange_rates`, and `auto_paste` adjust result layout, origin overlays, action search, usage history and ordering, pinning, currency rate refresh, and paste-after-copy (Settings → Launcher). `[shell.launcher.dmenu.entry.<id>]` adds custom dmenu-style providers backed by a shell command.
+- **[Shell](/noctalia/configuration/shell/#shell-settings)**: `ui_scale` and `font_family` affect the launcher's appearance. `shell.launcher.layout` picks the Full or Simple layout. `width`, `search_position`, `default_view`, `show_settings_button`, and `show_session_button` configure the Full panel, toolbar, and opening view; `categories` toggles the Simple chip row. `show_icons`, `show_app_origin_indicator`, `compact`, `app_grid`, `show_app_actions`, `track_usage`, `sort_by_usage`, `pinned`, `fetch_exchange_rates`, and `auto_paste` adjust result layout, origin overlays, action search, usage history and ordering, pinning, currency rate refresh, and paste-after-copy (Settings → Launcher). `[shell.launcher.dmenu.entry.<id>]` adds custom dmenu-style providers backed by a shell command.
 - **[Wallpaper](/noctalia/desktop/wallpaper/)**: Defines the search paths for the Wallpaper provider.
 - **[Session actions](/noctalia/configuration/shell/#session-panel)**: Defines the actions shown by the Session provider.
 
