@@ -49,7 +49,9 @@ greetd does not interpret a bare environment assignment as a command, so keep th
 
 Check the logs first. Confirm that `/var/lib/noctalia-greeter` exists, is mode `0750`, and is owned by the account configured as greetd's greeter user. Also verify that the greeter package's required `assets/` tree was installed.
 
-For a source checkout, `sudo ./scripts/setup_greeter_system.sh` performs the complete system setup; `just setup-log-dir` repairs only the state directory. Those commands are available only from the source tree. Packaged installations should use their distribution's setup or reinstall procedure. See [Installation](/greeter/installation/#3-configure-greetd).
+Follow [greeter state initialization](/greeter/installation/#initialize-greeter-state), including the tmpfiles override if greetd uses a custom greeter account. Run `sudo noctalia-greeter-apply-appearance --setup-system` to initialize or repair the configuration files after fixing directory ownership. Whether reinstalling a package performs this setup depends on the distribution's packaging.
+
+For a source checkout, `sudo ./scripts/setup_greeter_system.sh` performs the complete system setup, including its PAM adjustment; `just setup-log-dir` repairs only the state directory. Follow your distribution's PAM integration and setup procedure. See [Installation](/greeter/installation/#3-configure-greetd).
 
 ### Black screen after reboot
 

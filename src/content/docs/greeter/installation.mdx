@@ -37,17 +37,32 @@ Use one of the package options below. After it finishes, continue to
 
 ### Arch Linux
 
-Tagged releases are available as
-[`noctalia-greeter`](https://aur.archlinux.org/packages/noctalia-greeter) in the
-AUR. Install it with an AUR helper of your choice, for example:
+Tagged releases are moving from the AUR to Arch Linux's official Extra
+repository. During the transition, the package is in `extra-testing`; check the
+[package status](https://archlinux.org/packages/?name=noctalia-greeter) for its
+current repository. Once it is available in your enabled repositories, install it
+with:
 
 ```sh
-paru -S noctalia-greeter
+sudo pacman -Syu noctalia-greeter
 ```
 
-To follow development snapshots from `main`, install
+Development snapshots from `main` remain available as
 [`noctalia-greeter-git`](https://aur.archlinux.org/packages/noctalia-greeter-git)
-instead.
+in the AUR. Install them with an AUR helper, for example:
+
+```sh
+paru -S noctalia-greeter-git
+```
+
+The development package replaces the stable package. Both use the same greetd
+session wrapper and state directory. These packages leave greetd's
+configuration, PAM stack, and service management to you. After an upgrade,
+restart greetd when you are ready to use the new binaries.
+
+Optional packages are `polkit` for appearance-sync authorization and
+`xorg-xinit` for X11 sessions. `noctalia-git` also satisfies the optional
+`noctalia` dependency for wallpaper and palette sync.
 
 ### CachyOS
 
@@ -127,6 +142,46 @@ Keep the existing greeter account if your configuration uses a user other than
 Some packages configure greetd automatically. In that case, verify that the
 existing `command` points to `noctalia-greeter-session` and leave the rest of
 the configuration intact.
+
+### Initialize greeter state
+
+Some packages and declarative modules prepare greeter state automatically.
+If yours does, verify its configured account and state directory. Otherwise,
+initialize the state after configuring greetd's session user.
+
+The shipped tmpfiles rule creates `/var/lib/noctalia-greeter` with mode `0750`
+and ownership `greeter:greeter` on systems that process it. If greetd uses a
+different greeter account, create `/etc/tmpfiles.d/noctalia-greeter.conf` with
+this line, replacing `ACCOUNT` and `GROUP` with that account's name and primary
+group:
+
+```text
+d /var/lib/noctalia-greeter 0750 ACCOUNT GROUP -
+```
+
+On systemd, apply the override so the directory has the right owner now and
+after reboot:
+
+```sh
+sudo systemd-tmpfiles --create noctalia-greeter.conf
+```
+
+Initialize the configuration files, or migrate state from an older installation:
+
+```sh
+sudo noctalia-greeter-apply-appearance --setup-system
+```
+
+This creates or updates `greeter.toml` and `sync.toml` without editing PAM.
+It also creates the state directory on systems without tmpfiles processing.
+When changing the greeter account, apply the tmpfiles override and run the
+helper again. Existing state-directory ownership takes precedence over the
+user in greetd's configuration when the helper resolves the account. Pass
+`GREETER_USER` explicitly if the existing owner differs from the intended user:
+
+```sh
+sudo env GREETER_USER=ACCOUNT noctalia-greeter-apply-appearance --setup-system
+```
 
 ## 4. Replace the current display manager safely
 

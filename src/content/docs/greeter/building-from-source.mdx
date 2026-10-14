@@ -15,9 +15,9 @@ a cloned Noctalia Greeter checkout.
 ### Arch Linux
 
 ```sh
-sudo pacman -S meson gcc just \
+sudo pacman -S --needed base-devel meson just \
   greetd dbus \
-  wayland wayland-protocols wlroots0.20 \
+  wayland wayland-protocols wlroots0.20 libinput \
   libglvnd freetype2 fontconfig \
   cairo pango harfbuzz \
   libxkbcommon glib2 \
@@ -30,7 +30,7 @@ sudo pacman -S meson gcc just \
 ```sh
 sudo dnf install meson gcc-c++ just \
   greetd dbus \
-  wayland-devel wayland-protocols-devel wlroots-devel \
+  wayland-devel wayland-protocols-devel wlroots-devel libinput-devel \
   libEGL-devel mesa-libGLES-devel \
   freetype-devel fontconfig-devel \
   cairo-devel pango-devel harfbuzz-devel \
@@ -44,7 +44,7 @@ sudo dnf install meson gcc-c++ just \
 ```sh
 sudo zypper install meson gcc-c++ just \
   greetd dbus-1 \
-  wayland-devel wayland-protocols wlroots-devel \
+  wayland-devel wayland-protocols wlroots-devel libinput-devel \
   Mesa-libEGL-devel Mesa-libGLESv2-devel \
   freetype2-devel fontconfig-devel \
   cairo-devel pango-devel harfbuzz-devel \
@@ -58,7 +58,7 @@ sudo zypper install meson gcc-c++ just \
 ```sh
 sudo apt install meson g++ just \
   greetd dbus \
-  libwayland-dev wayland-protocols libwlroots-0.20-dev \
+  libwayland-dev wayland-protocols libwlroots-0.20-dev libinput-dev \
   libegl-dev libgles-dev \
   libfreetype-dev libfontconfig-dev \
   libcairo2-dev libpango1.0-dev libharfbuzz-dev \
@@ -72,7 +72,7 @@ sudo apt install meson g++ just \
 ```sh
 sudo xbps-install meson ninja pkg-config git \
   greetd dbus \
-  wayland-devel wayland-protocols wlroots-devel libepoxy-devel \
+  wayland-devel wayland-protocols wlroots-devel libinput-devel libepoxy-devel \
   MesaLib-devel libglvnd-devel cairo-devel \
   pango-devel fontconfig-devel freetype-devel harfbuzz-devel \
   tomlplusplus-devel nlohmann-json-devel stb \
@@ -88,11 +88,30 @@ system prefix:
 meson setup build-release --prefix=/usr --buildtype=release
 just build-release
 sudo meson install -C build-release
+```
+
+After configuring greetd's session user, initialize greeter state with the
+installed helper:
+
+```sh
+sudo noctalia-greeter-apply-appearance --setup-system
+```
+
+See [state initialization](/greeter/installation/#initialize-greeter-state) for
+directory ownership and tmpfiles overrides for custom greeter accounts.
+
+The portable setup script also prepares
+`/var/lib/noctalia-greeter/`, `greeter.toml`, and `sync.toml` for the greetd user
+and adjusts greetd's PAM stack for the detected systemd or elogind runtime
+module. Run it when that PAM adjustment is appropriate for your distribution:
+
+```sh
 sudo ./scripts/setup_greeter_system.sh
 ```
 
-The setup script prepares `/var/lib/noctalia-greeter/` and `greeter.toml` for
-the greetd user.
+The state helper above also works on systems without tmpfiles processing,
+where it creates the directory as well. Set `GREETER_USER` explicitly if its
+existing owner differs from the account you intend to use.
 
 Continue with [Configure greetd](/greeter/installation/#3-configure-greetd) to merge
 the installed session wrapper into your greetd configuration and complete the
