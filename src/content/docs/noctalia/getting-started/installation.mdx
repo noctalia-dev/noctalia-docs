@@ -45,13 +45,11 @@ sudo pacman -S noctalia
 
 Noctalia is available from the default repos for Fedora 44 and up.
 
-**Step 1**: Install noctalia
-
 ```bash
 sudo dnf install noctalia
 ```
 
-An alternate version using git snapshots is available from the [LionHeartP Copr](https://copr.fedorainfracloud.org/coprs/lionheartp/Hyprland/) repository.
+##### An alternate version using git snapshots is available from the [LionHeartP Copr](https://copr.fedorainfracloud.org/coprs/lionheartp/Hyprland/) repository.
 
 **Step 1**: Enable the repository
 
@@ -59,7 +57,7 @@ An alternate version using git snapshots is available from the [LionHeartP Copr]
 sudo dnf copr enable lionheartp/Hyprland 
 ```
 
-**Step 2**: Install noctalia
+**Step 2**: Install noctalia-git
 
 ```bash
 sudo dnf install noctalia-git
@@ -69,46 +67,39 @@ sudo dnf install noctalia-git
 
 ## openSUSE {#opensuse}
 
-Noctalia is available via [home:neifua:Noctalia](https://build.opensuse.org/package/show/home:neifua:Noctalia/noctalia-git) repository on the openSUSE Build Service.
+Noctalia is available in the official openSUSE repository.
+
+```bash
+sudo zypper refresh
+sudo zypper install noctalia
+```
+
+##### An alternate version using git snapshots is available from the [home:neifua:Noctalia](https://build.opensuse.org/project/show/home:neifua:Noctalia) repository on OBS.
 
 **Step 1**: Add the OBS repository
 
 <Tabs>
   <TabItem label="Tumbleweed">
     ```bash
-	sudo zypper addrepo --refresh --name noctalia-v5 https://download.opensuse.org/repositories/home:neifua:Noctalia/openSUSE_Tumbleweed/home:neifua:Noctalia.repo
+	sudo zypper addrepo --refresh --name 'Noctalia Project' https://download.opensuse.org/repositories/home:neifua:Noctalia/openSUSE_Tumbleweed/home:neifua:Noctalia.repo
     ```
   </TabItem>
   <TabItem label="Slowroll">
     ```bash
-	sudo zypper addrepo --refresh --name noctalia-v5 https://download.opensuse.org/repositories/home:neifua:Noctalia/openSUSE_Slowroll/home:neifua:Noctalia.repo
+	sudo zypper addrepo --refresh --name 'Noctalia Project' https://download.opensuse.org/repositories/home:neifua:Noctalia/openSUSE_Slowroll/home:neifua:Noctalia.repo
     ```
   </TabItem>
 </Tabs>
 
+**Step 2**: Refresh and install noctalia-git
 
-**Step 2**: Refresh and install noctalia:
-
-<Tabs>
-	<TabItem label="Stable (recommended)">
-	```bash
-	sudo zypper refresh
-	sudo zypper install noctalia
-	```
-	</TabItem>
-	<TabItem label="Unstable">
-	```bash
-	sudo zypper refresh
-	sudo zypper install noctalia-git
-	```
-	</TabItem>
-</Tabs>
+```bash
+sudo zypper refresh
+sudo zypper install noctalia-git
+```
 
 :::note
-v5 will only be available for **Tumbleweed** and **Slowroll**. **Leap 16.0** is unable to build because *sdbus-c++* is still on v1.6.0 while v5 requires >= v2.x.x
-
-- **[Stable version](https://build.opensuse.org/package/show/home:neifua:Noctalia/noctalia)**: Updated when a new release is tagged
-- **[Unstable version](https://build.opensuse.org/package/show/home:neifua:Noctalia/noctalia-git)**: Automatically rebuilt on OBS whenever a new commit is pushed
+v5 will only be available for **Tumbleweed** and **Slowroll**. **Leap 16.0** is unable to build because ***sdbus-c++*** is still on v1.6.0 while v5 requires >= v2.x.x
 :::
 
 ---
