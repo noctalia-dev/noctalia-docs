@@ -462,6 +462,12 @@ Configure under **`[lockscreen]`** in TOML, or use **Settings → Security → L
 
 Lock screen transitions have their own effect pool, duration, and edge smoothness. They do not read or modify the settings under **`[wallpaper]`**. Set `transition = []` to disable lock and unlock animations.
 
+**Lock and Suspend** waits for the entry transition to finish and for the compositor to acknowledge the fully revealed lock frame on every output before running the suspend command. With transitions disabled or unavailable, it waits for the first complete lock frame. An already revealed lock screen can suspend immediately. If rendering stalls, Noctalia logs a warning and proceeds after the selected transition's duration plus three seconds, or after three seconds when transitions are disabled.
+
+Unlocking or aborting the lock cancels a pending **Lock and Suspend** action. If an external sleep interrupts the wait, resuming also cancels the pending action so the session does not immediately suspend again.
+
+External sleep with **`lock_before_suspend = true`** waits for the same frames before Noctalia releases its logind sleep-delay inhibitor. This delay is bounded by logind's [`InhibitDelayMaxSec`](https://www.freedesktop.org/software/systemd/man/latest/logind.conf.html#InhibitDelayMaxSec=), which defaults to five seconds; a longer transition can exceed that limit.
+
 ```toml
 [lockscreen]
 enabled               = true      # master switch for session lock
