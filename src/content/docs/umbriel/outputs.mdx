@@ -209,6 +209,12 @@ hdr = "auto"
 sdr_white = 203
 ```
 
+While HDR is active, `sdr_white` sets both the brightness of composed SDR
+content and the reference white advertised to Wayland applications through
+output descriptions and surface color preferences. Reloading the setting
+updates those descriptions and notifies applications. In SDR mode, the
+advertised reference white remains the nominal 80 cd/m².
+
 Automatic HDR depends on metadata supplied by the application. Untagged
 XWayland content cannot be detected; use a native Wayland HDR path or
 `hdr = "on"` when necessary. Many monitors briefly go black while switching
@@ -227,6 +233,9 @@ MaxCLL, and MaxFALL for its own tone mapping. Umbriel leaves any value omitted
 by the EDID undefined instead of guessing a brightness that may be wrong for
 the panel. Nested and virtual outputs have no display EDID, so their luminance
 metadata remains undefined.
+
+These display limits describe the target color volume independently of
+`sdr_white`, which describes SDR reference white within the HDR encoding.
 
 Run `umbriel color` to inspect the metadata in the active output description.
 The JSON form reports `mastering_display_primaries`, `mastering_luminance`,
