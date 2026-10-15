@@ -181,13 +181,13 @@
   },
   {
     "level": 33,
-    "noctaliaVersion": null,
+    "noctaliaVersion": "v5.3.0",
     "feature": "scroll-reveal-key",
     "introduced": "The `revealKey` prop on `ui.scroll` for scrolling a keyed child into view."
   },
   {
     "level": 34,
-    "noctaliaVersion": null,
+    "noctaliaVersion": "v5.3.0",
     "feature": "widget-hover-highlight",
     "introduced": "The `hover_highlight` widget entry option for opting out of the bar's whole-widget hover highlight."
   }
