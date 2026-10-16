@@ -16,7 +16,7 @@ greeter runs. Install desktop sessions such as niri or Hyprland separately.
 Choose the method for your system:
 
 - [Install a distribution package](#2-install-noctalia-greeter) on Arch Linux,
-  CachyOS, KaOS, Fedora, Debian, or Ubuntu.
+  CachyOS, KaOS, Fedora, openSUSE, Debian, or Ubuntu.
 - [Build from source](/greeter/building-from-source/) if no package is available.
 - Follow the separate [NixOS declarative setup](#nixos-declarative-setup) on
   NixOS. Do not follow the imperative service steps in sections 3–6.
@@ -99,6 +99,46 @@ Automated development snapshots are also available from the
 The snapshot package is being renamed to distinguish it from stable builds, so
 check the Copr package page for its current name. Fedora's default repositories
 do not currently carry Noctalia Greeter.
+
+### openSUSE
+
+Noctalia Greeter is available from the [official openSUSE repository](https://build.opensuse.org/package/show/openSUSE:Factory/noctalia-greeter):
+
+```sh
+sudo zypper refresh
+sudo zypper install noctalia-greeter
+```
+
+The development snapshots from `main` branch is also available via
+[home:neifua:Noctalia](https://build.opensuse.org/package/show/home:neifua:Noctalia)
+OBS repository as
+[`noctalia-greeter-git`](https://build.opensuse.org/package/show/home:neifua:Noctalia/noctalia-greeter-git),
+to install it:
+
+**Step 1**: Add the OBS repository
+
+<Tabs>
+  <TabItem label="Tumbleweed">
+    ```bash
+	sudo zypper addrepo --refresh --name 'Noctalia Project' https://download.opensuse.org/repositories/home:neifua:Noctalia/openSUSE_Tumbleweed/home:neifua:Noctalia.repo
+    ```
+  </TabItem>
+  <TabItem label="Slowroll">
+    ```bash
+	sudo zypper addrepo --refresh --name 'Noctalia Project' https://download.opensuse.org/repositories/home:neifua:Noctalia/openSUSE_Slowroll/home:neifua:Noctalia.repo
+    ```
+  </TabItem>
+</Tabs>
+
+**Step 2**: Refresh and install noctalia-greeter-git
+
+```bash
+sudo zypper refresh
+sudo zypper install noctalia-greeter-git
+```
+:::note
+`noctalia-greeter` is only available for **Tumbleweed** and **Slowroll**.
+:::
 
 ### Debian and Ubuntu
 
