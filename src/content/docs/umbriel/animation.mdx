@@ -26,6 +26,10 @@ scale = 0.8
 
 [animation.windows_move]
 enabled = true
+curve = "spring:1,800"
+
+[animation.windows_resize]
+enabled = true
 curve = "spring:1,900"
 
 [animation.workspaces]
@@ -77,7 +81,8 @@ effect on that event.
 | --- | --- | --- |
 | `[animation.windows_in]` | `style`, `scale` | Window opening |
 | `[animation.windows_out]` | `style`, `scale` | Window closing |
-| `[animation.windows_move]` | none | Move, resize, reflow, maximize, and restore |
+| `[animation.windows_move]` | none | Position during moves, reflow, maximize, and restore |
+| `[animation.windows_resize]` | none, and no `effect` | Size during the same changes |
 | `[animation.workspaces]` | `style` | Workspace switching |
 | `[animation.overview]` | `workspace_curve` | Overview opening, closing, and filmstrip movement |
 | `[animation.scratchpad]` | `dim`, `blur`, `scale`, `maximize`, `fullscreen` | Scratchpad windows and backdrop |
@@ -91,6 +96,12 @@ effect on that event.
 `slide` or `reveal` (see [Workspace reveal](#workspace-reveal)). `scale`
 applies to `popin`: an opening window grows from it to full size, and a closing
 window shrinks toward it, while both fade.
+
+`windows_move` moves a window while `windows_resize` changes its size, so a
+slow move can still resize quickly. While the size animates, the window's
+latest frame is stretched to fit. With `windows_resize` disabled, the size
+changes at once while the window still moves. When the two timelines differ, a
+window can briefly overlap its neighbours during a reflow.
 
 `animation.overview.workspace_curve` controls filmstrip movement after wheel,
 keyboard, and touchpad navigation. A released touchpad gesture keeps the speed
