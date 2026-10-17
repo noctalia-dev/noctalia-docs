@@ -53,6 +53,7 @@ and positions when the output becomes available again.
 | `direct_scanout` | bool | `true` | Allow eligible fullscreen buffers to bypass composition. |
 | `hdr` | string | `"off"` | HDR activation policy. |
 | `sdr_white` | float | `203` | SDR reference white in cd/m² while HDR is active. |
+| `sdr_transfer` | string | `"gamma22"` | Transfer curve for untagged SDR on HDR outputs: `"gamma22"` or `"srgb"`. |
 | `bit_depth` | int | `8` | Render bit depth for SDR output: `8` or `10`. |
 | `workspaces` | int, string array, or `"dynamic"` | `"dynamic"` | Workspace inventory for this output. |
 | `min_workspaces` | int | `1` | Minimum count for a dynamic output. |
@@ -215,10 +216,23 @@ output descriptions and surface color preferences. Reloading the setting
 updates those descriptions and notifies applications. In SDR mode, the
 advertised reference white remains the nominal 80 cd/m².
 
-On HDR outputs, untagged SDR windows and compositor colors use gamma 2.2 to
-preserve their legacy SDR appearance. Explicit client color descriptions keep
-their declared transfer function, including the piecewise sRGB curve requested
-by `compound_power_2_4`. This does not change the display's PQ output encoding.
+On HDR outputs, untagged SDR windows and compositor colors use gamma 2.2 by
+default to preserve their legacy SDR appearance. Set `sdr_transfer = "srgb"` to
+decode them with the piecewise sRGB curve instead. This produces lighter dark
+shades and can match applications that convert SDR into PQ using that curve:
+
+```toml
+[output.DP-1]
+hdr = "on"
+sdr_transfer = "srgb"
+```
+
+The choice applies on reload and only while that output uses HDR (PQ). It also
+keeps effect color controls and SDR capture encoding consistent with the chosen
+curve. Explicit client color descriptions keep their declared transfer
+function, including piecewise sRGB, gamma 2.2, PQ, and linear content. The
+display's PQ encoding and normal SDR rendering stay unchanged. Run
+`umbriel color` to inspect each output's configured `sdr_transfer` choice.
 
 `sdr_white` can also be selected for one running output without editing the
 configuration:
