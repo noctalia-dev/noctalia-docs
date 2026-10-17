@@ -281,6 +281,9 @@ an 8-bit SDR view while HDR is active. DMA-BUF capture may retain 10-bit
 storage while still containing SDR values. Export-DMA-BUF bypasses the SDR
 capture view and retains the output's native HDR representation.
 
+Window captures, including portal window previews, honor the client's committed
+color metadata and convert HDR client content to SDR.
+
 Existing gamma-control clients, including Night Light tools, can adjust white
 point and brightness while HDR remains enabled. Umbriel uses each gamma ramp's
 white endpoint to adjust the image in linear light before PQ encoding. This
