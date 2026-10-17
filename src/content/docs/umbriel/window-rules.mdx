@@ -179,6 +179,7 @@ the windows stacked beside it in the column it joins or creates.
 | `blur_ignore_alpha` | Skip blur below an alpha threshold. |
 | `blur_optimized` | Override the global optimized-blur choice. |
 | `confine_pointer` | Keep the pointer inside this window while it has keyboard focus (default `false`). |
+| `background_render` | Keep this window drawing while hidden (default `false`). See [Background rendering](#background-rendering). |
 | `focus_on_activate` | Override activation focus for this window. |
 | `vrr` | Override the focused output's VRR policy. |
 | `tearing` | Request or veto asynchronous presentation. |
@@ -348,3 +349,22 @@ small movements over the window you just left do not refocus it; leaving and
 re-entering it, clicking it, or explicitly focusing it allows confinement again.
 Compositor cursor warps remain available. Confinement is suspended during
 session lock, overview, compositor move/resize and client drag operations.
+
+### Background rendering
+
+A window that no output shows, because it sits on another workspace, in a
+hidden tab or in a hidden scratchpad, is told it is suspended and receives no
+frame callbacks, so it can stop drawing. Applications that tie other work to
+their drawing loop can stall or degrade in that state. Use `background_render`
+for them:
+
+```toml
+[[window_rule]]
+match.app_id = "^obs$"
+background_render = true
+```
+
+A matching window is not suspended while hidden and receives frame callbacks
+at its output's refresh rate, so it keeps running as if it were shown. Umbriel
+still does not draw it. This costs the CPU and GPU time the application spends
+drawing in the background. Reloading the configuration updates open windows.
