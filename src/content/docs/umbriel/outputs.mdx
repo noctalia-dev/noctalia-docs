@@ -64,6 +64,10 @@ and positions when the output becomes available again.
 
 Umbriel tries an unadvertised resolution as a custom mode. If it cannot apply
 the configured mode, it uses the preferred advertised mode and logs a warning.
+Backend tests include the 8-bit SDR fallback, so a rejected swapchain can reach
+the preferred mode. On that mode, Umbriel retries the configured HDR and bit-depth
+preferences. A temporary rendering failure after an accepted backend test retries
+the current candidate instead of changing modes.
 
 ### Workspace count
 
