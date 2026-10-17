@@ -237,7 +237,7 @@ Right-click a day to launch the application registered for the `text/calendar` M
 
 ### audio_visualizer
 
-Desktop audio visualizers fill their widget box: the spectrum spans the full box width and the bars use the full box height. `box_width` and `box_height` set the box size - resize the box to change the visualizer's shape; leave both `0.0` to start from the default footprint. They also accept optional `mirrored`, `centered`, `show_when_idle`, `color_1`, and `color_2` settings; both colors default to `primary`.
+Desktop audio visualizers fill their widget box: the spectrum spans the full box width and the bars use the full box height. `box_width` and `box_height` set the box size - resize the box to change the visualizer's shape; leave both `0.0` to start from the default footprint. They also accept optional `mirrored`, `centered`, `show_wave`, `show_when_idle`, `color_1`, and `color_2` settings; both colors default to `primary`.
 
 ```toml
 [desktop_widgets.widget.audio_main]
@@ -260,9 +260,10 @@ color_2      = "secondary"
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `bands` | int | `32` | Number of frequency bands |
+| `bands` | int | `32` | Number of frequency bands; ignored when `show_wave` is enabled |
 | `mirrored` | bool | `true` | Mirror the spectrum horizontally |
-| `centered` | bool | `true` | Center bars vertically instead of aligning them to the bottom edge |
+| `centered` | bool | `true` | Center bars vertically instead of aligning them to the bottom edge; no effect when `show_wave` is enabled |
+| `show_wave` | bool | `false` | Render the spectrum as a smooth filled wave instead of discrete bars, with a smaller echo wave in `color_2` |
 | `show_when_idle` | bool | `true` | Keep the widget visible even when no media is playing |
 | `color_1` | string | `"primary"` | First gradient color role; fixed hex colors are also supported |
 | `color_2` | string | `"primary"` | Second gradient color role; fixed hex colors are also supported |
