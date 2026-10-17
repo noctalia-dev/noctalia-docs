@@ -566,7 +566,7 @@ Chords recorded in the GUI are serialized as `ctrl+shift+Return`-style strings u
 
 ## Session panel
 
-The session (power) menu opened from the bar **Session** widget or Control Center lists **Lock**, **Log out**, **Lock & Suspend**, **Reboot**, and **Shut down** by default. The launcher also exposes the same enabled entries under `/session`. `noctalia msg session <action>` uses the same configured entries (including per-row `command` overrides and disabled actions). Log out uses compositor-native exits where available, including LabWC's `labwc --exit`, unless a row-level `command` is set. You can change which buttons appear, their order, whether each is enabled, and optionally replace the implementation with a **shell command** (still run after `logging_out` / `rebooting` / `shutting_down` [hooks](/noctalia/automation/hooks/) when the action is one of those three).
+The session (power) menu opened from the bar **Session** widget or Control Center lists **Lock**, **Log out**, **Lock & Suspend**, **Reboot**, and **Shut down** by default. The launcher also exposes the same enabled entries under `/session`. `noctalia msg session <action>` uses the same configured entries (including per-row `command` overrides and disabled actions). Log out uses compositor-native exits where available, including LabWC's `labwc --exit`, unless a row-level `command` is set. You can change which buttons appear, their order, whether each is enabled, and optionally replace the implementation with a **shell command** (still run after `logging_out` / `rebooting` / `shutting_down` [hooks](/noctalia/automation/hooks/) when the action is `logout`, `reboot` or `reboot_uefi`, or `shutdown`).
 
 **Lock** and **Lock & Suspend** clear the menu's displayed frame before taking the lock transition's desktop snapshot. This prevents the menu from being replayed during the unlock animation.
 
@@ -580,6 +580,8 @@ shutdown = "sudo -n poweroff"
 ```
 
 When an override is set, Noctalia runs that command for the built-in suspend/reboot/shutdown actions (session panel, launcher, IPC, and idle). Per-row `command` still overrides a single menu button when you need one-off behavior (including logout via `noctalia msg session logout`).
+
+The opt-in `reboot_uefi` action always runs `systemctl reboot --firmware-setup` and has no `[shell.session.power]` override. It requires systemd and a UEFI boot; otherwise Noctalia logs an error and skips the `rebooting` hook. It is not synced to the greeter, which has its own firmware-setup button.
 
 Configure under **`[shell.session]`** in TOML, or use **Settings → Power → Session panel**: entries, reorder, and **Show** are listed inline; use the **settings** (cog) control on a row for behavior, label, command, icon, shortcut, countdown, and style. **Add action** appends a custom-command entry by default. The default five actions are assigned keyboard shortcuts **1**–**5**; pressing the key while the panel is open triggers the action (or starts its countdown when configured). **Grid Layout** and its **Columns** stepper control how the buttons are arranged; with grid off, the panel fits the actions on one row (wrapping to a second row past five). Arrow keys follow the resulting rows and columns.
 
@@ -595,7 +597,7 @@ Each entry in the `[[shell.session.actions]]` array takes:
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `action` | string | *required* | `lock`, `logout`, `suspend`, `lock_and_suspend`, `reboot`, `shutdown`, or `command` (custom entry). |
+| `action` | string | *required* | `lock`, `logout`, `suspend`, `lock_and_suspend`, `reboot`, `reboot_uefi`, `shutdown`, or `command` (custom entry). |
 | `enabled` | bool | `true` | When `false`, the button is hidden. |
 | `command` | string | *unset* | Optional. If set, the string is run with `/bin/sh -c` instead of the built-in handler. For `action = "command"`, this field is required. |
 | `label` | string | *unset* | Optional button label (otherwise translated defaults). |
