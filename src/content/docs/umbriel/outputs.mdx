@@ -215,7 +215,12 @@ output descriptions and surface color preferences. Reloading the setting
 updates those descriptions and notifies applications. In SDR mode, the
 advertised reference white remains the nominal 80 cd/m².
 
-The same value can be selected for one running output without editing the
+On HDR outputs, untagged SDR windows and compositor colors use gamma 2.2 to
+preserve their legacy SDR appearance. Explicit client color descriptions keep
+their declared transfer function, including the piecewise sRGB curve requested
+by `compound_power_2_4`. This does not change the display's PQ output encoding.
+
+`sdr_white` can also be selected for one running output without editing the
 configuration:
 
 ```sh
