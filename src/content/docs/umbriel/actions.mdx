@@ -184,11 +184,28 @@ Sizing rules per layout live in [Sizing behavior](/umbriel/layout/#sizing-behavi
 | `column-toggle-tab-bar` | Show or hide the focused tab group's bar |
 | `column-toggle-tabbed` | Tab the rows around the focused window, or stack its tabs |
 | `window-close:[<window-id>]` | Close the focused window, or the given window |
+| `window-kill:[<window-id>]` | Kill the process owning the focused or given window |
 | `window-toggle-floating:[<window-id>]` | Float or tile the focused window, or the given window |
 | `window-toggle-fullscreen` | Toggle fullscreen or exit a window covering the focus |
 | `window-toggle-maximize` | Toggle full width for the focused column |
 | `window-toggle-maximize-to-edges` | Toggle maximize without gaps, struts, or borders |
 | `window-toggle-pinned` | Pin the focused window above other windows |
+
+`window-close` asks the application to close a window. `window-kill` sends
+`SIGKILL` to the process owning the window, even if it ignores close requests.
+This terminates all windows owned by that process and can lose unsaved work.
+If the client PID is unavailable, the action returns an error.
+
+No window ID is needed: a bare `window-kill` targets the focused window,
+including a focused scratchpad window. For example:
+
+```toml
+[keybinds]
+"Mod+Shift+Q" = { action = "window-kill", repeat = false }
+```
+
+Use `umbriel msg window-kill` from a terminal, or append `:<window-id>` to
+target a specific window using an ID from `umbriel windows`.
 
 For Xwayland windows, fullscreen entered with `window-toggle-fullscreen`
 remains compositor-owned until an Umbriel action exits it. Fullscreen entered
