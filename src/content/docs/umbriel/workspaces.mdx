@@ -97,7 +97,8 @@ forms:
 - Bare digits from `1` to `64` select a one-based position.
 - Other text selects an exact, case-sensitive name.
 - Double quotes force name lookup for an all-digit name.
-- `/output` restricts either form to one output.
+- `/output` restricts selection to that output. A named selector can also use
+  its unavailable original output to find an evacuated workspace.
 
 ```text
 workspace-switch:3
@@ -109,6 +110,14 @@ workspace-switch:"3"/DP-2
 Duplicate names resolve on the pointer-preferred output when possible.
 Otherwise the selector is ambiguous. On a dynamic output, a numeric position
 beyond the current count selects the last workspace.
+
+Evacuated named workspaces keep their names even when appended at different
+positions on another output. Within one output, a native workspace takes
+precedence over evacuated workspaces with the same name. Multiple evacuated
+workspaces with the same name are ambiguous unless qualified by their original
+output. For example, `workspace-switch:"4"/DP-1` follows the named workspace
+`"4"` while `DP-1` is unavailable; `workspace-switch:4/DP-1` remains a position
+on a live `DP-1`. Disabled outputs are excluded from global name lookup.
 
 ## Inspect workspace state
 
