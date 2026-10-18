@@ -34,9 +34,25 @@ disabled. This avoids activating stale connector state reported by some DRM
 drivers. Add a matching output section with `enabled = true` to enable such a
 display explicitly.
 
-When an output disconnects or is disabled, Umbriel temporarily moves its
-workspaces and windows to another enabled output. They return with their layout
-and positions when the output becomes available again.
+When an output disconnects or is disabled, each populated workspace moves into
+its own temporary workspace on another enabled output. Umbriel appends these
+workspaces without replacing that output's configured workspaces, including
+when its workspace inventory is fixed. Temporary workspaces use numeric labels
+on the receiving output and retain their original layout rules. Their original
+names, layout, and positions return when the same output connector becomes
+available again. Windows opened in a temporary workspace return with it;
+explicitly moving a window into a local workspace cancels its automatic return.
+Tiling edits made in a temporary workspace also return with it when its tiled
+windows remain mapped.
+
+Umbriel first uses the first remaining enabled output in its internal output
+order. If that output has reached the 64-workspace limit, it tries another
+enabled output. If every enabled output is full, displaced windows share a
+local workspace until their home returns. Growing a fixed inventory during
+the disconnection can also leave too little room for temporary workspaces;
+those windows retain their saved homes. Empty temporary workspaces are removed.
+If every output disappears, windows wait until an output returns, then recover
+their separate workspaces there while their home output is still absent.
 
 ## Settings
 
