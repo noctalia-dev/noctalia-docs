@@ -365,6 +365,17 @@ while the window is fullscreen.
 Parented dialogs stay above their parent and normally open centered over its
 visible area.
 
+Focusing a floating window reveals the workspace's floating windows above
+fullscreen without taking the fullscreen window out of fullscreen. Clicking or
+explicitly focusing the fullscreen window covers independent floats again.
+With focus follows mouse enabled, hovering the fullscreen window transfers
+keyboard focus while leaving the floats visible; clicking it covers them.
+
+An independent floating window does not take focus by default when it opens over
+fullscreen. Set `default_focused = true` in a
+[window rule](/umbriel/window-rules/) to focus and reveal it automatically. Parented
+dialogs and application activation requests retain their usual focus behavior.
+
 ### Maximize and fullscreen
 
 Umbriel does not support a minimized window state and does not advertise one to
@@ -373,6 +384,10 @@ applications. Move windows to another workspace or use a
 
 `window-toggle-fullscreen` fills the complete output, ignoring struts and panel
 exclusive zones.
+
+Visible floating windows above fullscreen require composition on that output.
+Once fullscreen covers them again, direct scanout can resume if the fullscreen
+buffer meets the other scanout requirements.
 
 `window-toggle-maximize` fills the layout area. Tiled columns keep struts and
 gaps; floating windows fill the output's usable area inside the same margin, and
