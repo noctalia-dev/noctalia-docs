@@ -362,6 +362,13 @@ the application's minimum and maximum size hints. Resizing a maximized floating
 window leaves maximization and keeps the new size. Extent actions do nothing
 while the window is fullscreen.
 
+`window-move-left`, `window-move-right`, `window-move-up`, and
+`window-move-down` move a floating window to that edge of the output's usable
+area and keep its position on the other axis. The edge sits inside the layout
+struts, `gap`, and borders, so the window lines up with tiles at that edge. At
+the edge already, the `-or-output` and `-or-workspace` variants send the window
+to the neighboring output or workspace.
+
 Parented dialogs stay above their parent and normally open centered over its
 visible area.
 
