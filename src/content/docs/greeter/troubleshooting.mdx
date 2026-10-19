@@ -159,6 +159,78 @@ This command terminates greeter and compositor processes and stops greetd, so us
 
 ## Login and session
 
+### Keyring or KWallet asks for a password after login
+
+GNOME Keyring and KWallet store passwords used by applications, such as saved
+Wi-Fi or browser credentials. Their unlock password is separate from your
+account password, so a successful login does not necessarily unlock them.
+Automatic unlocking needs integration between your secret store and greetd,
+the login service behind Noctalia Greeter.
+
+#### Password login
+
+The password you enter at login can also unlock your keyring or wallet when
+their passwords match and login integration is enabled:
+
+1. Install your chosen store and its login integration. On Arch Linux, use
+   `gnome-keyring` for GNOME Keyring or `kwallet-pam` for KWallet; other
+   distributions may package the integration separately.
+2. In **Passwords and Keys (Seahorse)**, set the **Login** keyring password to
+   your account password. For KWallet, use **KWalletManager** to do the same
+   for **kdewallet**.
+3. Enable the integration in `/etc/pam.d/greetd`. For greetd, this is the file
+   to change even if a general guide uses `/etc/pam.d/login`.
+
+For **GNOME Keyring**, add these entries if they are not already present in
+that file or its included configuration:
+
+```text
+auth       optional     pam_gnome_keyring.so
+session    optional     pam_gnome_keyring.so auto_start
+```
+
+For **KWallet** on current Arch Linux (Plasma 6), use these instead:
+
+```text
+auth       optional     pam_kwallet5.so
+session    optional     pam_kwallet5.so auto_start force_run kwalletd=/usr/bin/ksecretd
+```
+
+Keep the existing rules: the `auth` entry goes after password authentication,
+and the `session` entry goes after the existing session setup. On NixOS or
+other systems that generate PAM files, enable the integration through the
+system configuration instead.
+
+Standalone compositor sessions, such as niri or Hyprland, may also need to
+start the store's session helper. See [GNOME Keyring setup](https://wiki.archlinux.org/title/GNOME/Keyring#PAM_step)
+or [KWallet setup](https://wiki.archlinux.org/title/KDE_Wallet#Configure_PAM_on_Plasma_6_(KF6))
+for startup instructions. KWallet's daemon path may differ on other
+distributions; its automatic unlocking supports password-encrypted wallets,
+not GPG wallets.
+
+If you log in with a fingerprint, face, or smartcard instead of a password,
+there may be no password available to unlock the store. A separate unlock
+prompt is then expected.
+
+#### Autologin with an encrypted disk
+
+greetd's `[initial_session]` autologin skips the login screen, so no account
+password is entered to unlock the keyring. You can unlock it when prompted
+after login, or configure it to reuse the disk password entered at boot.
+
+Reusing the disk password requires it to match your keyring or wallet password
+and remain available to the login service. greetd skips the authentication
+step during autologin, so the password-login entries above cannot capture a
+password. Instead, install `pam_fde_boot_pw` and configure it in the session
+section of `/etc/pam.d/greetd`, before the keyring or wallet starts. Use
+`inject_for=gkr` for GNOME Keyring or `inject_for=kwallet5` for KWallet.
+Follow the
+[ArchWiki greetd autologin guide](https://wiki.archlinux.org/title/Greetd#Unlocking_keyring_on_autologin_using_the_cryptsetup_password)
+for GNOME Keyring or KWallet setup.
+
+If the disk unlocks without a password, or the boot password is no longer
+available, you will still need to unlock the keyring separately.
+
 ### `Login service stopped responding`
 
 greetd did not answer a request before the watchdog expired. Inspect the greetd journal for a stalled or crashed PAM or session worker, then restart greetd. `[auth].request_timeout` controls the watchdog; its default is `60` seconds, and `0` disables it. See [Configuration](/greeter/configuration/).
