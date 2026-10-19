@@ -41,7 +41,7 @@ pinning a fullscreen window, leave the window unchanged.
 
 ```toml
 [input.keyboard]
-layout = ""           # empty uses the system default
+layout = ""           # empty uses the system keymap
 variant = ""
 options = ""
 model = ""
@@ -69,6 +69,14 @@ options = "grp:alt_shift_toggle"
 `options` accepts XKB options such as `caps:escape` or `compose:ralt`. Invalid
 layouts, variants, and models are reported in the log and fall back to the
 system default. Run `xkbcli list` to inspect available values.
+
+When `[input.keyboard]` sets none of `layout`, `variant`, `options`, and
+`model`, Umbriel uses the X11 keymap configured with
+`localectl set-x11-keymap`, read from systemd-localed at startup and on every
+config reload. Run `umbriel msg config-reload` to apply a keymap changed with
+`localectl`. Without systemd-localed, the `XKB_DEFAULT_*` environment
+variables apply, then `us`. A `[[input.device]]` rule that sets any of these
+keys uses only its own and `[input.keyboard]`'s values.
 
 Run `umbriel keyboard-layouts` to list the configured layouts. The active one
 is prefixed with `*`.
