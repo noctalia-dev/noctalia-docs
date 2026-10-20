@@ -25,6 +25,13 @@ builtin_ids              = []        # opt-in; run: noctalia theme --list-templa
 
 `builtin_ids` selects which shipped templates run. An empty array means no built-in templates are applied.
 
+In **Settings → Templates**, click a built-in template's external-link button (tooltip: **Documentation**) to open its setup guide in your default browser. Opening the guide does not enable or disable the template.
+
+Hover highlights the external-link button separately from its template tile, including on enabled templates.
+The entry stays highlighted while the pointer is over its link button, with a continuous highlight when moving between them.
+The link glyph follows the tile's text color when hovering or pressing the surrounding entry.
+Link tooltips are positioned at the link button rather than the center of the tile.
+
 Disabling a built-in template removes its generated Noctalia theme file and undoes any Noctalia-owned include or theme
 selection that the template added to the application's config. Disabling `enable_builtin_templates` performs the same
 cleanup for every selected built-in template.
@@ -55,6 +62,8 @@ community_ids              = []        # opt-in; fetched from api.noctalia.dev/t
 ```
 
 `community_ids` selects which community templates run. In **Settings → Templates**, enable community templates and use **Browse Templates** to search and filter the catalog (by category or enabled-only). Metadata and files are stored in `~/.local/state/noctalia/community-templates/` (honoring `NOCTALIA_STATE_HOME`, then `XDG_STATE_HOME`).
+
+Some community templates include extra setup instructions in a `README.md` in the [community-templates repository](https://github.com/noctalia-dev/community-templates). Their tiles show an external-link button with the **Readme** tooltip; click it to open those instructions in your default browser without changing the template's enabled state. With a template selected in the catalog grid, **F1** opens its README. READMEs are optional, so templates without one have no external-link button.
 
 Cached community template files are treated as editable local copies. Sync updates files only while their content still matches the last Noctalia-written md5; local edits are preserved until you delete the edited cached file.
 
