@@ -26,6 +26,7 @@ default_workspace = 2
 | `match.is_scratchpad` | Match current scratchpad state. |
 | `match.is_alone` | Match whether this is the only tiled window. |
 | `match.is_only_window` | Match whether this is the only window on its workspace, floating ones included. |
+| `match.is_dialog` | Match whether the application named a parent window for it. |
 | `match.at_startup` | Match during or after the first 60 seconds. |
 
 Selectors are optional. A rule with none matches every window. Regular
@@ -87,6 +88,23 @@ sees a client request stays on the column unless `default_maximize_to_edges` is 
 
 Dialogs float by default. Use `default_floating = false` in a matching rule to
 force one into the layout.
+
+A modal dialog [attaches to its parent](/umbriel/layout/#dialogs) and ignores the
+settings above, since it goes wherever its parent goes. `attach_to_parent =
+false` keeps it an ordinary window that these settings place. It is checked
+again whenever the rules change, so a reload detaches or attaches open dialogs.
+
+A rule that matches the parent window also covers its dialogs. This is how to
+opt out an application whose file pickers come from the desktop portal: those
+dialogs carry the portal's app id, such as `xdg-desktop-portal-gtk`, not the
+application's. A rule that matches the dialog itself takes precedence over its
+parent's.
+
+```toml
+[[window_rule]]
+match.app_id = "^org\\.mozilla\\.firefox$"
+attach_to_parent = false
+```
 
 ## Size and Position Rules
 
