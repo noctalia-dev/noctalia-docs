@@ -246,8 +246,45 @@ In a managed native session, Umbriel places startup, autostart, event, and
 `spawn:` commands in scopes bound to the compositor service, so they are
 cleaned up when the session ends. This requires systemd 254 or newer.
 
+The compositor service queues the graphical session targets at startup and
+reports readiness only after its display and IPC sockets are available and
+its session environment has been published to systemd and D-Bus. Services
+ordered after `graphical-session.target`, including desktop portals, wait for
+that readiness notification. Configured startup commands also wait for the
+environment import to finish.
+
 Run `umbriel` directly only for a nested development session or an explicitly
 unmanaged launch.
+
+## Screen sharing
+
+Screen sharing in Discord, browsers, and other portal-aware applications needs
+[`xdg-desktop-portal-umbriel`](https://github.com/noctalia-dev/xdg-desktop-portal-umbriel).
+
+### Picker missing after login
+
+Start the session through `start-umbriel` and install the matching
+`umbriel.service` alongside the compositor binary. The packaged service uses
+`Type=notify` to hold the graphical session targets until Umbriel is ready;
+portal services with `After=graphical-session.target` then inherit the
+published session environment. No portal service override is required for
+this startup ordering.
+
+If the picker is still missing, inspect the service and portal logs:
+
+```sh
+systemctl --user cat umbriel.service
+journalctl --user -b \
+  -u xdg-desktop-portal.service \
+  -u xdg-desktop-portal-umbriel.service \
+  -u xdg-desktop-portal-gtk.service \
+  --no-pager
+```
+
+A portal that was already running before the session startup transaction can
+retain an earlier environment. Umbriel does not automatically restart portal
+services. Nested and unmanaged launches do not provide the packaged service's
+readiness ordering.
 
 ## Logs
 
