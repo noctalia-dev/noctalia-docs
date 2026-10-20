@@ -138,6 +138,19 @@ With no named definitions, use `"default"`. A hidden scratchpad keeps the new
 window hidden unless `default_focused = true` is also set. Output, workspace,
 and floating rules determine where and how it returns when restored.
 
+The window opens with the size and position that `default_floating_size`,
+`default_floating_size_px`, and `default_position` give it, centered when no
+position is set, or opens fullscreen or maximized to the edges with
+`default_fullscreen` or `default_maximize_to_edges`. A window moved into a
+scratchpad later keeps its current size and position.
+
+```toml
+[[window_rule]]
+match.app_id = "^scratchpad-terminal$"
+default_scratchpad = "terminal"
+default_floating_size = { width = 0.7, height = 0.7 }
+```
+
 ## Workspace placement
 
 `default_workspace` uses TOML type to distinguish positions and names:

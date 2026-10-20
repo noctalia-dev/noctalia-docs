@@ -178,8 +178,10 @@ state. If that output or workspace no longer exists, Umbriel restores the
 window to the scratchpad's current output and active workspace.
 
 Fullscreen, pinned, and maximize-to-edges state are cleared when a window enters
-a scratchpad. Scratchpad animation settings may apply a new fullscreen,
-maximized, or scaled presentation while it is stored.
+a scratchpad, and the window floats at its current size. A window that opens
+into a scratchpad through `default_scratchpad` takes its size, position,
+fullscreen, and maximize-to-edges state from its
+[window rules](/umbriel/window-rules/#scratchpad-placement).
 
 ## Moving scratchpad windows
 
@@ -203,8 +205,7 @@ border_color_focused = "#E5C07BFF"
 border_color_unfocused = "#5C4A2AFF"
 ```
 
-Show and hide transitions, backdrop dimming and blur, and optional entry sizing
-are configured under
+Show and hide transitions and backdrop dimming and blur are configured under
 [`animation.scratchpad`](/umbriel/animation/#animation).
 
 Normal window size, fullscreen, maximize, and close actions work on a focused
