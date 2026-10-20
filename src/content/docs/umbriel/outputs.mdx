@@ -409,6 +409,21 @@ DMA-BUF capture may retain the negotiated 10-bit storage format. During HDR,
 that buffer still contains Umbriel's SDR capture view. Export-DMA-BUF alone
 bypasses the conversion and exposes the displayed native representation.
 
+### Window capture resolution
+
+Window screenshots and window sharing render at the window's current output
+scale. A fullscreen window on a 3200×2000 output at scale 2.5 therefore captures
+at 3200×2000 pixels, while its logical size remains 1280×800. Fractional pixel
+dimensions round up. Moving the window to an output with a different scale or
+changing its output's scale updates ongoing capture sessions' buffer sizes.
+
+Larger capture buffers increase memory use, rendering and copying work, and may
+increase encoding work for window sharing. At scale 2.5 they contain 6.25 times
+as many pixels as a scale 1 capture of the same logical window. Applications
+that supply low-resolution buffers still have only that source detail. Idle
+capture sources do not render, and stopping the last session releases their
+output swapchain.
+
 ## Virtual outputs
 
 A virtual output is a monitor with no display behind it. It has workspaces,
