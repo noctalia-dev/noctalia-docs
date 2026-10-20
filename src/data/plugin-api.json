@@ -190,5 +190,17 @@
     "noctaliaVersion": "v5.3.0",
     "feature": "widget-hover-highlight",
     "introduced": "The `hover_highlight` widget entry option for opting out of the bar's whole-widget hover highlight."
+  },
+  {
+    "level": 35,
+    "noctaliaVersion": null,
+    "feature": "idle-watch",
+    "introduced": "`noctalia.idle.watch` and `noctalia.idle.unwatch` for compositor idle notifications, available to every entry kind."
+  },
+  {
+    "level": 36,
+    "noctaliaVersion": null,
+    "feature": "layer-entry",
+    "introduced": "`[[layer]]` entries for plugin-owned layer-shell surfaces, with `layer.*` and `noctalia.layer.show`, `hide`, and `configure`."
   }
 ]

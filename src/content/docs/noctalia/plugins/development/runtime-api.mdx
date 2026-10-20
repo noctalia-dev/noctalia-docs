@@ -321,6 +321,43 @@ Sound names are scoped to one runtime instance. Reloading or stopping it cancels
 cached names, while a sound already playing finishes safely. Playback honors `[audio].sound_volume`, the shell
 sound toggles do not affect it. Triggering the same loaded sound while it is still playing is suppressed.
 
+## Idle
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `noctalia.idle.watch(seconds: number, callback: (idle: boolean) -> (), options: { ignoreInhibitors: boolean? }?)` | number | Calls `callback(true)` after `seconds` without user input and `callback(false)` on the next input. Returns a watch id. Requires <PluginApiBadge feature="idle-watch" />. |
+| `noctalia.idle.unwatch(id: number)` | boolean | Removes a watch. Returns `false` for an unknown id. Requires <PluginApiBadge feature="idle-watch" />. |
+
+Watches use the compositor's idle notification (`ext-idle-notify-v1`) and work from every entry kind. `seconds` must be
+positive; fractions are allowed and rounded up to milliseconds. Any other value raises
+`noctalia.idle.watch: seconds must be a positive number`. One entry runtime holds at most eight watches; a ninth raises
+`noctalia.idle.watch: at most 8 watches per entry`. Watches are released automatically when the runtime reloads or stops.
+
+By default a watch honors idle inhibitors: apps holding a Wayland idle inhibitor, Noctalia's caffeine, and D-Bus
+`org.freedesktop.ScreenSaver` inhibits (for example browser video). If a D-Bus inhibit starts while the watch reports
+idle, it reports `false`; when the inhibit lifts, the timeout restarts. Pass `{ ignoreInhibitors = true }` to count only
+real user input (`ext-idle-notify` v2). On compositors with only v1 this falls back to honoring inhibitors and logs a
+warning once.
+
+Watching never changes the `[idle]` behaviors (lock, screen off, suspend).
+
+## Layers
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `noctalia.layer.show(entryId: string)` | nothing | Shows one of this plugin's `[[layer]]` entries. Requires <PluginApiBadge feature="layer-entry" />. |
+| `noctalia.layer.hide(entryId: string)` | nothing | Hides the layer and destroys its surfaces and runtimes. Requires <PluginApiBadge feature="layer-entry" />. |
+| `noctalia.layer.configure(entryId: string, props: LayerProps)` | nothing | Changes layer properties on every live instance immediately and on future shows. Requires <PluginApiBadge feature="layer-entry" />. |
+
+`entryId` is the local id of the plugin's own [`[[layer]]` entry](/noctalia/plugins/development/manifest/#layer-entries)
+(`"saver"`, not `"me/plugin:saver"`), so a plugin cannot drive another plugin's layers. An id containing `:` or `/` is
+a Lua error; an unknown id logs a warning. Any entry of the plugin may call these. `show` and `hide` are idempotent, and
+all three apply asynchronously on the main thread.
+
+`configure` takes camelCase keys with the same value sets as the manifest: `layer`, `anchors`, `width`, `height`,
+`margins` (missing sides are `0`), `exclusiveZone`, `keyboard`, `clickThrough`, and `output`. An unknown key raises
+`noctalia.layer.configure: unknown property '<key>'`. Configured values last until the plugin reloads.
+
 ## HTTP and downloads
 
 | Method | Returns | Description |

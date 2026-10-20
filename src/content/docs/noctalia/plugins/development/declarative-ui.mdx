@@ -1,6 +1,6 @@
 ---
 title: Declarative UI
-description: Render desktop widgets and panels with shared ui.* trees.
+description: Render desktop widgets, panels, and layers with shared ui.* trees.
 sidebar:
   label: Declarative UI
   order: 4
@@ -481,6 +481,25 @@ noctalia msg panel-toggle noctalia/example:panel
 The reference implementation is the `panel` entry of the official `noctalia/example` plugin - a settings-style panel
 exercising every interactive control. `noctalia/wallhaven:browser` is a network-backed panel (thumbnail grid, filters,
 download + apply via `noctalia.wallpaperDirectory()` and `noctalia.setWallpaper()`).
+
+## `layer.*` - declarative layer UI {#layer--declarative-layer-ui}
+
+A [`[[layer]]` entry](/noctalia/plugins/development/entries/#layer-surfaces) describes its UI with the same `ui.*` tree
+as a desktop widget or panel. Requires <PluginApiBadge feature="layer-entry" />.
+
+`render(tree)` · `setNeedsFrameTick(bool)` · `outputName()`
+
+```lua
+layer.render(ui.column({ fill = "#000000", flexGrow = 1 }, {}))
+```
+
+- **Per output**: each shown output runs its own instance. `layer.outputName()` returns the connector of the output
+  this instance draws on, or `nil`.
+- **Ticks**: `update()` runs on the `noctalia.setUpdateInterval` interval (default 1000 ms). `setNeedsFrameTick(true)`
+  delivers `onFrameTick(deltaMs)` every frame while the layer is shown. As for desktop widgets, `deltaMs` arrives as a
+  string-formatted number; use `tonumber`.
+- **Input**: pointer and keyboard input drive controls like in a panel, and keys arrive only while the layer holds
+  keyboard focus (see the `keyboard` manifest key).
 
 ## Drag and drop (panels only) {#drag-and-drop-panels-only}
 
