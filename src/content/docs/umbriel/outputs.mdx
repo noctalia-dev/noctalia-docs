@@ -187,6 +187,39 @@ power consumption.
 Set `WLR_SCENE_DISABLE_DIRECT_SCANOUT=1` before starting Umbriel to disable
 direct scanout on every output.
 
+`umbriel outputs` shows whether it engages:
+
+```text
+  Direct scanout: active (steam_app_223850 "3DMark Steel Nomad")
+  Direct scanout: inactive (software cursor)
+```
+
+The log records each time scanout starts, stops, or moves to another window,
+once the new state has held for half a second:
+
+```text
+[INF] [output] output 'DP-1': direct scanout on (steam_app_223850 "3DMark Steel Nomad")
+[INF] [output] output 'DP-1': direct scanout off (composited)
+```
+
+When it is inactive, the reason is the first condition that ruled it out:
+
+| Reason | Meaning |
+| --- | --- |
+| `disabled` | `direct_scanout = false`, or `WLR_SCENE_DISABLE_DIRECT_SCANOUT` is set. |
+| `no_candidate` | Nothing is on the output, or what is visible is not a client buffer. |
+| `composited` | More than one surface is visible: overlays, popups, borders, a translucent window, or a window that does not cover the output. |
+| `effects` | A screen, window, or animation effect is drawing on the output. |
+| `color_conversion` | A gamma table, color transform, HDR white point, or the window's color description needs conversion. |
+| `capture` | An HDR output is being captured as SDR. |
+| `cropped` | The window is clipped, for instance mid-animation. |
+| `transform` | The buffer's transform differs from the output's. |
+| `modeset` | The output is changing mode or format this frame. |
+| `render_locked` | A capture or animation needs the output composited. |
+| `software_cursor` | The cursor is drawn in software over the window. |
+| `rejected` | The display driver refused the buffer, for instance its format or modifier. |
+| `debug_damage` | Damage highlighting is on. |
+
 ### Variable refresh rate
 
 `vrr` accepts:

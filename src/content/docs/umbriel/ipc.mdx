@@ -73,9 +73,17 @@ Output entries list every connected output, including disabled ones: `name`,
 switched off by DPMS), `focused`, `active_workspace` (its ID), `position`,
 `logical_size`, `usable_area` (the part layer-shell exclusive zones leave, in
 layout coordinates), `transform`, `scale`, `adaptive_sync` (`null` when the
-output cannot use variable refresh), `hdr_active`, and `modes`, each with
-`width`, `height`, `refresh_mhz`, `preferred`, and `current`. A disabled output
-reports a zero `logical_size` and `usable_area`.
+output cannot use variable refresh), `hdr_active`, `direct_scanout`, and
+`modes`, each with `width`, `height`, `refresh_mhz`, `preferred`, and
+`current`. A disabled output reports a zero `logical_size` and `usable_area`.
+
+`direct_scanout` is `null` while the output is disabled or powered off.
+Otherwise it holds `active`, `reason` (why the output composites, or `null`
+while active), and `window` (the scanned-out window's `id`, `app_id`, and
+`title`, or `null`). It reports a state only once it has held for half a
+second, so a cursor or notification passing over a fullscreen window does not
+flood subscribers. See [direct scanout](/umbriel/outputs/#direct-scanout) for the
+reasons.
 
 ## Effect inspection
 
