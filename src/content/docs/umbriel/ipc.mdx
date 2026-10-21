@@ -145,10 +145,11 @@ Payloads are full snapshots rather than deltas. Replace local state with the
 newest event instead of trying to merge increments. Identical consecutive
 payloads are omitted.
 
-Floating-window moves are reported while the drag is still held; `x` and `y`
-follow the drag position. Outside a drag, positions report layout targets rather
-than animation progress. Size updates follow committed client geometry,
-including mouse and keyboard resizes.
+Floating-window moves and windows carried by `xdg-toplevel-drag-v1` are reported
+while the drag is still held; `x` and `y` follow the drag position, including
+when a carried window normally belongs to the tiled layout. Outside a drag,
+positions report layout targets rather than animation progress. Size updates
+follow committed client geometry, including mouse and keyboard resizes.
 
 An unknown family returns an error and closes the subscription.
 

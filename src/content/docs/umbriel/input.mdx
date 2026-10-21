@@ -22,8 +22,9 @@ after it is re-enabled.
 
 `client_window_drag = false` ignores move requests from applications, such as
 dragging a client-side title bar or the empty tab strip of Chromium, Firefox,
-or Electron apps. Windows then move only with Mod+drag or keybinds.
-Resizing from client-side borders is unaffected.
+or Electron apps. Ordinary window moves then use Mod+drag or keybinds.
+Resizing from client-side borders and tab tear-off operations using
+`xdg-toplevel-drag-v1` are unaffected.
 
 `window_drag_toggle` controls what pressing the other main mouse button does
 during a window drag:
@@ -36,6 +37,16 @@ during a window drag:
 
 The state changes when the window is dropped. Unsupported transitions, such as
 pinning a fullscreen window, leave the window unchanged.
+
+### Detached tabs and panels
+
+Umbriel supports `xdg-toplevel-drag-v1` for native Wayland applications that
+implement it, including Chromium-based browsers. During a pointer drag, a
+detached window follows the pointer above ordinary windows and stays outside
+the tiling layout. Windows underneath it can receive the drop, allowing the
+application to merge a tab or dock a panel. If the application keeps the
+detached window after the drop, Umbriel places it using normal tiled or
+floating window-drag behavior. No additional configuration is needed.
 
 ### Keyboard
 
