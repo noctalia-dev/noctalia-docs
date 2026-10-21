@@ -426,6 +426,15 @@ buffer meets the other scanout requirements.
 gaps; floating windows fill the output's usable area inside the same margin, and
 follow it when the gap, borders, struts, or usable area change.
 
+A maximized window stays maximized when you float it and then unfloat it.
+Pressing the maximize binding after that round trip restores the column's
+extent from before the initial maximize. Repeated float/unfloat cycles preserve
+that restore extent until you unmaximize manually.
+
+Unmaximizing while floating restores the remembered normal floating size and
+position. If the window has never floated, its restore size comes from its
+ordinary tile before maximization.
+
 `window-toggle-maximize-to-edges` removes layout struts, gaps, and borders while
 leaving panel exclusive zones visible.
 
