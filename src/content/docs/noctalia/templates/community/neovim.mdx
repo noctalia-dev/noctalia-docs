@@ -10,27 +10,27 @@ Neovim can be themed using the Noctalia via the `base16` colorscheme.
 ## Setup
 
 1. **Add a user template for neovim**
-  - Add this to any TOML file under `~/.config/noctalia/` (for example `~/.config/noctalia/nvim.toml`). A user template becomes active as soon as its entry exists; there is no separate toggle to enable it. Set `enabled = false` on the entry to keep it defined but inactive.
 
-    ```toml
-    [theme.templates.user.nvim_base16]
-    input_path = "~/.config/nvim/lua/matugen-template.lua"
-    output_path = "~/.config/nvim/lua/matugen.lua"
-    post_hook = 'pkill -SIGUSR1 nvim'
-    ```
+- Add this to any TOML file under `~/.config/noctalia/` (for example `~/.config/noctalia/nvim.toml`). A user template becomes active as soon as its entry exists; there is no separate toggle to enable it. Set `enabled = false` on the entry to keep it defined but inactive.
+
+  ```toml
+  [theme.templates.user.nvim_base16]
+  input_path = "~/.config/nvim/lua/matugen-template.lua"
+  output_path = "~/.config/nvim/lua/matugen.lua"
+  post_hook = 'pkill -SIGUSR1 nvim'
+  ```
 
 2. Install the `base16` colorscheme by RRethy, using your package manager of choice. e.g. with Lazy:
 
-    ```lua
-    return { 'RRethy/base16-nvim',
-      config = function()
-        require('matugen').setup()
-      end,
-    }
-    ```
+   ```lua
+   return { 'RRethy/base16-nvim',
+     config = function()
+       require('matugen').setup()
+     end,
+   }
+   ```
 
-3. **Add the template to your neovim configuration:**
-   Add the following file to you neovim configuration (in `~/.config/nvim/lua/matugen-template.lua`, as above):
+3. **Add the template to your neovim configuration:** Add the following file to you neovim configuration (in `~/.config/nvim/lua/matugen-template.lua`, as above):
 
    ```lua
     local M = {}
@@ -71,6 +71,7 @@ Neovim can be themed using the Noctalia via the `base16` colorscheme.
 
     return M
    ```
+
    The `setup` function applies the theme, while the `signal` handler clears the old theme module out of the lua cache, then applies the new theme, whenever nvim is signalled with `SIGUSR1`.
 
 4. **Setup base16 in your init.lua**
@@ -78,5 +79,5 @@ Neovim can be themed using the Noctalia via the `base16` colorscheme.
    ```lua
     require('matugen').setup()
    ```
-When you restart neovim, it should use your noctalia theme.
 
+When you restart neovim, it should use your noctalia theme.
