@@ -202,6 +202,7 @@ height = 24
 font = "sans 10"
 padding = 8
 tab_gap = 2
+gap = -1
 corner_radius = -1
 title_format = "{title}"
 title_align = "center"
@@ -215,10 +216,11 @@ overflow = "scroll"
 | --- | --- | --- |
 | `style` | `"titles"` | `"titles"` shows each tab's title in its slot. `"indicator"` draws the slots alone; pair it with a small `height` for a thin strip. |
 | `position` | `"top"` | The group edge the bar sits on: `"top"`, `"bottom"`, `"left"`, or `"right"`. On the top or bottom the slots sit side by side; on the left or right they stack, a vertical tab list whose titles still read across. |
-| `height` | `24` | Thickness in logical pixels, from 2 to 400: the bar's height on the top or bottom, its width on the left or right. The group reserves the bar and one `gap` beside it. Give a side bar with titles room for them, such as `160`. |
+| `height` | `24` | Thickness in logical pixels, from 2 to 400: the bar's height on the top or bottom, its width on the left or right. The group reserves the bar and its `gap` beside it. Give a side bar with titles room for them, such as `160`. |
 | `font` | `"sans 10"` | Title font as a Pango description, such as `"Inter Bold 9"`. |
 | `padding` | `8` | Space a title keeps from either end of its slot. |
 | `tab_gap` | `2` | Space between neighbouring slots. |
+| `gap` | `-1` | Space between the bar and its window, from 0 to 500; `-1` follows the [layout `gap`](/umbriel/layout/#shared-settings). |
 | `corner_radius` | `-1` | Slot corner radius; `-1` follows `corner_radius`. |
 | `title_format` | `"{title}"` | Slot label. `{title}`, `{app_id}`, and `{index}` (from 1) are replaced; a window without a title shows its app id. |
 | `title_align` | `"center"` | `"left"`, `"center"`, or `"right"` within the slot. |
