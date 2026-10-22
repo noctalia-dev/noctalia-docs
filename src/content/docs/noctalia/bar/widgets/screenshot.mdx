@@ -45,7 +45,7 @@ noctalia msg screenshot-fullscreen all
 noctalia msg screenshot-window
 ```
 
-These commands use the global `[shell.screenshot]` output policy; `screenshot-window` needs the compositor's ext image capture protocols instead of `wlr-screencopy`. The canonical command list is also under [Keybinds & IPC → Media & UI → Screenshots](/noctalia/ipc/media-and-ui/#screenshots).
+These commands use the global `[shell.screenshot]` output policy unless [per-call options](/noctalia/ipc/media-and-ui/#per-call-options) override it; `screenshot-window` needs the compositor's ext image capture protocols instead of `wlr-screencopy`. The canonical command list is also under [Keybinds & IPC → Media & UI → Screenshots](/noctalia/ipc/media-and-ui/#screenshots).
 
 | `screenshot-fullscreen` argument | Behavior |
 |----------------------------------|----------|

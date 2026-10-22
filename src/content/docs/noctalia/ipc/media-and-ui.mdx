@@ -110,7 +110,7 @@ The CLI forwards everything after the command as one string (`noctalia msg wallp
 
 ## Screenshots
 
-Region and fullscreen capture require compositor support for `wlr-screencopy-unstable-v1`. Window capture uses `ext-image-copy-capture-v1` and `ext-foreign-toplevel-image-capture-source-manager-v1`. All screenshot commands use the global `[shell.screenshot]` output policy (directory, filename pattern, freeze, save to file, clipboard, pipe command); window capture ignores `freeze`. See [Shell settings](/noctalia/configuration/shell/#shell-settings).
+Region and fullscreen capture require compositor support for `wlr-screencopy-unstable-v1`. Window capture uses `ext-image-copy-capture-v1` and `ext-foreign-toplevel-image-capture-source-manager-v1`. All screenshot commands use the global `[shell.screenshot]` output policy (directory, filename pattern, freeze, save to file, clipboard, pipe command) unless [per-call options](#per-call-options) override it; window capture ignores `freeze`. See [Shell settings](/noctalia/configuration/shell/#shell-settings).
 
 | Action | Command | Description |
 |--------|---------|-------------|
@@ -125,6 +125,57 @@ Region and fullscreen capture require compositor support for `wlr-screencopy-uns
 | Annotate an image file | <IpcCommand command="annotate ~/Pictures/shot.png" /> | Open an image from disk in the editor instead of the screen. No screencopy support needed. |
 
 In picker mode, choose a connector from the top bar on any screen, or click the desktop to capture the monitor under the cursor. Errors list available connector names when the selector is unknown.
+
+### Per-call options
+
+`screenshot-region`, `screenshot-fullscreen`, `screenshot-window`, `screenshot-annotate`, and `annotate` accept options that override single `[shell.screenshot]` keys for one invocation, so two keybinds for the same command can behave differently. Each call starts from the config and only the named keys change; a call without options behaves exactly as the config says. Options work from `noctalia msg`, compositor binds, and bar widget actions, and `noctalia msg <command> --help` lists them.
+
+| Option | `[shell.screenshot]` key |
+|--------|--------------------------|
+| `--save-to-file` / `--no-save-to-file` | `save_to_file` |
+| `--copy-to-clipboard` / `--no-copy-to-clipboard` | `copy_to_clipboard` |
+| `--pipe-to-command` / `--no-pipe-to-command` | `pipe_to_command` |
+| `--freeze-screen` / `--no-freeze-screen` | `freeze_screen` |
+| `--confirm-region` / `--no-confirm-region` | `confirm_region` |
+| `--remember-last-region` / `--no-remember-last-region` | `remember_last_region` |
+| `--show-cursor` / `--no-show-cursor` | `show_cursor` |
+| `--annotate` / `--no-annotate` | `annotate` |
+| `--skip-annotate-on-copy-save` / `--no-skip-annotate-on-copy-save` | `skip_annotate_on_copy_save` |
+| `--close-on-copy` / `--no-close-on-copy` | `close_on_copy` |
+| `--close-on-save` / `--no-close-on-save` | `close_on_save` |
+| `--pipe-command <command>` | `pipe_command` |
+| `--directory <dir>` | `directory` |
+| `--filename-pattern <pattern>` | `filename_pattern` |
+
+- Options go before the fullscreen target or the annotate path; everything after the first non-option word is the target or path.
+- Quote values that contain spaces, for example `--pipe-command 'satty -f -'`.
+- Combining an option with its `--no-` form is an error, and so is an unknown option; the command then does nothing.
+- `--pipe-command` only sets the command; add `--pipe-to-command` when the config does not already enable piping.
+- A relative `--directory` resolves against the directory the command ran in. An empty value selects the default folder, like an empty `directory` key.
+- An option for a key that does not affect the command is accepted and ignored, the same as that key in the config.
+- **Capture new region** in the editor keeps the options of the command that opened it.
+
+```sh
+# Annotate this region even though annotate = false in the config
+noctalia msg screenshot-region --annotate
+# Copy straight to the clipboard without the editor and without saving a file
+noctalia msg screenshot-region --no-annotate --copy-to-clipboard --no-save-to-file
+# Send a combined capture of every monitor to satty
+noctalia msg screenshot-fullscreen --pipe-to-command --pipe-command 'satty -f -' all
+```
+
+A Niri bind and a screenshot widget action using the same options:
+
+```kdl
+binds {
+    Mod+Shift+S { spawn-sh "noctalia msg screenshot-region --annotate"; }
+}
+```
+
+```toml
+[widget.screenshot.actions]
+left = "screenshot-region --annotate"
+```
 
 `annotate <path>` edits a file instead of the screen. The image is decoded with the shell's own loader (PNG, JPEG, GIF, WebP, JPEG XL, ICO, SVG, and the other formats used for wallpapers and icons) and opens centered at its native pixel size on the focused output, scaled down when it does not fit. EXIF orientation is applied, so camera and phone photos open upright. Relative paths resolve against the directory the command ran in, and `~` expands. The pointer button stays disabled because no cursor was captured, and **Freeze** is not offered. **Copy** and **Save** deliver the annotated PNG, and **Done** applies the `[shell.screenshot]` output policy. Saving never overwrites the source: it writes a new PNG into the screenshot folder using the configured filename pattern.
 
