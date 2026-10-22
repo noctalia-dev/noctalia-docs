@@ -18,10 +18,45 @@ mode = "scrolling"
 | `scrolling` | Fixed-size columns in a scrollable strip | Keeping many windows readable without shrinking all of them |
 | `dwindle` | Each new window splits an existing tile | Flexible recursive tiling |
 | `master` | Primary windows beside a stack | Keeping one or more main windows prominent |
+| `floating` | Independently positioned, overlapping windows | Moving and resizing windows freely |
 
 Change the current workspace at runtime with
 `workspace-set-layout:<mode>`. See [Actions](/umbriel/actions/#argument-forms) and
 [Workspace Rules](/umbriel/workspaces/#workspace-rules).
+
+## Floating layout
+
+```toml
+[layout]
+mode = "floating"
+
+[appearance.title_bar]
+mode = "on"
+```
+
+Every ordinary window opens floating at its preferred size. Oversized automatic
+windows are reduced proportionally to fit the usable area, including title bars
+and margins. Client-driven size changes keep automatic placement centered until
+you move the window. New windows start at the center and shift diagonally when
+they would completely cover another window whose upper-left corner is visible.
+Placement includes title bars and borders. The offset clears the decorated title
+bar, with a minimum of 32 logical pixels, and wraps to fresh diagonals at the
+output boundary, including when several windows open simultaneously. Dialogs
+center over their parent; explicit position rules take precedence.
+
+Enable title bars to move windows without a modifier and use their close and maximize buttons. Dragging updates
+the window position continuously, so maximize and restore use its current
+position even while the pointer is held. Snap animations start where you release
+the window and keep the normal restore box from before the drag. The configured
+`appearance.drag_opacity` still applies. Enable `[input] window_snapping = true`
+for half-screen drop zones on all four edges and quarter-screen drop zones in
+all four corners.
+
+Directional focus uses window geometry, including overlapping windows.
+`window-toggle-floating` is rejected in this layout. Switching to a tiling layout
+re-tiles windows floated by the layout, while windows explicitly floated by a
+rule or before entering this layout stay floating. Moving a layout-floated window
+to a tiling workspace also tiles it there.
 
 ## Shared settings
 
@@ -416,7 +451,10 @@ applications. Move windows to another workspace or use a
 [scratchpad](/umbriel/scratchpads/) when they should stay running out of view.
 
 `window-toggle-fullscreen` fills the complete output, ignoring struts and panel
-exclusive zones.
+exclusive zones. A floating window keeps its normal size and position when moved
+through a tiled workspace while fullscreen and back to a floating workspace.
+Leaving fullscreen then restores that original floating box. Entering fullscreen
+during a resize still restores the requested size afterward.
 
 Visible floating windows above fullscreen require composition on that output.
 Once fullscreen covers them again, direct scanout can resume if the fullscreen

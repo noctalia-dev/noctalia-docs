@@ -28,7 +28,7 @@ are required, `[bracket]` forms are optional.
 | `<fraction>` | `0.1` to `1.0` of the column extent, or of the usable area for a floating window |
 | `<delta>` | Signed `-0.9` to `0.9`; the result clamps to `0.1` to `1.0` |
 | `<nits>[/<output>]` | SDR reference white in cd/m2, `80` to `1000`; append `/output` to select one output, otherwise the preferred output |
-| `<scrolling\|dwindle\|master\|toggle[:mode1,mode2,...]>` | Layout mode for `workspace-set-layout`; `toggle` cycles scrolling, dwindle, master; `toggle:mode1,mode2,...` cycles only the listed modes (two or more, each once) in order, switching to the first from an unlisted mode, as in `toggle:scrolling,master` |
+| `<scrolling\|dwindle\|master\|floating\|toggle[:mode1,mode2,...]>` | Layout mode for `workspace-set-layout`; `toggle` cycles scrolling, dwindle, master, floating; `toggle:mode1,mode2,...` cycles only the listed modes (two or more, each once) in order, switching to the first from an unlisted mode, as in `toggle:scrolling,master` |
 | `<normal\|tabbed>` | How `column-set-display` shows the rows around the focused window: stacked, or as a tab group |
 | `<index>` | Tab position for `column-focus-tab`, counted from `1` within the focused tab group; negative counts back from the last tab, `-1` |
 | `[skip-confirmation]` | `session-quit` only: quit without the on-screen confirmation |
@@ -169,6 +169,8 @@ Sizing rules per layout live in [Sizing behavior](/umbriel/layout/#sizing-behavi
 | `window-move-up` | Move up in its column, or a float to the top edge |
 | `window-set-primary-extent:<fraction>` | Set the focused area's primary extent fraction |
 | `window-set-secondary-extent:<fraction>` | Set the focused area's secondary extent fraction |
+| `window-snap:<left\|right\|top\|bottom\|top_left\|top_right\|bottom_left\|bottom_right>` | Snap the floating window, or restore it when already there |
+| `window-unsnap` | Restore the floating window's size before snapping |
 | `window-swap-down` | Swap with the window below |
 | `window-swap-left` | Swap with the window to the left |
 | `window-swap-next` | Swap with the next window in layout order |
@@ -176,7 +178,15 @@ Sizing rules per layout live in [Sizing behavior](/umbriel/layout/#sizing-behavi
 | `window-swap-right` | Swap with the window to the right |
 | `window-swap-up` | Swap with the window above |
 
+`window-snap` works on ordinary floating windows in any layout. It rejects tiled,
+fullscreen, pinned, and scratchpad windows, and regions smaller than the client's
+minimum size. Repeating the same region restores the normal box. Maximize and
+fullscreen preserve the snap placement; manual movement or resizing ends it.
+
 ## Windows
+
+`window-toggle-floating` requires a tiling layout. Windows in a floating layout
+already float and cannot be tiled individually.
 
 | Action | Effect |
 |--------|--------|
@@ -255,7 +265,7 @@ described in [Workspace selectors](/umbriel/workspaces/#workspace-selectors).
 | `workspace-move-up` | Move the focused workspace up the list |
 | `workspace-next` | Switch to the next workspace on this output |
 | `workspace-previous` | Switch to the previous workspace on this output |
-| `workspace-set-layout:<scrolling\|dwindle\|master\|toggle[:mode1,mode2,...]>` | Set the active workspace's layout mode |
+| `workspace-set-layout:<scrolling\|dwindle\|master\|floating\|toggle[:mode1,mode2,...]>` | Set the active workspace's layout mode |
 | `workspace-swap-active-output-down` | Swap active workspace windows with the output below |
 | `workspace-swap-active-output-left` | Swap active workspace windows with the output left |
 | `workspace-swap-active-output-next` | Swap active workspace windows with the next output |
