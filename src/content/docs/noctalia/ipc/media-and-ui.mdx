@@ -110,7 +110,7 @@ The CLI forwards everything after the command as one string (`noctalia msg wallp
 
 ## Screenshots
 
-Region and fullscreen capture require compositor support for `wlr-screencopy-unstable-v1`. Window capture uses `ext-image-copy-capture-v1` and `ext-foreign-toplevel-image-capture-source-manager-v1`. All screenshot commands use the global `[shell.screenshot]` output policy (directory, filename pattern, freeze, save to file, clipboard, pipe command) unless [per-call options](#per-call-options) override it; window capture ignores `freeze`. See [Shell settings](/noctalia/configuration/shell/#shell-settings).
+Region and fullscreen capture require compositor support for `wlr-screencopy-unstable-v1`. Window capture uses `ext-image-copy-capture-v1` and `ext-foreign-toplevel-image-capture-source-manager-v1`. All screenshot commands use the global `[shell.screenshot]` output policy (directory, filename pattern, file format, freeze, save to file, clipboard, pipe command) unless [per-call options](#per-call-options) override it; window capture ignores `freeze`. See [Shell settings](/noctalia/configuration/shell/#shell-settings).
 
 | Action | Command | Description |
 |--------|---------|-------------|
@@ -118,9 +118,9 @@ Region and fullscreen capture require compositor support for `wlr-screencopy-uns
 | Fullscreen screenshot | <IpcCommand command="screenshot-fullscreen" /> | Capture the focused monitor (compositor-selected output, active toplevel, keyboard focus, or recent pointer). |
 | Fullscreen (pick monitor) | <IpcCommand command="screenshot-fullscreen pick" /> | Open the display picker on multi-monitor setups. On a single monitor, captures immediately. |
 | Fullscreen (specific output) | <IpcCommand command="screenshot-fullscreen DP-2" /> | Capture one output without the picker. Pass the Wayland connector name (e.g. `DP-1`, `HDMI-A-1`) or a word-boundary match in the output description. |
-| Fullscreen (all monitors) | <IpcCommand command="screenshot-fullscreen all" /> | One combined desktop PNG spanning every monitor. |
+| Fullscreen (all monitors) | <IpcCommand command="screenshot-fullscreen all" /> | One combined desktop image spanning every monitor. |
 | Window screenshot | <IpcCommand command="screenshot-window" /> | Capture the focused window at native resolution. Requires `ext-image-copy-capture-v1` and `ext-foreign-toplevel-image-capture-source-manager-v1` support from the compositor. |
-| Annotate a frozen screen | <IpcCommand command="screenshot-annotate" /> | Freeze every monitor and open the annotation editor over the frozen image. **Copy** and **Save** deliver the annotated PNG; **`[keybinds].cancel`** closes without delivering. |
+| Annotate a frozen screen | <IpcCommand command="screenshot-annotate" /> | Freeze every monitor and open the annotation editor over the frozen image. **Copy** and **Save** deliver the annotated image; **`[keybinds].cancel`** closes without delivering. |
 | Annotate the live screen | <IpcCommand command="annotate" /> | Transparent drawing overlay for presentations. Apps keep updating behind the ink; **`Z`** freezes the screen under it and reveals Blur, Crop, Copy, and Save. |
 | Annotate an image file | <IpcCommand command="annotate ~/Pictures/shot.png" /> | Open an image from disk in the editor instead of the screen. No screencopy support needed. |
 
@@ -146,12 +146,15 @@ In picker mode, choose a connector from the top bar on any screen, or click the 
 | `--pipe-command <command>` | `pipe_command` |
 | `--directory <dir>` | `directory` |
 | `--filename-pattern <pattern>` | `filename_pattern` |
+| `--format <format>` | `format` (`png`, `jpeg`, `webp`, or `jxl`) |
+| `--quality <1-100>` | `quality` |
 
 - Options go before the fullscreen target or the annotate path; everything after the first non-option word is the target or path.
 - Quote values that contain spaces, for example `--pipe-command 'satty -f -'`.
-- Combining an option with its `--no-` form is an error, and so is an unknown option; the command then does nothing.
+- Combining an option with its `--no-` form is an error, and so is an unknown option, a `--format` outside the listed values, or a `--quality` that is not a whole number from 1 to 100; the command then does nothing.
 - `--pipe-command` only sets the command; add `--pipe-to-command` when the config does not already enable piping.
 - A relative `--directory` resolves against the directory the command ran in. An empty value selects the default folder, like an empty `directory` key.
+- `--format` and `--quality` change only the saved file; the clipboard and the pipe command still receive PNG.
 - An option for a key that does not affect the command is accepted and ignored, the same as that key in the config.
 - **Capture new region** in the editor keeps the options of the command that opened it.
 
@@ -162,6 +165,8 @@ noctalia msg screenshot-region --annotate
 noctalia msg screenshot-region --no-annotate --copy-to-clipboard --no-save-to-file
 # Send a combined capture of every monitor to satty
 noctalia msg screenshot-fullscreen --pipe-to-command --pipe-command 'satty -f -' all
+# Save this region as a lossless WebP file
+noctalia msg screenshot-region --format webp --quality 100
 ```
 
 A Niri bind and a screenshot widget action using the same options:
