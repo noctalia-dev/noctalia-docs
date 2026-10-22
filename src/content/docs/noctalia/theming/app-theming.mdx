@@ -87,13 +87,32 @@ community_ids              = []        # opt-in; fetched from api.noctalia.dev/t
 
 `community_ids` selects which community templates run. In **Settings → Templates**, enable community templates and use **Browse Templates** to search and filter the catalog (by category or enabled-only). Metadata and files are stored in `~/.local/state/noctalia/community-templates/` (honoring `NOCTALIA_STATE_HOME`, then `XDG_STATE_HOME`).
 
-Some community templates include extra setup instructions in a `README.md` in the [community-templates repository](https://github.com/noctalia-dev/community-templates). Their tiles show an external-link button with the **Readme** tooltip; click it to open those instructions in your default browser without changing the template's enabled state. With a template selected in the catalog grid, **F1** opens its README. READMEs are optional, so templates without one have no external-link button.
+Setup instructions for each community template live in its `README.md` in the [community-templates repository](https://github.com/noctalia-dev/community-templates). Template tiles show an external-link button with the **Readme** tooltip; click it to open those instructions in your default browser without changing the template's enabled state. With a template selected in the catalog grid, **F1** opens its README.
 
 Cached community template files are treated as editable local copies. Sync updates files only while their content still matches the last Noctalia-written md5; local edits are preserved until you delete the edited cached file.
 
 Disabling a community template, or disabling `enable_community_templates`, runs the `undo_hook` of each entry in its cached `template.toml`, so the template can remove an include or theme selection its `post_hook` added. A failed undo hook is retried on the next theme application. Templates without an `undo_hook` leave their files in place.
 
 Community template discovery and updates require network access unless the selected template is already cached. [`shell.offline_mode`](/noctalia/configuration/shell/#shell-settings) prevents outgoing HTTP requests, including community template requests.
+
+### Firefox
+
+Firefox is themed through the [Pywalfox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) browser extension and the **`pywalfox`** community template. The template writes a Pywal-compatible `colors.json` and requests the built-in `firefox-theme` post-action. Noctalia itself acts as the extension's native-messaging host, so no `python-pywalfox` package or separate daemon is needed.
+
+On the first theme application, Noctalia installs a user-local native-messaging manifest at `~/.mozilla/native-messaging-hosts/pywalfox.json` that points at the `noctalia` binary. Restart Firefox once after that so it picks up the host. Noctalia refreshes manifests it owns when the executable path changes, including across NixOS store generations; manifests installed by other Pywalfox hosts are left untouched.
+
+Each open Firefox profile runs its own host process, and theme pushes reach all of them. If only some profiles update after upgrading Noctalia, restart each profile once.
+
+The host can also be driven by hand:
+
+```sh
+noctalia firefox-theme install    # write the native-messaging manifest
+noctalia firefox-theme update     # push colors to all running profile hosts
+noctalia firefox-theme uninstall  # remove the Noctalia-owned manifest
+noctalia firefox-theme --help
+```
+
+To migrate from the Python Pywalfox host, uninstall `python-pywalfox` if nothing else needs it. If `~/.mozilla/native-messaging-hosts/pywalfox.json` still points at the Python host, remove it, since Noctalia does not overwrite a foreign manifest. Then enable **`pywalfox`**, re-apply templates, and restart Firefox.
 
 ## User Templates
 
@@ -111,6 +130,57 @@ Defining `[theme.templates.user.<id>]` enables that user template. Set `enabled 
 Relative paths resolve from the Noctalia config directory. A leading `$XDG_CONFIG_HOME`, `$XDG_DATA_HOME`, `$XDG_STATE_HOME`, or `$XDG_CACHE_HOME` token is expanded using the XDG base directory defaults when the matching environment variable is not set.
 
 User template entries support the same fields documented in [Template Entries](/noctalia/theming/templates/#template-entries), including `input_path_modes`, `output_path_dynamic`, `colors_to_compare`, `compare_to`, `pre_hook`, `post_hook`, `post_action`, and `index`.
+
+### Example: Terminal Escape Sequences
+
+Terminals that cannot reload their config, such as foot, can be recolored live by writing OSC escape sequences to every open terminal. The sequences work in most terminals (kitty, WezTerm, foot, Alacritty, GNOME Terminal, Konsole, and others) and match the colors of the built-in foot template.
+
+Add the user template:
+
+```toml
+[theme.templates.user.terminal-sequences]
+input_path  = "~/.config/noctalia/templates/terminal-sequences"
+output_path = "~/.cache/terminal-sequences"
+post_hook   = "tee /dev/pts/[0-9]* < ~/.cache/terminal-sequences"
+```
+
+Then create its input file:
+
+```sh
+mkdir -p ~/.config/noctalia/templates
+{
+    printf '\033]10;{{colors.terminal_foreground.default.hex}}\007'
+    printf '\033]11;{{colors.terminal_background.default.hex}}\007'
+
+    printf '\033]4;0;{{colors.terminal_normal_black.default.hex}}\007'
+    printf '\033]4;1;{{colors.terminal_normal_red.default.hex}}\007'
+    printf '\033]4;2;{{colors.terminal_normal_green.default.hex}}\007'
+    printf '\033]4;3;{{colors.terminal_normal_yellow.default.hex}}\007'
+    printf '\033]4;4;{{colors.terminal_normal_blue.default.hex}}\007'
+    printf '\033]4;5;{{colors.terminal_normal_magenta.default.hex}}\007'
+    printf '\033]4;6;{{colors.terminal_normal_cyan.default.hex}}\007'
+    printf '\033]4;7;{{colors.terminal_normal_white.default.hex}}\007'
+
+    printf '\033]4;8;{{colors.terminal_bright_black.default.hex}}\007'
+    printf '\033]4;9;{{colors.terminal_bright_red.default.hex}}\007'
+    printf '\033]4;10;{{colors.terminal_bright_green.default.hex}}\007'
+    printf '\033]4;11;{{colors.terminal_bright_yellow.default.hex}}\007'
+    printf '\033]4;12;{{colors.terminal_bright_blue.default.hex}}\007'
+    printf '\033]4;13;{{colors.terminal_bright_magenta.default.hex}}\007'
+    printf '\033]4;14;{{colors.terminal_bright_cyan.default.hex}}\007'
+    printf '\033]4;15;{{colors.terminal_bright_white.default.hex}}\007'
+
+    printf '\033]19;{{colors.terminal_selection_fg.default.hex}}\007'
+    printf '\033]17;{{colors.terminal_selection_bg.default.hex}}\007'
+    printf '\033]12;{{colors.terminal_cursor.default.hex}}\007'
+} > ~/.config/noctalia/templates/terminal-sequences
+```
+
+The hook only recolors terminals that are already open. To color new terminals too, without the built-in foot template, add this to `~/.bashrc`:
+
+```sh
+[[ -f ~/.cache/terminal-sequences ]] && cat ~/.cache/terminal-sequences
+```
 
 ## Config Location
 
