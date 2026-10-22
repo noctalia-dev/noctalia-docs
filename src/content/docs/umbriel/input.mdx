@@ -52,6 +52,13 @@ restore. Floating windows also resize by dragging the frame's edges or corners
 without a modifier. These compositor-owned interactions work with
 `client_window_drag = false`.
 
+Title bar presses keep the normal cursor until the pointer crosses a threshold
+of 10 logical pixels from its position at the original button press. Umbriel then
+starts dragging and switches to the grabbing cursor. Movement before an
+application's move request counts toward that threshold. If the pointer has
+already crossed it, dragging starts immediately without requiring another motion
+event or another threshold.
+
 In tiled layouts, pressing a client-side or Umbriel title bar focuses and reveals
 the window while keeping it in the layout. It detaches only after the pointer
 crosses the drag threshold. Holding or releasing a stationary press preserves
