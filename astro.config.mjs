@@ -149,7 +149,7 @@ export default defineConfig({
               label: "Templates",
               items: [
                 { label: "Official Templates", items: [{ autogenerate: { directory: "noctalia/templates/official" } }] },
-                { label: "Community Templates", items: [{ autogenerate: { directory: "noctalia/templates/community" } }] },
+                { label: "Community Templates", link: "https://github.com/noctalia-dev/community-templates" },
               ],
             },
           ],
