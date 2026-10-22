@@ -52,6 +52,11 @@ restore. Floating windows also resize by dragging the frame's edges or corners
 without a modifier. These compositor-owned interactions work with
 `client_window_drag = false`.
 
+In tiled layouts, pressing a client-side or Umbriel title bar focuses and reveals
+the window while keeping it in the layout. It detaches only after the pointer
+crosses the drag threshold. Holding or releasing a stationary press preserves
+the spacing between windows, including while applications repaint.
+
 Mod+right-click drags a window's resize edge. `mod_right_double_click` gives a
 second Mod+right-click on the same window a job beyond resizing:
 
