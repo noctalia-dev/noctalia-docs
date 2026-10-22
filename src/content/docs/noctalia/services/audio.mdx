@@ -18,11 +18,13 @@ sound_theme                = "freedesktop"
 ```
 
 - `enable_overdrive = false` clamps Control Center output/microphone sliders to 100%; `true` allows up to 150%.
-- `enable_sounds = false` disables all shell sound playback. Plugin sounds via `noctalia.sound.play` are not
-  affected by `enable_sounds` or the per-event toggles.
+- `enable_sounds = false` disables all shell sound playback and skips loading the sound theme files (nothing is
+  decoded until sounds are enabled again). Plugin sounds via `noctalia.sound.play` are not affected by `enable_sounds`
+  or the per-event toggles.
 - While `enable_sounds` is `true`, each per-event toggle gates one shell sound: `enable_volume_sounds` (volume
   changes), `enable_notification_sounds` (notifications), `enable_power_sounds` (charger connect or remove), and
-  `enable_screenshot_sounds` (screenshots).
+  `enable_screenshot_sounds` (screenshots). The per-event toggles, the sound volume and the sound theme are hidden in
+  Settings while `enable_sounds` is `false`.
 - `sound_volume` controls all UI sounds. A value of `1.0` plays the source at unity gain; lower values follow a
   perceptual volume curve.
   Files are decoded through `libsndfile`; common supported formats include WAV, FLAC, Ogg/Vorbis, Opus, MP3, and AIFF.
