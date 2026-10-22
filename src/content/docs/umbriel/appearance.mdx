@@ -155,6 +155,14 @@ without icons. The maximize button is disabled for fixed-size windows.
 `background` and `text` apply to the focused window; their `_unfocused`
 variants apply to other windows. Colors and title bar settings reload live.
 
+The title bar follows its window's `blur`, `blur_optimized`, and
+`blur_ignore_alpha` rules, together with the global [blur settings](#blur).
+Give `background` and `background_unfocused` some transparency, such as
+`"#292933CC"`, to see the blurred backdrop. The alpha threshold applies to the
+title bar's own background color, independently of the application's content.
+No layer rule is needed. Dragging, overview previews, and close animations keep
+the blur with the window.
+
 In `"on"` mode, Wayland windows that request server decorations, or have no
 known decoration preference, receive a bar.
 Explicit client-side decoration requests suppress it. Both xdg-decoration and
