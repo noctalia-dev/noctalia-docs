@@ -226,6 +226,7 @@ the windows stacked beside it in the column it joins or creates.
 | `border_color_outer` | Override `colors.border.outer`. |
 | `border_width` | Override `appearance.border_width`, 0 to 100. |
 | `outer_border_width` | Override `appearance.outer_border_width`, 0 to 100. |
+| `title_bar` | `"auto"` follows client decoration preferences, `"on"` forces a title bar, and `"off"` hides it. Overrides `appearance.title_bar.mode`; omission inherits the global mode. |
 | `corner_radius` | Override `appearance.corner_radius`, 0 to 100. |
 | `shadow` | Override `appearance.shadow.enabled`. |
 | `border_effect` | Replace `effects.border` with a border preset or pool, or `"off"` to disable it. |
@@ -249,6 +250,30 @@ border_color_unfocused = "#5C4A2AFF"
 ```
 
 ### Decoration
+
+An omitted `title_bar` inherits `[appearance.title_bar] mode`. An explicit
+`title_bar = "auto"` follows the client's decoration preference, or shows
+Umbriel's bar if no preference is known. Use `"on"` to force a bar or `"off"`
+to hide it. Rules override every global mode: `"on"` can enable a bar with
+global `"off"`, and `"auto"` can honor CSD requests with global `"on"`.
+A later matching `"auto"` rule resets an earlier override to automatic selection. Changes apply to existing windows,
+including state-based rules and config reloads. Fullscreen, maximize-to-edges,
+and tiled tab groups still suppress the bar.
+
+```toml
+[[window_rule]]
+match.app_id = "^my-editor$"
+title_bar = "on"
+
+[[window_rule]]
+match.app_id = "^my-editor$"
+match.title = "^Preferences$"
+title_bar = "auto"
+```
+
+Forcing a title bar does not remove client-drawn headerbars or controls.
+Changing title bar presence adjusts tiled content space and maximized floating
+content sizes. Border-only overrides below keep layout spacing unchanged.
 
 `border_width`, `outer_border_width`, `corner_radius`, and `shadow` change what
 Umbriel draws around the windows a rule matches. Layout spacing keeps using the

@@ -106,7 +106,7 @@ opaque_fullscreen = true
 
 | Key | Default | Description |
 | --- | --- | --- |
-| `prefer_no_csd` | `true` | Prefer Umbriel's border-only server decoration. |
+| `prefer_no_csd` | `true` | Advertise a preference for server decorations. The optional title bar is configured separately. |
 | `border_width` | `2` | Inner border width in logical pixels. |
 | `outer_border_width` | `0` | Outer ring width in logical pixels. |
 | `corner_radius` | `10` | Radius of the complete decorated window. |
@@ -126,6 +126,67 @@ Borders render outside window content and are included in layout spacing.
 `corner_radius = 0` keeps every contour square. A
 [window rule](/umbriel/window-rules/#decoration) can override `border_width`,
 `outer_border_width`, and `corner_radius` for the windows it matches.
+
+### Title bar
+
+Enable a simple server-side title bar on decorated windows in every layout:
+
+```toml
+[appearance.title_bar]
+mode = "off"
+height = 28
+font = "sans 10"
+button_position = "right"
+
+[colors.title_bar]
+background = "#292933FF"
+background_unfocused = "#1A1A1FFF"
+text = "#E8E8EAFF"
+text_unfocused = "#8A8A92FF"
+close = "#FF6B6BFF"
+maximize = "#7AA3FFFF"
+```
+
+Set `mode = "auto"` for automatic selection or `mode = "on"` to show a bar
+regardless of client preference. `mode = "off"` is the default. `height` is 16
+to 128 logical pixels, and `font` is a Pango font description. `button_position` accepts `"left"` or
+`"right"`; close stays at the outside edge. The two buttons are colored circles
+without icons. The maximize button is disabled for fixed-size windows.
+`background` and `text` apply to the focused window; their `_unfocused`
+variants apply to other windows. Colors and title bar settings reload live.
+
+In `"auto"` mode, Wayland windows that request server decorations, or have no known decoration preference, receive a bar.
+Explicit client-side decoration requests suppress it. Both xdg-decoration and
+the older server-decoration protocol are tracked; xdg-decoration takes priority
+when a window uses both. Managed Xwayland windows follow their decoration hints.
+Popups and unmanaged Xwayland windows do not receive a title bar.
+
+A [window rule](/umbriel/window-rules/#decoration) can set `title_bar` to `"auto"`,
+`"on"`, or `"off"`. `"on"` adds a bar even when the application requests its
+own decorations; `"off"` hides it; `"auto"` restores automatic selection after
+an earlier matching override. An omitted rule inherits the global mode.
+An explicit rule overrides it, so `"on"` can enable a bar with global `"off"`,
+and `"auto"` can honor client preferences with global `"on"`.
+Existing windows update when their preference or matching rule changes, or when
+the setting reloads.
+
+Application-drawn headerbars, tab strips, and custom controls remain part of the
+application content. To avoid duplicate title bars, select the application's
+native or system title bar option where available. `prefer_no_csd = true` still
+advertises Umbriel's preference to applications that support decoration
+negotiation.
+
+Drag empty title bar space with the left button to move a window without a
+modifier, or double-click it to toggle maximize. Click a colored button to
+maximize/restore or close the window. Buttons activate on release inside the
+same button. Floating windows also have modifier-free resize grips around their
+borders and corners. Application content keeps its normal pointer behavior.
+
+Tab group members show the tab bar instead. Fullscreen and maximize-to-edges
+hide the title bar, while normal maximize keeps it. The bar occupies space
+inside a tile's allocation; configure sizes, IPC window coordinates, and window
+captures continue to describe application content. Borders and shadows wrap the
+title bar and content together.
 
 ### Tab bar
 

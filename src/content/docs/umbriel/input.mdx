@@ -23,9 +23,16 @@ after it is re-enabled.
 
 `client_window_drag = false` ignores move requests from applications, such as
 dragging a client-side title bar or the empty tab strip of Chromium, Firefox,
-or Electron apps. Ordinary window moves then use Mod+drag or keybinds.
+or Electron apps. Ordinary window moves then use Mod+drag, keybinds, or an
+enabled [Umbriel title bar](/umbriel/appearance/#title-bar).
 Resizing from client-side borders and tab tear-off operations using
 `xdg-toplevel-drag-v1` are unaffected.
+
+When the title bar is shown by `[appearance.title_bar] mode` or a window rule, dragging empty server-side title
+bar space moves a window without a modifier. Double-click it to maximize or
+restore. Floating windows also resize by dragging the frame's edges or corners
+without a modifier. These compositor-owned interactions work with
+`client_window_drag = false`.
 
 Mod+right-click drags a window's resize edge. `mod_right_double_click` gives a
 second Mod+right-click on the same window a job beyond resizing:
