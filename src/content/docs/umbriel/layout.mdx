@@ -475,9 +475,9 @@ For a specific window, find its ID with `umbriel windows --json` and run
 `umbriel msg window-focus:<window-id>`.
 
 `workspace-toggle-show-desktop` minimizes every floating window of the active
-workspace and remembers them. The next toggle restores that set and the focus
-it had. Restoring one of those windows another way, or opening a new window on
-that workspace, drops the set, so the next toggle minimizes again.
+workspace. Once none is left to hide, the next toggle restores every minimized
+window of that workspace, including ones minimized another way, and returns
+focus to the window that had it.
 
 ### Maximize and fullscreen
 
