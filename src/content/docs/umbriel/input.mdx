@@ -408,9 +408,12 @@ follows_mouse_max_scroll = 0.5
 
 `follows_mouse = true` focuses the window that the pointer enters through real
 pointer motion. Scrolling or dragging a layout beneath a stationary pointer
-does not change focus. This follows the actual seat focus across tiled,
-floating, and pinned windows, including pinned windows whose owning workspace
-is inactive.
+does not change focus. After explicit layout scrolling settles, the next real
+pointer motion can focus the window beneath it without a border crossing.
+Pointer motion during scrolling does not change focus. Consume and expel
+commands also let the next pointer motion refresh focus after rearranging windows.
+This follows the actual seat focus across tiled, floating, and pinned windows,
+including pinned windows whose owning workspace is inactive.
 
 `follows_mouse_max_scroll` limits how far Umbriel may scroll a layout to reveal
 that window, measured in viewport widths. `0.0` allows only fully visible
