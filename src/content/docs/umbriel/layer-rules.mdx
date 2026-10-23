@@ -16,11 +16,11 @@ blur_popups = true
 
 ## Matching
 
-| Selector | Type | Description |
-|----------|------|-------------|
-| `match.namespace` | regex | Match the layer surface namespace. |
-| `match.layer` | enum | Match `"background"`, `"bottom"`, `"top"`, or `"overlay"`. |
-| `match.at_startup` | bool | Match during or after the first 60 seconds. |
+| Selector           | Type  | Description                                                |
+| ------------------ | ----- | ---------------------------------------------------------- |
+| `match.namespace`  | regex | Match the layer surface namespace.                         |
+| `match.layer`      | enum  | Match `"background"`, `"bottom"`, `"top"`, or `"overlay"`. |
+| `match.at_startup` | bool  | Match during or after the first 60 seconds.                |
 
 Regular expressions match any part of a namespace. Use `^` and `$` for an
 exact match. The selector takes either one pattern or an array of them, and any
@@ -31,12 +31,12 @@ every matching rule contributes its values.
 
 ## Effects
 
-| Key | Type | Description |
-|-----|------|-------------|
-| `blur` | bool | Enable/disable blur for the layer surface. |
-| `blur_popups` | bool | Enable/disable blur for descendant XDG popups. |
-| `blur_ignore_alpha` | float | Skip blur below an alpha threshold. |
-| `blur_optimized` | bool | Override the global optimized-blur choice. |
+| Key                 | Type  | Description                                    |
+| ------------------- | ----- | ---------------------------------------------- |
+| `blur`              | bool  | Enable/disable blur for the layer surface.     |
+| `blur_popups`       | bool  | Enable/disable blur for descendant XDG popups. |
+| `blur_ignore_alpha` | float | Skip blur below an alpha threshold.            |
+| `blur_optimized`    | bool  | Override the global optimized-blur choice.     |
 
 Layer-shell blur is off by default. Every matching rule contributes its
 settings, and later values take precedence.
@@ -53,11 +53,11 @@ as a bar, keep the cheaper optimized blur.
 A layer surface declares its own keyboard interactivity through the layer-shell
 protocol; no rule overrides it.
 
-| Interactivity | Behavior |
-|---------------|----------|
-| `none` | Never receives keyboard focus. Clicking the surface leaves the focused window alone. |
-| `on_demand` | Takes focus when mapped; clicking a window or using a focus action moves focus away. |
-| `exclusive` | Keeps keyboard focus; windows receive no keys and focus actions cannot leave it. |
+| Interactivity | Behavior                                                                             |
+| ------------- | ------------------------------------------------------------------------------------ |
+| `none`        | Never receives keyboard focus. Clicking the surface leaves the focused window alone. |
+| `on_demand`   | Takes focus when mapped; clicking a window or using a focus action moves focus away. |
+| `exclusive`   | Keeps keyboard focus; windows receive no keys and focus actions cannot leave it.     |
 
 Launchers and panels with search fields commonly use `on_demand`.
 
