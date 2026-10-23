@@ -48,6 +48,7 @@ The available controls and their props (sizes are logical px, scaled with the su
 | `ui.markdown`          | `text` (markdown source - see below), `width`, `height`                                                                                                                                                                                                                |
 | `ui.glyph`             | `name` (Tabler/Nerd-Font glyph), `size`, `color`                                                                                                                                                                                                                       |
 | `ui.image`             | `path` (plugin-relative, `~`, or absolute), `width`, `height`, `radius`, `fit` (`contain`/`cover`/`stretch`), `border`, `borderWidth`, `onClick`, `onHover`, `tooltip`                                                                                                 |
+| `ui.pixelStream`       | `path` (companion socket), `width`, `height`, `radius`, and pointer and keyboard callbacks; see [Pixel streams](#pixel-streams)                                                                                                                                        |
 | `ui.box`               | `fill`, `radius`, `border`, `borderWidth`, `softness`, `width`, `height`, `onClick`, `onHover`, `tooltip`                                                                                                                                                              |
 | `ui.separator`         | `thickness`, `color`, `spacing`, `orientation` (`auto`/`horizontal`/`vertical`)                                                                                                                                                                                        |
 | `ui.spacer`            | flexible filler (use `flexGrow`)                                                                                                                                                                                                                                       |
@@ -366,6 +367,57 @@ layer.render(ui.column({ fill = "#000000", flexGrow = 1 }, {}))
 - **Per output**: each shown output runs its own instance. `layer.outputName()` returns the connector of the output this instance draws on, or `nil`.
 - **Ticks**: `update()` runs on the `noctalia.setUpdateInterval` interval (default 1000 ms). `setNeedsFrameTick(true)` delivers `onFrameTick(deltaMs)` every frame while the layer is shown. As for desktop widgets, `deltaMs` arrives as a string-formatted number; use `tonumber`.
 - **Input**: pointer and keyboard input drive controls like in a panel, and keys arrive only while the layer holds keyboard focus (see the `keyboard` manifest key).
+
+## Pixel streams
+
+`ui.pixelStream` shows live frames produced by a companion process the plugin runs, for example a phone screen mirror or a remote preview (requires <PluginApiBadge feature="pixel-stream" />). The companion owns capture, decoding, audio, and any device input; Noctalia only displays its pixels and reports what the user does over them. Frame data never passes through the plugin script.
+
+```lua
+ui.pixelStream({
+  key = "screen", path = noctalia.pluginDataDir() .. "/screen.sock", width = 320, height = 640, radius = 12,
+  onPointerDown = function(x, y) sendTouch("down", x, y) end,
+  onPointerMove = function(x, y) lastX, lastY = x, y; if touching then sendTouch("move", x, y) end end,
+  onPointerUp = function(x, y) sendTouch("up", x, y) end,
+  onPointerCancel = function() sendTouch("cancel") end,
+  onScroll = function(dx, dy) sendScroll(lastX, lastY, tonumber(dx), tonumber(dy)) end,
+  onTextInput = function(text) sendText(text) end,
+  onKeyEvent = function(chord, pressed) sendKey(chord, pressed == "true") end,
+})
+```
+
+The frame is fitted inside `width` × `height` with its aspect ratio kept; supply both. Until the first frame arrives, and after `path` changes, the control is empty. When the companion disconnects, the last frame stays on screen and Noctalia reconnects every second.
+
+**Pointer.** Positions are strings from `"0.0000"` to `"1.0000"`, relative to the displayed frame (letterboxing excluded) with `0,0` at the top-left.
+
+- `onPointerMove(x, y)` fires while the pointer is over the frame, and during a left drag also outside it, pinned to the nearest edge. Moves are coalesced like `ui.graph`'s: a slow script only sees the newest position, but never one from after a later press, release, click, or scroll.
+- `onPointerDown(x, y)` / `onPointerUp(x, y)` bracket a left-button drag that starts on the frame. `onPointerCancel()` ends a drag without a release: the companion disconnected, the frame size changed, the control's callbacks changed, or it left the tree (including the panel closing). Every `onPointerDown` is followed by exactly one `onPointerUp` or `onPointerCancel` when the latter is declared.
+- `onRightClick(x, y)` / `onMiddleClick(x, y)` fire when that button is pressed on the frame and released over the control, with the press position.
+- `onScroll(dx, dy)` reports whole wheel steps over the frame, positive right and down; pair it with the last `onPointerMove` position. Without `onScroll` the wheel scrolls the surrounding content as usual.
+
+**Keyboard.** Declaring `onTextInput` or `onKeyEvent` lets the user focus the control by clicking it; keys arrive only while it holds focus, so this works in panels and layers that take keyboard focus, not in bar widgets. This is separate from a panel's `capture_keys` / global `onKey`: the focused control receives everything typed into it, including key repeats.
+
+- `onTextInput(text)` receives the UTF-8 text of each text-producing key press (no Ctrl or Alt held). Composition previews are not delivered; finished characters are.
+- `onKeyEvent(chord, pressed)` receives every other key as a chord such as `"Return"`, `"BackSpace"`, or `"Ctrl+c"` (modifiers in the order Ctrl, Alt, Shift, followed by the XKB key name), and `"true"` on press or repeat, `"false"` on release. Super chords are never delivered.
+- Host keys keep priority: the Cancel keybind (Escape) still dismisses the panel, the Tab keybinds still move focus, and a panel's `capture_keys` chords still go to its global `onKey`.
+
+### Companion protocol
+
+The companion listens on a filesystem Unix socket of type `SOCK_SEQPACKET` at `path`, ideally inside a directory only the user can access. Noctalia connects while the control exists, accepts only a peer running as the same user, and closes the connection when the control is removed. Noctalia does not start or stop the companion; manage it from the plugin, for example with the panel lifecycle callbacks.
+
+Every message is a sequence of little-endian unsigned 32-bit fields:
+
+| Direction            | Message   | Fields                 | Meaning                                                                                                                           |
+| -------------------- | --------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Noctalia → companion | `HELLO`   | `1`, version (`1`)     | First message on every connection. Close the connection if you do not speak this version.                                         |
+| Noctalia → companion | `REQUEST` | `2`, `0`               | Noctalia is ready for the next frame and no longer reads the buffer of the previous `FRAME`. The first `REQUEST` follows `HELLO`. |
+| companion → Noctalia | `BUFFER`  | `1`, id, width, height | Attaches shared buffer `id` (0 to 3). Carries exactly one file descriptor (`SCM_RIGHTS`).                                         |
+| companion → Noctalia | `FRAME`   | `2`, id                | Buffer `id` holds the frame to show. Only valid as the answer to a `REQUEST`.                                                     |
+
+A buffer is a `memfd` holding `width × height` RGBA pixels, 4 bytes each (red, green, blue, alpha), rows top to bottom with no padding. It must be at least that large and sealed against shrinking (`MFD_ALLOW_SEALING`, then `F_ADD_SEALS` with `F_SEAL_SHRINK`). Width and height are 1 to 4096, at most 4,194,304 pixels. Pixels should be opaque (alpha 255). A buffer can be replaced by sending `BUFFER` with the same id again, which is how the frame size changes.
+
+There is at most one outstanding `REQUEST`. Answer it when a frame newer than the last one sent exists, and immediately on a new connection, so a reconnecting shell gets the current picture. Between sending `FRAME` for a buffer and receiving the next `REQUEST`, do not write to or replace that buffer; render into another one instead (two buffers are enough). Noctalia sends `REQUEST` after it has uploaded a frame for display, so the stream is paced by the shell and pauses while the control is not drawn: render only the latest frame and drop older ones rather than queueing them.
+
+Any malformed or out-of-order message closes the connection, followed by a reconnect a second later.
 
 ## Drag and drop {#drag-and-drop-panels-only}
 

@@ -220,5 +220,11 @@
     "noctaliaVersion": null,
     "feature": "osd",
     "introduced": "`noctalia.osd.show(icon, value, opts)` for showing the shell OSD from plugins."
+  },
+  {
+    "level": 40,
+    "noctaliaVersion": null,
+    "feature": "pixel-stream",
+    "introduced": "`ui.pixelStream` for showing frames from a companion process over a shared-memory socket protocol, with pointer, scroll, and keyboard callbacks."
   }
 ]
