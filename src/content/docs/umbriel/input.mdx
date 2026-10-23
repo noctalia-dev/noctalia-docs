@@ -159,6 +159,11 @@ When an input method removes its virtual keyboard, Umbriel restores the keyboard
 that supplied the input. Held shortcut modifiers stay active until they are
 released, even when another connected keyboard is idle.
 
+Lock-key LEDs follow the active input source across physical keyboards, including
+newly connected devices. This keeps keyboard lights and LED-based lock-key OSDs
+working when an application forwards input through a uinput keyboard without
+LED feedback, such as a screen recorder's global-hotkey helper.
+
 #### Tracking the layout per window
 
 `track_layout` accepts:
