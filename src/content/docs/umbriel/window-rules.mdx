@@ -22,6 +22,7 @@ default_workspace = 2
 | `match.content_type` | Match `"none"`, `"photo"`, `"video"`, or `"game"`. |
 | `match.is_focused` | Match current focus state. |
 | `match.is_floating` | Match current floating state. |
+| `match.is_maximized_to_edges` | Match current maximized-to-edges state. |
 | `match.is_pinned` | Match current pinned state. |
 | `match.is_scratchpad` | Match current scratchpad state. |
 | `match.is_alone` | Match whether this is the only tiled window. |
@@ -258,8 +259,8 @@ Umbriel's bar if no preference is known. Use `"forced"` to force a bar or `"off"
 to hide it. Rules override every global mode: `"forced"` can enable a bar with
 global `"off"`, and `"on"` can honor CSD requests with global `"forced"`.
 A later matching `"on"` rule resets an earlier override to automatic selection. Changes apply to existing windows,
-including state-based rules and config reloads. Fullscreen, maximize-to-edges,
-and tiled tab groups still suppress the bar.
+including state-based rules and config reloads. Fullscreen and tiled tab groups
+still suppress the bar.
 
 ```toml
 [[window_rule]]
@@ -273,6 +274,19 @@ title_bar = "on"
 ```
 
 Forcing a title bar does not remove client-drawn headerbars or controls.
+
+Keep enabled title bars available for mouse-only restore by default, or hide them only
+while maximized to edges:
+
+```toml
+[[window_rule]]
+match.is_maximized_to_edges = true
+title_bar = "off"
+```
+
+The matcher also accepts `false` and updates when an existing window enters or
+leaves this state, whether through a keybind, application request, or title bar.
+
 Changing title bar presence adjusts tiled content space and maximized floating
 content sizes. Border-only overrides below keep layout spacing unchanged.
 

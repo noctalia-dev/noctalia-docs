@@ -476,7 +476,9 @@ position. If the window has never floated, its restore size comes from its
 ordinary tile before maximization.
 
 `window-toggle-maximize-to-edges` removes layout struts, gaps, and borders while
-leaving panel exclusive zones visible.
+leaving panel exclusive zones visible. An enabled title bar stays at the top of
+that usable area and reserves its height above the content, keeping the restore
+button reachable. This applies to tiled and floating windows.
 
 With `client_maximize = "edges"`, a tiled window's own maximize button (or
 titlebar double-click) behaves like `window-toggle-maximize-to-edges` instead of

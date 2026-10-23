@@ -203,11 +203,18 @@ Enabled buttons show a pointing cursor on hover. Their colors lighten against
 dark title bars and darken against light ones; pressing makes them darker again.
 Disabled maximize buttons keep the arrow cursor and do not highlight.
 
-Tab group members show the tab bar instead. Fullscreen and maximize-to-edges
-hide the title bar, while normal maximize keeps it. The bar occupies space
-inside a tile's allocation; configure sizes, IPC window coordinates, and window
-captures continue to describe application content. Borders and shadows wrap the
-title bar and content together.
+Tab group members show the tab bar instead. Fullscreen hides the title bar.
+Normal maximize and maximize-to-edges keep it, so its maximize button or a
+double-click can restore the window. A maximized-to-edges title bar has square
+corners and occupies the top of the usable area, above the application content;
+borders and shadows stay hidden.
+
+The bar occupies space inside a tile's allocation; configure sizes, IPC window
+coordinates, and window captures continue to describe application content.
+Borders and shadows normally wrap the title bar and content together. To hide
+the bar only while maximized to edges, use a
+[window rule](/umbriel/window-rules/#decoration) with
+`match.is_maximized_to_edges = true` and `title_bar = "off"`.
 
 ### Tab bar
 
