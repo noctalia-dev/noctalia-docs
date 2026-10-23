@@ -166,6 +166,8 @@ The title bar follows its window's `blur`, `blur_optimized`, and
 Give `background` and `background_unfocused` some transparency, such as
 `"#292933CC"`, to see the blurred backdrop. The alpha threshold applies to the
 title bar's own background color, independently of the application's content.
+Opaque title bar backgrounds remain opaque with blur enabled, including after
+leaving overview or switching focus between windows.
 No layer rule is needed. Dragging, overview previews, and close animations keep
 the blur with the window.
 
