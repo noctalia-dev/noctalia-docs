@@ -57,6 +57,7 @@ The available controls and their props (sizes are logical px, scaled with the su
 | `ui.graph`             | `values` / `values2` (arrays of 0–1 numbers), `color` / `color2`, `lineWidth`, `fillOpacity`, `width`, `height`, `onPointerMove`, `onPointerLeave`                                                                                                                     |
 | `ui.toggle`            | `checked` (bool), `enabled`, `onChange`                                                                                                                                                                                                                                |
 | `ui.slider`            | `min`, `max`, `step`, `value`, `controlSize` (`sm`/`md`/`lg`), `enabled`, `onChange`, `onDragEnd`                                                                                                                                                                      |
+| `ui.colorPicker`       | `value`, `alpha`, `inputs`, `swatches`, `width`, `enabled`, `onChange`, `onChangeEnd`; see [Color picker](#color-picker)                                                                                                                                               |
 | `ui.select`            | `options` (array of strings), `selectedIndex`, `placeholder`, `controlSize` (`sm`/`md`/`lg`), `enabled`, `width`, `height`, `onChange`                                                                                                                                 |
 | `ui.input`             | `value` (initial text only - see below), `placeholder`, `fontSize`, `controlSize` (`sm`/`md`/`lg`), `password` (bool), `multiline` (bool), `submitOnEnter` (bool - see below), `frameVisible` (bool - see below), `focus` (bool), `enabled`, `onChange`, `onSubmit`    |
 
@@ -367,6 +368,26 @@ layer.render(ui.column({ fill = "#000000", flexGrow = 1 }, {}))
 - **Per output**: each shown output runs its own instance. `layer.outputName()` returns the connector of the output this instance draws on, or `nil`.
 - **Ticks**: `update()` runs on the `noctalia.setUpdateInterval` interval (default 1000 ms). `setNeedsFrameTick(true)` delivers `onFrameTick(deltaMs)` every frame while the layer is shown. As for desktop widgets, `deltaMs` arrives as a string-formatted number; use `tonumber`.
 - **Input**: pointer and keyboard input drive controls like in a panel, and keys arrive only while the layer holds keyboard focus (see the `keyboard` manifest key).
+
+## Color picker
+
+`ui.colorPicker` embeds the shell's color picker: a saturation/brightness plane, a hue strip, and text fields, with corners that follow the shell's corner radius setting (requires <PluginApiBadge feature="color-picker" />). To ask for a color in a separate dialog instead, use `noctalia.openColorPicker`.
+
+```lua
+ui.colorPicker({
+  key = "accent", value = accent, alpha = true, width = 260,
+  swatches = { "#EF4444", "#F97316", "#EAB308", "#22C55E", "#06B6D4", "#3B82F6", "#8B5CF6", "#EC4899" },
+  onChange = function(color) accent = color; preview() end, -- while dragging or typing
+  onChangeEnd = function(color) save(color) end,             -- once per finished change
+})
+```
+
+- `value` is `#RRGGBB`, or `#RRGGBBAA` with `alpha = true`; callbacks report the same form. Like a slider's `value`, it is applied only when the prop changes between renders, never while the user is dragging, and passing the `onChange` value straight back is safe.
+- `alpha` (default `false`) adds a transparency strip and a percentage field.
+- `inputs` picks the text fields: `"full"` (default) is a HEX / RGB / HSL format switch with the fields of the chosen format, `"hex"` is the hex field alone, `"none"` hides the fields. The format switch opens a dropdown, which only panels can show; elsewhere use `"hex"` or `"none"`. Typing needs keyboard focus, so fields are only editable in panels and layers that take it.
+- `swatches` is up to 16 hex colors shown as chips; clicking one selects its color and keeps the current transparency. Invalid entries are logged and skipped.
+- `width` is the picker's width in logical pixels; without it the picker fills the width its container offers. Its height follows from the width.
+- `onChange(color)` fires continuously and is coalesced, so a slow script only sees the newest color. `onChangeEnd(color)` fires once when a drag is released, a typed value is applied, or a swatch is clicked: persist from there.
 
 ## Pixel streams
 

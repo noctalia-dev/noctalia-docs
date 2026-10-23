@@ -226,5 +226,11 @@
     "noctaliaVersion": null,
     "feature": "pixel-stream",
     "introduced": "`ui.pixelStream` for showing frames from a companion process over a shared-memory socket protocol, with pointer, scroll, and keyboard callbacks."
+  },
+  {
+    "level": 41,
+    "noctaliaVersion": null,
+    "feature": "color-picker",
+    "introduced": "`ui.colorPicker` for an inline color picker with optional alpha, hex-only or hidden inputs, swatches, and `onChange` / `onChangeEnd` callbacks."
   }
 ]
