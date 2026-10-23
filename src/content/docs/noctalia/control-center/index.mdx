@@ -33,6 +33,7 @@ sidebar = "compact"
 # width = 700  # full-sidebar width in pixels (600–1200)
 # show_shortcut_labels = true  # text under Home shortcut icons
 # show_session_button = true   # session-actions button in the Home header
+# circular_avatar = true       # disable to follow shell corner roundness
 # hidden_tabs = ["monitor", "weather"]  # hide tabs you never use
 ```
 
@@ -43,6 +44,7 @@ sidebar = "compact"
 | `width`                | int    | `700`       | Control Center width in pixels (`600`–`1200`). This is the full-sidebar width; the compact and no-sidebar modes scale down from it.                                            |
 | `show_shortcut_labels` | bool   | `true`      | Show text labels under Home shortcut icons. When `false`, shortcuts are icon-only and glyphs scale with cell size.                                                             |
 | `show_session_button`  | bool   | `true`      | Show the session-actions button in the Home tab header.                                                                                                                        |
+| `circular_avatar`      | bool   | `true`      | Keep the Home avatar circular. When `false`, the avatar follows the shell's corner roundness.                                                                                  |
 | `hidden_tabs`          | array  | `[]`        | Tab [context IDs](#sidebar-tabs) to hide from the Control Center. Empty shows every available tab. Editable from **Settings → Control Center**. The Home tab cannot be hidden. |
 
 ### Sidebar Tabs
@@ -77,6 +79,8 @@ The Home tab is the default Control Center landing view. It combines frequently 
 The user card automatically prefers a landscape wallpaper image from the connected monitors. If none is landscape, it uses the first available image.
 
 Click the avatar in the user card to pick a custom image. Noctalia saves the selected path as `[shell].avatar_path`.
+
+The avatar is circular by default. Disable **Circular Avatar** under **Settings → Control Center → Home**, or set `[control_center].circular_avatar = false`, to use the shell's corner roundness. With shell corner roundness set to zero, the avatar has square corners.
 
 When AccountsService is available, Noctalia also writes the selected avatar to `org.freedesktop.Accounts` as your user's `IconFile`. That is what Noctalia Greeter reads for the login user list. On distros where this is not enabled by default, install and enable **accountsservice** (usually the `accounts-daemon` service) if you want the same avatar in both the shell and the greeter.
 
