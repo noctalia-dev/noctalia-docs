@@ -228,7 +228,7 @@ the windows stacked beside it in the column it joins or creates.
 | `border_color_outer` | Override `colors.border.outer`. |
 | `border_width` | Override `appearance.border_width`, 0 to 100. |
 | `outer_border_width` | Override `appearance.outer_border_width`, 0 to 100. |
-| `title_bar` | `"on"` follows client decoration preferences, `"forced"` forces a title bar, and `"off"` hides it. Overrides `appearance.title_bar.mode`; omission inherits the global mode. |
+| `title_bar` | `"on"` follows client decoration preferences, `"negotiated"` requires Wayland decoration negotiation selecting server-side decorations, `"forced"` forces a title bar, and `"off"` hides it. Overrides `appearance.title_bar.mode`; omission inherits the global mode. |
 | `corner_radius` | Override `appearance.corner_radius`, 0 to 100. |
 | `shadow` | Override `appearance.shadow.enabled`. |
 | `border_effect` | Replace `effects.border` with a border preset or pool, or `"off"` to disable it. |
@@ -255,10 +255,13 @@ border_color_unfocused = "#5C4A2AFF"
 
 An omitted `title_bar` inherits `[appearance.title_bar] mode`. An explicit
 `title_bar = "on"` follows the client's decoration preference, or shows
-Umbriel's bar if no preference is known. Use `"forced"` to force a bar or `"off"`
-to hide it. Rules override every global mode: `"forced"` can enable a bar with
-global `"off"`, and `"on"` can honor CSD requests with global `"forced"`.
-A later matching `"on"` rule resets an earlier override to automatic selection. Changes apply to existing windows,
+Umbriel's bar if no preference is known. Use `"negotiated"` to show it only when
+Wayland decoration negotiation selects server-side decorations, `"forced"` to
+force a bar, or `"off"` to hide it. Both `"on"` and `"negotiated"` follow managed
+Xwayland windows' decoration hints. Rules override every global mode: `"forced"`
+can enable a bar with global `"off"`, and `"on"` can honor CSD requests with global `"forced"`.
+A later matching `"on"` or `"negotiated"` rule replaces an earlier override with
+its corresponding decoration policy. Changes apply to existing windows,
 including state-based rules and config reloads. Fullscreen and tiled tab groups
 still suppress the bar.
 

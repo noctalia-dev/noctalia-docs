@@ -148,9 +148,17 @@ close = "#FF6B6BFF"
 maximize = "#7AA3FFFF"
 ```
 
-Set `mode = "on"` to follow client decoration preferences, or `mode = "forced"`
-to show a bar regardless of client preference. `mode = "off"` is the default. `height` is 16
-to 128 logical pixels, and `font` is a Pango font description. `button_position` accepts `"left"` or
+Choose a title bar mode:
+
+| Mode | Behavior |
+| --- | --- |
+| `"off"` | Hide Umbriel's title bar (the default). |
+| `"negotiated"` | Show for Wayland windows only when decoration negotiation selects server-side decorations. |
+| `"on"` | Follow client decoration preferences; show when no preference is known. |
+| `"forced"` | Show regardless of client preference. |
+
+`height` is 16 to 128 logical pixels, and `font` is a Pango font description.
+`button_position` accepts `"left"` or
 `"right"`; close stays at the outside edge. The two buttons are colored and have
 no icons. `button_corner_radius` uses logical pixels, from `0` to `100`.
 Its default, `-1`, follows the window's `corner_radius`, including window rules.
@@ -175,15 +183,23 @@ In `"on"` mode, Wayland windows that request server decorations, or have no
 known decoration preference, receive a bar.
 Explicit client-side decoration requests suppress it. Both xdg-decoration and
 the older server-decoration protocol are tracked; xdg-decoration takes priority
-when a window uses both. Managed Xwayland windows follow their decoration hints.
+when a window uses both. `"negotiated"` follows the same preferences but hides the
+bar when neither protocol is in use. A client that creates an xdg-decoration
+object and accepts the compositor's default still negotiates server-side
+decorations and receives a bar. This mode avoids adding bars to Wayland apps
+that draw their own headerbars or intentionally create frameless windows without
+negotiating decorations. Managed Xwayland windows follow their decoration hints
+in both `"on"` and `"negotiated"` modes.
 Popups and unmanaged Xwayland windows do not receive a title bar.
 
 A [window rule](/umbriel/window-rules/#decoration) can set `title_bar` to `"on"`,
-`"forced"`, or `"off"`. `"forced"` adds a bar even when the application requests its
-own decorations; `"off"` hides it; `"on"` restores automatic selection after
+`"negotiated"`, `"forced"`, or `"off"`. `"forced"` adds a bar even when the
+application requests its own decorations; `"off"` hides it; `"on"` restores automatic selection after
 an earlier matching override. An omitted rule inherits the global mode.
 An explicit rule overrides it, so `"forced"` can enable a bar with global `"off"`,
-and `"on"` can honor client preferences with global `"forced"`.
+and `"on"` can honor client preferences with global `"forced"`. A `"negotiated"`
+rule requires negotiation for the matching Wayland windows, regardless of the
+global mode.
 Existing windows update when their preference or matching rule changes, or when
 the setting reloads.
 
