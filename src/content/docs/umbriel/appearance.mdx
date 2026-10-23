@@ -137,6 +137,7 @@ mode = "off"
 height = 28
 font = "sans 10"
 button_position = "right"
+buttons = ["minimize", "maximize", "close"]
 button_corner_radius = -1
 
 [colors.title_bar]
@@ -146,6 +147,7 @@ text = "#E8E8EAFF"
 text_unfocused = "#8A8A92FF"
 close = "#FF6B6BFF"
 maximize = "#7AA3FFFF"
+minimize = "#FFD166FF"
 ```
 
 Choose a title bar mode:
@@ -158,14 +160,19 @@ Choose a title bar mode:
 | `"forced"` | Show regardless of client preference. |
 
 `height` is 16 to 128 logical pixels, and `font` is a Pango font description.
-`button_position` accepts `"left"` or
-`"right"`; close stays at the outside edge. The two buttons are colored and have
+`button_position` accepts `"left"` or `"right"`. `buttons` lists the buttons
+to show, from the title outward: the last one sits at the bar's edge, so the
+default puts close outermost on either side. Leave a name out to hide that
+button, or use `[]` for a bar without buttons; each of `"minimize"`,
+`"maximize"`, and `"close"` may appear once. The buttons are colored and have
 no icons. `button_corner_radius` uses logical pixels, from `0` to `100`.
 Its default, `-1`, follows the window's `corner_radius`, including window rules.
 Use `0` for square buttons or a small positive value for rounded squares. The
 radius is capped at half the button size, producing circles at larger values.
 The shape scales with the output and overview zoom, and updates on reload.
-The maximize button is disabled for fixed-size windows.
+The maximize button is disabled for fixed-size windows. The minimize button
+shows only while the window can [minimize](/umbriel/layout/#minimize), so tiled and
+pinned windows do not have one.
 `background` and `text` apply to the focused window; their `_unfocused`
 variants apply to other windows. Colors and title bar settings reload live.
 
@@ -202,6 +209,15 @@ rule requires negotiation for the matching Wayland windows, regardless of the
 global mode.
 Existing windows update when their preference or matching rule changes, or when
 the setting reloads.
+
+A window rule's `title_bar_buttons` replaces `buttons` for the windows it
+matches, for example to keep only close on dialogs:
+
+```toml
+[[window_rule]]
+match.is_dialog = true
+title_bar_buttons = ["close"]
+```
 
 Application-drawn headerbars, tab strips, and custom controls remain part of the
 application content. To avoid duplicate title bars, select the application's

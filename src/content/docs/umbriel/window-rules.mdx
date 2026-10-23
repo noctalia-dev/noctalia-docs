@@ -229,6 +229,7 @@ the windows stacked beside it in the column it joins or creates.
 | `border_width` | Override `appearance.border_width`, 0 to 100. |
 | `outer_border_width` | Override `appearance.outer_border_width`, 0 to 100. |
 | `title_bar` | `"on"` follows client decoration preferences, `"negotiated"` requires Wayland decoration negotiation selecting server-side decorations, `"forced"` forces a title bar, and `"off"` hides it. Overrides `appearance.title_bar.mode`; omission inherits the global mode. |
+| `title_bar_buttons` | Title bar buttons for this window, from the title outward: any of `"minimize"`, `"maximize"`, and `"close"`, or `[]` for none. Overrides `appearance.title_bar.buttons`; omission inherits it. |
 | `corner_radius` | Override `appearance.corner_radius`, 0 to 100. |
 | `shadow` | Override `appearance.shadow.enabled`. |
 | `border_effect` | Replace `effects.border` with a border preset or pool, or `"off"` to disable it. |
