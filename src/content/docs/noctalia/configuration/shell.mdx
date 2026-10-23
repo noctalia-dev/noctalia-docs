@@ -91,15 +91,16 @@ control_center_placement = "attached" # attached | floating
 wallpaper_placement      = "attached" # attached | floating
 session_placement        = "attached" # attached | floating
 polkit_placement         = "floating" # attached | floating
-launcher_position        = "center"   # auto | center | top_left | … (floating only)
-clipboard_position       = "center"   # auto | center | top_left | … (floating only)
-polkit_position          = "center"   # auto | center | top_left | … (floating only)
+launcher_position        = "center"   # auto | center | top_left | …
+clipboard_position       = "center"   # auto | center | top_left | …
+control_center_position  = "auto"     # auto | center | top_left | …
+polkit_position          = "center"   # auto | center | top_left | …
 floating_offset          = 8           # px gap between a floating panel and the bar edge
-open_near_click_control_center = false  # attached/floating: follow the bar click instead of bar-center
-open_near_click_launcher       = false  # attached/floating: follow the bar click instead of bar-center
-open_near_click_clipboard      = false  # attached/floating: follow the bar click instead of bar-center
-open_near_click_wallpaper      = false  # attached/floating: follow the bar click instead of bar-center
-open_near_click_session        = false  # attached/floating: follow the bar click instead of bar-center
+open_near_click_control_center = false  # attached/floating: open near the clicked bar widget instead of at *_position
+open_near_click_launcher       = false  # attached/floating: open near the clicked bar widget instead of at *_position
+open_near_click_clipboard      = false  # attached/floating: open near the clicked bar widget instead of at *_position
+open_near_click_wallpaper      = false  # attached/floating: open near the clicked bar widget instead of at *_position
+open_near_click_session        = false  # attached/floating: open near the clicked bar widget instead of at *_position
 
 [shell.launcher]
 layout = "full"            # full | simple
@@ -326,13 +327,13 @@ Notes:
 
 - `shell.panel.launcher_placement`, `clipboard_placement`, `control_center_placement`, `wallpaper_placement`, `session_placement`, and `polkit_placement` accept only `attached` or `floating`. An attached panel keeps its own layer surface and anchors it to the host bar's inward edge; floating placement opens it detached. `center` is a floating `*_position`, not a third placement. Defaults are floating at the center position for Launcher, Clipboard, and the polkit auth prompt; Control Center, Wallpaper, and Session default to attached.
 
-- Per-panel `*_position` keys (`launcher_position`, `clipboard_position`, `control_center_position`, `wallpaper_position`, `session_position`, `polkit_position`) apply when placement is `floating`. `auto` keeps the panel bar-relative; `center` and the edge/corner tokens anchor on screen (same vocabulary as notification/OSD position).
+- Per-panel `*_position` keys (`launcher_position`, `clipboard_position`, `control_center_position`, `wallpaper_position`, `session_position`, `polkit_position`) name a screen position (same vocabulary as notification/OSD position). With `floating` placement, `auto` keeps the panel bar-relative and `center` or an edge/corner token pins it to that screen position. With `attached` placement, the panel follows the position only when it lies on the bar's edge: on a bottom bar, `bottom_left` and `bottom_right` align the panel to the bar's left or right end; on a right bar, `top_right` and `bottom_right` align it to the top or bottom end. Any other value keeps the attached panel centered on the bar. Configure under each panel's **Position** setting.
 
 - `shell.panel.floating_offset` sets the gap in pixels a floating panel keeps from the bar edge, or from the screen edge when it is pinned with a `*_position` (default `8`). It also spaces panels using the reserved edge area when multiple bars share an edge. `attached` panels ignore it.
 
 - When multiple enabled bars resolve to the same edge on one monitor, exact source-bar attachment is ambiguous. In that case attached/floating panels use the compositor's reserved edge area and open outside the bar stack instead of anchoring to one bar. Setting `shell.panel_anchor_bar` avoids this, at the cost of attaching every panel to that bar, including panels opened from widgets on other bars.
 
-- `shell.panel.open_near_click_control_center`, `open_near_click_launcher`, `open_near_click_clipboard`, `open_near_click_wallpaper`, and `open_near_click_session` position attached or floating panels near the click location on the bar instead of centering them along the bar. They are ignored when a panel is `floating` with a `*_position` other than `auto`, since it is then pinned to a fixed screen position.
+- `shell.panel.open_near_click_control_center`, `open_near_click_launcher`, `open_near_click_clipboard`, `open_near_click_wallpaper`, and `open_near_click_session` make a panel opened by clicking its bar widget appear next to that widget instead of at its `*_position` (centered or end-aligned along the bar). Panels opened without a click (IPC, shortcuts) still use `*_position`. They are ignored when a panel is `floating` with a `*_position` other than `auto`, since it is then pinned to a fixed screen position. Configure with each panel's **Open Near Clicked Widget** toggle.
 
 - `shell.launcher.layout` selects `full` (default) or `simple`. Full shows the profile, view tabs, and a toolbar with the search field and shortcuts. Simple shows a search field, an optional category chip row, and results at a fixed 560 × 500 size; `width`, `search_position`, `default_view`, `show_settings_button`, and `show_session_button` apply only to Full.
 
