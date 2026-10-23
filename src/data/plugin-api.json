@@ -232,5 +232,11 @@
     "noctaliaVersion": null,
     "feature": "color-picker",
     "introduced": "`ui.colorPicker` for an inline color picker with optional alpha, hex-only or hidden inputs, swatches, and `onChange` / `onChangeEnd` callbacks."
+  },
+  {
+    "level": 42,
+    "noctaliaVersion": null,
+    "feature": "panel-content-height",
+    "introduced": "`height = \"content\"` and `max_height` on `[[panel]]` entries: the panel follows the height of its rendered tree."
   }
 ]

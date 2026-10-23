@@ -176,6 +176,17 @@ A panel is a pop-up surface that describes its UI as a `ui.*` tree, exactly like
 
 Panel **size is host-owned**: declare `width` and `height` on the `[[panel]]` entry, so the surface is the same size on every open. There is no `setSize` at runtime. Each axis takes a positive number (logical px) or the string `"fill"`, which spans the output's available extent on that axis, the compositor subtracts every exclusive zone (bars, docks, third-party clients), so a `height = "fill"` panel sits exactly between them. `"fill"` requires `placement = "floating"`. Fixed pixel sizes are clamped to the output, so an oversized value degrades to full-available rather than a broken surface.
 
+`height = "content"` fits the panel to the tree it renders (requires <PluginApiBadge feature="panel-content-height" />). The panel follows its content as it changes, up to `max_height` (logical px, optional; without it, the output's available height). Content taller than that needs a `ui.scroll` with `flexGrow = 1` to scroll inside the panel. The panel keeps the edge it opens from: below a top bar it grows downward, above a bottom bar upward, and a centered panel grows both ways. Until the first `panel.render()` the panel is only as tall as its padding, so render in `onOpen`. Not available for `persistent = true` panels.
+
+```toml
+[[panel]]
+id = "picker"
+entry = "panel.luau"
+width = 300
+height = "content"
+max_height = 700
+```
+
 Set `dismiss_on_outside_click = false` for auth-style prompts (password / API key) so a misclick does not discard the panel; the default is `true`. Requires <PluginApiBadge feature="dismiss-on-outside-click" />. Escape and an explicit Close / Cancel control still dismiss it.
 
 `setWantsSecondTicks(true)` runs `update()` on second boundaries; `setNeedsFrameTick(true)` additionally delivers `onFrameTick(deltaMs)` every frame while the panel is open, for animation the script drives itself. Ticks stop on close and resume on the next open, and frames are coalesced - a slow script only ever sees the latest one. Requires <PluginApiBadge feature="panel-frame-tick" />.
