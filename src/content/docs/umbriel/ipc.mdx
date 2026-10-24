@@ -49,6 +49,7 @@ same way geometry reports layout targets:
 | `maximized` | Maximized by `window-toggle-maximize` (a full-width column for a tiled window) or by maximize-to-edges |
 | `maximized_to_edges` | Maximized without gaps, struts, or borders |
 | `pinned` | Pinned above other windows on every workspace of its output |
+| `minimizable` | Supports minimize in its current placement: a mapped, unattached floating window on a workspace, outside a scratchpad and not pinned. Matches the minimize capability offered to the application; fullscreen or an active move or resize can still reject a minimize request |
 | `minimized` | Hidden by `window-minimize`, the application, or a taskbar; see [Minimize](/umbriel/layout/#minimize) |
 | `visible` | On its output's active workspace (or pinned), not a hidden tab, not minimized, and not in a hidden scratchpad; it may still be scrolled out of view |
 | `parent` | ID of the window the client named as its parent, or `""` |
