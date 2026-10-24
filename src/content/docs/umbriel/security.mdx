@@ -17,6 +17,30 @@ with an opaque compositor-owned blank. Its RGB color comes from
 the secure handoff leaves this blank in place, so the desktop cannot be exposed
 by a crashed locker.
 
+## X11 desktop input
+
+X11 applications can request control of the pointer and keyboard through
+XTest. Steam uses this for its desktop controller mappings. Umbriel receives
+these requests through its native EIS backend and asks for permission before
+allowing desktop input.
+
+Press Enter to allow the requesting application for the current Umbriel
+session. Any other non-modifier key or pointer click denies it. Allow and deny
+decisions last until Umbriel restarts. Input received through this XTest
+emulation path cannot approve another permission prompt.
+
+The prompt says that an application is *claiming* its name: X11 application
+names are not verified sandbox identities. This permission is separate from
+`security_context_rule`, which controls Wayland protocol visibility.
+
+While the session is locked, Umbriel releases held emulated keys and buttons
+and discards further emulated input. That input is not replayed after unlock.
+Physical input devices continue to work on the lock screen.
+
+This requires Xwayland built with libei support. No Steam preload library,
+device permission change, or RemoteDesktop portal implementation is required
+for this XTest input path.
+
 ## Sandboxed Wayland clients
 
 Umbriel supports version 1 of the

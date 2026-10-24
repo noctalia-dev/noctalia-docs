@@ -430,3 +430,11 @@ focus. An outside click or explicit focus action can still dismiss the menu.
 `follows_mouse_max_scroll` limits how far Umbriel may scroll a layout to reveal
 that window, measured in viewport widths. `0.0` allows only fully visible
 windows. Omit the key for no limit.
+
+### Controller desktop input
+
+Steam's desktop controller mappings can control native Wayland windows through
+Umbriel's X11 input emulation. Umbriel asks for permission on the first request
+and remembers the decision for the current session. See
+[X11 desktop input](/umbriel/security/#x11-desktop-input) for consent and lock-screen
+behavior.

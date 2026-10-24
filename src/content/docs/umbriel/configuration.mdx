@@ -186,8 +186,8 @@ session services such as Noctalia. Nested sessions do not modify the host
 session environment.
 
 Names must match `[A-Za-z_][A-Za-z0-9_]*`, and values must be strings. Umbriel
-owns its display and session variables, so this section cannot override
-`WAYLAND_DISPLAY`, `WAYLAND_SOCKET`, `DISPLAY`, `UMBRIEL_SOCKET`,
+owns its display, input-emulation, and session variables, so this section cannot override
+`WAYLAND_DISPLAY`, `WAYLAND_SOCKET`, `DISPLAY`, `UMBRIEL_SOCKET`, `LIBEI_SOCKET`,
 `XDG_CURRENT_DESKTOP`, `XDG_SESSION_DESKTOP`, or `XDG_SESSION_TYPE`.
 
 Environment changes require an Umbriel restart. Fully quit and relaunch
