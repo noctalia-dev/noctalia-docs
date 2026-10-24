@@ -48,9 +48,12 @@ Resizing from client-side borders and tab tear-off operations using
 
 When the title bar is shown by `[appearance.title_bar] mode` or a window rule, dragging empty server-side title
 bar space moves a window without a modifier. Double-click it to maximize or
-restore. Floating windows also resize by dragging the frame's edges or corners
-without a modifier. These compositor-owned interactions work with
-`client_window_drag = false`.
+restore. Floating windows resize by dragging the frame's edges or corners with
+the left button without a modifier, whether or not the Umbriel title bar is
+shown. This also works for individually floated windows in tiling layouts.
+Tiled windows use Mod+right-drag for compositor resizing. Application content
+and client-side resize controls keep their normal pointer behavior. These
+compositor-owned interactions work with `client_window_drag = false`.
 
 Title bar presses keep the normal cursor until the pointer crosses a threshold
 of 10 logical pixels from its position at the original button press. Umbriel then
