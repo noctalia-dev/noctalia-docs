@@ -114,7 +114,7 @@ show_session_button = true # full layout: show the session-actions shortcut
 show_icons      = true   # show application icons in launcher results
 show_app_origin_indicator = true # show package origin indicators on application results
 compact         = false  # smaller icons and tighter rows; hides subtitles
-app_grid        = false  # icon grid for applications, global searches, and the provider overview
+app_grid        = false  # icon grid for grid-capable providers and the provider overview
 show_app_actions = false  # include searchable .desktop actions alongside applications
 track_usage     = true   # record launcher history for Recent and usage-based sorting
 sort_by_usage   = true   # boost frequently used results
@@ -353,7 +353,7 @@ Notes:
 
 - `shell.launcher.compact` uses smaller icons, tighter padding, and single-line rows (subtitles hidden).
 
-- `shell.launcher.app_grid` switches application browsing, global search results, and the provider overview to a multi-column icon grid with labels underneath. Results from an explicitly selected or prefixed provider stay in the list layout.
+- `shell.launcher.app_grid` switches Applications, Emoji, Wallpaper, Session, and the provider overview between lists and a multi-column icon grid with labels underneath. Calculator, Windows, Panels, dmenu, and plugin providers use lists. Global searches use a list if any visible result requires one. The grid toggle is hidden for list-only providers and when `show_icons` is disabled.
 
 - `shell.launcher.show_app_actions` includes searchable `.desktop` actions alongside application results. Action rows show the action name with the parent application underneath and launch that action directly. Disabled by default; application actions remain available from an application's right-click menu.
 
