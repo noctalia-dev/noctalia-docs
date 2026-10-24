@@ -118,6 +118,7 @@ app_grid        = false  # icon grid for grid-capable providers and the provider
 show_app_actions = false  # include searchable .desktop actions alongside applications
 track_usage     = true   # record launcher history for Recent and usage-based sorting
 sort_by_usage   = true   # boost frequently used results
+ignore_mouse    = false  # ignore mouse hover and clicks inside the launcher
 pinned          = []     # ordered desktop entry IDs shown in the Pinned view
 fetch_exchange_rates = true  # refresh currency rates from third-party online sources
 provider_prefix = "/"    # common prefix character for provider trigger words (e.g. "/" or ".")
@@ -360,6 +361,8 @@ Notes:
 - `shell.launcher.track_usage` records local launcher history for the chronological **Recent** view and usage-based sorting. Disable it to stop recording launches, hide **Recent**, and disable usage ordering. Existing history remains stored until it is reset and becomes available again if tracking is re-enabled.
 
 - `shell.launcher.sort_by_usage` boosts frequently used results (applications, emoji, panels, wallpapers, and dmenu entries) toward the top while usage tracking is enabled. Disable it to keep each provider's default ordering while continuing to record frequency and recent launches. The ordering button above the results changes the same setting without leaving the launcher.
+
+- `shell.launcher.ignore_mouse` makes the launcher and its menus ignore pointer hover, motion, clicks, scrolling, and touch taps, so navigation is keyboard-only. Clicking outside the launcher still closes it. Disabled by default.
 
 - `shell.launcher.pinned` is an ordered list of desktop entry IDs shown in the **Pinned** view. Launcher pins are independent from `dock.pinned` and each taskbar widget's `pinned` list.
 
