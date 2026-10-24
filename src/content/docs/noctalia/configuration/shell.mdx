@@ -520,6 +520,8 @@ When enabled and `wlr-screencopy` is available, Noctalia can capture the desktop
 
 Configure under **`[lockscreen]`** in TOML, or use **Settings → Security → Lock Screen**. The **Desktop capture** and transition controls appear only when your compositor supports screencopy. Use **Wallpaper** to pick a custom lock screen image (empty uses the desktop wallpaper per output).
 
+The power buttons on the lock screen come from the session actions; to trigger one from the keyboard (for example suspend on Escape), set its `lockscreen_shortcut` as described in [Lock screen shortcuts](#lock-screen-shortcuts).
+
 Lock screen transitions have their own effect pool, duration, and edge smoothness. They do not read or modify the settings under **`[wallpaper]`**. Set `transition = []` to disable lock and unlock animations.
 
 Normal manual and idle locks retain the configured transitions. If Noctalia has requested screen-off, or compositor feedback reports an output powered off, that lock skips desktop-based entry and exit animations. Its first frame contains the complete configured lock screen, so waking an output cannot replay a desktop transition. This decision remains in effect until unlock, including config reloads and newly connected outputs. The explicit **Desktop capture** background setting still applies.
@@ -655,16 +657,17 @@ Panel-level settings under `[shell.session]`:
 
 Each entry in the `[[shell.session.actions]]` array takes:
 
-| Field               | Type   | Default     | Description                                                                                                                                                                                                                                          |
-| ------------------- | ------ | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `action`            | string | *required*  | `lock`, `logout`, `suspend`, `lock_and_suspend`, `reboot`, `reboot_uefi`, `shutdown`, or `command` (custom entry).                                                                                                                                   |
-| `enabled`           | bool   | `true`      | When `false`, the button is hidden.                                                                                                                                                                                                                  |
-| `command`           | string | *unset*     | Optional. If set, the string is run with `/bin/sh -c` instead of the built-in handler. For `action = "command"`, this field is required.                                                                                                             |
-| `label`             | string | *unset*     | Optional button label (otherwise translated defaults).                                                                                                                                                                                               |
-| `glyph`             | string | *unset*     | Optional bar-style icon id (otherwise defaults per action). Under **Session panel** in Settings → Power, open a row’s settings (cog) editor and use the icon preview to pick a glyph.                                                                |
-| `shortcut`          | string | `"1"`–`"5"` | Optional keyboard shortcut that triggers the action while the session panel is open. Any XKB key name (e.g. `1`, `F1`, `Escape`) or modifier combo (`Ctrl+1`). Clear to disable.                                                                     |
-| `countdown_seconds` | number | `0`         | When greater than zero, the first activation starts a per-entry countdown (shown on the button badge). Activate the same entry again to run immediately, or wait for the timer. **Escape** or moving to another entry cancels. `0` runs immediately. |
-| `variant`           | string | `"default"` | Button style: `default`, `primary`, `secondary`, `destructive` (warning), or `outline`.                                                                                                                                                              |
+| Field                 | Type   | Default     | Description                                                                                                                                                                                                                                                                                                                                                                    |
+| --------------------- | ------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `action`              | string | *required*  | `lock`, `logout`, `suspend`, `lock_and_suspend`, `reboot`, `reboot_uefi`, `shutdown`, or `command` (custom entry).                                                                                                                                                                                                                                                             |
+| `enabled`             | bool   | `true`      | When `false`, the button is hidden.                                                                                                                                                                                                                                                                                                                                            |
+| `command`             | string | *unset*     | Optional. If set, the string is run with `/bin/sh -c` instead of the built-in handler. For `action = "command"`, this field is required.                                                                                                                                                                                                                                       |
+| `label`               | string | *unset*     | Optional button label (otherwise translated defaults).                                                                                                                                                                                                                                                                                                                         |
+| `glyph`               | string | *unset*     | Optional bar-style icon id (otherwise defaults per action). Under **Session panel** in Settings → Power, open a row’s settings (cog) editor and use the icon preview to pick a glyph.                                                                                                                                                                                          |
+| `shortcut`            | string | `"1"`–`"5"` | Optional keyboard shortcut that triggers the action while the session panel is open. Any XKB key name (e.g. `1`, `F1`, `Escape`) or modifier combo (`Ctrl+1`). Clear to disable.                                                                                                                                                                                               |
+| `lockscreen_shortcut` | string | *unset*     | Optional keyboard shortcut that triggers the action from the lock screen. Only actions shown as lock-screen buttons respond. Keys that type text (letters, digits, symbols, alone or with **Shift**) are rejected because the password field owns them; use a non-printable key (`Escape`, `F1`) or a `Ctrl`/`Alt` combo. See [Lock screen shortcuts](#lock-screen-shortcuts). |
+| `countdown_seconds`   | number | `0`         | When greater than zero, the first activation starts a per-entry countdown (shown on the button badge). Activate the same entry again to run immediately, or wait for the timer. **Escape** or moving to another entry cancels. `0` runs immediately.                                                                                                                           |
+| `variant`             | string | `"default"` | Button style: `default`, `primary`, `secondary`, `destructive` (warning), or `outline`.                                                                                                                                                                                                                                                                                        |
 
 Omitting `[[shell.session.actions]]` entirely keeps the default five actions. To define your own list, declare one or more tables. An explicit empty array hides all session buttons:
 
@@ -694,6 +697,18 @@ action = "shutdown"
 variant = "destructive"
 countdown_seconds = 5
 ```
+
+#### Lock screen shortcuts
+
+The lock screen shows the session actions as buttons (except `lock`, and `lock_and_suspend` when a plain `suspend` row exists). Give a row a `lockscreen_shortcut` to trigger it from the keyboard without unlocking; with `show_shortcuts` on, the key is shown on the button.
+
+```toml
+[[shell.session.actions]]
+action = "lock_and_suspend"
+lockscreen_shortcut = "Escape"
+```
+
+When a shortcut uses the same key as **Cancel** (Escape by default), the first press clears a typed password and the next press runs the action. Shortcuts are ignored while the screens are off and for one second after they turn back on or the system resumes, so the key that wakes the screen never runs an action.
 
 ### Greeter sync
 
