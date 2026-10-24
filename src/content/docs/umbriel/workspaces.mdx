@@ -111,6 +111,11 @@ Duplicate names resolve on the pointer-preferred output when possible.
 Otherwise the selector is ambiguous. On a dynamic output, a numeric position
 beyond the current count selects the last workspace.
 
+Window move bindings also work on a focused scratchpad window: they remove it
+from the scratchpad and restore its saved tiled or floating state on the
+destination workspace. Silent variants keep the current workspace active.
+See [Moving scratchpad windows](/umbriel/scratchpads/#moving-scratchpad-windows).
+
 Evacuated named workspaces keep their names even when appended at different
 positions on another output. Within one output, a native workspace takes
 precedence over evacuated workspaces with the same name. Multiple evacuated
