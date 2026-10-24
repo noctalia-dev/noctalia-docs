@@ -411,6 +411,10 @@ Notes:
 
 - **Hot corners** let you trigger actions by pushing your mouse pointer into one of the four screen corners. When `[hot_corners].enabled = true`, the shell places invisible hit areas in each corner. `delay_ms` (default `0`) is how long the pointer must stay in the corner before the action runs; raise it to reduce accidental triggers. Each corner (`top_left`, `top_right`, `bottom_left`, `bottom_right`) takes an `action`. If `action` is `"command"`, provide a shell `command` to execute. Configure under **Settings → Desktop → Hot Corners**.
 
+- **Minimised windows** are tracked automatically on Umbriel, KDE Plasma, and labwc when the connected compositor backend reports window state and eligibility. The window switcher keeps minimised windows selectable, with a small dash and a **Minimised** status when captions are enabled. It updates their status live. Selecting one restores and focuses it. Previews use an available cached snapshot or the application icon; listing a minimised window does not restore it.
+
+- **Minimise actions** in the [taskbar](/noctalia/bar/widgets/taskbar/) and [dock](/noctalia/dock/#window-actions-and-minimise-state) need no additional configuration. Single-window icons minimise an already focused window when allowed, restore a minimised window, and focus an unfocused window. Multi-window icons continue cycling. Minimised windows stay in window counts and keep their workspace occupied. Bars and docks using smart auto-hide ignore windows known to be minimised, so they stay visible after the last visible window is minimised.
+
 ### Encrypted storage master key
 
 The default `storage.key_source = "secret-service"` keeps the master key in the desktop Secret Service. Clipboard history and the calendar event cache reopen automatically after boot only when the collection holding it is unlocked at login. See [Secret Service & keyrings](/noctalia/configuration/secret-service/) for the `default`-collection requirement, the GNOME Keyring multiple-keyrings fix (a common cause of "locked after every reboot"), and automatic recovery.
