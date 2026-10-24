@@ -270,11 +270,25 @@ hdr = "auto"
 sdr_white = 203
 ```
 
-While HDR is active, `sdr_white` sets both the brightness of composed SDR
-content and the reference white advertised to Wayland applications through
-output descriptions and surface color preferences. Reloading the setting
-updates those descriptions and notifies applications. In SDR mode, the
-advertised reference white remains the nominal 80 cd/m².
+While HDR is active, `sdr_white` sets the brightness of composed SDR content.
+It also sets the reference white of the HDR encoding advertised to Wayland
+applications through output descriptions and surface color preferences.
+Reloading the setting updates those descriptions and notifies applications.
+Outputs offering only SDR retain the nominal 80 cd/m² reference white.
+
+On a supported output, `hdr = "auto"` advertises an HDR encoding before the
+display switches to HDR. This lets native Wayland Wine and Proton detect HDR
+support before submitting their first HDR frame. The output remains in SDR
+until fullscreen content supplies HDR metadata. The advertised target color
+volume continues to describe the current SDR or HDR destination, and
+`umbriel color` reports the physical output's active state.
+
+HDR availability requires a successful backend test of an HDR output state.
+If activation fails, Umbriel withdraws the HDR encoding until an output
+configuration or mode change tests support again. Windowed HDR content and
+content whose activation fails receive highlight compression into SDR instead
+of clipping every bright highlight to white. Untagged SDR content keeps its
+normal rendering.
 
 On HDR outputs, untagged SDR windows and compositor colors use gamma 2.2 by
 default to preserve their legacy SDR appearance. Set `sdr_transfer = "srgb"` to
@@ -315,11 +329,10 @@ Native Wayland applications and Wine receive the same standard
 `wp_color_manager_v1` interface, including Windows scRGB, explicit primaries and
 luminance ranges. Nested Gamescope can use its HDR and HDR inverse tone-mapping
 options through this interface with either PQ or scRGB buffers. No additional
-Umbriel option or layer rule is required. The output must support HDR. Use
-`hdr = "on"` when launching nested Gamescope so it can detect the active HDR
-output during startup. `hdr = "auto"` activates when a client already submits
-fullscreen HDR content; it does not force Gamescope to start producing HDR.
-A separate frog protocol is unnecessary.
+Umbriel option or layer rule is required. The output must support HDR, and
+Gamescope's own HDR settings must be enabled. Automatic mode offers an HDR
+encoding during startup, while clients that require an already active HDR
+target need `hdr = "on"`. A separate frog protocol is unnecessary.
 
 Windows scRGB uses absolute brightness: a linear sample of 1.0 represents
 80 cd/m² on an HDR output, including when `sdr_white` changes. Generic parametric
