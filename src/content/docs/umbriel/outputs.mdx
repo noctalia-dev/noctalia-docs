@@ -283,6 +283,13 @@ until fullscreen content supplies HDR metadata. The advertised target color
 volume continues to describe the current SDR or HDR destination, and
 `umbriel color` reports the physical output's active state.
 
+An HDR encoding can carry SDR content. In automatic mode, a positive content
+peak (MaxCLL) at or below the surface's reference white keeps the output in
+SDR, unless the application also supplies HDR mastering luminance. This keeps
+SDR browser content from switching the monitor to HDR merely because the
+browser uses a PQ buffer. A zero or missing content peak remains unknown;
+Umbriel then uses the description's encoding and luminance headroom.
+
 HDR availability requires a successful backend test of an HDR output state.
 If activation fails, Umbriel withdraws the HDR encoding until an output
 configuration or mode change tests support again. Windowed HDR content and
