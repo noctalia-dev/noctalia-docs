@@ -109,6 +109,7 @@ search_position = "bottom" # full layout: top | bottom; whole launcher toolbar p
 default_view   = "recent" # full layout: recent | pinned | all | categories
 categories     = true     # simple layout: show the category chip row
 category_icons_only = false # show app category icons without text labels
+show_navigation_labels = true # full layout: show text labels on the main view tabs
 show_settings_button = true # full layout: show the Settings shortcut
 show_session_button = true # full layout: show the session-actions shortcut
 show_icons      = true   # show application icons in launcher results
@@ -337,7 +338,7 @@ Notes:
 
 - `shell.panel.open_near_click_control_center`, `open_near_click_launcher`, `open_near_click_clipboard`, `open_near_click_wallpaper`, and `open_near_click_session` make a panel opened by clicking its bar widget appear next to that widget instead of at its `*_position` (centered or end-aligned along the bar). Panels opened without a click (IPC, shortcuts) still use `*_position`. They are ignored when a panel is `floating` with a `*_position` other than `auto`, since it is then pinned to a fixed screen position. Configure with each panel's **Open Near Clicked Widget** toggle.
 
-- `shell.launcher.layout` selects `full` (default) or `simple`. Full shows the profile, view tabs, and a toolbar with the search field and shortcuts. Simple shows a search field, an optional category chip row, and results at a fixed 560 × 500 size; `width`, `search_position`, `default_view`, `show_settings_button`, and `show_session_button` apply only to Full.
+- `shell.launcher.layout` selects `full` (default) or `simple`. Full shows the profile, view tabs, and a toolbar with the search field and shortcuts. Simple shows a search field, an optional category chip row, and results at a fixed 560 × 500 size; `width`, `search_position`, `default_view`, `show_navigation_labels`, `show_settings_button`, and `show_session_button` apply only to Full.
 
 - `shell.launcher.width` sets the Full launcher panel width in pixels from `560` to `1100` (default `760`).
 
@@ -348,6 +349,8 @@ Notes:
 - `shell.launcher.categories` shows the All, Recently Used, and app category chips under the search field in the Simple layout (enabled by default). Launchers scoped to one provider, such as dmenu pickers, keep their chips regardless.
 
 - `shell.launcher.category_icons_only` hides text labels on app category tabs (Full) or chips (Simple) such as Internet and Games, keeping full names in hover tooltips. Disabled by default; category tabs show icons and text. It does not change the main view tabs.
+
+- `shell.launcher.show_navigation_labels` shows text on the Full layout's main view tabs: Recent, Pinned, All, Categories, and Providers (default `true`). Turn off **Show navigation labels** in the launcher settings for icons with names in hover tooltips at any panel width. Narrow panels use icons automatically even when this option is enabled.
 
 - `shell.launcher.show_icons` toggles application icons in launcher result rows. Prefixed-provider rows (for example emoji) still show their leading character when icons are hidden.
 
