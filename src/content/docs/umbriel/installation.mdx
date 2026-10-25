@@ -128,6 +128,33 @@ The module installs Umbriel, registers its display-manager session, enables the 
 
 Rebuild the system, then select Umbriel in the display manager or start it from a TTY with `start-umbriel`.
 
+### Home Manager and hjem
+
+The Home Manager module (`inputs.umbriel.homeModules.default`) and the hjem module (`inputs.umbriel.hjemModules.default`) write the user configuration from Nix. `settings` is an attrset serialized to TOML; Home Manager also accepts a raw TOML string or a path:
+
+```nix
+{ inputs, ... }:
+{
+  imports = [ inputs.umbriel.homeModules.default ];
+
+  programs.umbriel = {
+    enable = true;
+    settings = {
+      general.autostart = [ "noctalia" ];
+      layout.gap = 5;
+      input.keyboard.layout = "de";
+      keybinds = {
+        "Mod+Return" = "spawn:kitty";
+        "Mod+Q" = "window-close";
+        "Mod" = "spawn:noctalia msg panel-toggle launcher";
+      };
+    };
+  };
+}
+```
+
+When `settings` is omitted, both modules leave the user configuration path untouched, so Umbriel loads its packaged configuration.
+
 ### Binary cache
 
 Pre-built `x86_64-linux` and `aarch64-linux` packages for Umbriel and its portal are available from [Cachix](https://app.cachix.org/cache/umbriel). Add the cache to the NixOS configuration to avoid compiling them locally:

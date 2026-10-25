@@ -14,6 +14,30 @@ Configure bindings under `[keybinds]`. See [Actions](/umbriel/actions/) for the 
 "Mod+I" = "overview-toggle"
 ```
 
+## Default keybinds
+
+The packaged starting configuration ([`examples/config.toml`](https://github.com/noctalia-dev/umbriel/blob/main/examples/config.toml)) binds these, among others. `Mod` is Super on a native session and Alt when Umbriel runs nested in another desktop (see [Modifiers](#modifiers)).
+
+| Shortcut               | Action                                      |
+| ---------------------- | ------------------------------------------- |
+| Mod                    | Toggle the Noctalia launcher                |
+| Mod+Return             | Open kitty                                  |
+| Mod+Q                  | Close the focused window                    |
+| Mod+Escape             | Quit (asks for confirmation)                |
+| Mod+F1                 | Cycle window focus                          |
+| Mod+H/J/K/L or arrows  | Focus adjacent window                       |
+| Mod+Shift+arrows       | Move column left/right or window up/down    |
+| Mod+Comma / Mod+Period | Consume left / consume right                |
+| Mod+R / Mod+F          | Cycle width / toggle fullscreen             |
+| Mod+T                  | Toggle floating for the focused window      |
+| Mod+P                  | Toggle pin for the focused window           |
+| Mod+W                  | Toggle tabs for the focused column          |
+| Mod+O                  | Toggle the overview                         |
+| Mod+1..9               | Switch workspace on focused monitor         |
+| Mod+Shift+1..9         | Move focused window to workspace and follow |
+
+Change the launcher and terminal commands under `[keybinds]` if you use another shell or terminal.
+
 ## Modifiers
 
 | Modifier                  | Notes                                                                 |
