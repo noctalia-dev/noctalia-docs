@@ -79,7 +79,7 @@ alpha     = 0.55    # multiplied by each component's background opacity
 [shell.panel]
 transparency_mode     = "solid"  # solid | soft | glass; controls floating panel opacity and card translucency
 borders               = true   # outline on floating panel surfaces
-border_color          = "outline"   # floating panel outline color: theme role token or #RRGGBB
+border_color          = "outline_variant"   # floating panel outline color: theme role token or #RRGGBB
 border_width          = 1.0         # floating panel outline width in px, 0 hides the stroke
 shadow                = true   # cast the global [shell.shadow] from panel surfaces
 list_item_background  = false  # filled rounded background behind launcher and clipboard list items
@@ -316,7 +316,7 @@ Notes:
 
 - `shell.panel.borders` draws an outline on floating panel surfaces. Attached panels stay borderless on the bar edge. Default is `true`; set to `false` for a flatter look. Section cards inside panels are controlled by `[shell].card_borders`.
 
-- `shell.panel.border_color` sets the floating panel outline color: a theme role token (for example `outline`, `primary`) or a fixed hex color (`#RRGGBB` / `#RRGGBBAA`). The alpha is multiplied by the panel background opacity from `shell.panel.transparency_mode`.
+- `shell.panel.border_color` sets the floating panel outline color: a theme role token (for example `outline_variant`, `primary`) or a fixed hex color (`#RRGGBB` / `#RRGGBBAA`). The alpha is multiplied by the panel background opacity from `shell.panel.transparency_mode`.
 
 - `shell.panel.border_width` sets the floating panel outline width in logical pixels (default `1.0`, range `0` to `20`). Ignored when `shell.panel.borders` is `false`.
 
@@ -491,7 +491,7 @@ hide_delay_ms = 1400     # time before a popup starts hiding; range 250 to 10000
 scale = 1.0              # OSD size multiplier on top of shell.ui_scale
 background_opacity = 0.97 # background opacity of OSD popups
 border = true            # outline around OSD popup cards; set false for a borderless look
-border_color = "outline" # outline color: theme color role (e.g. "primary") or hex (e.g. "#a8b185")
+border_color = "outline_variant" # outline color: theme color role (e.g. "primary") or hex (e.g. "#a8b185")
 border_width = 1         # outline stroke width in px; raise for a thicker outline
 follow_focused_output = false # show a new OSD on the focused output; keep it pinned until it disappears
 offset_x = 20            # absolute horizontal margin from the screen edge
