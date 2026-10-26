@@ -112,6 +112,8 @@ opaque_fullscreen = true
 
 With `opaque_fullscreen = false`, a fullscreen window that is translucent shows the desktop behind it instead of the backdrop, and can be blurred. A window is translucent when its rule opacity is below 1 or the application itself draws transparent content. Other fullscreen windows stay opaque and skip blur.
 
+X11 bounding-shape cutouts show what is behind the window with either `opaque_fullscreen` setting.
+
 Set `prefer_no_csd = false` to let newly connected applications draw their own decorations. Restart applications after changing it because decoration protocol availability is fixed when an application connects.
 
 Borders render outside window content and are included in layout spacing. `corner_radius = 0` keeps every contour square. A [window rule](/umbriel/window-rules/#decoration) can override `border_width`, `outer_border_width`, and `corner_radius` for the windows it matches.
