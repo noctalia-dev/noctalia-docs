@@ -69,6 +69,8 @@ A `default_maximize` rule opens the window at the full column width. [`client_ma
 
 Dialogs float by default. Use `default_floating = false` in a matching rule to force one into the layout.
 
+X11 windows marked as menus, dropdowns, tooltips, or other client-placed popups bypass window rules, including broad application rules that force tiling or maximize. If an application publishes its popup type or override-redirect flag after opening, Umbriel switches it to popup handling immediately, restores its client-requested position and size, and clears maximize and fullscreen state. These popups do not appear in `umbriel windows`.
+
 A modal dialog [attaches to its parent](/umbriel/layout/#dialogs) and ignores the settings above, since it goes wherever its parent goes. `attach_to_parent = false` keeps it an ordinary window that these settings place. It is checked again whenever the rules change, so a reload detaches or attaches open dialogs.
 
 A rule that matches the parent window also covers its dialogs. This is how to opt out an application whose file pickers come from the desktop portal: those dialogs carry the portal's app id, such as `xdg-desktop-portal-gtk`, not the application's. A rule that matches the dialog itself takes precedence over its parent's.
