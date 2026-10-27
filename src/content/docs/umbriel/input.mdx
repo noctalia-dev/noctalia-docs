@@ -55,6 +55,10 @@ The state changes when the window is dropped. Unsupported transitions, such as p
 
 Umbriel supports `xdg-toplevel-drag-v1` for native Wayland applications that implement it, including Chromium-based browsers. During a pointer drag, a detached window follows the pointer above ordinary windows and stays outside the tiling layout. Windows underneath it can receive the drop, allowing the application to merge a tab or dock a panel. If the application keeps the detached window after the drop, Umbriel places it using normal tiled or floating window-drag behavior. No additional configuration is needed.
 
+### Input capture
+
+The InputCapture portal supports approved keyboard and pointer sharing through `xdg-desktop-portal-umbriel`. It provides screen-edge activation, keyboard events and modifiers, pointer motion, buttons, and scrolling. Press **Ctrl+Alt+Escape** to restore local control. Clipboard sharing, persistent permission grants, touch, tablet, and gesture capture are not supported. See [Input capture](/umbriel/security/#input-capture) for the complete support table and permission behavior.
+
 ### Keyboard
 
 ```toml
