@@ -15,7 +15,7 @@ X11 applications can request control of the pointer and keyboard through XTest. 
 
 Press Enter to allow the requesting application for the current Umbriel session. Any other non-modifier key or pointer click denies it. Allow and deny decisions last until Umbriel restarts. Input received through this XTest emulation path cannot approve another permission prompt.
 
-The prompt says that an application is *claiming* its name: X11 application names are not verified sandbox identities. This permission is separate from `security_context_rule`, which controls Wayland protocol visibility.
+The prompt says that an application is _claiming_ its name: X11 application names are not verified sandbox identities. This permission is separate from `security_context_rule`, which controls Wayland protocol visibility.
 
 While the session is locked, Umbriel releases held emulated keys and buttons and discards further emulated input. That input is not replayed after unlock. Physical input devices continue to work on the lock screen.
 
@@ -44,6 +44,8 @@ Enabling a session arms its barriers. Capture begins only when Umbriel detects a
 Locking, VT/session deactivation, transport failure, and session closure stop capture. Output geometry changes disable capture and invalidate its barriers. Touchscreen and tablet input also restore local control. Pointer constraints, held pointer buttons, and compositor grabs prevent a barrier from taking over an existing interaction. Held input is released during handoff so it cannot remain pressed after capture ends. Lock-screen input is never exported.
 
 Install matching versions of Umbriel and the portal backend. The portal frontend must support InputCapture; version 2 calls require a frontend exposing version 2. The integration checks exercise the real `xdg-desktop-portal` 1.22.1 frontend. No configuration option or additional libei package is needed in Umbriel.
+
+For Deskflow with multiple monitors, use version 1.27 or newer. Deskflow 1.26 can submit duplicate barrier IDs and fail to arm capture.
 
 ## Sandboxed Wayland clients
 
