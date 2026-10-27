@@ -288,6 +288,8 @@ Run `umbriel` directly only for a nested development session or an explicitly un
 
 Screen sharing in Discord, browsers, and other portal-aware applications needs [`xdg-desktop-portal-umbriel`](https://github.com/noctalia-dev/xdg-desktop-portal-umbriel).
 
+On rotated or flipped outputs, the shared cursor may appear offset because of a wlroots 0.20.2 cursor metadata issue.
+
 ### Picker missing after login
 
 Start the session through `start-umbriel` and install the matching `umbriel.service` alongside the compositor binary. The packaged service uses `Type=notify` to hold the graphical session targets until Umbriel is ready; portal services with `After=graphical-session.target` then inherit the published session environment. No portal service override is required for this startup ordering.
