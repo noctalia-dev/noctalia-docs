@@ -54,7 +54,19 @@ Layer entries describe layer-shell surfaces such as panels, launchers, and wallp
 
 Output entries list every connected output, including disabled ones: `name`, `description`, `make`, `model`, `serial`, `config_name` (the [monitor identity](/umbriel/outputs/), or `null` when the display reports none), `physical_size`, `enabled` (part of the desktop), `powered` (enabled and not switched off by DPMS), `focused`, `active_workspace` (its ID), `position`, `logical_size`, `usable_area` (the part layer-shell exclusive zones leave, in layout coordinates), `transform`, `scale`, `adaptive_sync` (`null` when the output cannot use variable refresh), `hdr_active`, `direct_scanout`, and `modes`, each with `width`, `height`, `refresh_mhz`, `preferred`, and `current`. A disabled output reports a zero `logical_size` and `usable_area`.
 
-`direct_scanout` is `null` while the output is disabled or powered off. Otherwise it holds `active`, `reason` (why the output composites, or `null` while active), and `window` (the scanned-out window's `id`, `app_id`, and `title`, or `null`). It reports a state only once it has held for half a second, so a cursor or notification passing over a fullscreen window does not flood subscribers. See [direct scanout](/umbriel/outputs/#direct-scanout) for the reasons.
+`direct_scanout` is `null` while the output is disabled or powered off. Otherwise it holds `active`, `reason` (why the output composites, or `null` while active), and `window` (the scanned-out window's `id`, `app_id`, and `title`, or `null`). Queries report the latest scene buffer accepted by the backend immediately. A successful commit does not guarantee physical presentation. Failed builds, rejected commits, and bufferless cursor or output-property commits do not update this state.
+
+Three diagnostic fields retain successful scene-buffer commit history for each output:
+
+| Field             | Meaning                                                                                                                                             |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `commits`         | Number of accepted scene-buffer commits, composed or scanned out.                                                                                   |
+| `scanout_commits` | Number of those commits that used direct scanout, including brief episodes.                                                                         |
+| `commit_seq`      | The backend's 32-bit commit sequence for the latest accepted scene buffer. It can wrap and can skip numbers used by commits without a scene buffer. |
+
+The counters survive configuration reloads and power cycles. They reset when Umbriel restarts or the output is destroyed and recreated. Compare snapshots from the same output lifetime to measure activity during a game session. A zero increase in `scanout_commits` means no direct scanout commits occurred during that interval.
+
+Scanout-triggered subscription notifications and routine log messages still wait until a state has held for half a second. Counter increments alone do not trigger subscription events. Other output events can carry a newer snapshot before that interval expires. Poll `outputs` when immediate state or updated counters are needed. See [direct scanout](/umbriel/outputs/#direct-scanout) for the reasons.
 
 ## Effect inspection
 
