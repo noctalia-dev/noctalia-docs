@@ -69,7 +69,15 @@ A `default_maximize` rule opens the window at the full column width. [`client_ma
 
 Dialogs float by default. Use `default_floating = false` in a matching rule to force one into the layout.
 
-X11 windows marked as menus, dropdowns, tooltips, or other client-placed popups bypass window rules, including broad application rules that force tiling or maximize. If an application publishes its popup type or override-redirect flag after opening, Umbriel switches it to popup handling immediately, restores its client-requested position and size, and clears maximize and fullscreen state. These popups do not appear in `umbriel windows`.
+X11 windows marked as popup menus, dropdowns, tooltips, or other client-placed popups bypass window rules, including broad application rules that force tiling or maximize. Persistent torn-off menus marked `_NET_WM_WINDOW_TYPE_MENU` remain managed and follow window rules unless they request override-redirect. If an application publishes its popup type or override-redirect flag after opening, Umbriel switches it to popup handling immediately, restores its client-requested position and size, and clears maximize and fullscreen state. These popups do not appear in `umbriel windows`.
+
+Some Wine and Proton native Wayland builds expose context menus as untitled, unparented `xdg_toplevel` windows. These receive normal window rules and have no popup anchor, so they can open centered or maximized. Hover focus can also return to the application while the pointer travels toward the menu. Such a client needs to supply a popup role and placement information. For affected applications, use the runtime's X11 driver. With Proton builds supporting both Wayland environment options, use this per-application Steam launch option:
+
+```sh
+PROTON_ENABLE_WAYLAND=0 PROTON_USE_WAYLAND=0 %command%
+```
+
+Restart the application after changing its driver. Its main window should then report `xwayland: true` in `umbriel windows --json`. The plain-text listing uses `-` as a placeholder for an empty title; matching the literal `-` does not select an untitled window. `match.title = "^$"` matches a client-supplied empty title, including these native Wayland menus, but rules cannot supply their missing popup anchor.
 
 A modal dialog [attaches to its parent](/umbriel/layout/#dialogs) and ignores the settings above, since it goes wherever its parent goes. `attach_to_parent = false` keeps it an ordinary window that these settings place. It is checked again whenever the rules change, so a reload detaches or attaches open dialogs.
 
