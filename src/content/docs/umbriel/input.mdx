@@ -334,6 +334,8 @@ While a client holds a pointer or keyboard grab, such as an open tray menu, hove
 
 X11 windows that declare `Input=False` without `WM_TAKE_FOCUS`, including Steam's on-screen keyboard, receive pointer input without taking keyboard focus. Hovering or clicking the keyboard leaves typing directed at the previously focused window. These windows are also skipped when Umbriel chooses replacement focus after a window closes.
 
+X11 windows marked `_NET_WM_WINDOW_TYPE_NOTIFICATION` do not take keyboard focus, regardless of their input hints or override-redirect flag. An existing popup that becomes a notification releases keyboard focus back to the active window.
+
 `follows_mouse_max_scroll` limits how far Umbriel may scroll a layout to reveal that window, measured in viewport widths. `0.0` allows only fully visible windows. Omit the key for no limit.
 
 ### Controller desktop input
