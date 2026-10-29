@@ -105,6 +105,8 @@ attach_to_parent = false
 
 Pixel values take precedence over fractions. Each axis is optional. A tiled window remembers floating size and position rules until it first floats, and a floating window remembers its scrolling extent until it first tiles.
 
+Floating size defaults also apply when the initial title arrives between the opening configure and the first visible buffer. Placement uses the resulting size for centering and position anchors. Unchanged dimensions are not reapplied over a size the application chooses while opening. Applications can resize themselves afterward.
+
 ```toml
 [[window_rule]]
 match.app_id = "^org[.]example[.]Utility$"
