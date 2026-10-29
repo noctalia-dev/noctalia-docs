@@ -26,7 +26,7 @@ Without a matching output section, Umbriel enables outputs that advertise a pref
 
 When an output disconnects or is disabled, each populated workspace moves into its own temporary workspace on another enabled output. Umbriel appends these workspaces without replacing that output's configured workspaces, including when its workspace inventory is fixed. Temporary workspaces use numeric labels for originally anonymous workspaces; named workspaces keep their explicit names, so name-based keybinds continue to work. Both retain their original layout rules. When the same output connector becomes available again, their layout and positions are restored there. Windows opened in a temporary workspace return with it; explicitly moving a window into a local workspace cancels its automatic return. Tiling edits made in a temporary workspace also return with it when its tiled windows remain mapped.
 
-If a receiving output already has a workspace with the same name, its native workspace keeps priority for name lookup. Qualify the displaced name with its original output, such as `workspace-switch:WEB/DP-1`, to select it while `DP-1` is unavailable. See [workspace selectors](/umbriel/workspaces/#workspace-selectors).
+If a receiving output already has a workspace with the same name, its native workspace keeps priority for name lookup. Qualify the displaced name with its original output, such as `workspace-switch WEB --output DP-1`, to select it while `DP-1` is unavailable. See [workspace selectors](/umbriel/workspaces/#workspace-selectors).
 
 Umbriel first uses the first remaining enabled output in its internal output order. If that output has reached the 64-workspace limit, it tries another enabled output. If every enabled output is full, displaced windows share a local workspace until their home returns. Growing a fixed inventory during the disconnection can also leave too little room for temporary workspaces; those windows retain their saved homes. Empty temporary workspaces are removed. If every output disappears, windows wait until an output returns, then recover their separate workspaces there while their home output is still absent.
 
@@ -245,8 +245,8 @@ The choice applies on reload and only while that output uses HDR (PQ). It also k
 `sdr_white` can also be selected for one running output without editing the configuration:
 
 ```sh
-umbriel msg output-sdr-white:203
-umbriel msg output-sdr-white:120/DP-1
+umbriel msg output-sdr-white 203
+umbriel msg output-sdr-white 120 --output DP-1
 ```
 
 The preferred output, or the named one, keeps the value until it disconnects or a configuration reload changes output state, which restores the configured `sdr_white`. `umbriel color` reports the selected value.
@@ -344,9 +344,9 @@ The output leaves the desktop, but its workspaces and windows are retained and r
 Use the logical output actions for the same temporary change without an external output-management tool:
 
 ```sh
-umbriel msg output-disable:eDP-1
-umbriel msg output-enable:eDP-1
-umbriel msg output-toggle:eDP-1
+umbriel msg output-disable eDP-1
+umbriel msg output-enable eDP-1
+umbriel msg output-toggle eDP-1
 ```
 
 These actions remove and restore the output as part of the desktop layout. Windows move to another enabled output while their home is unavailable, then return when it is enabled again. A disabled output is also absent from whole-desktop screenshots. The actions can be used directly by [lid event commands](/umbriel/configuration/#events).
@@ -359,8 +359,8 @@ Use DPMS actions to power monitors off without removing their workspaces:
 
 ```sh
 umbriel msg dpms-off
-umbriel msg dpms-off:DP-1
-umbriel msg dpms-on:DP-1
+umbriel msg dpms-off DP-1
+umbriel msg dpms-on DP-1
 ```
 
 The bare actions target every configured output. Input wakes all monitors when every output is powered off. Outputs disabled with `enabled = false` are not affected. DPMS does not remove an output from the logical desktop, move its windows, or exclude it from a whole-desktop capture.

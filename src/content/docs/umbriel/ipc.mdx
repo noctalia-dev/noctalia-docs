@@ -12,22 +12,60 @@ Each request and reply is one JSON object per line:
 printf '{"cmd":"workspaces"}\n' | socat -t 5 STDIO "$UMBRIEL_SOCKET"
 ```
 
-Replies use `{"ok": ...}` or `{"err": "..."}`.
+Replies use `{"ok": ...}` or `{"err": "..."}`. Commands that take arguments send them as an `args` array of strings, one per command-line word.
 
 ## Queries
 
-| Request                                       | CLI                                        |
-| --------------------------------------------- | ------------------------------------------ |
-| `{"cmd":"effects"}`                           | `umbriel effects --json`                   |
-| `{"cmd":"windows"}`                           | `umbriel windows --json`                   |
-| `{"cmd":"focused-window"}`                    | `umbriel focused-window --json`            |
-| `{"cmd":"workspaces"}`                        | `umbriel workspaces --json`                |
-| `{"cmd":"submap"}`                            | `umbriel submap --json`                    |
-| `{"cmd":"layers"}`                            | `umbriel layers --json`                    |
-| `{"cmd":"outputs"}`                           | `umbriel outputs --json`                   |
-| `{"cmd":"input-capture-permissions"}`         | `umbriel input-capture-permissions --json` |
-| `{"cmd":"input-capture-revoke","arg":"<id>"}` | `umbriel input-capture-revoke <id>`        |
-| `{"cmd":"msg","arg":"<action>"}`              | `umbriel msg <action>`                     |
+| Request                                          | CLI                                        |
+| ------------------------------------------------ | ------------------------------------------ |
+| `{"cmd":"effects"}`                              | `umbriel effects --json`                   |
+| `{"cmd":"windows"}`                              | `umbriel windows --json`                   |
+| `{"cmd":"focused-window"}`                       | `umbriel focused-window --json`            |
+| `{"cmd":"workspaces"}`                           | `umbriel workspaces --json`                |
+| `{"cmd":"submap"}`                               | `umbriel submap --json`                    |
+| `{"cmd":"layers"}`                               | `umbriel layers --json`                    |
+| `{"cmd":"outputs"}`                              | `umbriel outputs --json`                   |
+| `{"cmd":"input-capture-permissions"}`            | `umbriel input-capture-permissions --json` |
+| `{"cmd":"input-capture-revoke","args":["<id>"]}` | `umbriel input-capture-revoke <id>`        |
+
+## Actions
+
+Programs run an [action](/umbriel/actions/) with a typed request instead of the words people type:
+
+```json
+{ "cmd": "action", "action": "window-focus", "window": "<window-id>" }
+```
+
+`umbriel msg <action> [args...]` parses its words and sends this same request. The reply is `{"ok": null}` or `{"err": "..."}`. A field that the action does not take, a missing required field, a wrong JSON type, or an empty string is rejected with the field named in the error. Optional fields are left out rather than sent empty.
+
+| Argument form (see [Actions](/umbriel/actions/#argument-forms)) | Fields                                                                                                           |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `<cmd...>`                                               | `command`: string, run through the shell                                                                         |
+| submap `<name>`                                          | `submap`: string                                                                                                 |
+| `<fraction>`                                             | `fraction`: number                                                                                               |
+| `<delta>`                                                | `delta`: number                                                                                                  |
+| `<workspace> [--output <output>]`                        | `workspace`: a position number, or a name string even when it has only digits; optional `output`: string         |
+| `<output>`, `[<output>]`                                 | `output`: string, required or optional as in the argument form                                                   |
+| `<window-id>`, `[<window-id>]`                           | `window`: string, required or optional as in the argument form                                                   |
+| `[<scratchpad>]`                                         | optional `scratchpad`: string                                                                                    |
+| effect `set`                                             | `effect`: string; optional `window` (window and border effects) or `output` (screen effects)                     |
+| effect `cycle`                                           | optional `pool`: string; optional `window` or `output` as for `set`                                              |
+| `<nits> [--output <output>]`                             | `nits`: number; optional `output`: string                                                                        |
+| layout mode                                              | `layout`: `"scrolling"`, `"dwindle"`, `"master"`, `"stacking"`, or `"toggle"`; with `"toggle"`, optional `cycle` |
+| `<normal\|tabbed>`                                       | `display`: `"normal"` or `"tabbed"`                                                                              |
+| `<index>`                                                | `index`: integer                                                                                                 |
+| `[skip-confirmation]`                                    | optional `skip_confirmation`: boolean                                                                            |
+| region                                                   | `region`: string                                                                                                 |
+| `<anchor> <x> <y> [--window <window-id>]`                | `anchor`: string; `x`, `y`: integers; optional `window`: string                                                  |
+| `<delta-x> <delta-y> [--window <window-id>]`             | `dx`, `dy`: integers; optional `window`: string                                                                  |
+
+`cycle` is an array of two or more distinct layout names. Value ranges match the argument forms. For example:
+
+```json
+{"cmd":"action","action":"workspace-switch","workspace":2,"output":"DP-1"}
+{"cmd":"action","action":"workspace-set-layout","layout":"toggle","cycle":["scrolling","master"]}
+{"cmd":"action","action":"session-quit","skip_confirmation":true}
+```
 
 Window entries include IDs, application identity, process ID, geometry, output, workspace, and scratchpad membership. X11 windows report the process ID they publish as `_NET_WM_PID`, or `-1` when they publish none. A member of a [tab group](/umbriel/layout/#tab-groups) reports `tabbed`, its place among the group's tabs as `tab_index` (from 0, `-1` outside a group), and `tab_hidden` while its group shows another tab; the plain listing marks it `tab` instead of `tile`.
 
@@ -226,9 +264,9 @@ Disconnect, malformed or oversized input, or 250 ms without a snapshot closes th
 
 ## Virtual outputs
 
-| Request                                         | CLI                                   |
-| ----------------------------------------------- | ------------------------------------- |
-| `{"cmd":"output-create","arg":"<name> [mode]"}` | `umbriel output-create <name> [mode]` |
-| `{"cmd":"output-destroy","arg":"<name>"}`       | `umbriel output-destroy <name>`       |
+| Request                                                                                             | CLI                                   |
+| --------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| `{"cmd":"output-create","args":["<name>"]}` or `{"cmd":"output-create","args":["<name>","<mode>"]}` | `umbriel output-create <name> [mode]` |
+| `{"cmd":"output-destroy","args":["<name>"]}`                                                        | `umbriel output-destroy <name>`       |
 
 `output-create` replies with the new output's name. Its optional mode is in the `WIDTHxHEIGHT[@HZ]` form. Both commands reply with an error for a name that is invalid, already taken, or unknown, and `output-destroy` refuses outputs backed by a real display. See [Virtual outputs](/umbriel/outputs/#virtual-outputs).

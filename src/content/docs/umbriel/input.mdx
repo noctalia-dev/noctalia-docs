@@ -19,7 +19,7 @@ mod_right_double_click = "none"
 
 Edge and corner drag placement is configured with [`layout.stacking.drop_zones`](/umbriel/layout/#drop-zones-and-region-placement). It is enabled by default in stacking workspaces. Individual floating windows above tiling layouts use free placement instead.
 
-Dragging a window out of a region placement or maximize restores its normal size under the pointer, keeping the title bar and content aligned while the application redraws. Placing it on another monitor maps the normal restore position to that monitor. Shared monitor edges require a 150 ms dwell before offering a drop zone, so dragging straight across monitors remains possible. Tiled, pinned, scratchpad, overview, data-device, and toplevel-transfer drags do not use these zones. The explicit `window-set-region:<region>` and `window-clear-region` actions work independently of the pointer setting within stacking. See [Actions](/umbriel/actions/).
+Dragging a window out of a region placement or maximize restores its normal size under the pointer, keeping the title bar and content aligned while the application redraws. Placing it on another monitor maps the normal restore position to that monitor. Shared monitor edges require a 150 ms dwell before offering a drop zone, so dragging straight across monitors remains possible. Tiled, pinned, scratchpad, overview, data-device, and toplevel-transfer drags do not use these zones. The explicit `window-set-region <region>` and `window-clear-region` actions work independently of the pointer setting within stacking. See [Actions](/umbriel/actions/).
 
 `client_window_drag = false` ignores move requests from applications, such as dragging a client-side title bar or the empty tab strip of Chromium, Firefox, or Electron apps. Ordinary window moves then use Mod+drag, keybinds, or an enabled [Umbriel title bar](/umbriel/appearance/#title-bar). Resizing from client-side borders and tab tear-off operations using `xdg-toplevel-drag-v1` are unaffected.
 
@@ -297,7 +297,7 @@ hide_timeout_ms = 0
 
 Set `hardware_cursor = false` to work around hardware cursor flicker or disappearance. Set `hide_timeout_ms` to a value from 1 to 3600000 to hide an inactive cursor; `0` disables the timeout.
 
-`follows_focus = true` moves the cursor to a newly focused window after keyboard-driven focus and transfer actions. Pointer-driven focus, gestures, and automatic replacement focus do not move it. `window-focus-warp:<id>` always moves the cursor regardless of this setting. Active-workspace output swaps keep the cursor and seat focus on the invoking output when this setting is false; when it is true, both follow the previously focused window to its new output.
+`follows_focus = true` moves the cursor to a newly focused window after keyboard-driven focus and transfer actions. Pointer-driven focus, gestures, and automatic replacement focus do not move it. `window-focus-warp <id>` always moves the cursor regardless of this setting. Active-workspace output swaps keep the cursor and seat focus on the invoking output when this setting is false; when it is true, both follow the previously focused window to its new output.
 
 ### Drag edge scroll
 
