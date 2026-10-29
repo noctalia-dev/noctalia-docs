@@ -155,12 +155,13 @@ Later values replace earlier ones. Strut edges are resolved independently, so a 
 | `name`                                       | Select an exact name and create it on matching dynamic outputs.                                                                             |
 | `index`                                      | Select a current one-based position from 1 to 64.                                                                                           |
 | `output`                                     | Restrict the rule to a connector or monitor name.                                                                                           |
-| `layout.mode`                                | Use `"scrolling"`, `"dwindle"`, `"master"`, or `"floating"`.                                                                                |
+| `layout.mode`                                | Use `"scrolling"`, `"dwindle"`, `"master"`, or `"stacking"`.                                                                                |
 | `layout.gap`                                 | Set the window gap.                                                                                                                         |
 | `layout.struts.{left,right,top,bottom}`      | Reserve signed logical pixels at each edge.                                                                                                 |
 | `layout.extent_presets`                      | Set extent-cycle fractions.                                                                                                                 |
 | `layout.new_exits_fullscreen`                | Choose which arriving windows exit fullscreen; see [Leaving fullscreen](/umbriel/layout/#leaving-fullscreen).                                      |
 | `layout.client_maximize`                     | Choose `"column"` or `"edges"` for a tiled window's own maximize request; see [Maximize and fullscreen](/umbriel/layout/#maximize-and-fullscreen). |
+| `layout.stacking.drop_zones`                 | Enable edge and corner drag previews and placement in stacking; defaults to `true`.                                                         |
 | `layout.scrolling.default_extent_fraction`   | Set the initial scrolling-column extent.                                                                                                    |
 | `layout.scrolling.center_underfull_strip`    | Center or start-align an underfull strip.                                                                                                   |
 | `layout.scrolling.center_focused`            | Control when focus changes center a column.                                                                                                 |
