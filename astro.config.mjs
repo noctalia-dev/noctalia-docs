@@ -174,6 +174,7 @@ export default defineConfig({
             { label: "Installation", link: "umbriel/installation/" },
             { label: "Configuration", link: "umbriel/configuration/" },
             { label: "Outputs", link: "umbriel/outputs/" },
+            { label: "Game streaming", link: "umbriel/streaming/" },
             { label: "Keybinds", link: "umbriel/keybinds/" },
             { label: "Actions", link: "umbriel/actions/" },
             { label: "IPC", link: "umbriel/ipc/" },
