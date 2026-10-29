@@ -269,6 +269,12 @@ map_to_output = "eDP-1"
 
 Without `map_to_output`, a touchscreen maps to the output its device reports, or else to the built-in panel (`eDP-`, `LVDS-`, or `DSI-`) when exactly one is enabled. Otherwise it spans the whole output layout.
 
+A touchscreen reports its output through the `WL_OUTPUT` udev property, which names a connector. A udev rule can set it so each touchscreen keeps its own monitor without the global `map_to_output`:
+
+```text
+SUBSYSTEM=="input", KERNEL=="event*", ATTRS{idVendor}=="1234", ATTRS{idProduct}=="5678", ENV{WL_OUTPUT}="DP-1"
+```
+
 ### Cursor
 
 ```toml
