@@ -98,6 +98,27 @@ Window move bindings also work on a focused scratchpad window: they remove it fr
 
 Evacuated named workspaces keep their names even when appended at different positions on another output. Within one output, a native workspace takes precedence over evacuated workspaces with the same name. Multiple evacuated workspaces with the same name are ambiguous unless qualified by their original output. For example, `workspace-switch --name 4 --output DP-1` follows the named workspace `"4"` while `DP-1` is unavailable; `workspace-switch 4 --output DP-1` remains a position on a live `DP-1`. Disabled outputs are excluded from global name lookup.
 
+## Moving a workspace between outputs
+
+`workspace-move-to-output-next` and `workspace-move-to-output-previous` move the active workspace through the same output order as `output-focus-next` and `output-focus-previous`, wrapping at either end. The `left`, `right`, `up`, and `down` variants select an adjacent output.
+
+`workspace-move-to-output <destination> [<workspace>] [--output <output>]` selects the destination by connector or monitor identity, or uses `current` for the pointer-preferred output. Omit the workspace to move the active one. A supplied workspace uses the same position/name selection as `workspace-switch`; `--output` qualifies the source, and `--name` selects an explicit name, including numeric names.
+
+```sh
+umbriel msg workspace-move-to-output DP-2
+umbriel msg workspace-move-to-output DP-2 WEB --output DP-1
+umbriel msg workspace-move-to-output current WEB --output DP-1
+umbriel msg workspace-move-to-output DP-2 --name 3 --output DP-1
+```
+
+Moving an inactive workspace leaves its source output's active workspace selected. Moving a workspace to its existing output succeeds without changing selection or order. Unknown, disabled, or ambiguous destination outputs are rejected.
+
+The workspace keeps its stable ID, explicit name, layout, and its windows, including floating windows. Pinned windows stay on their output, even when the workspace they were pinned on moves. The workspace is inserted immediately after the destination's active workspace and becomes active there. Keyboard focus follows it. When its active workspace moves, the source shows the preceding workspace, or the following one if the first workspace moved. An output whose only workspace moves receives an empty replacement.
+
+Moves also work for empty workspaces and fixed inventories. They change the runtime inventory without editing configuration. Dynamic outputs maintain their empty workspace sentinels and minimum count. Explicit names stay with transferred workspaces; anonymous labels follow their new positions. A move is rejected if the destination already has the same explicit name or has reached the 64-workspace limit.
+
+The transferred workspace retains its layout settings until a relevant configuration reload applies layout rules again. Changing workspace inventory configuration reapplies the configured inventories, including named workspace declarations. Output qualifiers in selectors refer to the workspace's current output. Its ID remains stable, so scripts should read the `output` field rather than infer the current output from the ID.
+
 ## Inspect workspace state
 
 Run `umbriel workspaces` to list workspaces and their effective layout:

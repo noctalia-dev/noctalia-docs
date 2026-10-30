@@ -59,6 +59,12 @@ Programs run an [action](/umbriel/actions/) with a typed request instead of the 
 | `<anchor> <x> <y> [--window <window-id>]`                | `anchor`: string; `x`, `y`: integers; optional `window`: string                                                  |
 | `<delta-x> <delta-y> [--window <window-id>]`             | `dx`, `dy`: integers; optional `window`: string                                                                  |
 
+`workspace-move-to-output` requires a `destination` string (connector, monitor identity, or `current`). Optional `workspace` and `output` fields select the source using the same types as `workspace-switch`; `output` requires `workspace`.
+
+```json
+{"cmd":"action","action":"workspace-move-to-output","destination":"current","workspace":"WEB","output":"DP-1"}
+```
+
 `cycle` is an array of two or more distinct layout names. Value ranges match the argument forms. For example:
 
 ```json
