@@ -320,6 +320,28 @@ By default a watch honors idle inhibitors: apps holding a Wayland idle inhibitor
 
 Watching never changes the `[idle]` behaviors (lock, screen off, suspend).
 
+## Umbriel
+
+| Method                                                                                    | Returns | Description                                                                                                                   |
+| ----------------------------------------------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `noctalia.umbriel.action(request: table, callback: ((ok: boolean, err: string?) -> ())?)` | boolean | Sends one action to the running Umbriel compositor over its IPC socket. Requires <PluginApiBadge feature="umbriel-action" />. |
+
+`request` is the typed action request from Umbriel's [IPC reference](/umbriel/ipc/) without `cmd`: an `action` name plus one field per argument. Noctalia adds `cmd = "action"`; a table that sets `cmd` itself, or has no non-empty `action` string, is a Lua error. Umbriel validates the fields and rejects unknown, missing, or mistyped ones.
+
+The call returns `false` without sending anything when no Umbriel socket is found: `UMBRIEL_SOCKET` is unset and `$XDG_RUNTIME_DIR/umbriel-$WAYLAND_DISPLAY.sock` does not exist. Otherwise it returns `true` and sends the request off the script thread. `callback(true, nil)` follows when Umbriel accepts the action, and `callback(false, err)` when it rejects it, the socket cannot be reached, or no reply arrives within two seconds. Without a callback the action is fire-and-forget. At most 16 callbacks may be pending in one runtime.
+
+Prefer it over `runAsync({ "umbriel", "msg", ... })`: it starts no process, does not need `umbriel` on `PATH`, and passes arguments as typed values instead of words.
+
+```lua
+noctalia.umbriel.action({ action = "workspace-set-layout", layout = "dwindle" }, function(ok, err)
+  if not ok then
+    noctalia.notifyError("Layout change failed", err)
+  end
+end)
+
+noctalia.umbriel.action({ action = "workspace-switch", workspace = "WEB", output = "DP-1" })
+```
+
 ## Layers
 
 | Method                                                         | Returns | Description                                                                                                                         |
