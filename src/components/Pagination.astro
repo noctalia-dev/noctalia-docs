@@ -1,8 +1,8 @@
 ---
 import { Icon } from '@astrojs/starlight/components';
-import { projectFromPath } from '../lib/projects';
+import { paginationFromNoctaliaSidebar, projectFromPath } from '../lib/projects';
 
-const { dir, pagination } = Astro.locals.starlightRoute;
+const { dir, pagination, sidebar } = Astro.locals.starlightRoute;
 const activeProject = projectFromPath(Astro.url.pathname);
 
 function sameProject(href: string): boolean {
@@ -15,6 +15,9 @@ function sameProject(href: string): boolean {
 }
 
 let { prev, next } = pagination;
+if (!prev && !next && activeProject?.id === 'noctalia') {
+  ({ prev, next } = paginationFromNoctaliaSidebar(sidebar, Astro.url.pathname));
+}
 if (prev && !sameProject(prev.href)) prev = undefined;
 if (next && !sameProject(next.href)) next = undefined;
 const isRtl = dir === 'rtl';

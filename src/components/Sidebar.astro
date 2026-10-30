@@ -2,17 +2,49 @@
 import MobileMenuFooter from 'virtual:starlight/components/MobileMenuFooter';
 import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro';
 import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro';
-import { PROJECTS, pickProjectSidebarEntries, projectFromPath } from '../lib/projects';
+import {
+  NOCTALIA_VERSIONS,
+  PROJECTS,
+  pickProjectSidebarEntries,
+  projectFromPath,
+  remapNoctaliaSidebarEntries,
+  resolveNoctaliaVersionHref,
+} from '../lib/projects';
+
+const versionsData = NOCTALIA_VERSIONS;
 
 const { sidebar } = Astro.locals.starlightRoute;
 const pathname = Astro.url.pathname;
 const activeProject = projectFromPath(pathname);
-const sublist = pickProjectSidebarEntries(sidebar, pathname);
+const isNoctalia = activeProject?.id === 'noctalia';
+
+let currentVersion = versionsData.find((v) => v.isDefault) ?? versionsData.find((v) => v.path === '/noctalia/') ?? versionsData[0] ?? {
+  version: 'main',
+  tag: 'main',
+  label: 'main (rolling)',
+  path: '/noctalia/',
+  status: 'rolling',
+  isDefault: true,
+  isLatest: false,
+};
+let activeVersionPrefix = '';
+if (isNoctalia) {
+  for (const v of versionsData) {
+    if (v.path !== '/noctalia/' && pathname.startsWith(v.path)) {
+      currentVersion = v;
+      activeVersionPrefix = v.path;
+      break;
+    }
+  }
+}
+
+const rawSublist = pickProjectSidebarEntries(sidebar, pathname);
+const sublist = remapNoctaliaSidebarEntries(rawSublist, pathname, activeVersionPrefix);
 ---
 
 <nav class="project-navigation" aria-label="Documentation projects">
   <span class="project-navigation-label">Project</span>
-  <details class="project-switcher">
+  <details class="project-switcher" name="sidebar-switcher">
     <summary>
       <span>
         <strong>{activeProject?.label ?? 'Noctalia Docs'}</strong>
@@ -33,6 +65,33 @@ const sublist = pickProjectSidebarEntries(sidebar, pathname);
       ))}
     </ul>
   </details>
+
+  {isNoctalia && versionsData.length > 0 && (
+    <div class="version-navigation">
+      <span class="project-navigation-label">Version</span>
+      <details class="project-switcher version-switcher" name="sidebar-switcher">
+        <summary>
+          <span>
+            <strong>{currentVersion.label}</strong>
+            <small>{currentVersion.isLatest ? 'Current release' : currentVersion.version === 'main' ? 'Rolling release' : `Released ${currentVersion.releaseDate ?? ''}`}</small>
+          </span>
+        </summary>
+        <ul>
+          {versionsData.map((v) => (
+            <li>
+              <a
+                href={resolveNoctaliaVersionHref(pathname, v.path)}
+                aria-current={v.version === currentVersion.version ? 'page' : undefined}
+              >
+                <strong>{v.label}</strong>
+                <small>{v.isLatest ? 'Current release' : v.version === 'main' ? 'Rolling release' : `Released ${v.releaseDate ?? ''}`}</small>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
+    </div>
+  )}
 </nav>
 
 {sublist.length > 0 && (
@@ -50,6 +109,10 @@ const sublist = pickProjectSidebarEntries(sidebar, pathname);
     margin-block-end: 1rem;
     padding-block-end: 1rem;
     border-block-end: 1px solid var(--sl-color-gray-5);
+  }
+
+  .version-navigation {
+    margin-block-start: 0.75rem;
   }
 
   .project-navigation-label {
@@ -135,6 +198,11 @@ const sublist = pickProjectSidebarEntries(sidebar, pathname);
     border: 1px solid var(--sl-color-gray-5);
     border-radius: var(--sl-border-radius);
     list-style: none;
+  }
+
+  .version-switcher ul {
+    max-height: 16rem;
+    overflow-y: auto;
   }
 
   li {
