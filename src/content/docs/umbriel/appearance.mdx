@@ -130,8 +130,7 @@ font = "sans 10"
 button_position = "right"
 buttons = ["minimize", "maximize", "close"]
 button_corner_radius = -1
-button_icons = true
-button_icons_on_hover = false
+button_glyph = "hover"
 button_background = true
 
 [colors.title_bar]
@@ -161,9 +160,15 @@ Choose a title bar mode:
 
 `height` is 16 to 128 logical pixels, and `font` is a Pango font description. `button_position` accepts `"left"` or `"right"`. `buttons` lists the buttons to show, from the title outward: the last one sits at the bar's edge, so the default puts close outermost on either side. Leave a name out to hide that button, or use `[]` for a bar without buttons; each of `"minimize"`, `"maximize"`, and `"close"` may appear once.
 
-Buttons show a drawn X for close, an outlined square for maximize, and an underscore for minimize. Both `button_icons` and `button_background` default to `true`. Set `button_icons = false` to show only the colored backgrounds, or `button_background = false` to show only the symbols. Setting both options to `false` hides the controls and returns their space to the title.
+Buttons show a drawn X for close, an outlined square for maximize, and an underscore for minimize. `button_glyph` controls when those symbols appear:
 
-`button_icons_on_hover = true` hides each symbol until its button is hovered or pressed. It defaults to `false`. Hidden symbols keep their button's click target, including when backgrounds are off. `button_icons = false` disables symbols regardless of hover.
+| Value      | Behavior                                                                    |
+| ---------- | --------------------------------------------------------------------------- |
+| `"always"` | Show each symbol at all times.                                              |
+| `"hover"`  | Show each symbol only while its button is hovered or pressed (the default). |
+| `"never"`  | Hide the symbols and show only the colored backgrounds.                     |
+
+`button_background = false` removes the colored backgrounds and leaves only the symbols. Buttons keep their click targets while their symbols are hidden, including when backgrounds are off. Setting `button_glyph = "never"` together with `button_background = false` hides the controls and returns their space to the title.
 
 The `close`, `maximize`, and `minimize` colors control button backgrounds. Each button has independent `*_glyph` and `*_glyph_hover` colors for its idle and hovered or pressed symbol. All six glyph colors default to `"#141419FF"`, with no color difference on hover. These colors apply with or without backgrounds, support alpha, and are not adjusted automatically. For symbols alone on a dark title bar, choose lighter glyph colors. Disabled buttons keep their idle glyph color and appear dimmed. Backgrounds retain their hover and pressed feedback.
 
