@@ -267,7 +267,7 @@ These display limits describe the target color volume independently of `sdr_whit
 
 Run `umbriel color` to inspect the metadata in the active output description. The JSON form reports `mastering_display_primaries`, `mastering_luminance`, `max_cll`, and `max_fall` for each output. For surfaces with explicit primary coordinates, `primaries` reports `"custom"`.
 
-Shared-memory screenshots from normal screencopy and image-copy clients receive an 8-bit SDR view while HDR is active. DMA-BUF capture may retain 10-bit storage while still containing SDR values. Export-DMA-BUF bypasses the SDR capture view and retains the output's native HDR representation.
+Shared-memory screenshots from normal screencopy and image-copy clients receive an 8-bit SDR view while HDR is active. DMA-BUF capture may retain 10-bit storage while still containing SDR values. Raw export-DMA-BUF is not advertised. Use screencopy or image-copy clients, including image-copy clients with DMA-BUF destinations.
 
 Window captures, including portal window previews, honor the client's committed color metadata and convert HDR client content to SDR.
 
@@ -302,7 +302,7 @@ Direct scanout remains enabled by the `direct_scanout` setting, but it may be le
 
 #### Screencopy and capture
 
-Shared-memory captures through screencopy and image-copy use an 8-bit format even when the output render format is XR30 or XB30. This applies to both 10-bit SDR outputs and the SDR capture view produced while HDR is active, improving compatibility with clients whose shared-memory paths assume 8-bit pixels. DMA-BUF capture may retain the negotiated 10-bit storage format. During HDR, that buffer still contains Umbriel's SDR capture view. Export-DMA-BUF alone bypasses the conversion and exposes the displayed native representation.
+Shared-memory captures through screencopy and image-copy use an 8-bit format even when the output render format is XR30 or XB30. This applies to both 10-bit SDR outputs and the SDR capture view produced while HDR is active, improving compatibility with clients whose shared-memory paths assume 8-bit pixels. DMA-BUF capture may retain the negotiated 10-bit storage format. During HDR, that buffer still contains Umbriel's SDR capture view. Raw export-DMA-BUF is not available.
 
 ### Window capture resolution
 
