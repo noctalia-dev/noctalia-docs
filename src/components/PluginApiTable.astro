@@ -1,6 +1,8 @@
 ---
-// The plugin API ledger, rendered from src/data/plugin-api.ts.
-import { PLUGIN_API_LEVELS } from '../data/plugin-api';
+// The plugin API ledger of the page's release, rendered from src/data/plugin-api.ts.
+import { pluginApiLedgerFor } from '../data/plugin-api';
+
+const ledger = pluginApiLedgerFor(Astro.url.pathname);
 
 // `introduced` carries markdown inline code so the data file stays readable and holds no raw HTML.
 // Escape first, then convert backtick pairs.
@@ -20,7 +22,7 @@ function renderInlineCode(text: string): string {
   </thead>
   <tbody>
     {
-      PLUGIN_API_LEVELS.map((entry) => (
+      ledger.levels.map((entry) => (
         <tr>
           <td>
             <code>{entry.level}</code>
