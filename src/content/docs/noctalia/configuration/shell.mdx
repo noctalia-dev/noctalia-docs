@@ -270,6 +270,8 @@ Notes:
 
 - `clipboard_keep_from_closed_apps`: when `true` (default), Noctalia takes ownership of the live selection after the application that supplied it closes, keeping the last copied value pasteable. This is independent of clipboard history retention.
 
+- Copies that a password manager marks as sensitive with `x-kde-passwordManagerHint` (1Password does this) are never added to clipboard history and are not kept after the password manager closes. They still paste into Noctalia text fields like any other copy.
+
 - Clipboard history is encrypted at rest with a purpose-specific key derived from the Noctalia storage master key. The default `secret-service` source stores the master key through Secret Service. If the provider is unavailable or locked, history still works for the current session but is not read from or written to disk; unlock or start the provider and use **Settings → Shell → Clipboard → Retry**. Noctalia also reopens encrypted storage on its own once the provider appears or its keyring unlocks; see [Secret Service & keyrings](/noctalia/configuration/secret-service/) for the unlock requirements and the multiple-keyrings caveat. Existing plaintext history is migrated only after the encrypted replacement is complete, and encrypted files are preserved if their key is missing.
 
 - `clipboard_history_max_entries`: caps how many **unpinned** clipboard history rows Noctalia keeps (default `100`, range `10`–`10000`). Pinned entries stay outside this limit. Lowering the value trims older unpinned rows on reload.
