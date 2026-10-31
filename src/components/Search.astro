@@ -1,13 +1,17 @@
 ---
 import { Icon } from '@astrojs/starlight/components';
 import project from 'virtual:starlight/project-context';
-import { projectFromPath } from '../lib/projects';
+import { noctaliaVersionFromPath, projectFromPath } from '../lib/projects';
 
 const dataAttributes: DOMStringMap = {};
 if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash'] = '';
 
 const activeProject = projectFromPath(Astro.url.pathname);
 if (activeProject) dataAttributes['data-doc-project'] = activeProject.id;
+dataAttributes['data-doc-version'] =
+  activeProject?.id === 'noctalia'
+    ? (noctaliaVersionFromPath(Astro.url.pathname) ?? 'main')
+    : 'latest';
 // Pagefind only has an index in production builds.
 if (import.meta.env.DEV) dataAttributes['data-dev-warning'] = Astro.locals.t('search.devWarning');
 
@@ -140,7 +144,11 @@ const searchLabel = Astro.locals.t('search.label');
 				? (path: string) => path.replace(/(.)\/(#.*)?$/, '$1$2')
 				: (path: string) => path;
 			const docProject = this.dataset.docProject;
-			this.#filters = docProject ? { project: docProject } : undefined;
+			const docVersion = this.dataset.docVersion || 'latest';
+			this.#filters = {
+				...(docProject ? { project: docProject } : {}),
+				version: docVersion,
+			};
 
 			/** Close the modal if a user clicks on a link or outside of the modal. */
 			const onClick = (event: MouseEvent) => {
@@ -276,7 +284,7 @@ const searchLabel = Astro.locals.t('search.label');
 			// share a title need the project name to be told apart. Scoped search
 			// shows the sidebar section, falling back to the project name for pages
 			// that sit at a project's root.
-			const crumbs = this.#filters ? [] : [page.meta.project];
+			const crumbs = this.#filters?.project ? [] : [page.meta.project];
 			if (page.meta.breadcrumb) crumbs.push(page.meta.breadcrumb);
 			else if (crumbs.length === 0) crumbs.push(page.meta.project);
 			const breadcrumb = crumbs.filter(Boolean).join(' › ');

@@ -1,6 +1,8 @@
 ---
-// The span of plugin API levels the current shell accepts, e.g. "3 through 12".
-import { CURRENT_PLUGIN_API, OLDEST_SUPPORTED_PLUGIN_API } from '../data/plugin-api';
+// The span of plugin API levels the page's release accepts, e.g. "3 through 12".
+import { pluginApiLedgerFor } from '../data/plugin-api';
+
+const ledger = pluginApiLedgerFor(Astro.url.pathname);
 ---
 
-<span>{OLDEST_SUPPORTED_PLUGIN_API} through {CURRENT_PLUGIN_API}</span>
+<span>{ledger.oldestSupported} through {ledger.current}</span>

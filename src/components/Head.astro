@@ -1,9 +1,20 @@
 ---
-import { breadcrumbFromSidebar, projectFromPath } from '../lib/projects';
+import {
+  LATEST_NOCTALIA_VERSION,
+  breadcrumbFromSidebar,
+  noctaliaVersionFromPath,
+  projectFromPath,
+} from '../lib/projects';
 
 const { head, sidebar } = Astro.locals.starlightRoute;
 const pathname = Astro.url.pathname;
 const project = projectFromPath(pathname);
+const activeVersionTag = noctaliaVersionFromPath(pathname);
+const isNoctalia = project?.id === 'noctalia';
+const pagefindVersion = isNoctalia ? (activeVersionTag ?? 'main') : 'latest';
+const isDefaultSearchTarget =
+  !isNoctalia ||
+  (LATEST_NOCTALIA_VERSION ? activeVersionTag === LATEST_NOCTALIA_VERSION.tag : !activeVersionTag);
 const isDocsRoot = pathname === '/' || pathname === '';
 
 function textFromHeadMeta(name: 'description' | 'twitter:card' | 'twitter:image') {
@@ -93,6 +104,10 @@ const enhancedHead = head.map((entry) => {
 {enhancedHead.map(({ tag: Tag, attrs, content }) => <Tag {...attrs} set:html={content} />)}
 <slot />
 <meta data-pagefind-filter={`project:${project?.id ?? 'projects'}`} />
+<meta data-pagefind-filter={`version:${pagefindVersion}`} />
+{isDefaultSearchTarget && pagefindVersion !== 'latest' && (
+  <meta data-pagefind-filter="version:latest" />
+)}
 {breadcrumb && <meta data-pagefind-meta={`breadcrumb:${breadcrumb}`} />}
 <meta data-pagefind-meta={`project:${project?.label ?? 'Noctalia Docs'}`} />
 <meta property="og:image" content={ogImageUrl} />

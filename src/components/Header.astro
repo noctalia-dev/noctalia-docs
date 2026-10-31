@@ -5,13 +5,23 @@ import Search from 'virtual:starlight/components/Search';
 import SiteTitle from 'virtual:starlight/components/SiteTitle';
 import SocialIcons from 'virtual:starlight/components/SocialIcons';
 import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
-import { projectFromPath } from '../lib/projects';
+import {
+  LATEST_NOCTALIA_VERSION,
+  noctaliaVersionFromPath,
+  projectFromPath,
+} from '../lib/projects';
 
 const pathname = Astro.url.pathname;
 const project = projectFromPath(pathname);
+const activeVersionTag = noctaliaVersionFromPath(pathname);
 const shouldRenderSearch =
   config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
-const faqHref = project?.faqHref;
+const faqHref =
+  project?.id === 'noctalia'
+    ? activeVersionTag
+      ? `/noctalia/${activeVersionTag}/getting-started/faq/`
+      : '/noctalia/getting-started/faq/'
+    : project?.faqHref;
 const isLegacy = project?.legacy === true;
 ---
 
@@ -58,56 +68,31 @@ const isLegacy = project?.legacy === true;
   class="version-alert-banner is-legacy"
   role="alert"
   hidden={!isLegacy}
+  data-latest-noctalia-path={LATEST_NOCTALIA_VERSION?.path}
 >
   <span class="banner-legacy">
-    <strong>v4 (Quickshell) is no longer maintained.</strong> Please use <a href="/noctalia/">Noctalia v5 →</a>
+    <strong>v4 (Quickshell) is no longer maintained.</strong> Please use <a href={LATEST_NOCTALIA_VERSION?.path ?? '/noctalia/'}>Noctalia v5 →</a>
   </span>
 </div>
 
 <script>
-  import { projectFromPath } from '../lib/projects';
-
-  function contextForPath(pathname: string) {
-    const project = projectFromPath(pathname);
-    return {
-      hasProject: project !== undefined,
-      faqHref: project?.faqHref,
-      isLegacy: project?.legacy === true,
-    };
-  }
-
-  function updateHeaderContext() {
-    const context = contextForPath(window.location.pathname);
-    const headerSearch = document.querySelector<HTMLElement>('.header-search');
-    headerSearch?.classList.toggle('no-project', !context.hasProject);
-
-    const search = document.querySelector<HTMLElement>('.site-search');
-    if (search) search.toggleAttribute('data-trigger-hidden', !context.hasProject);
-
-    const faqButton = document.querySelector<HTMLAnchorElement>('.faq-button');
-    if (faqButton) {
-      faqButton.hidden = !context.faqHref;
-      if (context.faqHref) faqButton.href = context.faqHref;
-    }
-
-    const banner = document.querySelector<HTMLElement>('.version-alert-banner');
-    if (!banner) return;
-    banner.hidden = !context.isLegacy;
-
-    const legacyMessage = banner.querySelector<HTMLElement>('.banner-legacy');
-    if (legacyMessage) legacyMessage.hidden = !context.isLegacy;
-  }
-
   function positionBanner() {
-    const banner = document.querySelector('.version-alert-banner');
+    const banner = document.querySelector<HTMLElement>('.version-alert-banner');
     const header = document.querySelector('.header');
     if (banner && header) header.after(banner);
+
+    const latestPath = banner?.dataset.latestNoctaliaPath;
+    if (latestPath && (window.location.pathname === '/' || window.location.pathname === '')) {
+      document.querySelectorAll<HTMLAnchorElement>('a[href^="/noctalia/"]').forEach((anchor) => {
+        if (!anchor.pathname.startsWith('/noctalia/v')) {
+          anchor.href = anchor.href.replace('/noctalia/', latestPath);
+        }
+      });
+    }
   }
 
-  updateHeaderContext();
   positionBanner();
   document.addEventListener('astro:page-load', () => {
-    updateHeaderContext();
     positionBanner();
   });
 </script>
