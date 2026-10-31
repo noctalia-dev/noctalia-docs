@@ -26,6 +26,8 @@ Most `noctalia.*` functions are synchronous. Methods that start subprocesses, HT
 
 `getConfig(key)` reads the calling plugin entry's declared settings. `getSetting(path)` instead reads the shell's effective configuration. For example, `noctalia.getSetting("shell.offline_mode")` returns a boolean, `noctalia.getSetting("bar.order[0]")` returns the first configured bar name, and `noctalia.getSetting("widget.clock")` returns the whole table when it exists.
 
+When a value an entry read through `getSetting` changes, the entry's `onConfigChanged()` runs, or its script reloads when it defines none. Changes to config the entry never read are ignored. See [Reacting to shell setting changes](/noctalia/plugins/development/entries/#reacting-to-shell-setting-changes).
+
 ## Outputs, wallpaper, and panels
 
 | Method                                                          | Returns         | Description                                                                                                                                            |
