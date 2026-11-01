@@ -5,9 +5,9 @@ All documentation in this repository is synchronized from the relevant external 
 
 ## Dependency maintenance
 
-Use Node.js 22.12.0 or newer and `npm ci` to install the dependency versions recorded in `package-lock.json`. Run `npm audit` after dependency updates and `npm run build` to verify the documentation build.
+Use Node.js 22.23.4 or newer (required by Astro 7.4.4) and `npm ci` to install the dependency versions recorded in `package-lock.json`. To maintain current dependencies, check `npm outdated`, update direct dependencies to their latest stable releases, and refresh compatible transitive dependencies with `npm update`. Verify upgrades with `npm audit`, `npm run build`, and browser checks of navigation and search.
 
-The scoped `postcss-selector-parser` override in `package.json` keeps Expressive Code's `postcss-nested` dependency on a version patched for [GHSA-rj75-hqrm-r3gf](https://github.com/advisories/GHSA-rj75-hqrm-r3gf). Remove the override once the upstream dependency resolves to version 7.1.6 or newer without it. Avoid `npm audit fix --force`: its proposed Starlight downgrade is not a compatible security upgrade.
+Satori 0.63.2 still pins vulnerable `fflate` 0.7.3. The scoped `fflate` override in `package.json` selects version 0.8.3 or newer to fix [malformed ZIP64 archive handling](https://github.com/advisories/GHSA-px8p-9vwx-vf98); remove it once Satori no longer pins a vulnerable release. The former `postcss-selector-parser` override is no longer needed: the lockfile resolves patched version 7.1.7 through the upstream dependency range.
 
 Commit and push dependency updates to this repository's `main` branch before deployment. The deployment and content-sync scripts reset the checkout to `origin/main`, discarding uncommitted changes.
 

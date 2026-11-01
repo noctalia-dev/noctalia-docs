@@ -13,23 +13,23 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/markdown-remark": "^7.3.2",
-    "@astrojs/starlight": "^0.41.11",
-    "@tabler/icons-webfont": "^3.49.0",
-    "astro": "^7.3.8",
+    "@astrojs/markdown-remark": "^7.3.5",
+    "@astrojs/starlight": "^0.42.8",
+    "@tabler/icons-webfont": "^3.50.0",
+    "astro": "^7.4.4",
     "remark-custom-heading-id": "^2.0.0",
     "sharp": "^0.35.5"
   },
   "devDependencies": {
-    "@fontsource/inter": "^5.2.8",
+    "@fontsource/inter": "^5.3.0",
     "@resvg/resvg-js": "^2.6.2",
-    "@types/react": "^19.2.14",
-    "react": "^19.2.5",
-    "satori": "^0.26.0"
+    "@types/react": "^19.3.0",
+    "react": "^19.3.1",
+    "satori": "^0.63.2"
   },
   "overrides": {
-    "postcss-nested": {
-      "postcss-selector-parser": "^7.1.6"
+    "satori": {
+      "fflate": "^0.8.3"
     }
   }
 }
