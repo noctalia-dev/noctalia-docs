@@ -140,9 +140,9 @@ const isLegacy = project?.legacy === true;
     line-height: 1.5;
     letter-spacing: 0.06em;
     text-transform: lowercase;
-    color: var(--sl-color-text-accent);
-    background-color: color-mix(in srgb, var(--sl-color-accent) 16%, transparent);
-    border: 1px solid color-mix(in srgb, var(--sl-color-accent) 45%, transparent);
+    color: var(--sl-color-highlight);
+    background-color: color-mix(in srgb, var(--sl-color-highlight) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--sl-color-highlight) 45%, transparent);
     border-radius: 999px;
   }
 
@@ -201,9 +201,9 @@ const isLegacy = project?.legacy === true;
     padding: 0.4rem 0.75rem;
     font-size: 0.875rem;
     font-weight: 500;
-    color: var(--sl-color-bg);
-    background-color: var(--sl-color-accent);
-    border: 1px solid var(--sl-color-accent);
+    color: var(--sl-color-on-highlight);
+    background-color: var(--sl-color-highlight);
+    border: 1px solid var(--sl-color-highlight);
     border-radius: var(--sl-border-radius, 0.5rem);
     text-decoration: none;
     transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
@@ -211,7 +211,7 @@ const isLegacy = project?.legacy === true;
 
   .faq-button:hover {
     background-color: transparent;
-    color: var(--sl-color-accent);
+    color: var(--sl-color-highlight);
   }
 
   .faq-button svg {
@@ -230,7 +230,7 @@ const isLegacy = project?.legacy === true;
     color: var(--sl-color-text-accent);
     background:
       linear-gradient(var(--sl-color-bg-soft), var(--sl-color-bg-soft)) padding-box,
-      linear-gradient(135deg, var(--sl-color-accent), var(--sl-color-link-hover, var(--sl-color-accent))) border-box;
+      linear-gradient(135deg, var(--sl-color-accent), var(--sl-color-highlight)) border-box;
     border: 1px solid transparent;
     border-radius: var(--sl-border-radius, 0.5rem);
     text-decoration: none;

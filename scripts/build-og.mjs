@@ -19,7 +19,7 @@ const publicDir = join(root, 'public');
 const cacheFile = join(publicDir, 'og/.og-input-hashes.json');
 
 const WEBP_OPTIONS = { quality: 95, effort: 6 };
-const LAYOUT_VERSION = 10;
+const LAYOUT_VERSION = 11;
 const OG_WIDTH = 1200;
 const OG_HEIGHT = 630;
 const NOISE_OPACITY = 0.01;
@@ -200,7 +200,7 @@ function buildTree(page, logoDataUrl) {
 				height: OG_HEIGHT,
 				display: 'flex',
 				position: 'relative',
-				backgroundColor: '#070722',
+				backgroundColor: '#15162e',
 				fontFamily: 'Inter',
 				overflow: 'hidden',
 			},
@@ -210,7 +210,7 @@ function buildTree(page, logoDataUrl) {
 				position: 'absolute',
 				inset: 0,
 				background: [
-					'linear-gradient(165deg, #070722 0%, #0a0a2a 46%, #11112d 100%)',
+					'linear-gradient(165deg, #15162e 0%, #191a35 46%, #20213d 100%)',
 				].join(', '),
 			},
 		}),
@@ -231,20 +231,20 @@ function buildTree(page, logoDataUrl) {
 				h(
 					'radialGradient',
 					{ id: 'halo-left', cx: '50%', cy: '50%', r: '50%' },
-					h('stop', { offset: '0%', 'stop-color': '#607eae', 'stop-opacity': '0.22' }),
-					h('stop', { offset: '100%', 'stop-color': '#607eae', 'stop-opacity': '0' })
+					h('stop', { offset: '0%', 'stop-color': '#8589ac', 'stop-opacity': '0.22' }),
+					h('stop', { offset: '100%', 'stop-color': '#8589ac', 'stop-opacity': '0' })
 				),
 				h(
 					'radialGradient',
 					{ id: 'halo-right', cx: '50%', cy: '50%', r: '50%' },
-					h('stop', { offset: '0%', 'stop-color': '#fff59b', 'stop-opacity': '0.11' }),
-					h('stop', { offset: '100%', 'stop-color': '#fff59b', 'stop-opacity': '0' })
+					h('stop', { offset: '0%', 'stop-color': '#f7e9a8', 'stop-opacity': '0.11' }),
+					h('stop', { offset: '100%', 'stop-color': '#f7e9a8', 'stop-opacity': '0' })
 				),
 				h(
 					'radialGradient',
 					{ id: 'halo-bottom', cx: '50%', cy: '50%', r: '50%' },
-					h('stop', { offset: '0%', 'stop-color': '#a9aefe', 'stop-opacity': '0.08' }),
-					h('stop', { offset: '100%', 'stop-color': '#a9aefe', 'stop-opacity': '0' })
+					h('stop', { offset: '0%', 'stop-color': '#b3b8ed', 'stop-opacity': '0.08' }),
+					h('stop', { offset: '100%', 'stop-color': '#b3b8ed', 'stop-opacity': '0' })
 				)
 			),
 			h('ellipse', { cx: 230, cy: 185, rx: 390, ry: 230, fill: 'url(#halo-left)' }),
@@ -299,7 +299,7 @@ function buildTree(page, logoDataUrl) {
 								fontWeight: 600,
 								letterSpacing: '0.2em',
 								textTransform: 'uppercase',
-								color: '#7c80b4',
+								color: '#8589ac',
 								marginBottom: 20,
 							},
 						},
@@ -311,7 +311,7 @@ function buildTree(page, logoDataUrl) {
 							style: {
 								fontSize: 92,
 								fontWeight: 600,
-								color: '#f3edf7',
+								color: '#ece9f4',
 								lineHeight: 1.02,
 							},
 						},
@@ -323,7 +323,7 @@ function buildTree(page, logoDataUrl) {
 							style: {
 								fontSize: 38,
 								fontWeight: 600,
-								color: '#9bfece',
+								color: '#a0ddc0',
 								lineHeight: 1.18,
 								marginTop: 14,
 								maxWidth: 850,
@@ -337,7 +337,7 @@ function buildTree(page, logoDataUrl) {
 							style: {
 								fontSize: 26,
 								fontWeight: 400,
-								color: '#a9aed8',
+								color: '#a5a7c6',
 								lineHeight: 1.45,
 								marginTop: 28,
 								maxWidth: 830,

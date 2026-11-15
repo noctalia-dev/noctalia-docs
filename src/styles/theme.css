@@ -1,88 +1,117 @@
-/* Noctalia for Starlight */
+/* Noctalia for Starlight: accessibility-first theme.
+   Colors derive from the Noctalia palette in noctalia-shell
+   (src/theme/builtin_palettes.cpp). Contrast targets: body text >= 7:1,
+   links and muted text >= 4.5:1. Links use the palette secondary and are
+   always underlined. --sl-color-highlight carries the brand yellow
+   (current page, TOC marker, FAQ button, docs pill). */
 
 :root {
-	/* Typography */
-	--sl-font: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-	--sl-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 	/* Shared with noctalia.dev. */
 	--radius-sm: 0.25rem;
 	--radius-md: 0.375rem;
 	--sl-border-radius: var(--radius-md);
+	/* Inline code at 14px instead of Starlight's 13px. */
+	--sl-text-code-sm: var(--sl-text-sm);
+	/* Project aliases used by custom components. */
+	--sl-color-bg-soft: var(--sl-color-bg-nav);
+	--sl-color-text-soft: var(--sl-color-gray-3);
 }
 
-/* Dark Theme */
-:root[data-theme='dark'] {
-	/* Brand & accents */
-	--sl-color-accent: #fff59b;
-	/* Primary */
-	--sl-color-text-accent: #fff59b;
+:root[data-theme='dark'],
+[data-theme='dark'] ::backdrop {
+	--sl-color-white: #f5f1fa;
+	--sl-color-gray-1: #ece9f4;
+	--sl-color-gray-2: #dbd9e8; /* body text, 12.7:1 on bg */
+	--sl-color-gray-3: #a5a7c6; /* muted text, 7.5:1 on bg */
+	--sl-color-gray-4: #8589ac;
+	--sl-color-gray-5: #3e4166; /* borders, inline-code bg */
+	--sl-color-gray-6: #20213d; /* nav, sidebar, code editor */
+	--sl-color-black: #15162e; /* page */
 
-	/* Surfaces & text */
-	--sl-color-bg: #070722;
-	/* Surface */
-	--sl-color-bg-soft: #11112d;
-	/* Surface Variant */
-	--sl-color-text: #f3edf7;
-	/* On Surface */
-	--sl-color-text-soft: #7c80b4;
-	/* On Surface Variant */
-	--sl-color-hairline: #21215F;
-	/* Outline */
-	--sl-color-bg-nav: var(--sl-color-bg-soft);
-	--sl-color-black: var(--sl-color-bg-soft);
-	--sl-color-bg-sidebar: var(--sl-color-bg-soft);
+	--sl-color-accent-low: #2b2e57;
+	--sl-color-accent: #8b91d9;
+	--sl-color-accent-high: #b3b8ed; /* links (text-accent), 9.3:1 */
 
-	/* Links */
-	--sl-color-link: var(--sl-color-accent);
-	--sl-color-link-hover: #9BFECE;
-	/* Secondary */
+	--sl-color-highlight: #f7e9a8;
+	--sl-color-on-highlight: #302c1e;
 
-	/* Shadows */
-	--sl-shadow-color: #7c80b4;
-	/* Shadow */
+	--sl-color-hairline: var(--sl-color-gray-5);
 
-	/* Slightly brighter than surface variant */
-	--ec-frm-edBg: #151538;
-	--ec-frm-trmBg: #151538;
+	--sl-color-blue-low: #2c304c;
+	--sl-color-blue: #a3b6eb;
+	--sl-color-blue-high: #b9c8f5;
+	--sl-color-purple-low: #312d4a;
+	--sl-color-purple: #c3a4dd;
+	--sl-color-purple-high: #d5b8ec;
+	--sl-color-orange-low: #393640;
+	--sl-color-orange: #f3e09d;
+	--sl-color-orange-high: #faebb4;
+	--sl-color-red-low: #38273f;
+	--sl-color-red: #ed8296;
+	--sl-color-red-high: #f3a0b0;
+	--sl-color-green-low: #2c3440;
+	--sl-color-green: #a5d19c;
+	--sl-color-green-high: #b8e1b1;
 }
 
-/* Light Theme */
-:root[data-theme='light'] {
-	/* Brand & accents */
-	--sl-color-accent: #5d65f5;
-	/* Primary */
-	--sl-color-text-accent: #5d65f5;
+:root[data-theme='light'],
+[data-theme='light'] ::backdrop {
+	--sl-color-white: #1b1c36; /* headings */
+	--sl-color-gray-1: #20223a;
+	--sl-color-gray-2: #292b45; /* body text, 12.8:1 on bg */
+	--sl-color-gray-3: #414765; /* muted text, 7.7:1 on nav */
+	--sl-color-gray-4: #5c6184;
+	--sl-color-gray-5: #a4aac9; /* borders */
+	--sl-color-gray-6: #e3e4ef; /* inline-code bg, code title bar */
+	--sl-color-gray-7: #ebecf4; /* nav, sidebar, code editor */
+	--sl-color-black: #f6f6fb; /* page */
 
+	--sl-color-accent-low: #dfe1f6;
+	--sl-color-accent: #4a52a8; /* links (text-accent), 6.4:1 */
+	--sl-color-accent-high: #3b4168;
 
-	/* Surfaces & text */
-	--sl-color-bg: #e6e8fa;
-	/* Surface */
-	--sl-color-bg-soft: #eff0ff;
-	/* Surface Variant */
-	--sl-color-text: #4b55c8;
-	/* On Surface */
-	--sl-color-text-soft: #4b55c8;
-	/* On Surface Variant */
-	--sl-color-hairline: #8288fc;
-	/* Outline */
-	--sl-color-bg-nav: var(--sl-color-bg-soft);
-	--sl-color-black: var(--sl-color-bg-soft);
-	--sl-color-bg-sidebar: var(--sl-color-bg-soft);
+	--sl-color-highlight: #3b4168;
+	--sl-color-on-highlight: #fff0bd;
 
-	/* Links */
-	--sl-color-link: var(--sl-color-accent);
-	--sl-color-link-hover: #fef29a;
-	/* Secondary */
+	--sl-color-bg-sidebar: var(--sl-color-gray-7);
+	--sl-color-hairline: var(--sl-color-gray-5);
 
-	/* Shadows */
-	--sl-shadow-color: #4b55c8;
-	/* Shadow */
-
-	/* Slightly darker than surface variant */
-	--ec-frm-edBg: #e0e2ff;
-	--ec-frm-trmBg: #e0e2ff;
+	--sl-color-blue-low: #e5e6f2;
+	--sl-color-blue: #4c59a3;
+	--sl-color-blue-high: #414d94;
+	--sl-color-purple-low: #eae5ef;
+	--sl-color-purple: #805085;
+	--sl-color-purple-high: #70437a;
+	--sl-color-orange-low: #e9e6e5;
+	--sl-color-orange: #755a1d;
+	--sl-color-orange-high: #695016;
+	--sl-color-red-low: #eee3eb;
+	--sl-color-red: #a53c59;
+	--sl-color-red-high: #992c4b;
+	--sl-color-green-low: #e3e8e8;
+	--sl-color-green: #39683a;
+	--sl-color-green-high: #28592d;
 }
 
+@media (prefers-contrast: more) {
+	:root[data-theme='dark'] {
+		--sl-color-gray-2: #ece9f4;
+		--sl-color-gray-3: #dbd9e8;
+		--sl-color-gray-5: #8589ac;
+		--sl-color-black: #0b0c1b;
+	}
+
+	:root[data-theme='light'] {
+		--sl-color-gray-2: #20223a;
+		--sl-color-gray-3: #292b45;
+		--sl-color-gray-5: #5c6184;
+		--sl-color-black: #ffffff;
+	}
+
+	.sl-markdown-content a:not(:where(.not-content *)) {
+		text-decoration-thickness: 2px;
+	}
+}
 
 
 button {
@@ -98,7 +127,26 @@ starlight-menu-button button {
 }
 
 summary {
-	color: var(--sl-color-accent);
+	color: var(--sl-color-text-accent);
+}
+
+/* Current page in the sidebar uses the brand highlight, not the link color.
+   .top-level scopes this to Starlight's SidebarSublist and skips the
+   project/version switchers in Sidebar.astro. */
+.sidebar-content .top-level a[aria-current='page'] {
+	color: var(--sl-color-on-highlight);
+	background-color: var(--sl-color-highlight);
+}
+
+/* Visible keyboard focus everywhere. */
+:focus-visible {
+	outline: 2px solid var(--sl-color-text-accent);
+	outline-offset: 2px;
+}
+
+/* Links: clearer underline that clears descenders. */
+.sl-markdown-content a:not(:where(.not-content *)) {
+	text-underline-offset: 0.2em;
 }
 
 /* Nested sidebar groups (subcategories) */
@@ -249,7 +297,7 @@ snake-toc nav>ul::before {
 	position: absolute;
 	left: 0;
 	width: 2px;
-	background: var(--sl-color-accent);
+	background: var(--sl-color-highlight);
 	top: var(--snake-top, 0);
 	height: var(--snake-height, 0);
 	transition: top 0.15s ease-out, height 0.15s ease-out;
@@ -258,22 +306,8 @@ snake-toc nav>ul::before {
 }
 
 snake-toc a[data-visible="true"] {
-	color: var(--sl-color-text-accent);
-}
-
-/* Caution aside, bright yellow bg with dark text */
-:root[data-theme='dark'] .starlight-aside--caution {
-	--sl-color-asides-text-accent: #070722;
-	--sl-color-asides-border: #c4b200;
-	background-color: #fff59b;
-	color: #070722;
-}
-
-:root[data-theme='light'] .starlight-aside--caution {
-	--sl-color-asides-text-accent: #2a2a5a;
-	--sl-color-asides-border: #f5e000;
-	background-color: #fff59b;
-	color: #2a2a5a;
+	color: var(--sl-color-highlight);
+	font-weight: 600;
 }
 
 /* FAQ item anchor links */
@@ -377,6 +411,13 @@ snake-toc a[data-visible="true"] {
 
 html {
 	scroll-padding-top: calc(1.5rem + var(--sl-nav-height) + var(--sl-mobile-toc-height) + var(--sl-banner-height)) !important;
+}
+
+/* Readable measure: prose stops at ~75 characters; code, tables and tabs
+   keep the full content width. Zero specificity so component rules
+   (e.g. .family-note) still win. */
+:where(.sl-markdown-content) :where(p, ul, ol, dl, blockquote):not(:where(.not-content *)) {
+	max-width: 75ch;
 }
 
 /* Splash hero without an image: collapse the reserved image column and shrink
@@ -555,4 +596,25 @@ html {
 .sl-link-card,
 .sl-link-button {
 	border-radius: var(--radius-md);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+
+	.lightbox-trigger:hover,
+	.lightbox-close:hover,
+	.homepage-install:hover,
+	.homepage-site:hover,
+	.family-card:hover,
+	.site-button:hover,
+	.site-button:hover .site-button-arrow {
+		transform: none !important;
+	}
 }
