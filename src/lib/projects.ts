@@ -70,6 +70,13 @@ export const PROJECTS: readonly Project[] = [
     sidebarLabel: 'Umbriel',
   },
   {
+    id: 'luciole',
+    label: 'Luciole',
+    description: 'File manager',
+    href: '/luciole/',
+    sidebarLabel: 'Luciole',
+  },
+  {
     id: 'noctalia-shell',
     label: 'Noctalia Shell',
     description: 'Quickshell · v4 legacy',

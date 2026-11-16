@@ -1,0 +1,37 @@
+---
+title: Programs and custom scripts
+description: Run custom scripts and programs on selected files in Luciole.
+---
+
+## Open or run
+
+Open, Enter and double-click use the associated application. They do not automatically execute a text file because it contains a script.
+
+For a native executable, choose Run as a Program or Run in Terminal from its context menu. Scripts need executable permission and an interpreter line such as `#!/bin/sh`. Properties can change the executable permission. Run in Terminal requires `xdg-terminal-exec` and a suitable installed terminal.
+
+Application `.desktop` files use a Launch Once confirmation showing the launcher's name and command. Cancel is selected initially. Only launch a command you trust. Confirmation applies to that attempt; Luciole does not save a trust marker or change the file's permissions. Changed launchers are refused. Only application entries with an Exec command are supported.
+
+Successful launching means the program was handed off. The application may still take time to become ready or may fail later. Launched programs can keep running after Luciole closes.
+
+## Install a custom action
+
+Choose Scripts → Open Scripts Folder from a file or folder background menu. It opens or creates:
+
+```text
+$XDG_DATA_HOME/luciole/scripts/
+```
+
+With the default XDG data location, this is `~/.local/share/luciole/scripts/`. Place your own executable scripts there. Reopen the submenu to see changes. Hidden files, non-executable files and `.desktop` launchers are excluded; nested script folders are not scanned.
+
+A script receives selected native paths as separate arguments. Its working directory is the folder shown by the originating pane. Running it from the background menu supplies no selected paths. For example, an executable shell script can forward the selection to an installed editor:
+
+```sh
+#!/bin/sh
+exec my-editor "$@"
+```
+
+Replace `my-editor` with the program you want to use. Keep `"$@"` quoted so names with spaces or other special characters remain separate arguments. Luciole itself never builds a shell command from the selected filenames.
+
+The scripts directory, its `luciole` parent and the executable targets must be owned by you or root and not writable by group or others. Symlinks to qualifying targets are accepted, including read-only declarative scripts. Luciole never makes an unsafe directory writable on your behalf. Scripts are arbitrary programs you deliberately install and run, not sandboxed extensions.
+
+The menu displays at most 64 scripts and inspects at most 1024 children. A launch accepts at most 4096 selected paths and 1 MiB of path arguments. Custom scripts currently require a native browse folder and native selected items outside Trash. Luciole does not install an interpreter for your scripts; their interpreters and commands must be available on your system.

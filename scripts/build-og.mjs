@@ -76,6 +76,7 @@ function projectLabelFromRoute(route) {
 	if (project === 'greeter') return 'noctalia greeter';
 	if (project === 'noctalia-shell') return 'noctalia shell · v4';
 	if (project === 'umbriel') return 'umbriel';
+	if (project === 'luciole') return 'luciole';
 	return 'docs';
 }
 

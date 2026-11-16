@@ -192,6 +192,17 @@ export default defineConfig({
           ],
         },
         {
+          label: "Luciole",
+          items: [
+            { label: "Luciole", link: "luciole/" },
+            { label: "Installation", link: "luciole/installation/" },
+            { label: "Browsing", link: "luciole/browsing/" },
+            { label: "Configuration", link: "luciole/configuration/" },
+            { label: "File operations", link: "luciole/file-operations/" },
+            { label: "Custom scripts", link: "luciole/scripts/" },
+          ],
+        },
+        {
           label: "Noctalia Shell",
           items: [
             { label: "Overview", link: "noctalia-shell-legacy/" },
