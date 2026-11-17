@@ -105,6 +105,8 @@ An undone created document's original data can continue using disk space while i
 
 Delete moves native selections to Trash. A failed trash operation does not silently become permanent deletion. The full Trash interface requires the system's GIO/GVfs provider and a session D-Bus connection, including browsing, restoration and Empty Trash. See the [required Trash runtime](https://github.com/noctalia-dev/luciole/blob/main/PACKAGING.md#gvfs-and-trash) for packaging requirements.
 
+Shift+Delete permanently removes selected native files or folders after confirmation, including folder contents. Symbolic links are removed themselves, leaving their targets intact. Cancel or Escape leaves the selection in place. Permanent deletion bypasses Trash and cannot be undone.
+
 In Trash, Restore returns selected items to their recorded original locations and asks about conflicts. Delete Permanently removes selected trashed items after confirmation. Empty Trash is available from the Trash sidebar row's context menu and by right-clicking the Trash folder background. It stays disabled when Trash is empty or unavailable; the sidebar briefly checks the provider when its menu opens. Hidden contents still count. Its confirmation includes the measured contents and size. Cancel starts with its normal appearance; Enter cancels until you explicitly focus another control. Permanent deletion is irreversible.
 
 ## Archives
