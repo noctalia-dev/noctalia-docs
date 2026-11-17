@@ -46,11 +46,10 @@ export const PROJECTS: readonly Project[] = [
   {
     id: 'noctalia',
     label: 'Noctalia',
-    description: 'Current release · v5+',
+    description: 'Desktop shell',
     href: defaultNoctaliaHref,
     pathPrefix: '/noctalia/',
     sidebarLabel: 'Noctalia',
-    displayName: 'Noctalia v5+',
     faqHref: `${defaultNoctaliaHref}getting-started/faq/`,
   },
   {

@@ -72,7 +72,7 @@ function ogImagePathForRoute(pathname) {
 
 function projectLabelFromRoute(route) {
 	const project = route.replace(/^\/+/, '').split('/', 1)[0];
-	if (project === 'noctalia') return 'noctalia · v5+';
+	if (project === 'noctalia') return 'noctalia';
 	if (project === 'greeter') return 'noctalia greeter';
 	if (project === 'umbriel') return 'umbriel';
 	if (project === 'luciole') return 'luciole';
