@@ -37,6 +37,7 @@ switch_to_new_tab = true
 confirm_permanent_deletion = true
 restore_last_window = false
 compact_menus = true
+background_opacity = 1.0
 sort_by = "name"
 directories_first = true
 ```
@@ -72,6 +73,7 @@ All keys below belong in `[browser]`. Dimensions are logical pixels unless state
 | `always_show_tab_bar` | `true` | Keep the tab bar visible when a window has only one tab |
 | `always_show_status_bar` | `false` | Keep the status pill visible when idle, showing the item count and free space |
 | `compact_menus` | `true` | Reduce the row height and padding in context menus without shrinking their text |
+| `background_opacity` | `1.0` | Number from `0` (clear) to `1` (opaque) for the window background; tabs, toolbar, sidebar and file area share it. Menus and dialogs stay opaque |
 | `activation_mode` | `"double_click"` | `"single_click"`, `"double_click"` |
 | `typing_mode` | `"search"` | `"search"` recursively searches filenames; `"filter"` filters names in the current folder only; `"typeahead"` selects names |
 | `confirm_permanent_deletion` | `true` | Ask before permanently deleting selected items, including Shift+Delete and selections in Trash; Empty Trash always confirms |
