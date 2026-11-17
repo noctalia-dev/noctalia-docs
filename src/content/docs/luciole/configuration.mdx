@@ -34,6 +34,7 @@ preview_width = 320
 activation_mode = "double_click"
 typing_mode = "search"
 switch_to_new_tab = true
+confirm_permanent_deletion = true
 restore_last_window = false
 compact_menus = true
 sort_by = "name"
@@ -73,6 +74,7 @@ All keys below belong in `[browser]`. Dimensions are logical pixels unless state
 | `compact_menus` | `true` | Reduce the row height and padding in context menus without shrinking their text |
 | `activation_mode` | `"double_click"` | `"single_click"`, `"double_click"` |
 | `typing_mode` | `"search"` | `"search"` recursively searches filenames; `"filter"` filters names in the current folder only; `"typeahead"` selects names |
+| `confirm_permanent_deletion` | `true` | Ask before permanently deleting selected items, including Shift+Delete and selections in Trash; Empty Trash always confirms |
 | `switch_to_new_tab` | `true` | Switch when opening a folder in a new tab; disable to keep browsing the current tab |
 | `restore_last_window` | `false` | Reopen tabs from the last closed window once in a new window, or at startup without a requested location |
 | `terminal_command` | `""` | Terminal command and optional arguments, for example `"foot"`; empty uses `$TERMINAL`, then automatic discovery |
