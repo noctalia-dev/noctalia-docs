@@ -512,25 +512,6 @@ html {
 	box-shadow: var(--sl-shadow-md);
 }
 
-/* Flagship: subtle accent emphasis for Noctalia. */
-.family-card--primary {
-	border-color: var(--sl-color-text-accent);
-	background-color: color-mix(in srgb, var(--sl-color-text-accent) 6%, var(--sl-color-bg-soft));
-}
-
-.family-badge {
-	position: absolute;
-	top: -0.7rem;
-	padding: 0.15rem 0.7rem;
-	font-size: 0.7rem;
-	font-weight: 600;
-	letter-spacing: 0.03em;
-	text-transform: uppercase;
-	color: var(--sl-color-bg);
-	background-color: var(--sl-color-text-accent);
-	border-radius: 999px;
-}
-
 .family-logo {
 	width: 76px;
 	height: 76px;
