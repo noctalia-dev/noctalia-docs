@@ -127,7 +127,7 @@ Name accepts `0` for automatic sizing or an integer from `160` through `16384`. 
 | --- | --- | --- |
 | `thumbnail_policy` | `"local"` | `"never"`, `"local"`, `"all"` |
 | `thumbnail_max_file_mib` | `64` | Image/PDF source limit, integer `1` through `1024`; does not limit video/audio file size |
-| `thumbnail_cache_mib` | `128` | Integer `16` through `1024` |
+| `thumbnail_cache_mib` | `1024` | Integer `16` through `8192`; only Luciole-written thumbnails count and are pruned |
 
 Local policy generates thumbnails for eligible local files. To generate thumbnails on mounted network shares such as `/mnt/media`, choose Settings → Thumbnails → Show thumbnails → All locations. All permits generation from filesystem paths, including mounted shares, and reuses the shared thumbnail cache. Locations without a filesystem path remain cache-only; Luciole does not download entire remote files for thumbnail generation.
 
