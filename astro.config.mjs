@@ -202,51 +202,6 @@ export default defineConfig({
             { label: "Custom scripts", link: "luciole/scripts/" },
           ],
         },
-        {
-          label: "Noctalia Shell",
-          items: [
-            { label: "Overview", link: "noctalia-shell-legacy/" },
-            {
-              label: "Getting started",
-              items: [
-                { label: "Installation", link: "noctalia-shell-legacy/getting-started/installation/" },
-                { label: "NixOS", link: "noctalia-shell-legacy/getting-started/nixos/" },
-                { label: "Running the Shell", link: "noctalia-shell-legacy/getting-started/running-the-shell/" },
-                { label: "Compositor Settings", items: [{ autogenerate: { directory: "noctalia-shell-legacy/getting-started/compositor-settings" } }] },
-                { label: "Keybinds", items: [{ autogenerate: { directory: "noctalia-shell-legacy/getting-started/keybinds" } }] },
-                { label: "FAQ", link: "noctalia-shell-legacy/getting-started/faq/" },
-                { label: "Uninstall", link: "noctalia-shell-legacy/getting-started/uninstall/" },
-              ],
-            },
-            {
-              label: "Configuration",
-              items: [{ autogenerate: { directory: "noctalia-shell-legacy/configuration" } }],
-            },
-            {
-              label: "Theming",
-              items: [
-                { label: "Basic App Theming", link: "noctalia-shell-legacy/theming/basic-app-theming/" },
-                { label: "Program Specific", items: [{ autogenerate: { directory: "noctalia-shell-legacy/theming/program-specific" } }] },
-                { label: "User Templates", link: "noctalia-shell-legacy/theming/user-templates/" },
-                { label: "User Color Schemes", link: "noctalia-shell-legacy/theming/color-schemes/" },
-              ],
-            },
-            {
-              label: "Development",
-              items: [
-                { label: "Guidelines", link: "noctalia-shell-legacy/development/guidelines/" },
-                { label: "IPC", link: "noctalia-shell-legacy/development/ipc/" },
-                { label: "Widgets", link: "noctalia-shell-legacy/development/widgets/" },
-                { label: "Templates", link: "noctalia-shell-legacy/development/templates/" },
-                { label: "Plugins", items: [{ autogenerate: { directory: "noctalia-shell-legacy/development/plugins" } }] },
-              ],
-            },
-            {
-              label: "Deprecated",
-              items: [{ autogenerate: { directory: "noctalia-shell-legacy/deprecated" } }],
-            },
-          ],
-        },
       ],
     }),
   ],

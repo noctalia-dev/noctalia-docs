@@ -16,8 +16,6 @@ export interface Project {
   displayName?: string;
   /** Header FAQ link; only set for projects with an FAQ page. */
   faqHref?: string;
-  /** Archived project; renders the legacy banner in the header. */
-  legacy?: boolean;
 }
 
 export interface VersionEntry {
@@ -75,16 +73,6 @@ export const PROJECTS: readonly Project[] = [
     description: 'File manager',
     href: '/luciole/',
     sidebarLabel: 'Luciole',
-  },
-  {
-    id: 'noctalia-shell',
-    label: 'Noctalia Shell',
-    description: 'Quickshell · v4 legacy',
-    href: '/noctalia-shell-legacy/',
-    sidebarLabel: 'Noctalia Shell',
-    displayName: 'Noctalia Shell Legacy v4',
-    faqHref: '/noctalia-shell-legacy/getting-started/faq/',
-    legacy: true,
   },
 ];
 

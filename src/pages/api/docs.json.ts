@@ -7,8 +7,6 @@ export const GET: APIRoute = async () => {
       gettingStarted: 'https://docs.noctalia.dev/noctalia/getting-started/',
       configuration: 'https://docs.noctalia.dev/noctalia/configuration/',
       theming: 'https://docs.noctalia.dev/noctalia/theming/',
-      development: 'https://docs.noctalia.dev/noctalia-shell/development/',
-      v4: 'https://docs.noctalia.dev/noctalia-shell/',
       faq: 'https://docs.noctalia.dev/noctalia/getting-started/faq/',
     }),
     {

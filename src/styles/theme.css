@@ -552,26 +552,16 @@ html {
 	text-underline-offset: 0.2em;
 }
 
-.family-note,
-.family-legacy {
+.family-note {
 	text-align: center;
 	margin-inline: auto;
 	max-width: 46rem;
-}
-
-.family-note {
 	margin-top: 2rem;
 	color: var(--sl-color-text);
 }
 
 .family-site {
 	font-size: 0.95rem;
-	color: var(--sl-color-text-soft);
-}
-
-.family-legacy {
-	margin-top: 0.75rem;
-	font-size: 0.85rem;
 	color: var(--sl-color-text-soft);
 }
 

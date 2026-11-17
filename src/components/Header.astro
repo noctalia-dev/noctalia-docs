@@ -22,10 +22,9 @@ const faqHref =
       ? `/noctalia/${activeVersionTag}/getting-started/faq/`
       : '/noctalia/getting-started/faq/'
     : project?.faqHref;
-const isLegacy = project?.legacy === true;
 ---
 
-<div class="header-inner">
+<div class="header-inner" data-latest-noctalia-path={LATEST_NOCTALIA_VERSION?.path}>
   <div class="title-wrapper sl-flex">
     <SiteTitle />
     <span class="docs-pill">docs</span>
@@ -64,24 +63,9 @@ const isLegacy = project?.legacy === true;
   </div>
 </div>
 
-<div
-  class="version-alert-banner is-legacy"
-  role="alert"
-  hidden={!isLegacy}
-  data-latest-noctalia-path={LATEST_NOCTALIA_VERSION?.path}
->
-  <span class="banner-legacy">
-    <strong>v4 (Quickshell) is no longer maintained.</strong> Please use <a href={LATEST_NOCTALIA_VERSION?.path ?? '/noctalia/'}>Noctalia v5 →</a>
-  </span>
-</div>
-
 <script>
-  function positionBanner() {
-    const banner = document.querySelector<HTMLElement>('.version-alert-banner');
-    const header = document.querySelector('.header');
-    if (banner && header) header.after(banner);
-
-    const latestPath = banner?.dataset.latestNoctaliaPath;
+  function rewriteLandingNoctaliaLinks() {
+    const latestPath = document.querySelector<HTMLElement>('.header-inner')?.dataset.latestNoctaliaPath;
     if (latestPath && (window.location.pathname === '/' || window.location.pathname === '')) {
       document.querySelectorAll<HTMLAnchorElement>('a[href^="/noctalia/"]').forEach((anchor) => {
         if (!anchor.pathname.startsWith('/noctalia/v')) {
@@ -91,15 +75,14 @@ const isLegacy = project?.legacy === true;
     }
   }
 
-  positionBanner();
+  rewriteLandingNoctaliaLinks();
   document.addEventListener('astro:page-load', () => {
-    positionBanner();
+    rewriteLandingNoctaliaLinks();
   });
 </script>
 
 <style>
-  .faq-button[hidden],
-  .version-alert-banner[hidden] {
+  .faq-button[hidden] {
     display: none;
   }
 
@@ -269,54 +252,5 @@ const isLegacy = project?.legacy === true;
     .site-button {
       padding: 0.4rem;
     }
-  }
-</style>
-
-<style is:global>
-  .version-alert-banner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    padding: 0.5rem 1.5rem;
-    font-size: var(--sl-text-sm);
-    font-weight: 500;
-    text-align: center;
-    line-height: 1.4;
-    border-bottom: 2px solid;
-    position: fixed;
-    top: var(--sl-nav-height);
-    left: 0;
-    right: 0;
-    z-index: var(--sl-z-index-navbar);
-  }
-
-
-  .version-alert-banner.is-legacy {
-    color: color-mix(in srgb, var(--sl-color-orange) 90%, black);
-    background-color: color-mix(in srgb, var(--sl-color-orange) 12%, var(--sl-color-bg));
-    border-bottom-color: color-mix(in srgb, var(--sl-color-orange) 40%, transparent);
-  }
-
-  [data-theme='dark'] .version-alert-banner.is-legacy {
-    color: color-mix(in srgb, var(--sl-color-orange) 90%, white);
-  }
-
-  .version-alert-banner.is-legacy svg,
-  .version-alert-banner.is-legacy strong,
-  .version-alert-banner.is-legacy a {
-    color: var(--sl-color-orange);
-  }
-
-  .version-alert-banner a {
-    margin-inline-start: 0.4rem;
-    font-weight: 700;
-    text-decoration: underline;
-    text-underline-offset: 0.15em;
-    white-space: nowrap;
-  }
-
-  .version-alert-banner a:hover {
-    text-decoration-thickness: 2px;
   }
 </style>
