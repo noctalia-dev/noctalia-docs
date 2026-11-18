@@ -31,14 +31,14 @@ Build and library dependencies:
 sudo pacman -S --needed base-devel meson just \
   wayland wayland-protocols libglvnd \
   glib2 freetype2 fontconfig cairo pango harfbuzz libxkbcommon \
-  gdk-pixbuf2 glycin librsvg libpng libarchive xz acl \
+  gdk-pixbuf2 librsvg libpng libarchive xz acl \
   tomlplusplus nlohmann-json stb
 ```
 
 Runtime services and optional helpers:
 
 ```sh
-sudo pacman -S --needed shared-mime-info gsettings-desktop-schemas dconf \
+sudo pacman -S --needed shared-mime-info glycin gsettings-desktop-schemas dconf \
   adwaita-icon-theme gvfs gvfs-smb gvfs-dnssd glib-networking \
   ffmpeg ffmpegthumbnailer poppler 7zip xdg-terminal-exec
 ```
@@ -53,14 +53,14 @@ Build and library dependencies:
 sudo dnf install gcc-c++ meson just \
   wayland-devel wayland-protocols-devel libglvnd-devel \
   glib2-devel freetype-devel fontconfig-devel cairo-devel pango-devel harfbuzz-devel libxkbcommon-devel \
-  gdk-pixbuf2-devel glycin-devel librsvg2-devel libpng-devel libarchive-devel xz-devel libacl-devel \
+  gdk-pixbuf2-devel librsvg2-devel libpng-devel libarchive-devel xz-devel libacl-devel \
   tomlplusplus-devel json-devel stb_image_resize2-devel
 ```
 
 Runtime services and optional helpers:
 
 ```sh
-sudo dnf install shared-mime-info gsettings-desktop-schemas dconf \
+sudo dnf install shared-mime-info glycin-loaders gsettings-desktop-schemas dconf \
   adwaita-icon-theme gvfs gvfs-smb glib-networking \
   ffmpeg-free ffmpegthumbnailer poppler-utils 7zip xdg-terminal-exec
 ```
@@ -115,4 +115,4 @@ Installing Luciole does not automatically make it the default file manager.
 
 ## Optional features
 
-Image format coverage depends on installed Glycin loaders. Video/audio thumbnails and metadata need FFmpeg; PDF thumbnails and metadata need Poppler utilities. Encrypted 7z input needs a system 7-Zip executable. Terminal actions need `xdg-terminal-exec` and a suitable terminal. Trash and mounted network locations need the appropriate GIO/GVfs services. Missing helpers leave ordinary local browsing available; [Packaging](https://github.com/noctalia-dev/luciole/blob/main/PACKAGING.md#runtime-integration-and-helpers) lists the full requirements.
+Image format coverage depends on the installed GdkPixbuf image loaders (Glycin loaders when GdkPixbuf is built with Glycin). Video/audio thumbnails and metadata need FFmpeg; PDF thumbnails and metadata need Poppler utilities. Encrypted 7z input needs a system 7-Zip executable. Terminal actions need `xdg-terminal-exec` and a suitable terminal. Trash and mounted network locations need the appropriate GIO/GVfs services. Missing helpers leave ordinary local browsing available; [Packaging](https://github.com/noctalia-dev/luciole/blob/main/PACKAGING.md#runtime-integration-and-helpers) lists the full requirements.
