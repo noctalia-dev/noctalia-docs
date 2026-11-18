@@ -41,6 +41,7 @@ background_opacity = 1.0
 corner_radius_scale = 1.0
 sort_by = "name"
 directories_first = true
+hidden_last = false
 ```
 
 Validate one file without opening a window or reading adjacent GUI overrides:
@@ -89,6 +90,7 @@ All keys below belong in `[browser]`. Dimensions are logical pixels unless state
 | `sort_by` | `"name"` | `"name"`, `"type"`, `"size"`, `"modified"`, `"accessed"`, `"created"`, `"owner"`, `"group"`, `"permissions"`, `"location"` |
 | `sort_descending` | `false` | Reverse sort direction |
 | `directories_first` | `true` | Group folders, and links to local folders, before files |
+| `hidden_last` | `false` | Sort shown hidden items after visible ones; `directories_first` applies within each group |
 | `show_sidebar` | `true` | Show the sidebar |
 | `sidebar_width` | `206` | Integer `160` through `400` |
 | `sidebar_tree` | `false` | Optional sidebar folder tree |
