@@ -141,6 +141,8 @@ User bookmarks live in `$XDG_CONFIG_HOME/gtk-3.0/bookmarks`, defaulting to `~/.c
 
 Built-in Places layout and optional last-window tab state remain in `$XDG_STATE_HOME/luciole/state.toml`, defaulting to `~/.local/state/luciole/state.toml`. Cached user rows there preserve their placement among built-ins; their contents always come from the shared bookmark file. Deleting a shared user bookmark removes it from Luciole even when an old cache row remains. Tab restoration is controlled by `browser.restore_last_window`.
 
+Custom bookmark icons are saved as an optional `icon` field on the matching bookmark row in this private state file. They are Luciole-only; the shared GTK bookmark format has no icon field.
+
 Thumbnails use the shared `$XDG_CACHE_HOME/thumbnails/` cache plus a Luciole ownership ledger under `$XDG_CACHE_HOME/luciole/`. The default cache root is `~/.cache`. Custom actions live in the [Scripts directory](/luciole/scripts/).
 
 An optional `colors.toml` beside the settings files supplies the supported Noctalia palette handoff. The installed template is `share/luciole/templates/colors.toml`; broader palette/font/UI-scale preferences remain planned. See [Packaging](https://github.com/noctalia-dev/luciole/blob/main/PACKAGING.md#configuration-and-writable-data) for the complete ownership and installation notes.

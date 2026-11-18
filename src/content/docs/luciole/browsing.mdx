@@ -75,6 +75,8 @@ Drop native files or folders onto the Trash row to move them to Trash. This work
 
 Pinned folders use the shared GTK bookmark file, also used by Nemo and Nautilus. Adding, removing, renaming or reordering user bookmarks in Luciole updates that file; changes from another application appear automatically. Built-in Places keep their Luciole layout and are not automatically added to other applications' bookmarks. Old Luciole-only pins are not imported.
 
+Use a bookmark's context menu and choose **Change icon…** to select a Tabler icon. This icon is stored in Luciole's private state and does not change the shared GTK bookmark or its appearance in other applications. Choose **Reset to default** to restore the place's standard icon.
+
 Drives starts with File System (`/`), followed by the volumes and mounts GIO reports: removable media, extra partitions and network mounts, but not other system mounts such as `/home` or `/boot`. Mounted drives come before unmounted ones. In the Places list, each mounted drive shows a bar of its used space under its row; the bar turns red at 90% used. Unmounted drives and filesystems that do not report a size have no bar.
 
 The eject button and the drive's context menu remove a mounted drive the way GNOME Files does: Safely Remove powers off a USB disk plugged in during the session, Eject ejects removable media, and Unmount unmounts anything else. Open panes leave the drive first. Undo/Redo history that holds that mount is retired, and removal waits briefly for cleanup and cancelled preview/thumbnail reads. History belonging to other mounts stays available. Removal never forces: active operations or other programs with open files still prevent removal, and the status bar names the reported blockers.
