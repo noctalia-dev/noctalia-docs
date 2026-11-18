@@ -150,7 +150,9 @@ Custom bookmark icons are saved as an optional `icon` field on the matching book
 
 Thumbnails use the shared `$XDG_CACHE_HOME/thumbnails/` cache plus a Luciole ownership ledger under `$XDG_CACHE_HOME/luciole/`. The default cache root is `~/.cache`. Custom actions live in the [Scripts directory](/luciole/scripts/).
 
-An optional `colors.toml` beside the settings files supplies the supported Noctalia palette handoff. The installed template is `share/luciole/templates/colors.toml`; broader palette/font/UI-scale preferences remain planned. See [Packaging](https://github.com/noctalia-dev/luciole/blob/main/PACKAGING.md#configuration-and-writable-data) for the complete ownership and installation notes.
+An optional `colors.toml` beside the settings files supplies the supported Noctalia palette handoff. The installed template is `share/luciole/templates/colors.toml`; UI-scale preferences remain planned. See [Packaging](https://github.com/noctalia-dev/luciole/blob/main/PACKAGING.md#configuration-and-writable-data) for the complete ownership and installation notes.
+
+Text follows the system font: the family and size from GNOME's `font-name` setting, or `gtk-font-name` in `~/.config/gtk-3.0/settings.ini` (then `gtk-4.0`), as written by GNOME Settings or nwg-look. The size sets body text (11 pt is about 14.7 px) and other text keeps its proportions; without a system font, Luciole uses Fontconfig's `sans-serif` at 14 px. GNOME's Large Text (`text-scaling-factor`) multiplies it. Changes apply to open windows right away, including symlinked `settings.ini` files. Icons keep their size.
 
 ## Terminal selection
 
