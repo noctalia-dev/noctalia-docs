@@ -19,6 +19,123 @@ yay -S luciole-git
 
 Optional helpers for video, PDF and archive support and network locations are listed as optional dependencies; see [optional features](#optional-features).
 
+## NixOS
+
+The flake provides a package, NixOS, Home Manager and hjem modules, and a pinned development environment for `x86_64-linux` and `aarch64-linux`. Enable the `nix-command` and `flakes` experimental features in your Nix configuration before using the commands below.
+
+### Try Luciole
+
+Run Luciole without adding it to your system configuration:
+
+```sh
+nix run github:noctalia-dev/luciole
+```
+
+To build the package and keep a local result link:
+
+```sh
+nix build github:noctalia-dev/luciole
+./result/bin/luciole
+```
+
+### Add the flake input
+
+Add Luciole to your existing `flake.nix` inputs:
+
+```nix
+{
+  inputs.luciole.url = "github:noctalia-dev/luciole";
+}
+```
+
+The module examples below use `inputs`. Pass it to NixOS modules through `specialArgs` in your existing `nixpkgs.lib.nixosSystem` call:
+
+```nix
+specialArgs = { inherit inputs; };
+```
+
+For standalone Home Manager, pass it through `extraSpecialArgs` in `home-manager.lib.homeManagerConfiguration`. With Home Manager's NixOS module, use `home-manager.extraSpecialArgs = { inherit inputs; };`.
+
+### NixOS module
+
+Import the module in your system configuration and enable Luciole:
+
+```nix
+{ inputs, ... }:
+{
+  imports = [ inputs.luciole.nixosModules.default ];
+
+  programs.luciole.enable = true;
+  services.gvfs.enable = true;
+}
+```
+
+The Luciole module installs the application system-wide. GVfs supplies Trash and mounted network locations; enable it separately as shown above. Optional DNS-SD discovery also needs `services.avahi.enable = true;`.
+
+Rebuild using your configuration's host name:
+
+```sh
+sudo nixos-rebuild switch --flake .#your-host
+```
+
+Alternatively, install only the package with `environment.systemPackages = [ inputs.luciole.packages.${pkgs.stdenv.hostPlatform.system}.default ];` in a module receiving `inputs` and `pkgs`. You can omit this when using one of Luciole's modules, which installs the package for you.
+
+### Home Manager
+
+With Home Manager already configured, import Luciole's module in your home configuration:
+
+```nix
+{ inputs, ... }:
+{
+  imports = [ inputs.luciole.homeModules.default ];
+
+  programs.luciole = {
+    enable = true;
+    settings = {
+      browser = {
+        view_mode = "grid";
+        show_hidden = false;
+      };
+    };
+  };
+}
+```
+
+Apply it with your usual Home Manager switch command, or rebuild NixOS when Home Manager is integrated into the system configuration. On NixOS, enable GVfs in the system configuration even when Home Manager installs Luciole. On other distributions, install and enable the distribution's GIO/GVfs services.
+
+### hjem
+
+With hjem already configured, add Luciole's module to `hjem.extraModules` in your NixOS configuration and enable it for your user:
+
+```nix
+{ inputs, ... }:
+{
+  hjem = {
+    extraModules = [ inputs.luciole.hjemModules.default ];
+    users.your-user.programs.luciole = {
+      enable = true;
+      settings.browser.view_mode = "grid";
+    };
+  };
+
+  services.gvfs.enable = true;
+}
+```
+
+Replace `your-user` with your username, then rebuild NixOS.
+
+Both home modules accept `settings` as an attribute set, a TOML string or a path to a TOML file, and validate it at build time by default. Omitting `settings` leaves `config.toml` untouched. The declarative base lives in `~/.config/luciole/config.toml`; GUI changes remain writable in `settings.toml` and take precedence. Reset a preference in Settings to use its declarative value again. See [configuration](/luciole/configuration/#files-and-precedence).
+
+### Updates and development
+
+Update the pinned input from your configuration directory, then apply your configuration again:
+
+```sh
+nix flake update luciole
+```
+
+For source development, run `nix develop` from a Luciole checkout, then use the [development build commands](#development-builds). [Nix packaging](https://github.com/noctalia-dev/luciole/blob/main/PACKAGING.md#nix-integration) documents the wrapper and runtime integration.
+
 ## Build from source
 
 Luciole builds with `just`, Meson and a C++23 compiler (GCC 13+ or Clang 16+).
@@ -81,17 +198,6 @@ sudo just install release
 ```
 
 This installs under `/usr/local`; use `just configure release /usr` before building to choose another prefix. To uninstall, run `sudo ninja -C build-release uninstall` from the same checkout.
-
-### Nix
-
-The flake provides a package and a pinned development environment:
-
-```sh
-nix build github:noctalia-dev/luciole
-./result/bin/luciole
-```
-
-It also exports NixOS, Home Manager and hjem modules. Home Manager and hjem can supply `programs.luciole.settings` as a declarative base; GUI preferences remain separate. See [configuration](/luciole/configuration/) and [Nix packaging](https://github.com/noctalia-dev/luciole/blob/main/PACKAGING.md#nix-integration).
 
 ### Development builds
 
