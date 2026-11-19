@@ -131,6 +131,6 @@ Native permission and ownership editing is available in Properties. Multiple sel
 
 ## Network locations
 
-Mounted, authenticated SFTP, SMB and WebDAV locations support the verified copy/move paths through installed GIO/GVfs backends. Some providers cannot preserve native symlinks, raw filename bytes or every metadata field. Read-only targets, conflicts, disconnects and partial moves remain explicit outcomes. Luciole does not provide its own server connection or credentials dialog yet.
+Mounted, authenticated SFTP, SMB and WebDAV locations support the verified copy/move paths through installed GIO/GVfs backends. Opening an unmounted address starts the connection and any provider login questions; see [network folders](/luciole/browsing/#network-folders). Some providers cannot preserve native symlinks, raw filename bytes or every metadata field. Read-only targets, conflicts, disconnects and partial moves remain explicit outcomes. A separate connect-to-server address form is still planned.
 
 See [runtime providers](https://github.com/noctalia-dev/luciole/blob/main/PACKAGING.md#gvfs-and-trash) for provider packaging requirements.

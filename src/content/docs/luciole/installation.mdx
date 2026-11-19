@@ -70,7 +70,9 @@ Import the module in your system configuration and enable Luciole:
 }
 ```
 
-The Luciole module installs the application system-wide. GVfs supplies Trash and mounted network locations; enable it separately as shown above. Optional DNS-SD discovery also needs `services.avahi.enable = true;`.
+The Luciole module installs the application system-wide. Enable GVfs separately as shown above for Trash and network locations; Luciole's modules do not enable it automatically. Optional DNS-SD discovery also needs `services.avahi.enable = true;`.
+
+After enabling the services, restart Luciole. If your existing desktop session does not pick up the new service environment, log out and back in.
 
 Rebuild using your configuration's host name:
 
@@ -78,7 +80,7 @@ Rebuild using your configuration's host name:
 sudo nixos-rebuild switch --flake .#your-host
 ```
 
-Alternatively, install only the package with `environment.systemPackages = [ inputs.luciole.packages.${pkgs.stdenv.hostPlatform.system}.default ];` in a module receiving `inputs` and `pkgs`. You can omit this when using one of Luciole's modules, which installs the package for you.
+Alternatively, install only the package with `environment.systemPackages = [ inputs.luciole.packages.${pkgs.stdenv.hostPlatform.system}.default ];` in a module receiving `inputs` and `pkgs`, and enable `services.gvfs.enable = true;` yourself. You can omit the package list entry when using one of Luciole's modules, which installs the package for you.
 
 ### Home Manager
 
@@ -211,7 +213,7 @@ luciole /path/to/folder
 luciole 'file:///path/to/folder'
 ```
 
-Without an argument, Luciole opens Home. Supply one directory path or URI to start elsewhere. Remote locations require the corresponding installed GIO/GVfs backend and an already mounted/authenticated location. Luciole's own connect-to-server and credential dialogs are not implemented yet.
+Without an argument, Luciole opens Home. Supply one directory path or URI to start elsewhere. Remote locations require the corresponding installed GIO/GVfs backend and session services. Luciole connects when you open an unmounted location and presents the provider's login or confirmation requests. See [network folders](/luciole/browsing/#network-folders) for SFTP addresses, requirements and troubleshooting. A separate connect-to-server address form is still planned.
 
 Every window runs in one Luciole process. Starting `luciole` while it is already running opens a new window in that process, so additional windows cost far less memory than separate instances. A relative path names a folder under the directory where the command ran. The process exits when its last window closes.
 
