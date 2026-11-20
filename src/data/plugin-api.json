@@ -307,19 +307,19 @@
   },
   {
     "level": 54,
-    "noctaliaVersion": null,
+    "noctaliaVersion": "v5.6.0",
     "feature": "compositor-subscribe",
     "introduced": "`noctalia.compositor.name`, `noctalia.compositor.subscribe`, and `noctalia.compositor.unsubscribe` for reading the session compositor's event stream (Umbriel, niri, Hyprland) over a connection the shell opens per subscription, without spawning a process."
   },
   {
     "level": 55,
-    "noctaliaVersion": null,
+    "noctaliaVersion": "v5.6.0",
     "feature": "ring",
     "introduced": "`ui.ring`, a natively drawn circular progress gauge with `progress`, `fill`, `track`, and `thickness` props."
   },
   {
     "level": 56,
-    "noctaliaVersion": null,
+    "noctaliaVersion": "v5.6.0",
     "feature": "notification-actions",
     "introduced": "Action buttons on `noctalia.notify` and `noctalia.notifyError` through an options table (`actions`, `onAction`, `context`), plus `noctalia.openPath` and `noctalia.revealPath` for opening a file or showing it selected in the file manager."
   }

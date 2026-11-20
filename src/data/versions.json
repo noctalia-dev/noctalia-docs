@@ -9,14 +9,24 @@
     "isLatest": false
   },
   {
+    "version": "5.6.0",
+    "tag": "v5.6.0",
+    "label": "v5.6.0 (Latest)",
+    "path": "/noctalia/v5.6.0/",
+    "releaseDate": "2026-11-20",
+    "commit": "a5444b9a2",
+    "status": "latest",
+    "isLatest": true
+  },
+  {
     "version": "5.5.0",
     "tag": "v5.5.0",
-    "label": "v5.5.0 (Latest)",
+    "label": "v5.5.0",
     "path": "/noctalia/v5.5.0/",
     "releaseDate": "2026-11-12",
     "commit": "c2573248a",
-    "status": "latest",
-    "isLatest": true
+    "status": "archived",
+    "isLatest": false
   },
   {
     "version": "5.4.1",
