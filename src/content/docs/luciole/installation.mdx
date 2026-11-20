@@ -140,6 +140,29 @@ Replace `your-user` with your username, then rebuild NixOS.
 
 Both home modules accept `settings` as an attribute set, a TOML string or a path to a TOML file, and validate it at build time by default. Omitting `settings` leaves `config.toml` untouched. The declarative base lives in `~/.config/luciole/config.toml`; GUI changes remain writable in `settings.toml` and take precedence. Reset a preference in Settings to use its declarative value again. See [configuration](/luciole/configuration/#files-and-precedence).
 
+### Binary cache
+
+Pre-built binaries for Luciole are available on [Cachix](https://app.cachix.org/cache/noctalia). Add the cache to the NixOS configuration to avoid compiling them locally:
+
+> **Note:** To use the binary cache, omit `inputs.nixpkgs.follows` from the Luciole input. Overriding any of Luciole's inputs changes the derivation hash, causing cache misses.
+
+```nix
+{
+  nix.settings = {
+    extra-substituters = [ "https://noctalia.cachix.org" ];
+    extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ];
+  };
+}
+```
+
+Tracking `main` directly may pull in a commit that CI hasn't cached yet. The [`cachix`](https://github.com/noctalia-dev/luciole/tree/cachix) branch always points to the latest cached commit, so pinning to it avoids cache misses:
+
+```nix
+{
+  inputs.luciole.url = "github:noctalia-dev/luciole/cachix";
+}
+```
+
 ### Updates and development
 
 Update the pinned input from your configuration directory, then apply your configuration again:
