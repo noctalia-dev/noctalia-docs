@@ -21,6 +21,23 @@ yay -S luciole-git
 
 Optional helpers for video, PDF and archive support and network locations are listed as optional dependencies; see [optional features](#optional-features).
 
+## Fedora
+
+[Terra](https://wiki.fyralabs.com/Terra) provides nightly builds:
+
+```sh
+sudo dnf install luciole-nightly
+```
+
+Alternatively, the [`lemmy/favorites`](https://copr.fedorainfracloud.org/coprs/lemmy/favorites/) COPR repository provides development builds:
+
+```sh
+sudo dnf copr enable lemmy/favorites
+sudo dnf install luciole-git
+```
+
+For Trash and network locations, install `gvfs` and the backends you need, such as `gvfs-smb`; see [optional features](#optional-features).
+
 ## Debian and Ubuntu
 
 The NickH APT repository provides Luciole for Debian-based distributions.
