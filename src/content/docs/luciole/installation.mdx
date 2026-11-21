@@ -21,6 +21,55 @@ yay -S luciole-git
 
 Optional helpers for video, PDF and archive support and network locations are listed as optional dependencies; see [optional features](#optional-features).
 
+## Debian and Ubuntu
+
+The NickH APT repository provides Luciole for Debian-based distributions.
+
+### Install the repository signing key
+
+```sh
+wget https://pkg.noctalia.dev/deb/nickh-archive-keyring.deb
+sudo dpkg -i nickh-archive-keyring.deb
+```
+
+### Add the repository
+
+Choose the source matching your distribution:
+
+```sh
+# Debian Trixie
+sudo wget -O /etc/apt/sources.list.d/noctalia-trixie.sources \
+  https://pkg.noctalia.dev/deb/noctalia-trixie.sources
+
+# Debian Sid
+sudo wget -O /etc/apt/sources.list.d/noctalia-unstable.sources \
+  https://pkg.noctalia.dev/deb/noctalia-unstable.sources
+
+# Ubuntu 26.04
+sudo wget -O /etc/apt/sources.list.d/noctalia-resolute.sources \
+  https://pkg.noctalia.dev/deb/noctalia-resolute.sources
+
+# Ubuntu 26.10
+sudo wget -O /etc/apt/sources.list.d/noctalia-stonking.sources \
+  https://pkg.noctalia.dev/deb/noctalia-stonking.sources
+```
+
+### Install Luciole
+
+Choose the command matching your distribution:
+
+```sh
+sudo apt update
+
+# Debian Trixie
+sudo apt install -t trixie-backports luciole
+
+# Debian Sid and Ubuntu 26.04 and 26.10
+sudo apt install luciole
+```
+
+The repository provides `amd64` and `arm64` packages only. For Trash and network locations, install `gvfs` and the backends you need, such as `gvfs-backends`; see [optional features](#optional-features).
+
 ## NixOS
 
 The flake provides a package, NixOS, Home Manager and hjem modules, and a pinned development environment for `x86_64-linux` and `aarch64-linux`. Enable the `nix-command` and `flakes` experimental features in your Nix configuration before using the commands below.
