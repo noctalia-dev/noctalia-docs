@@ -144,7 +144,7 @@ Name accepts `0` for automatic sizing or an integer from `160` through `16384`. 
 | --- | --- | --- |
 | `thumbnail_policy` | `"local"` | `"never"`, `"local"`, `"all"` |
 | `thumbnail_max_file_mib` | `64` | Image/PDF source limit, integer `1` through `1024`; does not limit video/audio file size |
-| `thumbnail_cache_mib` | `1024` | Integer `16` through `8192`; only Luciole-written thumbnails count and are pruned |
+| `thumbnail_cache_mib` | `1024` | Integer `16` through `8192`; bounds the whole shared cache, oldest thumbnails pruned first |
 
 Local policy generates thumbnails for eligible local files. It skips network shares and FUSE mounts without a local disk, such as rclone and sshfs. A FUSE mount of local files that has no disk of its own, such as gocryptfs, is skipped too; choose All Locations to get its thumbnails. To generate thumbnails on mounted network shares such as `/mnt/media`, choose Settings → Thumbnails → Show Thumbnails → All Locations. All permits generation from filesystem paths, including mounted shares, and reuses the shared thumbnail cache. Locations without a filesystem path remain cache-only; Luciole does not download entire remote files for thumbnail generation.
 
@@ -158,7 +158,7 @@ Built-in Places layout and optional last-window tab state remain in `$XDG_STATE_
 
 Custom bookmark icons are saved as an optional `icon` field on the matching bookmark row in this private state file. They are Luciole-only; the shared GTK bookmark format has no icon field.
 
-Thumbnails use the shared `$XDG_CACHE_HOME/thumbnails/` cache plus a Luciole ownership ledger under `$XDG_CACHE_HOME/luciole/`. The default cache root is `~/.cache`. Custom actions live in the [Scripts directory](/luciole/scripts/).
+Thumbnails use the shared `$XDG_CACHE_HOME/thumbnails/` cache. The default cache root is `~/.cache`. Custom actions live in the [Scripts directory](/luciole/scripts/).
 
 An optional `colors.toml` beside the settings files supplies the supported Noctalia palette handoff. The installed template is `share/luciole/templates/colors.toml`; UI-scale preferences remain planned. See [Packaging](https://github.com/noctalia-dev/luciole/blob/main/PACKAGING.md#configuration-and-writable-data) for the complete ownership and installation notes.
 
