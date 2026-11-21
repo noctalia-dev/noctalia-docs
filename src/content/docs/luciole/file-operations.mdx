@@ -25,6 +25,8 @@ The background menu provides New Folder (Ctrl+Shift+N) and New Document. New Doc
 
 F2 renames one item. Multiple selected native items from the same containing folder open batch rename. Preview the proposed names before applying them.
 
+Choose **Regex** to replace every match of an ECMAScript regular expression. In **Replace**, use `$1`, `$2`, and so on for captured groups, `$&` for the whole match, or `$$` for a literal dollar sign. For example, find `^IMG_(\d+)$` and replace it with `Photo-$1` to turn `IMG_0042.jpg` into `Photo-0042.jpg` with **Keep extensions** enabled. Non-matching names stay unchanged. Matching is case-sensitive and works on filename bytes, not Unicode characters, so a pattern such as `.` can match part of a multibyte character. A new name that is not valid UTF-8 is flagged in the preview and cannot be applied. Back-references such as `\1` in **Find** are not supported.
+
 ## File operations popover
 
 Open File Operations from the toolbar or main menu to see jobs across tabs and windows in this running Luciole process. It shows preparation, transferred bytes, known item totals, pending decisions and results. Work with no known final total uses a spinner rather than a percentage. Pause is not offered because the current services cannot pause.
