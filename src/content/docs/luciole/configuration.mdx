@@ -107,10 +107,11 @@ All keys below belong in `[browser]`. Dimensions are logical pixels unless state
 | `expandable_folders` | `false` | Expand folders within List view |
 | `show_preview` | `true` | Show the side preview when space permits |
 | `chooser_show_preview` | `false` | Show the side preview in file picker windows; toggling the preview there changes only this key |
-| `chooser_view_mode` | `"list"` | `"list"`, `"grid"`; file picker windows' view, changed only from a picker |
-| `chooser_sort_by`, `chooser_sort_descending`, `chooser_directories_first`, `chooser_hidden_last` | as `sort_by` and its companions | File picker windows' sorting, changed only from a picker |
+| `chooser_start_folder` | `"home"` | `"home"`, `"last"`; where a file picker opens when the application suggests no folder. `"last"` reopens the folder of the last accepted pick; a folder the application suggests always wins |
+| `chooser_view_mode` | `"list"` | `"list"`, `"grid"`; file picker windows' view, kept apart from `view_mode` |
+| `chooser_sort_by`, `chooser_sort_descending`, `chooser_directories_first`, `chooser_hidden_last` | as `sort_by` and its companions | File picker windows' sorting, kept apart from the browser's |
 | `chooser_show_hidden` | `false` | Show hidden items in file picker windows |
-| `chooser_grid_icon_size`, `chooser_list_icon_size` | as `grid_icon_size`, `list_icon_size` | File picker windows' zoom, changed only from a picker |
+| `chooser_grid_icon_size`, `chooser_list_icon_size` | as `grid_icon_size`, `list_icon_size` | File picker windows' zoom, kept apart from the browser's |
 | `preview_width` | `320` | Integer `208` through `800` |
 | `miller_column_width` | `260` | Preferred column width, integer `180` through `800` |
 | `miller_show_parents` | `true` | Include parent folders when entering Column view |
@@ -158,7 +159,7 @@ The Image/PDF Size Limit applies to image and PDF sources. Video stills and embe
 
 User bookmarks live in `$XDG_CONFIG_HOME/gtk-3.0/bookmarks`, defaulting to `~/.config/gtk-3.0/bookmarks`, shared with Nemo, Nautilus and GTK file choosers. Each line contains a URI and an optional label separated by a space. The older `~/.gtk-bookmarks` is read as a fallback when the modern file has not been found; edits go to the modern path. Read-only or symlink-managed files can be displayed, but Luciole refuses edits that would replace a read-only or linked file. Old Luciole pins are not migrated.
 
-Built-in Places layout and optional last-window tab state remain in `$XDG_STATE_HOME/luciole/state.toml`, defaulting to `~/.local/state/luciole/state.toml`. Cached user rows there preserve their placement among built-ins; their contents always come from the shared bookmark file. Deleting a shared user bookmark removes it from Luciole even when an old cache row remains. Tab restoration is controlled by `browser.restore_last_window`.
+Built-in Places layout, optional last-window tab state and the last file picker folder remain in `$XDG_STATE_HOME/luciole/state.toml`, defaulting to `~/.local/state/luciole/state.toml`. Cached user rows there preserve their placement among built-ins; their contents always come from the shared bookmark file. Deleting a shared user bookmark removes it from Luciole even when an old cache row remains. Tab restoration is controlled by `browser.restore_last_window`.
 
 Custom bookmark icons are saved as an optional `icon` field on the matching bookmark row in this private state file. They are Luciole-only; the shared GTK bookmark format has no icon field.
 
