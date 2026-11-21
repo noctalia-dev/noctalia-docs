@@ -5,9 +5,9 @@ description: Run custom scripts and programs on selected files in Luciole.
 
 ## Open or run
 
-Open, Enter and double-click use the associated application. They do not automatically execute a text file because it contains a script.
+Open, Enter and double-click run a single native application binary when it has executable permission, including a link to one. Other files use the associated application. Text scripts keep opening in their associated editor even when they have executable permission.
 
-For a native executable, choose Run as a Program or Run in Terminal from its context menu. Scripts need executable permission and an interpreter line such as `#!/bin/sh`. Properties can change the executable permission. Run in Terminal requires `xdg-terminal-exec` and a suitable installed terminal.
+For explicit execution, choose Run as a Program or Run in Terminal from the file's context menu. Scripts need executable permission and an interpreter line such as `#!/bin/sh`. Properties can change the executable permission. Run in Terminal requires a suitable installed terminal, selected through the Terminal setting or automatic discovery.
 
 Application `.desktop` files use a Launch Once confirmation showing the launcher's name and command. Cancel is selected initially. Only launch a command you trust. Confirmation applies to that attempt; Luciole does not save a trust marker or change the file's permissions. Changed launchers are refused. Only application entries with an Exec command are supported.
 
