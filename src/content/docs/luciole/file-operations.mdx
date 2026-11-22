@@ -131,7 +131,7 @@ Properties (Alt+Return) shows available file/media facts. Hold Alt while clickin
 
 For a native symbolic link, Properties and the side preview show Link Target as stored in the link and Resolved Target as the final absolute path. Relative targets and link chains are resolved through the filesystem. A missing, inaccessible or looping target shows Target Status instead. The other file facts and permission controls still describe the link itself; inspecting a folder link does not count its target's contents. Opening a valid link follows its target, while an unavailable target reports an error and leaves the current folder open.
 
-For folders, Properties starts a separate cancellable recursive count/size calculation. Ordinary selection and the side preview do not traverse folders to calculate totals. Recursive totals are currently unavailable for non-native locations and Trash.
+For folders, Properties starts a separate cancellable recursive count/size calculation. Ordinary selection and the side preview do not traverse folders to calculate totals. Totals stay inside the starting filesystem: a folder mounted inside the counted tree counts as one folder and is not entered unless it is selected too. Recursive totals are currently unavailable for non-native locations and Trash.
 
 Native permission and ownership editing is available in Properties. Multiple selections support bulk changes; recursive changes are explicit operations. Advanced Permissions opens the POSIX ACL editor on supported native filesystems. Merely selecting a folder does not apply anything recursively. Luciole reports unsupported or denied changes rather than claiming they succeeded.
 
