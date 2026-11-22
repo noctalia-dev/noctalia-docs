@@ -158,6 +158,30 @@ Local policy generates thumbnails for eligible local files. It skips network sha
 
 The Image/PDF Size Limit applies to image and PDF sources. Video stills and embedded audio artwork use seekable media access and are not rejected merely because their files exceed that limit. There is no pixel-count limit: a decoding helper's memory, CPU time and output limits decide how large an image can be, which admits phone photos up to about 200 megapixels. Settings also provides cache inspection/clearing. Luciole reuses compatible shared thumbnails and preserves cache files created or replaced by other applications. Older Luciole video thumbnails regenerate using representative frames instead of always taking the opening frame. With `ffmpegthumbnailer` installed, newly generated video thumbnails include its filmstrip edges, stored in the shared cache so other file managers display them too. Missing/failing helpers keep a plain thumbnail. The edges come from the thumbnailer rather than the icon theme. Native video previews generate clean frames separately.
 
+### Keyboard shortcuts
+
+Shortcuts live in `[browser.keybinds]`. Each key names a command and holds an array of up to four chords. Commands you omit keep their built-in defaults; an empty array unassigns the command. Saving from Settings → Keybinds writes only the commands that differ from the inherited configuration, so restoring a built-in default still overrides a custom `config.toml`. Reset all settings restores every default.
+
+```toml
+[browser.keybinds]
+search = ["Ctrl+F", "Ctrl+K"]
+open_in_new_tab = ["Ctrl+Return"]
+zoom_in = ["Ctrl+equal", "Ctrl+plus", "Ctrl+Shift+plus", "Ctrl+KP_Add"]
+quick_preview = []
+```
+
+Commands are grouped into three independent scopes. Two commands in the same scope cannot share a chord; the same chord can appear once in each scope. The keybinds section refuses same-scope conflicts, and warns when a chord is already used in another scope because the other command may take precedence depending on focus. Super combinations are reserved for the compositor and are rejected. Unlike other settings tables, an unknown command name or malformed chord in `[browser.keybinds]` invalidates the whole file, so check the reported error before restarting.
+
+| Scope | Commands |
+| --- | --- |
+| Controls | `validate`, `cancel`, `focus_next`, `focus_previous`, `move_left`, `move_right`, `move_up`, `move_down`, `move_first`, `move_last`, `move_page_up`, `move_page_down` |
+| File Browser | `back`, `forward`, `up`, `home_folder`, `refresh`, `edit_location`, `search`, `view_grid`, `view_list`, `view_miller`, `toggle_hidden`, `toggle_sidebar`, `toggle_preview`, `quick_preview`, `open`, `open_in_new_tab`, `open_in_new_tab_background`, `toggle_selection`, `rename`, `create_folder`, `create_file`, `cut`, `copy`, `paste`, `trash`, `delete_permanently`, `properties`, `terminal`, `parent_folder`, `context_menu`, `select_all`, `invert_selection`, `select_pattern`, `clear_selection`, `undo`, `redo`, `settings`, `keyboard_shortcuts`, `zoom_in`, `zoom_out`, `zoom_reset` |
+| Tabs and Windows | `new_tab`, `close_tab`, `duplicate_tab`, `reopen_tab`, `next_tab`, `previous_tab`, `split_view`, `switch_area`, `close_pane`, `new_window`, `close_window`, `fullscreen`, `quit`, `select_tab_1`, `select_tab_2`, `select_tab_3`, `select_tab_4`, `select_tab_5`, `select_tab_6`, `select_tab_7`, `select_tab_8`, `select_tab_9` |
+
+The archive viewer follows `cancel`, `focus_next`, `focus_previous`, `move_up`, `move_down`, `move_first`, `move_last`, `move_page_up`, `move_page_down`, `select_all`, `parent_folder`, `up` and `open`. `quit` is handled globally, including while an archive or menu popup is open. `select_tab_9` always selects the last tab. Other Escape handlers (returning to the file list, the location bar, search completion, menus, previews and dialogs) also follow `cancel`; `clear_selection` still clears the file list selection.
+
+Chords use key names such as `Return`, `Escape`, `Tab`, `space`, `BackSpace`, `Delete`, `Menu`, `Home`, `End`, `Page_Up`, `Page_Down`, `equal`, `minus`, `plus`, `comma`, `KP_Add`, `KP_0` and function keys such as `F4` and `F5`. `Next`/`Prior` are accepted aliases for `Page_Down`/`Page_Up`. `Ctrl+,` and `Ctrl++` are accepted as shorthands for `Ctrl+comma` and `Ctrl+plus`. Except for `validate` and `quick_preview`, printable keys need Ctrl, Alt or another modifier; Shift alone is not enough. Changes apply to open windows immediately.
+
 ## Other writable data
 
 User bookmarks live in `$XDG_CONFIG_HOME/gtk-3.0/bookmarks`, defaulting to `~/.config/gtk-3.0/bookmarks`, shared with Nemo, Nautilus and GTK file choosers. Each line contains a URI and an optional label separated by a space. The older `~/.gtk-bookmarks` is read as a fallback when the modern file has not been found; edits go to the modern path. Read-only or symlink-managed files can be displayed, but Luciole refuses edits that would replace a read-only or linked file. Old Luciole pins are not migrated.
