@@ -68,6 +68,7 @@ All keys below belong in `[browser]`. Dimensions are logical pixels unless state
 | Key | Default | Accepted values / meaning |
 | --- | --- | --- |
 | `view_mode` | `"list"` | `"list"`, `"grid"`, `"miller"` |
+| `remember_folder_views` | `false` | Sort and Grid/List changes apply to the current folder only and are remembered for it; file picker windows keep their own. See [per-folder view and sort](/luciole/browsing/#per-folder-view-and-sort) |
 | `grid_icon_size` | `96` | `32`, `48`, `64`, `80`, `96`, `128`, `160`, `192`, `256` |
 | `list_icon_size` | `0` | `0` uses the default size, `32`; or `16`, `20`, `24`, `28`, `32`, `40`, `48`, `64`. Rows grow with the icon. |
 | `miller_icon_size` | `0` | Columns view icon size: `0` uses the density's size (`20` compact, `28` comfortable); otherwise the same values as `list_icon_size` |
@@ -162,6 +163,8 @@ The Image/PDF Size Limit applies to image and PDF sources. Video stills and embe
 User bookmarks live in `$XDG_CONFIG_HOME/gtk-3.0/bookmarks`, defaulting to `~/.config/gtk-3.0/bookmarks`, shared with Nemo, Nautilus and GTK file choosers. Each line contains a URI and an optional label separated by a space. The older `~/.gtk-bookmarks` is read as a fallback when the modern file has not been found; edits go to the modern path. Read-only or symlink-managed files can be displayed, but Luciole refuses edits that would replace a read-only or linked file. Old Luciole pins are not migrated.
 
 Built-in Places layout, optional last-window tab state and the last file picker folder remain in `$XDG_STATE_HOME/luciole/state.toml`, defaulting to `~/.local/state/luciole/state.toml`. Cached user rows there preserve their placement among built-ins; their contents always come from the shared bookmark file. Deleting a shared user bookmark removes it from Luciole even when an old cache row remains. Tab restoration is controlled by `browser.restore_last_window`.
+
+Per-folder sort and view choices live in `$XDG_STATE_HOME/luciole/folder_views.toml`, one `[[folders]]` row per folder URI with optional `sort_by`, `sort_descending`, `directories_first`, `hidden_last` and `view_mode` (`"list"` or `"grid"`) fields. Invalid rows are skipped. Luciole replaces an unreadable file with its in-memory settings the next time a folder's settings change. It keeps the 4096 most recently changed folders, or fewer when their rows would make the file larger than 240 KiB; the least recently changed go first.
 
 Custom bookmark icons are saved as an optional `icon` field on the matching bookmark row in this private state file. They are Luciole-only; the shared GTK bookmark format has no icon field.
 
