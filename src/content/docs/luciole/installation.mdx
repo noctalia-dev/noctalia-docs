@@ -9,6 +9,8 @@ Prefer a distribution package when one is available; it provides the simplest in
 
 **Trash and remote folders require GVfs.** Install and enable your distribution's GIO/GVfs services and the backends for SFTP/SSH, SMB or WebDAV as needed, with a working session D-Bus connection. An SSH client alone does not provide SFTP browsing. Without the relevant backend, a remote address can fail with **Operation not supported** before a login prompt appears. See [network folders](/luciole/browsing/#network-folders) for connection examples and troubleshooting, and the distribution-specific setup below.
 
+To use Luciole for other applications' Open and Save dialogs, see [file picker setup](#use-luciole-as-the-file-picker).
+
 ## Arch Linux
 
 [`luciole-git`](https://aur.archlinux.org/packages/luciole-git) is available in the AUR and builds the latest development version. Install it with an AUR helper such as `paru` or `yay`:
@@ -90,6 +92,8 @@ The repository provides `amd64` and `arm64` packages only. For Trash and network
 ## NixOS
 
 The flake provides a package, NixOS, Home Manager and hjem modules, and a pinned development environment for `x86_64-linux` and `aarch64-linux`. Enable the `nix-command` and `flakes` experimental features in your Nix configuration before using the commands below.
+
+Selecting Luciole as the file picker is a separate, optional step; see [NixOS file picker setup](#file-picker-on-nixos).
 
 ### GVfs for Trash and remote folders
 
@@ -321,6 +325,92 @@ Every window runs in one Luciole process. Starting `luciole` while it is already
 Use `luciole --help` for command syntax and `luciole --version` for the version and build revision. These commands do not open a window. Bash, Zsh and Fish completions are installed with Luciole; `luciole completions bash` also prints the Bash completion script.
 
 Installing Luciole does not automatically make it the default file manager.
+
+## Use Luciole as the file picker
+
+Luciole can provide Open and Save dialogs for applications that use the FileChooser portal. Install Luciole and `xdg-desktop-portal`, then select the `luciole` backend as described below. Keep your desktop's other portal backends installed for screen sharing, screenshots and other interfaces. This choice is separate from the default file manager; applications that use their own dialogs keep them.
+
+If you use [xdg-desktop-portal-umbriel](https://github.com/noctalia-dev/xdg-desktop-portal-umbriel), its supplied configuration already prefers Luciole when installed, with GTK as the fallback. No chooser override is needed unless another configuration takes precedence.
+
+### File picker on other distributions
+
+Install your distribution's `xdg-desktop-portal` package alongside Luciole. Luciole's installation must include `share/xdg-desktop-portal/portals/luciole.portal` and its D-Bus service; an uninstalled development binary alone does not register the picker.
+
+Check your desktop name:
+
+```sh
+echo "$XDG_CURRENT_DESKTOP"
+```
+
+Find the desktop's portal configuration in `/usr/share/xdg-desktop-portal/` or `/etc/xdg/xdg-desktop-portal/`; source installations may use `/usr/local/share/xdg-desktop-portal/`. For example, GNOME uses `gnome-portals.conf` and KDE uses `kde-portals.conf`. Names use the lowercase desktop name; a colon-separated desktop value supplies several names to check in order.
+
+Copy that configuration into `~/.config/xdg-desktop-portal/`, keeping its filename and all existing preferences. If you already have a user configuration there, edit it instead. Use `$XDG_CONFIG_HOME/xdg-desktop-portal/` if you set a different configuration root.
+
+Under its existing `[preferred]` section, add or replace only the FileChooser entry:
+
+```ini
+[preferred]
+org.freedesktop.impl.portal.FileChooser=luciole;gtk
+```
+
+This is an entry to merge into the copied configuration, not a replacement for the whole file. Keep its `default` and other interface preferences. The `gtk` fallback needs `xdg-desktop-portal-gtk`; you can omit it or use another installed FileChooser backend such as `kde`.
+
+If your session supplies no portal configuration, create `~/.config/xdg-desktop-portal/portals.conf`. With `xdg-desktop-portal-gtk` installed, this is a minimal starting point:
+
+```ini
+[preferred]
+default=gtk
+org.freedesktop.impl.portal.FileChooser=luciole;gtk
+```
+
+Configure any compositor-specific interfaces, such as screen sharing, through their appropriate backend as well. Portal configuration files are selected as a whole; a new file does not inherit preferences from lower-priority files. See the upstream [configuration search rules](https://flatpak.github.io/xdg-desktop-portal/docs/portals.conf.html).
+
+### File picker on NixOS
+
+Register Luciole through `xdg.portal.extraPortals` in your **NixOS system configuration**, including when Home Manager or hjem installs Luciole. Running it with `nix run` alone does not register the backend for the session.
+
+For a session without an existing portal configuration, this example supplies GTK for other interfaces and Luciole for file picking:
+
+```nix
+{ inputs, pkgs, ... }:
+{
+  xdg.portal = {
+    enable = true;
+    extraPortals = [
+      inputs.luciole.packages.${pkgs.stdenv.hostPlatform.system}.default
+      pkgs.xdg-desktop-portal-gtk
+    ];
+    config.common = {
+      default = [ "gtk" ];
+      "org.freedesktop.impl.portal.FileChooser" = [ "luciole" "gtk" ];
+    };
+  };
+}
+```
+
+Use the [flake input and argument setup](#add-the-flake-input) above. If you already configure portals, add Luciole to `extraPortals` and add the FileChooser preference to the configuration for your session, retaining its other preferences and backend packages. For example, use `xdg.portal.config.gnome."org.freedesktop.impl.portal.FileChooser" = [ "luciole" "gtk" ];` for a managed GNOME configuration, or `config.kde` with `[ "luciole" "kde" ]` for KDE. Preserve the desktop's supplied `default` and interface entries when bringing a packaged configuration into Nix.
+
+`config.common` generates the generic `portals.conf`; it is not merged into desktop-specific configurations. A matching desktop-specific file in the same directory takes precedence, and a generic file can shadow a packaged desktop configuration in a lower-priority directory. User files in `~/.config/xdg-desktop-portal/` can also override the NixOS configuration. See the [NixOS portal options](https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/config/xdg/portal.nix).
+
+Rebuild your system after changing the configuration, then apply the session steps below. Luciole's modules do not select the file picker automatically.
+
+### Apply and check the file picker
+
+Log out and back in after installation and configuration, or restart the portal frontend in sessions managed by systemd:
+
+```sh
+systemctl --user restart xdg-desktop-portal.service
+```
+
+Restart the requesting application, then try its Open or Save dialog. The application must use the FileChooser portal for Luciole to appear; application-specific portal preferences may be required. The picker has its own [view, hidden-file and preview settings](/luciole/configuration/#browser-preferences).
+
+If the old picker still appears, check the selected configuration's filename and precedence, Luciole's installed portal file and the requesting application's portal support. With systemd, inspect errors using:
+
+```sh
+journalctl --user -b -u xdg-desktop-portal.service
+```
+
+The fallback list covers a backend that is absent; it does not guarantee fallback when an installed backend fails to start or returns an error.
 
 ## Optional features
 
