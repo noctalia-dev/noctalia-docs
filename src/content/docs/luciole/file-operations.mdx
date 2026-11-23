@@ -121,6 +121,8 @@ To move top-level items out of Trash to another local folder, drag them onto a f
 
 Compress creates ZIP, TAR and 7z archives for native selections. Supported compressed TAR variants depend on the installed libarchive build and include gzip, bzip2, XZ and Zstandard. Browse Archive opens a read-only archive page. Opening a supported local archive (double-click, Enter or Open) browses it the same way; while another file operation is still finishing, Luciole reports that instead. Extract Here and Extract To publish extracted contents through the normal transfer/conflict flow. Archive browsing can extract selected members or open an individual file through its associated application.
 
+Compression stores symbolic links with their original target text and does not copy the target's contents. Absolute, outside-folder, missing and cyclic link targets can therefore be archived. Luciole still refuses to browse or extract archives containing escaping or cyclic links, including archives it created itself; creation does not mark an archive as trusted.
+
 ZIP/TAR/7z/RAR input depends on available archive capabilities. Encrypted 7z input additionally uses a system 7-Zip executable. Passwords are requested when needed and are not stored in settings. Encrypted RAR is not supported. Numbered byte-split ZIP sets use `name.zip.001`, `.002` and so on; select `.001`, with all contiguous parts beside it. Spanned `.z01` sets and split-archive creation are not supported.
 
 Opening and extracting archives validate members and enforce resource limits. An archive rejected as unsafe or unsupported is reported; Luciole does not silently disable these checks. Native archives are the current scope.
