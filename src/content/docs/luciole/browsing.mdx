@@ -33,6 +33,8 @@ In List and Columns, Right or Enter enters the folder under the cursor and Left 
 
 The Parent Folder toolbar button also returns keyboard focus to the file view. Once the parent listing loads, F2 renames the selected folder you left, and Delete moves it to Trash.
 
+After deleting the selected item, selection moves to the next remaining item in the previous visible order, or the previous one when there is no successor. Surviving items in a multi-selection stay selected while a deletion finishes or some items fail. An empty folder clears selection. The same behavior applies to context-menu deletion and observed removals; filtering and navigation keep their existing selection rules. Within an expanded List folder, an empty branch does not select an unrelated item outside that branch.
+
 The cursor ring marks the item the keyboard acts on and stays visible inside a multi-selection. Ctrl+arrow keys move it without changing the selection, and Ctrl+Space selects or unselects the item under it. Ctrl+Enter opens the folder under the cursor in a new tab; Ctrl+Shift+Enter reverses the Switch to new folder tabs preference. Escape anywhere outside the file list, such as Places or the toolbar, returns focus to the list. In the search field, Down or Enter moves to the results with the first one selected. F1 lists every shortcut.
 
 ## Network folders
