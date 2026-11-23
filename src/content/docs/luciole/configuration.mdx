@@ -59,6 +59,8 @@ luciole config validate /path/to/config.toml
 
 File and folder artwork follows the desktop icon theme. Theme selection changes and edits to active SVG/PNG artwork refresh automatically. If desktop settings support is unavailable, Luciole uses the icon theme named by GTK settings.ini. Nix users need a fresh development shell after updating runtime dependencies.
 
+Luciole selects the theme's drawing for the displayed icon size, including display scaling. Size-specific SVGs can have different detail and spacing; large vector artwork is not substituted for a matching smaller drawing. Changing zoom can therefore change an icon's drawing as well as its size.
+
 Icon themes that declare `FollowsColorScheme=true` in their `index.theme` (Breeze, Tela, Colloid, and others) draw their recolorable parts with the `colors.toml` palette, as KDE apps do: folders take the primary color and monochrome icons the text color. They update when the palette changes. Other themes keep their own colors.
 
 ## Browser preferences
