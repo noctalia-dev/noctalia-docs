@@ -40,6 +40,23 @@ sudo dnf install luciole-git
 
 For Trash and network locations, install `gvfs` and the backends you need, such as `gvfs-smb`; see [optional features](#optional-features).
 
+## openSUSE
+
+[home:neifua:Noctalia](https://build.opensuse.org/project/show/home:neifua:Noctalia) OBS repo provides `Luciole` for both **Tumbleweed** and **Slowroll** favors 
+
+#### Tumbleweed
+
+```sh
+sudo zypper addrepo --refresh --name 'Noctalia Project' https://download.opensuse.org/repositories/home:neifua:Noctalia/openSUSE_Tumbleweed/home:neifua:Noctalia.repo
+sudo zypper refresh && sudo zypper install luciole
+```
+
+#### Slowroll
+```sh
+sudo zypper addrepo --refresh --name 'Noctalia Project' https://download.opensuse.org/repositories/home:neifua:Noctalia/openSUSE_Slowroll/home:neifua:Noctalia.repo
+sudo zypper refresh && sudo zypper install luciole
+```
+
 ## Debian and Ubuntu
 
 The NickH APT repository provides Luciole for Debian-based distributions.
