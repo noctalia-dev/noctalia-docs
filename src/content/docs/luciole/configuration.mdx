@@ -88,6 +88,7 @@ All keys below belong in `[browser]`. Dimensions are logical pixels unless state
 | `show_close_buttons` | `true` | Show the glyph close buttons on tabs, dialogs, panes, the preview and archives. Disable to hide them live; the window controls, Escape and Close/Cancel actions still close things |
 | `reduce_animations` | `false` | Skip animated transitions, such as file entries fading in as they scroll into Grid and List views, smooth scrolling and the sidebar drawer. Applies live |
 | `use_ssd` | `true` | Let the compositor draw the title bar and borders (server-side decoration) when it supports them. Disable to always draw Luciole's own (client-side decoration). Open windows switch live |
+| `color_scheme` | `"auto"` | `"auto"` uses Noctalia's current palette from `colors.toml` (the built-in dark palette without one); `"dark"` and `"light"` use that variant from `colors.toml`, or Luciole's built-in dark or light palette when the file has none (Noctalia versions that write only `[colors]`). Applies live |
 | `background_opacity` | `1.0` | Number from `0` (clear) to `1` (opaque) for the window background; tabs, toolbar, sidebar and file area share it. Menus and dialogs stay opaque |
 | `corner_radius_scale` | `1.0` | Number from `0` (square) to `2` (extra rounded) scaling every corner radius, like Noctalia's setting of the same name. Open windows, menus and dialogs update live |
 | `activation_mode` | `"double_click"` | `"single_click"`, `"double_click"` |
@@ -196,7 +197,7 @@ Custom bookmark icons are saved as an optional `icon` field on the matching book
 
 Thumbnails use the shared `$XDG_CACHE_HOME/thumbnails/` cache. The default cache root is `~/.cache`. Custom actions live in the [Scripts directory](/luciole/scripts/).
 
-An optional `colors.toml` beside the settings files supplies the supported Noctalia palette handoff. The installed template is `share/luciole/templates/colors.toml`; UI-scale preferences remain planned. See [Packaging](https://github.com/noctalia-dev/luciole/blob/main/PACKAGING.md#configuration-and-writable-data) for the complete ownership and installation notes.
+An optional `colors.toml` beside the settings files supplies the Noctalia palette handoff; Noctalia's built-in [Luciole template](https://docs.noctalia.dev/noctalia/templates/official/luciole/) writes it. UI-scale preferences remain planned. See [Packaging](https://github.com/noctalia-dev/luciole/blob/main/PACKAGING.md#configuration-and-writable-data) for the complete ownership and installation notes.
 
 Text follows the system font: the family and size from GNOME's `font-name` setting, or `gtk-font-name` in `~/.config/gtk-3.0/settings.ini` (then `gtk-4.0`), as written by GNOME Settings or nwg-look. The size sets body text (11 pt is about 14.7 px) and other text keeps its proportions; without a system font, Luciole uses Fontconfig's `sans-serif` at 14 px. GNOME's Large Text (`text-scaling-factor`) multiplies it. Changes apply to open windows right away, including symlinked `settings.ini` files. Icons keep their size.
 
