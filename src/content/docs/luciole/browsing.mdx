@@ -81,7 +81,7 @@ Network protocols require their installed GVfs backends and a session D-Bus conn
 
 ### Network share automounts
 
-Open an NFS or SMB share from the sidebar or enter its local mount path. Systemd mounts it using your fstab entry or native automount unit, even without `user` in fstab. The share stays in the sidebar while idle. If the automount is stopped or the NAS is unreachable, Luciole shows an error.
+Open an NFS or SMB share from the sidebar or enter its local mount path. Systemd mounts it using your fstab entry or native automount unit, even without `user` in fstab. The share stays in the sidebar while idle. If the automount is stopped or the NAS is unreachable, Luciole shows an error; file operations, program launches, and terminal actions on the share fail the same way instead of using the local folder beneath it. Permanent deletion refuses a folder that contains a share's mount point, and recursive permission changes skip the share.
 
 Use **Refresh** to see folder changes.
 
