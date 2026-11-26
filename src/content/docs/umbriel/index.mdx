@@ -3,31 +3,30 @@ title: Umbriel
 description: Umbriel is a Wayland compositor for daily use, with scrolling and tiling layouts, per-output workspaces, window rules, blur, shadows, and fluid animations.
 ---
 
-Umbriel is a Wayland compositor with scrolling, dwindle, master, and stacking layouts, independent workspaces per monitor, and configurable visual effects. It works on its own or with [Noctalia](https://docs.noctalia.dev/noctalia/), a desktop shell designed to integrate with Umbriel.
+Umbriel is a Wayland compositor. It arranges your windows in scrolling, dwindle, master, or stacking layouts, gives every monitor its own workspaces, and draws blur, shadows, and animations without getting in the way. It works on its own or with [Noctalia](https://docs.noctalia.dev/noctalia/), a desktop shell designed to integrate with Umbriel.
 
-> Umbriel is young and actively evolving. Configuration and behavior may change between releases, and you may encounter rough edges.
+![Umbriel in the scrolling layout: a terminal centered, with the neighboring columns continuing past both edges](../../../assets/umbriel/index-hero.webp)
 
-## Start here
+## What it does
 
-1. [Install Umbriel](/umbriel/installation/).
-2. [Copy and edit the starting configuration](/umbriel/configuration/#starting-configuration).
-3. Configure your [outputs](/umbriel/outputs/), [input devices](/umbriel/input/), and [keybinds](/umbriel/keybinds/).
-4. Choose a [layout](/umbriel/layout/) and [workspace model](/umbriel/workspaces/).
-5. Use [window rules](/umbriel/window-rules/) for application-specific behavior.
+- Lays out each workspace as a scrolling strip of columns, a dwindle or master tiling, or freely stacked windows.
+- Keeps independent workspaces on every output, with an overview to see and rearrange them all.
+- Groups windows into tabs, and hides others in scratchpads you call up with one key.
+- Applies window and layer rules to place, size, and style specific applications.
+- Draws blur, shadows, rounded corners, animations, and custom GLSL effects.
+- Supports HDR, variable refresh rate, and tearing for games, where hardware and clients allow.
+- Runs X11 applications through Xwayland, and answers scripts and panels over local IPC.
 
-Umbriel reloads most configuration changes when you save the file. Errors and warnings appear on screen, and `umbriel config validate` can check a configuration without a running session.
+## Where to start
 
-## Features
+1. [Install Umbriel](/umbriel/installation/) from a package, or [build it from source](/umbriel/building/).
+2. Follow [Getting started](/umbriel/getting-started/) to log in, learn the first keys, and copy the starting configuration.
+3. Pick a [layout](/umbriel/layout/), then configure your [outputs](/umbriel/outputs/), [input devices](/umbriel/input/), and [keybinds](/umbriel/keybinds/).
 
-- [Scrolling, dwindle, master, and stacking layouts](/umbriel/layout/) with per-workspace selection
-- [Stacking workspaces](/umbriel/layout/#stacking-layout) with automatic placement, cascading, and edge and corner drop zones
-- Optional [title bars](/umbriel/appearance/#title-bar) with close and maximize controls, plus modifier-free moving and resizing
-- Independent workspaces and configuration per output
-- Floating, pinned, fullscreen, and [scratchpad](/umbriel/scratchpads/) windows
-- Configurable keybinds, gestures, window rules, blur, shadows, animations, and [effects](/umbriel/effects/)
-- X11 application support through Xwayland
-- Local [IPC](/umbriel/ipc/) for scripts, panels, and runtime inspection
+:::note
+Umbriel is young and actively evolving. Configuration and behavior may change between releases, and you may encounter rough edges.
+:::
 
-## Help and contributing
+## Get help
 
-Bug reports are welcome. Feature requests are considered against the project's [scope statement](https://github.com/noctalia-dev/umbriel/blob/main/SCOPE.md). For general help and design discussion, join the community on [Discord](https://discord.noctalia.dev).
+Report problems on the [issue tracker](https://github.com/noctalia-dev/umbriel/issues) or ask on [Discord](https://discord.noctalia.dev); [Troubleshooting](/umbriel/troubleshooting/) lists what to include. Feature requests are considered against the project's [scope statement](https://github.com/noctalia-dev/umbriel/blob/main/SCOPE.md). For development, see [Contributing](https://github.com/noctalia-dev/umbriel/blob/main/CONTRIBUTING.md) and [Packaging](https://github.com/noctalia-dev/umbriel/blob/main/PACKAGING.md).

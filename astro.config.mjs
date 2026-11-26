@@ -170,25 +170,70 @@ export default defineConfig({
         {
           label: "Umbriel",
           items: [
-            { label: "Umbriel", link: "umbriel/" },
-            { label: "Installation", link: "umbriel/installation/" },
-            { label: "Configuration", link: "umbriel/configuration/" },
-            { label: "Outputs", link: "umbriel/outputs/" },
-            { label: "Game streaming", link: "umbriel/streaming/" },
-            { label: "Keybinds", link: "umbriel/keybinds/" },
-            { label: "Actions", link: "umbriel/actions/" },
-            { label: "IPC", link: "umbriel/ipc/" },
-            { label: "Input", link: "umbriel/input/" },
-            { label: "Appearance", link: "umbriel/appearance/" },
-            { label: "Animation", link: "umbriel/animation/" },
-            { label: "Effects", link: "umbriel/effects/" },
-            { label: "Layout", link: "umbriel/layout/" },
-            { label: "Workspaces", link: "umbriel/workspaces/" },
-            { label: "Workspaces Overview", link: "umbriel/workspaces-overview/" },
-            { label: "Window Rules", link: "umbriel/window-rules/" },
-            { label: "Layer Rules", link: "umbriel/layer-rules/" },          
-            { label: "Scratchpads", link: "umbriel/scratchpads/" },
-            { label: "Security", link: "umbriel/security/" },
+            { label: "Overview", link: "umbriel/" },
+            {
+              label: "Getting started",
+              items: [
+                { label: "Installation", link: "umbriel/installation/" },
+                { label: "Building from source", link: "umbriel/building/" },
+                { label: "Getting started", link: "umbriel/getting-started/" },
+              ],
+            },
+            {
+              label: "Layouts",
+              items: [
+                { label: "Choosing a layout", link: "umbriel/layout/" },
+                { label: "Scrolling", link: "umbriel/layout-scrolling/" },
+                { label: "Dwindle", link: "umbriel/layout-dwindle/" },
+                { label: "Master", link: "umbriel/layout-master/" },
+                { label: "Stacking", link: "umbriel/layout-stacking/" },
+              ],
+            },
+            {
+              label: "Windows and workspaces",
+              items: [
+                { label: "Window sizing and states", link: "umbriel/window-states/" },
+                { label: "Tab groups", link: "umbriel/tab-groups/" },
+                { label: "Workspaces", link: "umbriel/workspaces/" },
+                { label: "Workspaces overview", link: "umbriel/workspaces-overview/" },
+                { label: "Scratchpads", link: "umbriel/scratchpads/" },
+              ],
+            },
+            {
+              label: "Displays and input",
+              items: [
+                { label: "Outputs", link: "umbriel/outputs/" },
+                { label: "HDR, VRR, and tearing", link: "umbriel/display-features/" },
+                { label: "Input", link: "umbriel/input/" },
+                { label: "Keybinds", link: "umbriel/keybinds/" },
+                { label: "Game streaming", link: "umbriel/streaming/" },
+              ],
+            },
+            {
+              label: "Look and feel",
+              items: [
+                { label: "Appearance", link: "umbriel/appearance/" },
+                { label: "Animation", link: "umbriel/animation/" },
+                { label: "Effects", link: "umbriel/effects/" },
+              ],
+            },
+            {
+              label: "Rules",
+              items: [
+                { label: "Window rules", link: "umbriel/window-rules/" },
+                { label: "Layer rules", link: "umbriel/layer-rules/" },
+              ],
+            },
+            {
+              label: "Reference",
+              items: [
+                { label: "Configuration", link: "umbriel/configuration/" },
+                { label: "Actions", link: "umbriel/actions/" },
+                { label: "IPC", link: "umbriel/ipc/" },
+                { label: "Security", link: "umbriel/security/" },
+              ],
+            },
+            { label: "Troubleshooting", link: "umbriel/troubleshooting/" },
           ],
         },
         {
