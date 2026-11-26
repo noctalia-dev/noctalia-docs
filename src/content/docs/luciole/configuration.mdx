@@ -37,6 +37,7 @@ single_window = false
 compact_menus = true
 context_menu_icons = true
 show_close_buttons = true
+show_folder_in_title = true
 background_opacity = 1.0
 corner_radius_scale = 1.0
 sort_by = "name"
@@ -80,6 +81,7 @@ All keys belong in `[browser]`. Dimensions are logical pixels. View, zoom and so
 | `show_close_buttons` | `true` | Show close buttons on tabs, dialogs, panes, the preview and archives. Window controls, `Escape` and Close/Cancel still work when hidden |
 | `reduce_animations` | `false` | Skip animated transitions (entries fading in, smooth scrolling, the sidebar drawer). Applies live |
 | `use_ssd` | `true` | Let the compositor draw the title bar and borders when it supports them; disable to always draw Luciole's own. Open windows switch live |
+| `show_folder_in_title` | `true` | Title each browser window after the folder its active pane shows (`Downloads - Luciole`); disable to title every window `Luciole`. File picker windows keep their own title. Open windows switch live |
 | `color_scheme` | `"auto"` | `"auto"` uses Noctalia's current palette from `colors.toml` (built-in dark without one); `"dark"` and `"light"` use that variant, or the built-in dark or light palette when the file has none. Applies live |
 | `background_opacity` | `1.0` | `0` (clear) to `1` (opaque) for the window background; menus and dialogs stay opaque |
 | `corner_radius_scale` | `1.0` | `0` (square) to `2` (extra rounded), scaling every corner radius. Applies live |
