@@ -3,25 +3,21 @@ title: Configuration
 description: Luciole settings and the config.toml reference.
 ---
 
-Open Settings with Ctrl+, or the main menu. It is a page inside the existing window. Changes save automatically; no manual reload is needed. Reset removes a GUI override so the base configuration or built-in default applies again. Reset All Settings removes the browser override set.
-
-Settings stays open when another window gains focus, preserving your selected category and unfinished edits. Close it with Escape or its close button. Settings follows the available window size while open. Enlarging the window restores its normal dialog size; narrowing it switches to compact category navigation without resetting your selected category or edits.
-
-Luciole uses `luciole/` for its application-owned directories. Existing data under the previous application name is not imported automatically. To retain settings or built-in Places layout, move the corresponding files into the paths documented below while the application is closed.
+Every Luciole preference is a key in `config.toml`; use this page to write the file by hand or to look up a default.
 
 ## Files and precedence
 
-Settings load in this order:
+Settings load in this order, later steps overriding earlier ones:
 
 1. Built-in defaults.
 2. `$XDG_CONFIG_HOME/luciole/config.toml`, your optional base configuration.
-3. `$XDG_CONFIG_HOME/luciole/settings.toml`, writable GUI overrides.
+3. `$XDG_CONFIG_HOME/luciole/settings.toml`, the overrides written by [Settings](/luciole/settings/).
 
-When `XDG_CONFIG_HOME` is unset, use `~/.config`. Luciole never writes through your base configuration. This lets Nix or another declarative tool own `config.toml` while GUI changes remain writable in `settings.toml`. A base edit hidden by a GUI override becomes effective after resetting that preference.
+When `XDG_CONFIG_HOME` is unset, `~/.config` is used. Luciole never writes to `config.toml`, so Nix or another declarative tool can own it. A base edit hidden by an override takes effect after you reset that setting. Luciole does not read `/etc/xdg` or a packaged default.
 
-Valid external changes apply automatically. Unknown keys in either settings file produce a warning and are ignored, so obsolete settings do not prevent startup or reload. Recognized preferences still apply. GUI saves and Reset preserve unknown keys and their values; they never rewrite your base file. Unknown options do not enable unsupported features. Incorrect types, unsupported values, incompatible schema versions and invalid TOML remain errors; invalid reloads keep the last working settings. `luciole config validate <file>` remains strict and reports unknown keys too. Luciole does not search `/etc/xdg` or a packaged default configuration.
+Valid external changes apply automatically. Unknown keys log a warning and are ignored; Settings keeps them when it saves. Wrong types, unsupported values, an incompatible `schema_version` and invalid TOML are errors, and an invalid reload keeps the last working settings.
 
-This is a valid starting configuration, not a required file:
+`schema_version` is optional; when present it must be the integer `1`. This is a valid starting file, not a required one:
 
 ```toml
 schema_version = 1
@@ -41,7 +37,6 @@ single_window = false
 compact_menus = true
 context_menu_icons = true
 show_close_buttons = true
-show_folder_in_title = true
 background_opacity = 1.0
 corner_radius_scale = 1.0
 sort_by = "name"
@@ -49,94 +44,83 @@ directories_first = true
 hidden_last = false
 ```
 
-Validate one file without opening a window or reading adjacent GUI overrides:
-
-```sh
-luciole config validate /path/to/config.toml
-```
-
-`schema_version` is optional; when present it must be integer `1`.
+Check a file with `luciole config validate /path/to/config.toml`; it also reports unknown keys. See [Validate a file](/luciole/settings/#validate-a-file).
 
 ## Icon theme
 
-File and folder artwork follows the desktop icon theme. Theme selection changes and edits to active SVG/PNG artwork refresh automatically. If desktop settings support is unavailable, Luciole uses the icon theme named by GTK settings.ini. Nix users need a fresh development shell after updating runtime dependencies.
+File and folder icons follow the desktop icon theme. Switching themes or editing the active theme's SVG or PNG files refreshes icons automatically. Without desktop settings support, Luciole uses the theme named in GTK `settings.ini`.
 
-Luciole selects the theme's drawing for the displayed icon size, including display scaling. Size-specific SVGs can have different detail and spacing; large vector artwork is not substituted for a matching smaller drawing. Changing zoom can therefore change an icon's drawing as well as its size.
+Luciole picks the theme's drawing for the displayed size, including display scaling, so zooming can change an icon's detail as well as its size.
 
-Icon themes that declare `FollowsColorScheme=true` in their `index.theme` (Breeze, Tela, Colloid, and others) draw their recolorable parts with the `colors.toml` palette, as KDE apps do: folders take the primary color and monochrome icons the text color. They update when the palette changes. Other themes keep their own colors.
+Themes that declare `FollowsColorScheme=true` in their `index.theme` (Breeze, Tela, Colloid and others) draw recolorable parts with the `colors.toml` palette: folders take the primary color and monochrome icons the text color. Other themes keep their own colors.
 
 ## Browser preferences
 
-All keys below belong in `[browser]`. Dimensions are logical pixels unless stated otherwise. View, zoom and sorting choices become defaults for new pages; existing pages retain their visit state. Interaction, sidebar, thumbnail and preview preferences apply across the application.
+All keys belong in `[browser]`. Dimensions are logical pixels. View, zoom and sorting keys set the defaults for new pages; existing pages keep their state. Other keys apply to the whole application.
 
 | Key | Default | Accepted values / meaning |
 | --- | --- | --- |
 | `view_mode` | `"list"` | `"list"`, `"grid"`, `"miller"` |
-| `remember_folder_views` | `false` | Sort and Grid/List changes apply to the current folder only and are remembered for it; file picker windows keep their own. See [per-folder view and sort](/luciole/browsing/#per-folder-view-and-sort) |
+| `remember_folder_views` | `false` | Sort and Grid/List changes apply to the current folder only and are remembered for it; file picker windows keep their own. See [per-folder view and sort](/luciole/views/#remember-a-view-per-folder) |
 | `grid_icon_size` | `96` | `32`, `48`, `64`, `80`, `96`, `128`, `160`, `192`, `256` |
-| `list_icon_size` | `0` | `0` uses the default size, `32`; or `16`, `20`, `24`, `28`, `32`, `40`, `48`, `64`. Rows grow with the icon. |
-| `miller_icon_size` | `0` | Columns view icon size: `0` uses the density's size (`20` compact, `28` comfortable); otherwise the same values as `list_icon_size` |
+| `list_icon_size` | `0` | `0` uses the default size, `32`; or `16`, `20`, `24`, `28`, `32`, `40`, `48`, `64`. Rows grow with the icon |
+| `miller_icon_size` | `0` | Columns view icon size: `0` uses the density's size (`20` compact, `28` comfortable); otherwise the values of `list_icon_size` |
 | `density` | `"compact"` | `"compact"`, `"comfortable"` |
-| `filename_truncation` | `"middle"` | `"middle"` keeps both ends of long filenames; `"end"` keeps the beginning. Applies to all views; Grid retains two-line wrapping. |
+| `filename_truncation` | `"middle"` | `"middle"` keeps both ends of long names; `"end"` keeps the beginning. Grid keeps two-line wrapping |
 | `show_size_caption` | `false` | Size caption in Grid view |
 | `show_type_caption` | `false` | Type caption in Grid view |
 | `show_modified_caption` | `false` | Modified-time caption in Grid view |
 | `show_emblems` | `true` | File emblems |
 | `show_hidden` | `false` | Hidden entries |
 | `show_backups` | `true` | Non-directory backup names ending in `~` |
-| `always_show_tab_bar` | `true` | Keep the tab bar visible when a window has only one tab |
-| `always_show_status_bar` | `false` | Keep the status bar visible when idle, showing the item count and free space |
-| `compact_menus` | `true` | Reduce the row height and padding in context menus without shrinking their text |
-| `context_menu_icons` | `true` | Show action glyphs at the start of context menu rows. Disabling removes the whole icon column; labels, checkmarks, shortcuts and submenu arrows stay in place |
-| `show_close_buttons` | `true` | Show the glyph close buttons on tabs, dialogs, panes, the preview and archives. Disable to hide them live; the window controls, Escape and Close/Cancel actions still close things |
-| `reduce_animations` | `false` | Skip animated transitions, such as file entries fading in as they scroll into Grid and List views, smooth scrolling and the sidebar drawer. Applies live |
-| `use_ssd` | `true` | Let the compositor draw the title bar and borders (server-side decoration) when it supports them. Disable to always draw Luciole's own (client-side decoration). Open windows switch live |
-| `show_folder_in_title` | `true` | Title each browser window after the folder its active pane shows, as its tab label reads (`Downloads - Luciole`), so taskbars and window lists can tell windows apart. Disable to title every window `Luciole`. File picker windows keep their own title. Open windows switch live |
-| `color_scheme` | `"auto"` | `"auto"` uses Noctalia's current palette from `colors.toml` (the built-in dark palette without one); `"dark"` and `"light"` use that variant from `colors.toml`, or Luciole's built-in dark or light palette when the file has none (Noctalia versions that write only `[colors]`). Applies live |
-| `background_opacity` | `1.0` | Number from `0` (clear) to `1` (opaque) for the window background; tabs, toolbar, sidebar and file area share it. Menus and dialogs stay opaque |
-| `corner_radius_scale` | `1.0` | Number from `0` (square) to `2` (extra rounded) scaling every corner radius, like Noctalia's setting of the same name. Open windows, menus and dialogs update live |
+| `always_show_tab_bar` | `true` | Keep the tab bar visible with a single tab |
+| `always_show_status_bar` | `false` | Keep the status bar visible when idle, showing item count and free space |
+| `compact_menus` | `true` | Reduce context menu row height and padding without shrinking text |
+| `context_menu_icons` | `true` | Show action icons at the start of context menu rows; disabling removes the icon column only |
+| `show_close_buttons` | `true` | Show close buttons on tabs, dialogs, panes, the preview and archives. Window controls, `Escape` and Close/Cancel still work when hidden |
+| `reduce_animations` | `false` | Skip animated transitions (entries fading in, smooth scrolling, the sidebar drawer). Applies live |
+| `use_ssd` | `true` | Let the compositor draw the title bar and borders when it supports them; disable to always draw Luciole's own. Open windows switch live |
+| `color_scheme` | `"auto"` | `"auto"` uses Noctalia's current palette from `colors.toml` (built-in dark without one); `"dark"` and `"light"` use that variant, or the built-in dark or light palette when the file has none. Applies live |
+| `background_opacity` | `1.0` | `0` (clear) to `1` (opaque) for the window background; menus and dialogs stay opaque |
+| `corner_radius_scale` | `1.0` | `0` (square) to `2` (extra rounded), scaling every corner radius. Applies live |
 | `activation_mode` | `"double_click"` | `"single_click"`, `"double_click"` |
-| `typing_mode` | `"search"` | `"search"` recursively searches filenames; `"filter"` filters names in the current folder only; `"typeahead"` selects names |
-| `drop_action` | `"menu"` | Action for a drop without a modifier: `"menu"` opens a drop action context menu at the pointer, `"copy"` copies, `"move"` moves. Ctrl, Shift and Alt still take priority; Trash, items from Trash and non-native folders keep their fixed behavior |
-| `single_click_location_edit` | `false` | Edit the location bar path with a single click on the current folder breadcrumb or unused space instead of a double-click |
-| `confirm_permanent_deletion` | `true` | Ask before permanently deleting selected items, including Shift+Delete and selections in Trash; Empty Trash always confirms |
-| `show_permanent_deletion` | `false` | Show Delete Permanently in context menus for items outside Trash; Shift+Delete and Trash actions stay available either way |
-| `switch_to_new_tab` | `true` | Switch when opening a folder in a new tab; disable to keep browsing the current tab |
-| `restore_last_window` | `false` | Reopen tabs from the last closed window once in a new window, or at startup without a requested location |
-| `single_window` | `false` | Keep one window: launches with a path and FileManager1 show-items requests open tabs in the existing window instead of a new one, launches without a path raise it, New Window opens a tab, and tab-moving entries disappear from menus |
-| `terminal_command` | `""` | Terminal command and optional arguments, for example `"foot"`; empty uses `$TERMINAL`, then automatic discovery |
+| `typing_mode` | `"search"` | `"search"` searches filenames recursively; `"filter"` filters the current folder only; `"typeahead"` selects names |
+| `drop_action` | `"menu"` | Drop without a modifier: `"menu"` opens a menu at the pointer, `"copy"` copies, `"move"` moves. `Ctrl`, `Shift` and `Alt` take priority; Trash, items from Trash and non-native folders keep fixed behavior |
+| `single_click_location_edit` | `false` | Edit the path with a single click on the current breadcrumb or unused space instead of a double-click |
+| `confirm_permanent_deletion` | `true` | Ask before permanently deleting, including `Shift+Delete` and selections in Trash; Empty Trash always asks |
+| `show_permanent_deletion` | `false` | Show Delete Permanently in context menus outside Trash; `Shift+Delete` and Trash actions work either way |
+| `switch_to_new_tab` | `true` | Switch to a folder opened in a new tab; disable to keep browsing the current tab |
+| `restore_last_window` | `false` | Reopen the tabs of the last closed window, once, in a new window or at startup without a location |
+| `single_window` | `false` | Keep one window: launches with a path and FileManager1 show-items requests open tabs in it, launches without a path raise it, New Window opens a tab, and tab-moving entries leave the menus |
+| `terminal_command` | `""` | Terminal command with optional arguments, for example `"foot"`; empty uses `$TERMINAL`, then automatic discovery. See [Opening files](/luciole/opening-files/) |
 | `sort_by` | `"name"` | `"name"`, `"type"`, `"size"`, `"modified"`, `"accessed"`, `"created"`, `"owner"`, `"group"`, `"permissions"`, `"location"` |
 | `sort_descending` | `false` | Reverse sort direction |
 | `directories_first` | `true` | Group folders, and links to local folders, before files |
 | `hidden_last` | `false` | Sort shown hidden items after visible ones; `directories_first` applies within each group |
 | `show_sidebar` | `true` | Show the docked sidebar in wide windows; narrow windows use a temporary drawer |
 | `sidebar_width` | `206` | Integer `160` through `400` |
-| `sidebar_tree` | `false` | Optional sidebar folder tree |
+| `sidebar_tree` | `false` | Sidebar folder tree |
 | `show_drives` | `true` | Show drive rows |
-| `show_network` | `true` | Show Network in the sidebar, retaining its saved position when hidden |
+| `show_network` | `true` | Show Network in the sidebar; a hidden entry keeps its saved position |
 | `expandable_folders` | `false` | Expand folders within List view |
 | `show_preview` | `true` | Show the side preview when space permits |
-| `chooser_show_preview` | `false` | Show the side preview in file picker windows; toggling the preview there changes only this key |
-| `chooser_start_folder` | `"home"` | `"home"`, `"last"`; where a file picker opens when the application suggests no folder. `"last"` reopens the folder of the last accepted pick; a folder the application suggests always wins |
-| `chooser_view_mode` | `"list"` | `"list"`, `"grid"`; file picker windows' view, kept apart from `view_mode` |
-| `chooser_sort_by`, `chooser_sort_descending`, `chooser_directories_first`, `chooser_hidden_last` | as `sort_by` and its companions | File picker windows' sorting, kept apart from the browser's |
+| `chooser_show_preview` | `false` | Show the side preview in file picker windows; toggling it there changes only this key |
+| `chooser_start_folder` | `"home"` | `"home"`, `"last"`: where a file picker opens when the application suggests no folder. `"last"` reopens the folder of the last accepted pick; a suggested folder always wins |
+| `chooser_view_mode` | `"list"` | `"list"`, `"grid"`; kept apart from `view_mode` |
+| `chooser_sort_by`, `chooser_sort_descending`, `chooser_directories_first`, `chooser_hidden_last` | as `sort_by` and its companions | Sorting of file picker windows, kept apart from the browser's |
 | `chooser_show_hidden` | `false` | Show hidden items in file picker windows |
-| `chooser_grid_icon_size`, `chooser_list_icon_size` | as `grid_icon_size`, `list_icon_size` | File picker windows' zoom, kept apart from the browser's |
+| `chooser_grid_icon_size`, `chooser_list_icon_size` | as `grid_icon_size`, `list_icon_size` | Zoom of file picker windows, kept apart from the browser's |
 | `preview_width` | `320` | Integer `208` through `800` |
-| `miller_column_width` | `260` | Preferred column width, integer `180` through `800` |
+| `miller_column_width` | `260` | Preferred column width, integer `180` through `800`; individual columns can keep their own width |
 | `miller_show_parents` | `true` | Include parent folders when entering Column view |
-
-Individual live Miller columns can retain independent widths. The saved preferred width is a default, not a requirement for every column to occupy the same width.
 
 ### List columns
 
-Name is always present. Type, Size and Modified are visible by default. Accessed, Created, Owner, Group, Permissions and Location are optional and hidden by default.
+Name is always present. Type, Size and Modified are visible by default; Accessed, Created, Owner, Group, Permissions and Location are hidden by default.
 
 Visibility keys are `show_type_column`, `show_size_column`, `show_modified_column`, `show_accessed_column`, `show_created_column`, `show_owner_column`, `show_group_column`, `show_permissions_column` and `show_location_column`.
 
-`column_order` accepts unique metadata column names. It must include `"type"`, `"size"` and `"modified"`; the optional names are `"accessed"`, `"created"`, `"owner"`, `"group"`, `"permissions"` and `"location"`. Omitted optional columns are appended in their default order. Name is not an entry in this array.
-
-Width keys and defaults:
+`column_order` lists unique column names. It must include `"type"`, `"size"` and `"modified"`; the optional names are `"accessed"`, `"created"`, `"owner"`, `"group"`, `"permissions"` and `"location"`, and omitted ones are appended in that order. Name is not an entry.
 
 | Key | Default |
 | --- | --- |
@@ -151,80 +135,29 @@ Width keys and defaults:
 | `permissions_column_width` | `112` |
 | `location_column_width` | `260` |
 
-Name accepts `0` for automatic sizing or an integer from `160` through `16384`. Other column widths accept integers from `64` through `2048`.
+Name accepts `0` for automatic sizing or an integer from `160` through `16384`. Other widths accept integers from `64` through `2048`.
 
 ### Thumbnails
 
 | Key | Default | Accepted values |
 | --- | --- | --- |
 | `thumbnail_policy` | `"local"` | `"never"`, `"local"`, `"all"` |
-| `thumbnail_max_file_mib` | `64` | Image/PDF source limit, integer `1` through `1024`; does not limit video/audio file size |
+| `thumbnail_max_file_mib` | `64` | Image/PDF source limit, integer `1` through `1024`; does not limit video or audio files |
 | `thumbnail_cache_mib` | `1024` | Integer `16` through `8192`; bounds the whole shared cache, oldest thumbnails pruned first |
 
-Local policy generates thumbnails for eligible local files. It skips network shares and FUSE mounts without a local disk, such as rclone and sshfs. A FUSE mount of local files that has no disk of its own, such as gocryptfs, is skipped too; choose All Locations to get its thumbnails. To generate thumbnails on mounted network shares such as `/mnt/media`, choose Settings → Thumbnails → Show Thumbnails → All Locations. All permits generation from filesystem paths, including mounted shares, and reuses the shared thumbnail cache. Locations without a filesystem path remain cache-only; Luciole does not download entire remote files for thumbnail generation.
+`"local"` skips network shares and FUSE mounts without a local disk, such as rclone, sshfs and gocryptfs. To get thumbnails on mounted shares such as `/mnt/media`, choose **Settings → Thumbnails → Show Thumbnails → All Locations**. Locations without a filesystem path stay cache-only; Luciole never downloads whole remote files for thumbnails.
 
-The Image/PDF Size Limit applies to image and PDF sources. Video stills and embedded audio artwork use seekable media access and are not rejected merely because their files exceed that limit. There is no pixel-count limit: a decoding helper's memory, CPU time and output limits decide how large an image can be, which admits phone photos up to about 200 megapixels. Settings also provides cache inspection/clearing. Luciole reuses compatible shared thumbnails and preserves cache files created or replaced by other applications. Older Luciole video thumbnails regenerate using representative frames instead of always taking the opening frame. With `ffmpegthumbnailer` installed, newly generated video thumbnails include its filmstrip edges, stored in the shared cache so other file managers display them too. Missing/failing helpers keep a plain thumbnail. The edges come from the thumbnailer rather than the icon theme. Native video previews generate clean frames separately.
-
-### Keyboard shortcuts
-
-Shortcuts live in `[browser.keybinds]`. Each key names a command and holds an array of up to four chords. Commands you omit keep their built-in defaults; an empty array unassigns the command. Saving from Settings → Keybinds writes only the commands that differ from the inherited configuration, so restoring a built-in default still overrides a custom `config.toml`. Reset all settings restores every default.
-
-```toml
-[browser.keybinds]
-search = ["Ctrl+F", "Ctrl+K"]
-open_in_new_tab = ["Ctrl+Return"]
-open_in_other_pane = ["Ctrl+Alt+Return"]
-open_in_new_window = ["Shift+Return"]
-copy_target_path = ["Ctrl+Alt+C"]
-copy_target_uri = ["Ctrl+Alt+U"]
-zoom_in = ["Ctrl+equal", "Ctrl+plus", "Ctrl+Shift+plus", "Ctrl+KP_Add"]
-quick_preview = []
-```
-
-Commands are grouped into three independent scopes. Two commands in the same scope cannot share a chord; the same chord can appear once in each scope. The keybinds section refuses same-scope conflicts, and warns when a chord is already used in another scope because the other command may take precedence depending on focus. Super combinations are reserved for the compositor and are rejected. Unlike other settings tables, an unknown command name or malformed chord in `[browser.keybinds]` invalidates the whole file, so check the reported error before restarting.
-
-If a File Browser command already uses `Ctrl+Alt+C`, `Ctrl+Alt+U`, `Ctrl+Alt+Return` or `Shift+Return`, the corresponding Copy Location or Open In default stays unassigned while that key is in use. An explicit assignment for any of these commands, including one that matches its default, still follows the usual same-scope conflict rule.
-
-| Scope | Commands |
-| --- | --- |
-| Controls | `validate`, `cancel`, `focus_next`, `focus_previous`, `move_left`, `move_right`, `move_up`, `move_down`, `move_first`, `move_last`, `move_page_up`, `move_page_down` |
-| File Browser | `back`, `forward`, `up`, `home_folder`, `refresh`, `edit_location`, `search`, `view_grid`, `view_list`, `view_miller`, `toggle_hidden`, `toggle_sidebar`, `toggle_preview`, `quick_preview`, `open`, `open_in_new_tab`, `open_in_new_tab_background`, `open_in_other_pane`, `open_in_new_window`, `toggle_selection`, `rename`, `create_folder`, `create_file`, `cut`, `copy`, `copy_target_path`, `copy_target_uri`, `paste`, `trash`, `delete_permanently`, `properties`, `terminal`, `parent_folder`, `context_menu`, `select_all`, `invert_selection`, `select_pattern`, `clear_selection`, `undo`, `redo`, `settings`, `keyboard_shortcuts`, `zoom_in`, `zoom_out`, `zoom_reset` |
-| Tabs and Windows | `new_tab`, `close_tab`, `duplicate_tab`, `reopen_tab`, `next_tab`, `previous_tab`, `split_view`, `switch_area`, `close_pane`, `new_window`, `close_window`, `fullscreen`, `quit`, `select_tab_1`, `select_tab_2`, `select_tab_3`, `select_tab_4`, `select_tab_5`, `select_tab_6`, `select_tab_7`, `select_tab_8`, `select_tab_9` |
-
-The archive viewer follows `cancel`, `focus_next`, `focus_previous`, `move_up`, `move_down`, `move_first`, `move_last`, `move_page_up`, `move_page_down`, `select_all`, `parent_folder`, `up` and `open`. `quit` is handled globally, including while an archive or menu popup is open. `select_tab_9` always selects the last tab. Other Escape handlers (returning to the file list, the location bar, search completion, menus, previews and dialogs) also follow `cancel`; `clear_selection` still clears the file list selection.
-
-Chords use key names such as `Return`, `Escape`, `Tab`, `space`, `BackSpace`, `Delete`, `Menu`, `Home`, `End`, `Page_Up`, `Page_Down`, `equal`, `minus`, `plus`, `comma`, `KP_Add`, `KP_0` and function keys such as `F4` and `F5`. `Next`/`Prior` are accepted aliases for `Page_Down`/`Page_Up`. `Ctrl+,` and `Ctrl++` are accepted as shorthands for `Ctrl+comma` and `Ctrl+plus`. Except for `validate` and `quick_preview`, printable keys need Ctrl, Alt or another modifier; Shift alone is not enough. Changes apply to open windows immediately.
+The size limit applies to image and PDF sources only. There is no pixel limit: the decoder's memory, CPU time and output limits decide, which admits phone photos up to about 200 megapixels. With `ffmpegthumbnailer` installed, new video thumbnails get its filmstrip edges; without it they stay plain. Settings can inspect and clear the cache, and existing shared thumbnails are reused.
 
 ## Other writable data
 
-User bookmarks live in `$XDG_CONFIG_HOME/gtk-3.0/bookmarks`, defaulting to `~/.config/gtk-3.0/bookmarks`, shared with Nemo, Nautilus and GTK file choosers. Each line contains a URI and an optional label separated by a space. The older `~/.gtk-bookmarks` is read as a fallback when the modern file has not been found; edits go to the modern path. Read-only or symlink-managed files can be displayed, but Luciole refuses edits that would replace a read-only or linked file. Old Luciole pins are not migrated.
+- **Pinned folders:** `$XDG_CONFIG_HOME/gtk-3.0/bookmarks`, default `~/.config/gtk-3.0/bookmarks`. Each line holds a URI and an optional label. See [Pin a folder](/luciole/sidebar/#pin-a-folder).
+- **Sidebar layout and last window:** `$XDG_STATE_HOME/luciole/state.toml`, default `~/.local/state/luciole/state.toml`. It holds the built-in Places layout, separators and headings, custom pin icons, the tabs of the last window and the last file picker folder. Icons exist only here.
+- **Per-folder view and sort:** `$XDG_STATE_HOME/luciole/folder_views.toml`. Luciole keeps the 4096 most recently changed folders.
+- **Thumbnails:** the shared `$XDG_CACHE_HOME/thumbnails/` cache, default `~/.cache/thumbnails/`.
+- **Custom actions:** the [scripts directory](/luciole/scripts/).
+- **Palette:** an optional `colors.toml` beside the settings files, written by Noctalia's [Luciole template](https://docs.noctalia.dev/noctalia/templates/official/luciole/). See [Packaging](https://github.com/noctalia-dev/luciole/blob/main/PACKAGING.md#configuration-and-writable-data) for ownership and installation.
 
-Built-in Places layout, Places separators and their headings, optional last-window tab state and the last file picker folder remain in `$XDG_STATE_HOME/luciole/state.toml`, defaulting to `~/.local/state/luciole/state.toml`. Cached user rows there preserve their placement among built-ins; their contents always come from the shared bookmark file. Deleting a shared user bookmark removes it from Luciole even when an old cache row remains. Tab restoration is controlled by `browser.restore_last_window`.
+Pinned folders are shared with GTK applications and file dialogs, and Luciole refuses to edit a read-only or symlinked bookmarks file.
 
-Per-folder sort and view choices live in `$XDG_STATE_HOME/luciole/folder_views.toml`, one `[[folders]]` row per folder URI with optional `sort_by`, `sort_descending`, `directories_first`, `hidden_last` and `view_mode` (`"list"` or `"grid"`) fields. Invalid rows are skipped. Luciole replaces an unreadable file with its in-memory settings the next time a folder's settings change. It keeps the 4096 most recently changed folders, or fewer when their rows would make the file larger than 240 KiB; the least recently changed go first.
-
-Custom bookmark icons are saved as an optional `icon` field on the matching bookmark row in this private state file. They are Luciole-only; the shared GTK bookmark format has no icon field.
-
-Thumbnails use the shared `$XDG_CACHE_HOME/thumbnails/` cache. The default cache root is `~/.cache`. Custom actions live in the [Scripts directory](/luciole/scripts/).
-
-An optional `colors.toml` beside the settings files supplies the Noctalia palette handoff; Noctalia's built-in [Luciole template](https://docs.noctalia.dev/noctalia/templates/official/luciole/) writes it. UI-scale preferences remain planned. See [Packaging](https://github.com/noctalia-dev/luciole/blob/main/PACKAGING.md#configuration-and-writable-data) for the complete ownership and installation notes.
-
-Text follows the system font: the family and size from GNOME's `font-name` setting, or `gtk-font-name` in `~/.config/gtk-3.0/settings.ini` (then `gtk-4.0`), as written by GNOME Settings or nwg-look. The size sets body text (11 pt is about 14.7 px) and other text keeps its proportions; without a system font, Luciole uses Fontconfig's `sans-serif` at 14 px. GNOME's Large Text (`text-scaling-factor`) multiplies it. Changes apply to open windows right away, including symlinked `settings.ini` files. Icons keep their size.
-
-## Terminal selection
-
-Settings → General → Terminal sets Luciole's terminal command, for example `foot`, `kitty` or `foot --app-id=Luciole`. Press Enter or leave the field to save. This preference applies to Open Terminal Here, Run in Terminal and opening files with terminal-based applications, including Open With and explicitly confirmed terminal application launchers. It does not change another application's terminal preference or the file's associated editor.
-
-Selection order is the configured command, then the process's inherited `TERMINAL` environment variable, then automatic discovery. `TERM` is never an executable preference. Empty `terminal_command` means automatic selection; an explicit missing or malformed command reports an error instead of choosing another terminal. Restart after changing the environment inherited by Luciole; saved preferences apply live across windows.
-
-Automatic discovery tries `xdg-terminal-exec` first, then `x-terminal-emulator` and supported terminal executables. The helper honors shared terminal preferences; without a preference it may choose any eligible installed terminal. Set Luciole's command or `TERMINAL` to choose a particular one when several are installed. With neither helper present, Luciole tries Foot, Kitty, Alacritty, Ghostty, WezTerm, Konsole, GNOME Terminal, Console, Ptyxis, Xfce Terminal and XTerm in that order.
-
-Commands support quoted arguments and `~/` in the executable path, without shell expansion, substitutions or environment assignments. Common terminals get their execution separator automatically. An explicitly supplied trailing `--`, `-e` or `-x` is preserved; custom terminal wrappers can use one of those forms. Automatic executable discovery cannot infer a favorite terminal from the fact that several are installed.
-
-Open Terminal Here and Run in Terminal pass the requested folder both as the process directory and through the supported terminal's directory option. This includes Alacritty, Ghostty, WezTerm, Kitty, Foot, Konsole, GNOME Terminal, Console, Ptyxis, MATE Terminal and Xfce Terminal, plus `xdg-terminal-exec`. WezTerm receives `start` when no subcommand is configured. Ordinary Ghostty launches use a separate process so an existing window cannot override the requested directory or command; an explicitly configured `ghostty +new-window` keeps its reuse behavior. Custom wrappers and `x-terminal-emulator` must forward the inherited directory themselves.
-
-Ghostty loads additional `--config-file` files after command-line settings. When supplying one in the terminal command, leave `working-directory` and `gtk-single-instance` out of that additional file so it does not override Luciole's launch options. The normal Ghostty configuration file can keep its usual defaults.
-
-Terminal-based file handlers start in the files' common native containing folder. A terminal application launcher's explicit desktop `Path` takes precedence; otherwise a confirmed launcher uses the folder from which it was run. Remote or mixed-parent file selections without a common native folder retain the handler's default directory.
-
-The terminal preference applies only when an application asks for a terminal. Graphical or client desktop entries marked `Terminal=false` keep their normal behavior. For example, an Emacs Client entry may reuse an existing Emacs frame, including one running inside a terminal; selecting Kitty here does not override the editor's session policy.
+Text follows the system font: family and size come from GNOME's `font-name` setting, or `gtk-font-name` in `~/.config/gtk-3.0/settings.ini` (then `gtk-4.0`). Without either, Luciole uses `sans-serif` at 14 px. Large Text (`text-scaling-factor`) multiplies the size, and open windows update live. Icons keep their size.

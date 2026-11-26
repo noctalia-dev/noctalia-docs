@@ -1,0 +1,50 @@
+---
+title: Archives
+---
+
+Create, browse and extract archives without leaving Luciole.
+
+## Create an archive
+
+Select native files or folders and choose **Compress**. Luciole creates ZIP, TAR and 7z archives. Compressed TAR variants (gzip, bzip2, XZ, Zstandard) depend on the installed archive library.
+
+Symbolic links are stored as links with their original target text, not their contents. Absolute, outside-folder, missing and cyclic targets can be archived this way.
+
+:::note
+Luciole refuses to browse or extract an archive that contains escaping or cyclic links, even one it created itself.
+:::
+
+## Browse an archive
+
+Double-click, press `Enter` or choose **Open** on a supported local archive, or choose **Browse Archive**. The read-only archive page shows:
+
+- the name, format, compression, size and a contents summary
+- breadcrumbs for folders inside the archive
+- members with sortable **Name**, **Type**, **Size** and **Modified** columns
+
+**Open** on a member opens that file in its associated application. Members opened this way are limited to 128 MiB; use extraction for larger files. If another file operation is still finishing, Luciole says so instead of opening.
+
+## Extract
+
+Use **Extract Here** or **Extract To**, or the **Extract…** and **Extract Here** buttons on the archive page. They act on the selected members, or on the whole archive when nothing is selected. Extraction uses the normal conflict dialog, see [file operations](/luciole/file-operations/#resolve-name-conflicts).
+
+You can also drop one archive on a folder and choose **Extract Here** from the menu.
+
+Before extracting, Luciole checks that temporary storage and the destination have enough space. This is an estimate, so write errors are still reported. Archives that are unsafe or unsupported are refused with a message.
+
+## Supported inputs
+
+| Input | Notes |
+|---|---|
+| ZIP, TAR, 7z, RAR | Depends on the archive capabilities available on your system |
+| Encrypted 7z | Needs a system 7-Zip executable |
+| Encrypted RAR | Not supported |
+| Split ZIP `name.zip.001`, `.002`, ... | Select `.001`, with all contiguous parts beside it |
+| Spanned `.z01` sets | Not supported; split-archive creation is not supported either |
+| `dump.sql.gz` (`.gz`, `.bz2`, `.xz`, `.zst` without `.tar`) | Browses and extracts as one file without the suffix; size is unknown until extracted |
+
+Luciole asks for a password when one is needed and never stores it.
+
+:::tip
+Right-click an archive and choose **Open With** to open it in another installed application. Luciole has no preferred external archiver.
+:::

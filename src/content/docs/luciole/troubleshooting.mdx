@@ -1,0 +1,22 @@
+---
+title: Troubleshooting
+---
+
+Find your symptom, then follow the link for the full steps.
+
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| Trash, Restore or Empty Trash do nothing | The GVfs services are not installed or no session D-Bus connection exists | Install and enable GVfs, then restart Luciole. See [Installation](/luciole/installation/#optional-features) |
+| **Operation not supported** when opening `sftp://`, `smb://` or a WebDAV address | The GVfs backend for that protocol is missing | [Fix "Operation not supported"](/luciole/network/#fix-operation-not-supported) |
+| Remote address works in a terminal but not in Luciole | Luciole runs outside the desktop session that mounted it | [Test the system provider](/luciole/network/#test-the-system-provider) |
+| No thumbnails for some image formats | The matching image loader is missing | Install the loaders listed under [Optional features](/luciole/installation/#optional-features) |
+| No thumbnails for videos or PDFs | FFmpeg or the Poppler utilities are missing | Install them, see [Optional features](/luciole/installation/#optional-features) |
+| An encrypted 7z archive cannot be opened | No system 7-Zip executable | Install 7-Zip, see [Supported inputs](/luciole/archives/#supported-inputs) |
+| An encrypted RAR archive cannot be opened | Encrypted RAR is not supported | Extract it with another tool |
+| Other applications still show a different Open and Save dialog | The portal backend is not selected | [Apply and check the file picker](/luciole/file-picker/#apply-and-check-the-file-picker) |
+| Luciole is not the default file manager | Installing it does not change defaults | Set it in your desktop's default applications |
+| A shortcut does nothing | Another command in the same scope uses it, or the chord is unassigned | See [Keyboard shortcuts](/luciole/keybinds/) |
+| Open Terminal Here does nothing | No terminal was found | [Choose a terminal](/luciole/opening-files/#choose-a-terminal) |
+| A setting in `config.toml` is ignored | The file has an error, or a Settings override takes precedence | Run `luciole config validate ~/.config/luciole/config.toml` and see [Files and precedence](/luciole/configuration/#files-and-precedence) |
+
+If none of these match, report the problem on the [issue tracker](https://github.com/noctalia-dev/luciole/issues) with your Luciole version (`luciole --version`), your distribution and the exact error.

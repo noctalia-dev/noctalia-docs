@@ -1,0 +1,49 @@
+---
+title: Undo and redo
+---
+
+Reverse the most recent file operation with `Ctrl+Z`, and reapply it with `Ctrl+Shift+Z`.
+
+## What can be undone
+
+The main menu and the folder background menu name the pending action, such as **Undo Create Folder**. History holds one operation, shared by all tabs and windows of the running Luciole.
+
+| Operation | Undo | Redo |
+|---|---|---|
+| Create folder, empty file, template document, link | Removes the unchanged new item (not to Trash) | Recreates it from the original content |
+| Rename, batch rename | Restores the old names | Applies the new names |
+| Copy | Deletes the unchanged copies; originals stay | Copies again from the source's current contents |
+| Create Links | Deletes only the created links | Recreates links with the same targets, even if dangling |
+| Move | Returns items to their original folders | Moves them back to the destination names |
+
+A fully completed batch rename or move selection is one action. Text fields keep their own text undo.
+
+## Mounted network folders
+
+Copies from or to SFTP, SMB and WebDAV folders can be undone. So can moves inside one mounted SFTP server and account. Other remote moves, partial jobs, retries and Trash have no undo. See [network folders](/luciole/network/).
+
+## When undo is refused
+
+Undo checks everything before it changes anything. It is refused when:
+
+- a created or copied item was changed, replaced or removed
+- a new folder is no longer empty
+- another item occupies a name the undo must restore (move it aside and retry)
+- a copy's source is unavailable for redo (the problem is reported and you can retry)
+
+Merely reading a file does not count as a change. An undone folder merge removes only the items that were transferred; existing folders and other files stay.
+
+:::caution
+**Replace** permanently discards the previous destination. Undo removes the new copy or moves your data back, but the replaced item stays gone.
+:::
+
+## When history is cleared
+
+- Starting another file job that changes files clears history, including redo. Browsing and dialogs do not.
+- Quitting Luciole clears it. It does not carry over between separate processes.
+- Undo and redo are unavailable while a file job is running.
+- Moves across file systems copy the data back, so they need free space and write access. Copy needs the source again for redo.
+
+If a job completes with history too large to track, you get the result without an undo entry. Files that were already changed stay changed when an undo is interrupted. Check the report in [File Operations](/luciole/file-operations/#file-operations-popover).
+
+Trash moves, permanent deletion and external archive extraction have no undo. See [trash](/luciole/trash/).

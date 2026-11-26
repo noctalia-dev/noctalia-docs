@@ -3,108 +3,72 @@ title: File operations
 description: Copy, move, rename, Trash, archives, Properties, and undo and redo in Luciole.
 ---
 
-## Copy, move and create
+Copy, move, create and rename files, and watch running jobs in the File Operations popover.
 
-Use Ctrl+C or Ctrl+X for the selection and Ctrl+V in the destination folder. Paste is also available from context menus, including List view. Clipboard transfers and drag/drop work between Luciole windows; the same transport supports other file managers.
+## Copy and move
 
-In the Copy Location submenu, Path (Ctrl+Alt+C) copies the selected paths as text, and URI (Ctrl+Alt+U) copies their URIs. Multiple items are separated by newlines. Change these shortcuts on the Keybinds page in Settings. Ctrl+C still copies items for file transfers.
+Select items, press `Ctrl+C` to copy or `Ctrl+X` to cut, open the destination folder and press `Ctrl+V`. Paste is also in the context menus, including List view. Clipboard transfers and drag and drop work between Luciole windows and with other applications.
 
-Ctrl+V also accepts an image on the clipboard (PNG, JPEG, WebP, GIF, BMP, TIFF or SVG): Luciole asks for a name, defaulting to `Pasted image` with the matching extension, and saves the image as a new file in the current folder. An existing name is reported rather than overwritten. The save uses the same staged creation path as New File, so it joins the Undo history; like other creation it needs a folder with a native path, which includes mounted SFTP and WebDAV locations.
+To copy paths as text, use **Copy Location**: **Path** (`Ctrl+Alt+C`) or **URI** (`Ctrl+Alt+U`). Several items are separated by newlines. To change these shortcuts, see [keybinds](/luciole/keybinds/).
 
-Drop files on a folder or anywhere else in the destination pane; dropping on a file uses the folder it is in. Ctrl requests Copy, Shift requests Move and Alt opens an action menu at the pointer. Without a modifier, Settings → General → When Dropping Files decides: Ask What to Do by default, which opens the same menu, Copy Here, or Move Here. Alt-drop offers Create Link Here for native locations and within the same mounted SFTP server/account. These are symbolic links, not copies of the source data. Cross-server links and SMB/WebDAV link creation are unavailable. Server-side symlink support is checked before an existing destination is replaced. The drop menu also offers Extract Here when exactly one supported archive is dropped on a native folder: it publishes the contents into a folder named after the archive at the drop location and leaves the archive where it is. Move into New Folder… asks for a folder name, creates that folder at the drop location and moves the dropped files into it; the folder stays if the move fails or is cancelled. Dragging a folder into Places pins it instead of transferring its contents.
+## Paste an image
 
-Archive entries can also be dragged from compatible applications. An ordinary file-list offer uses the normal Copy workflow after the source prepares its files. A KDE deferred-extraction offer requests extraction directly into a local folder, including mounted folders with a native path. The source application handles passwords, progress and existing-name decisions. Luciole reports that extraction was requested; that message does not mean extraction has finished. Review or cancel that extraction in the source application. These source-owned extractions do not enter Luciole's File Operations or Undo history. Keep the source application open until it finishes.
+If the clipboard holds an image (PNG, JPEG, WebP, GIF, BMP, TIFF or SVG), `Ctrl+V` asks for a name, default `Pasted image`, and saves a new file in the current folder. An existing name is reported, never overwritten. The folder needs a native path, which includes mounted SFTP and WebDAV folders. You can undo it, see [undo and redo](/luciole/undo-redo/).
 
-A source may need time to prepare the files after a drop. Luciole waits asynchronously for a file list for up to two minutes and reports a read error if it cannot obtain a complete valid list. Normal file-list transfers then use Luciole's progress and conflict handling. The source must provide usable files and keep them available through transfer completion.
+## Drag and drop
 
-There is no per-archiver drag preference: compatible producers are detected automatically. An external archive program may need its own extraction helpers. Luciole's built-in Compress/Extract actions do not use a preferred external archiver; Open With can still open an archive in an installed application.
+Drop files on a folder, or anywhere in the destination pane to use the folder shown. Dropping on a file uses its folder.
 
-Deferred extraction cannot target a provider URI or pin an archive entry in Places. X11 Direct Save-only and arbitrary raw-data offers are not supported. Supporting one export protocol does not imply support for every archive application's drag behavior.
+| Modifier | Result |
+|---|---|
+| `Ctrl` | Copy |
+| `Shift` | Move |
+| `Alt` | Opens an action menu at the pointer |
+| none | Follows **Settings → General → When Dropping Files**: **Ask What to Do** (default), **Copy Here** or **Move Here** |
 
-When names collide, the conflict dialog offers Replace, Skip and a numbered new name. Folder copies can merge into existing folders. Apply-to-all choices are scoped to the current job. Failed-item retries are explicit. Cancellation stops remaining work; it does not undo already completed changes. Supported native copies, links and moves, remote copies and SFTP link transfers have [Undo/Redo](#undo-and-redo); interrupted-job recovery remains pending.
+The menu offers **Create Link Here** for native folders and within one mounted SFTP server. These are symbolic links, not copies. Cross-server links and SMB or WebDAV links are unavailable, see [network folders](/luciole/network/).
 
-The background menu provides New Folder (Ctrl+Shift+N) and New Document. New Document offers an empty file (Ctrl+Alt+N) and files from the configured XDG Templates folder. Create Link on a single native item creates a symbolic or hard link where supported. Show Link Target on a single symbolic link opens the folder that holds the link's target and selects it. It follows one link: when the target is another link, use it again to go further. A link whose target no longer exists reports that instead.
+With exactly one supported archive dropped on a native folder, **Extract Here** extracts into a new folder named after the archive. **Move into New Folder…** asks for a name, creates the folder and moves the files into it; the folder stays if the move fails. Dragging a folder into Places pins it. Dropping on Trash is covered in [trash](/luciole/trash/).
 
-F2 renames one item. Multiple selected native items from the same containing folder open batch rename. Preview the proposed names before applying them.
+## Drop from an archive application
 
-Choose **Regex** to replace every match of an ECMAScript regular expression. In **Replace**, use `$1`, `$2`, and so on for captured groups, `$&` for the whole match, or `$$` for a literal dollar sign. For example, find `^IMG_(\d+)$` and replace it with `Photo-$1` to turn `IMG_0042.jpg` into `Photo-0042.jpg` with **Keep extensions** enabled. Non-matching names stay unchanged. Matching is case-sensitive and works on filename bytes, not Unicode characters, so a pattern such as `.` can match part of a multibyte character. A new name that is not valid UTF-8 is flagged in the preview and cannot be applied. Back-references such as `\1` in **Find** are not supported.
+Entries dragged from a compatible archive application are copied once the source has prepared the files. Luciole waits up to two minutes for the list.
 
-## File operations popover
+Some applications instead ask Luciole to extract into a local folder. They handle passwords, progress and name conflicts, and Luciole only reports that extraction was requested. Keep the source open; review or cancel there. These extractions do not appear in File Operations or undo history.
 
-Open File Operations from the toolbar or main menu to see jobs across tabs and windows in this running Luciole process. It shows preparation, transferred bytes, known item totals, pending decisions and results. Work with no known final total uses a spinner rather than a percentage. Pause is not offered because the current services cannot pause.
+## Resolve name conflicts
 
-Cancel stops remaining work; completed effects remain. Closing the popover does not cancel accepted jobs. It dismisses when the window resizes; open it again from the toolbar at the new size. Review returns to the page handling a pending decision. Details shows a bounded report with Copy Report. Retry Failed is offered only while that transfer's retry information is available, and rechecks captured inputs without repeating completed items. Retried cut moves preserve the existing clipboard ownership checks.
+When names collide, the dialog offers **Replace**, **Skip** and a numbered new name. Folder copies can merge into existing folders. Apply-to-all choices last for the current job, and retrying failed items is explicit. Cancel stops the remaining work; finished items stay done.
 
-The most recent 12 results stay in memory until Clear Finished or application exit. Clearing results does not cancel running jobs. Older reports can outlive their service, so Retry may no longer be available. This is progress and reporting, not a persistent recovery journal. Separate Luciole processes have separate job lists.
+:::caution
+**Replace** permanently discards the previous item, including a folder's contents. Undo cannot bring it back.
+:::
 
-## Undo and redo
+## Create items
 
-Undo (Ctrl+Z) reverses the most recent supported creation, rename, copy or move. Redo (Ctrl+Shift+Z) reapplies it. The main menu and folder background menu name the action, such as Undo Create Folder, Undo Batch Rename, Undo Copy, Undo Create Links or Undo Move. A fully completed batch rename or supported move selection is one action. The one-operation history is shared by tabs and windows in the same running Luciole process; it does not survive restart or cross independent processes. Text inputs retain their own text undo/redo.
+The folder background menu offers **New Folder** (`Ctrl+Shift+N`) and **New Document**, which has an empty file (`Ctrl+Alt+N`) and the files in your XDG Templates folder.
 
-Undo creation removes the unchanged new folder, empty file, template document or link from its containing folder. It does not send it to Trash. Changed, replaced or missing items are refused, and folders must still be empty. Creation Undo never traverses or deletes folder contents. Undoing a link removes only the new link. Redo uses the original created content, so changing or removing a document template does not change the restored document. Hard-link Redo requires its retained target to remain available and unchanged.
+**Create Link** on one native item makes a symbolic or hard link where supported. **Show Link Target** on a symbolic link opens the folder holding its target and selects it; use it again to follow a chain.
 
-An unrelated occupant blocks reversal; move it aside before retrying. Reversal checks containing-folder and item identities/revisions. Reading a file does not invalidate the record. Batch replay checks all affected items and destinations before changing names and handles swaps and cycles. Entries whose names did not change are excluded.
+## Rename
 
-Undo Copy deletes the unchanged copied destinations, leaving the originals untouched. Redo copies again from the original source into the recorded destination names, including numbered Keep Both names. It uses the source's current contents. If the source changed, the new copy reflects those changes; if it is missing or unavailable, Redo reports the problem and can be retried. Copied files are not kept privately for Redo.
+Press `F2` to rename one item. With several native items from one folder selected, it opens batch rename; check the preview before applying.
 
-Undo Create Links deletes only the created symbolic links. Redo recreates their literal targets even if the original source disappeared, producing a dangling link. Link transfers support native paths and the same SFTP host, account and port. They do not traverse their targets or merge folders.
+Choose **Regex** to replace every match of an ECMAScript regular expression. In **Replace**, `$1`, `$2` insert captured groups, `$&` the whole match and `$$` a dollar sign. With **Keep extensions** on, find `^IMG_(\d+)$` and replace with `Photo-$1` to turn `IMG_0042.jpg` into `Photo-0042.jpg`.
 
-Undo Move returns the recorded files, folders and links to their original containing folders. Redo moves them back to the actual destination names. Both directions use ordinary transfer jobs. Native same-filesystem whole-folder moves use rename without recursively scanning their contents for history; nested changes travel with the folder when its recorded root revision remains unchanged. Moves across native filesystems copy the data back, synchronize it and remove the transferred source. They need sufficient free space and write access and do not preserve original inode identities or hard-link relationships.
+- Non-matching names stay unchanged.
+- Matching is case-sensitive and works on bytes, so `.` can match part of a multibyte character.
+- `\1` back-references in **Find** are not supported.
+- A new name that is not valid UTF-8 is flagged and cannot be applied.
 
-For folder merges, Undo changes only the transferred children. Existing destination folders, destination-only files and later sibling additions stay in place. An emptied Move source folder is recreated before its children are returned. Its inode changes; native permissions, ownership, supported extended attributes and POSIX ACLs are restored where permitted. Provider metadata follows backend capabilities. Empty Move merges can be undone; an empty Copy merge alone creates no record. Restored Move source trees must remain unchanged for Redo.
+## File Operations popover
 
-Replace permanently discards the previous destination, including its folder contents, for native and provider transfers. Undo removes the incoming copy/link or returns moved data to its source and leaves the replaced name vacant. It cannot recover overwritten data. Redo refuses unrelated occupants. Outside hard-link aliases of an overwritten native item are left alone.
+The toolbar **File Operations** button shows the number of active jobs. Open it, or use **File Operations** in the main menu, to see every tab and window of this Luciole: progress, bytes, item totals, pending decisions and results. Jobs cannot be paused.
 
-Completed copies from or to mounted SFTP, SMB and WebDAV destinations can supply Copy history. Redo requires the original source and the destination to be available. Completed moves within one mounted SFTP host, account and port can also supply Move history. These moves retain the normal copy/remove transport and cannot promise server inode, hard-link or unexposed metadata preservation. Other provider Move shapes, partial jobs, retries and Trash remain outside transfer history.
+- **Cancel** stops remaining work; finished effects remain. Closing the popover does not cancel.
+- **Review** returns to the page waiting for your decision.
+- **Details** shows a report; **Copy Report** copies it.
+- **Retry Failed** appears while retry information lasts and skips finished items.
+- **Clear Finished** drops results; the latest 12 are kept until then or until you quit.
 
-A completed supported selection is one action, including supported replacements, merges and numbered names. Copy can combine an initial copied folder with later merged children or a later parent replacement. Move history is declined if a later replacement destroys an earlier moved source version. Some dependent or over-budget selections can complete without Undo.
-
-Before replay changes anything, Luciole checks the recorded outputs and return names. Native copied trees use identities, revisions and exact child sets; provider trees also use content hashes and exposed metadata. Changed copied items, unexpected children or replaced items block Undo. An occupied destination blocks replay without replacing its contents. Provider operations cannot supply native descriptor guarantees or an atomic conditional mutation; unconfirmed replies and incomplete effects are reported in File Operations.
-
-Completed Copy, Link and Move history keeps operation metadata in memory. It does not keep file payloads or create persistent `.luciole-history-*` markers. Transient `.luciole-transfer-*` or `.luciole-create-*` staging can still appear while a transfer is running. Failed or uncertain operations can preserve recovery data and report its location. Older crash residue is not automatically deleted; inspect its contents before removing it.
-
-History capture is optional and bounded: up to 4096 recorded effects, 16384 captured entries and 64 levels per captured tree. Provider content proofs share a 256 MiB read budget. Ordinary native whole-folder renames do not require a recursive history snapshot. Unreadable or unsupported trees and exhausted capture resources can leave a successful operation without history. Capture and verification run on workers, never during ordinary selection.
-
-Starting another mutating file job clears the previous history, including Redo. Preparation-only dialogs and browsing do not clear it. History is unavailable while jobs run and does not survive restart. A collision or unavailable Copy source found before replay changes anything can be retried. Changed ownership proofs or an incomplete replay retire the record; completed effects remain, so inspect the File Operations report. There is no automatic rollback or crash-recovery journal.
-
-Creation history remains separate: an undone created document can keep its original bytes through an open descriptor while Redo is available. Clearing that record or exiting releases it. Rename and creation retain their existing identity and revision checks.
-
-## Trash
-
-You can drag native files and folders onto Trash in Places, including from another Luciole window or an application offering a move-capable file list. The drop moves the items to Trash and appears in File Operations. Copy-only offers, Ctrl-copy, Alt action choices, remote files and deferred archive extraction are rejected. A failed move never falls back to permanent deletion.
-
-Delete or Move to Trash moves selected native items to Trash, including search results from different containing folders. Only the selected items are moved; the search stays active and refreshes after the operation. A failed trash operation does not silently become permanent deletion. The full Trash interface requires the system's GIO/GVfs provider and a session D-Bus connection, including browsing, restoration and Empty Trash. See the [required Trash runtime](https://github.com/noctalia-dev/luciole/blob/main/PACKAGING.md#gvfs-and-trash) for packaging requirements.
-
-Shift+Delete permanently removes selected native files or folders, including folder contents. It asks for confirmation by default. The confirmation opens with Cancel focused, so Enter cancels and Escape closes it without deleting; Tab and Shift+Tab cycle the dialog's controls, Left/Right move between Cancel and Delete, and Delete activates once preparation finishes. Turn off Settings → General → Confirm Permanent Deletion to delete selected items immediately, including items already in Trash. Empty Trash always asks for confirmation. Symbolic links are removed themselves, leaving their targets intact. Permanent deletion bypasses Trash and cannot be undone.
-
-In Trash, Restore returns selected items to their recorded original locations and asks about conflicts. Delete Permanently removes selected trashed items, using the Confirm Permanent Deletion preference. Empty Trash appears as a toolbar button whenever Trash is open, and is also available from the Trash sidebar row's context menu and by right-clicking the Trash folder background. It stays disabled when Trash is empty or unavailable; the sidebar briefly checks the provider when its menu opens. Hidden contents still count. Its confirmation includes the measured contents and size. Both confirmations open with Cancel focused, so Enter cancels; Tab and Shift+Tab cycle the dialog's controls, Left/Right move between Cancel and the Delete or Empty Trash button, and it activates once preparation finishes. Permanent deletion is irreversible.
-
-To move top-level items out of Trash to another local folder, drag them onto a folder or a destination in Places, or use Cut (Ctrl+X) and Paste (Ctrl+V). The original folder can be missing. File Operations reports the move and asks about existing names. Keep Both or Skip is available for folders; folder merging and replacement are unavailable. These moves use the Trash provider within the same filesystem. Remote destinations, moves across filesystems, Copy/Link actions and moving individual children inside a trashed folder remain unsupported. Cancellation stops remaining moves and retains completed effects. File Operations reports failures or unconfirmed outcomes. Trash moves have no Undo record.
-
-## Archives
-
-Compress creates ZIP, TAR and 7z archives for native selections. Supported compressed TAR variants depend on the installed libarchive build and include gzip, bzip2, XZ and Zstandard. Browse Archive opens a read-only archive page. Opening a supported local archive (double-click, Enter or Open) browses it the same way; while another file operation is still finishing, Luciole reports that instead. Extract Here and Extract To publish extracted contents through the normal transfer/conflict flow. The archive page shows the archive's name with its format, compression, size and contents summary, breadcrumbs for the folders inside the archive, and members with sortable Name, Type, Size and Modified columns. Its Extract… and Extract Here buttons act on the selected members, or on the whole archive when nothing is selected; Open opens an individual file through its associated application.
-
-Compression stores symbolic links with their original target text and does not copy the target's contents. Absolute, outside-folder, missing and cyclic link targets can therefore be archived. Luciole still refuses to browse or extract archives containing escaping or cyclic links, including archives it created itself; creation does not mark an archive as trusted.
-
-ZIP/TAR/7z/RAR input depends on available archive capabilities. Encrypted 7z input additionally uses a system 7-Zip executable. Passwords are requested when needed and are not stored in settings. Encrypted RAR is not supported. Numbered byte-split ZIP sets use `name.zip.001`, `.002` and so on; select `.001`, with all contiguous parts beside it. Spanned `.z01` sets and split-archive creation are not supported. A single compressed file such as `dump.sql.gz` (`.gz`, `.bz2`, `.xz` or `.zst` without `.tar`) browses and extracts as one file named without the compression suffix; its size is unknown until extracted.
-
-Normal archive browsing, compression and extraction have no fixed archive-size, expanded-size, entry-count or job-time quotas. Before extraction, Luciole checks the selected files against available space in both temporary storage and the destination. Sparse files use their data size when publication preserves holes; cross-filesystem copies allow for expanded holes and separate hard-link copies. These estimates cannot reserve space or predict every filesystem overhead, so write, close and publication errors are still reported. Compression has no reliable final-size estimate and reports storage errors as it writes.
-
-Member paths, link safety, source changes and malformed input are still checked. Opening one member in another application retains its separate 128 MiB temporary-file limit; use Extract for larger files. An archive rejected as unsafe or unsupported is reported. Native archives are the current scope.
-
-## Properties and permissions
-
-Properties (Alt+Return) shows available file/media facts. Hold Alt while clicking an item to open its Properties: use a single click with single-click opening enabled, or a double-click with double-click opening enabled. This works in List, Grid and Columns; Alt-drag still offers the transfer action menu. Images can include pixel dimensions, videos can include codecs and duration, and PDFs can include page information. Installed providers determine which facts are available. A mounted drive's Properties shows its file system type and live free space.
-
-For a native symbolic link, Properties and the side preview show Link Target as stored in the link and Resolved Target as the final absolute path. Relative targets and link chains are resolved through the filesystem. A missing, inaccessible or looping target shows Target Status instead. The other file facts and permission controls still describe the link itself; inspecting a folder link does not count its target's contents. Opening a valid link follows its target, while an unavailable target reports an error and leaves the current folder open.
-
-For folders, Properties starts a separate cancellable recursive count/size calculation. Ordinary selection and the side preview do not traverse folders to calculate totals. Totals stay inside the starting filesystem: a folder mounted inside the counted tree counts as one folder and is not entered unless it is selected too. Recursive totals are currently unavailable for non-native locations and Trash.
-
-Native permission and ownership editing is available in Properties. Multiple selections support bulk changes; recursive changes are explicit operations. Advanced Permissions opens the POSIX ACL editor on supported native filesystems. Merely selecting a folder does not apply anything recursively. Luciole reports unsupported or denied changes rather than claiming they succeeded.
-
-## Network locations
-
-Mounted, authenticated SFTP, SMB and WebDAV locations support the verified copy/move paths through installed GIO/GVfs backends. Opening an unmounted address starts the connection and any provider login questions; see [network folders](/luciole/browsing/#network-folders). Some providers cannot preserve native symlinks, raw filename bytes or every metadata field. Read-only targets, conflicts, disconnects and partial moves remain explicit outcomes. A separate connect-to-server address form is still planned.
-
-See [runtime providers](https://github.com/noctalia-dev/luciole/blob/main/PACKAGING.md#gvfs-and-trash) for provider packaging requirements.
+The popover closes when the window is resized.

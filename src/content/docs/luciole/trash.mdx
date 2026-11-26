@@ -1,0 +1,41 @@
+---
+title: Trash
+---
+
+Move files to Trash, restore them, or delete them permanently.
+
+## Move to Trash
+
+Press `Delete` or choose **Move to Trash** to send the selected native items to Trash. This also works on search results from different folders: only the selected items move, and the search stays active.
+
+You can also drag native files and folders onto **Trash** in Places, including from another Luciole window. Copy-only drags, `Ctrl` copy, `Alt` action choices, remote files and archive extractions are rejected. A failed move never turns into permanent deletion.
+
+:::note
+Trash, restore and Empty Trash need the system's Trash service and a session D-Bus connection. See [troubleshooting](/luciole/troubleshooting/) if they do nothing.
+:::
+
+## Restore or delete trashed items
+
+In Trash, **Restore** returns the selected items to their original locations and asks about conflicts. **Delete Permanently** removes them for good and follows **Settings → General → Confirm Permanent Deletion**.
+
+## Empty Trash
+
+**Empty Trash** is a toolbar button whenever Trash is open. It is also in the context menu of the Trash row in Places and of the Trash folder background.
+
+It stays disabled when Trash is empty or unavailable. Hidden contents count. The confirmation shows the measured contents and size, and it always appears.
+
+## Take items out of Trash
+
+To move top-level items to another local folder, drag them onto a folder or a Places destination, or use `Ctrl+X` and `Ctrl+V`. The original folder may be missing.
+
+File Operations reports the move and asks about existing names. For folders you can **Keep Both** or **Skip**; merging and replacing are unavailable. Remote destinations, other file systems, copy and link actions, and single items inside a trashed folder are not supported. These moves cannot be undone.
+
+## Delete permanently
+
+`Shift+Delete` removes the selected native items for good, including folder contents. Symbolic links are removed without touching their targets.
+
+By default it asks first. The dialog opens with **Cancel** focused, so `Enter` cancels and `Escape` closes it. `Tab` and `Shift+Tab` cycle the controls, `Left` and `Right` switch between **Cancel** and **Delete**, and **Delete** activates once preparation finishes. Turn off **Settings → General → Confirm Permanent Deletion** to delete at once, including items already in Trash.
+
+:::caution
+Permanent deletion bypasses Trash and cannot be undone.
+:::

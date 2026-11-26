@@ -1,0 +1,43 @@
+---
+title: Opening files
+---
+
+Open files with the default application, choose another, or run programs.
+
+## Open a file
+
+`Enter` or a double-click opens the file with its associated application. **Open With** in the context menu lets you choose another installed application.
+
+A single native application binary with executable permission runs directly, including a link to one. Text scripts keep opening in their associated editor, even with executable permission.
+
+## Run a program
+
+Choose **Run as a Program** or **Run in Terminal** from the file's context menu. A script needs executable permission and an interpreter line such as `#!/bin/sh`. Change the permission in Properties, see [preview and properties](/luciole/preview-and-properties/).
+
+**Run in Terminal** needs an installed terminal, see below. Launched programs can keep running after Luciole closes. A successful launch means the program was handed off; it may still fail or take time to start.
+
+## Launch an application entry
+
+Opening an application `.desktop` file shows a **Launch Once** confirmation with the launcher's name and command. **Cancel** is selected initially. Only launch commands you trust.
+
+The confirmation applies to that attempt only. Luciole saves no trust marker and does not change the file's permissions. A launcher changed since the prompt is refused, and only application entries with an `Exec` command work.
+
+## Choose a terminal
+
+**Settings → General → Terminal** sets the command, for example `foot`, `kitty` or `foot --app-id=Luciole`. Press `Enter` or leave the field to save; it applies live in all windows. The setting covers **Open Terminal Here**, **Run in Terminal** and terminal-based applications opened with **Open With** or a confirmed launcher.
+
+Luciole picks a terminal in this order:
+
+1. the command set in **Settings → General → Terminal**
+2. the `TERMINAL` environment variable
+3. `xdg-terminal-exec`, then `x-terminal-emulator`, then known terminals
+
+An empty setting means automatic selection. An explicit command that is missing or malformed reports an error instead of falling back. Restart Luciole after changing the environment it inherits.
+
+If several terminals are installed, set the command or `TERMINAL` to pick one. Commands accept quoted arguments and `~/` in the executable path, with no shell expansion. A trailing `--`, `-e` or `-x` is kept; common terminals get their separator automatically.
+
+Terminal-based handlers start in the files' common native folder. Remote or mixed-folder selections keep the handler's default directory.
+
+:::note
+The setting applies only when an application asks for a terminal. Graphical entries marked `Terminal=false` keep their own behavior.
+:::

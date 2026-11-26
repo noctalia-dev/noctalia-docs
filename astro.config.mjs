@@ -194,12 +194,50 @@ export default defineConfig({
         {
           label: "Luciole",
           items: [
-            { label: "Luciole", link: "luciole/" },
-            { label: "Installation", link: "luciole/installation/" },
-            { label: "Browsing", link: "luciole/browsing/" },
-            { label: "Configuration", link: "luciole/configuration/" },
-            { label: "File operations", link: "luciole/file-operations/" },
-            { label: "Custom scripts", link: "luciole/scripts/" },
+            { label: "Overview", link: "luciole/" },
+            {
+              label: "Getting started",
+              items: [
+                { label: "Installation", link: "luciole/installation/" },
+                { label: "Building from source", link: "luciole/building/" },
+                { label: "Getting started", link: "luciole/getting-started/" },
+                { label: "File picker", link: "luciole/file-picker/" },
+              ],
+            },
+            {
+              label: "Basics",
+              items: [
+                { label: "Navigation", link: "luciole/navigation/" },
+                { label: "Views", link: "luciole/views/" },
+                { label: "Tabs and split view", link: "luciole/tabs-and-windows/" },
+                { label: "Sidebar and drives", link: "luciole/sidebar/" },
+                { label: "Preview and Properties", link: "luciole/preview-and-properties/" },
+              ],
+            },
+            {
+              label: "Files",
+              items: [
+                { label: "File operations", link: "luciole/file-operations/" },
+                { label: "Undo and redo", link: "luciole/undo-redo/" },
+                { label: "Trash", link: "luciole/trash/" },
+                { label: "Archives", link: "luciole/archives/" },
+                { label: "Opening files", link: "luciole/opening-files/" },
+                { label: "Custom scripts", link: "luciole/scripts/" },
+              ],
+            },
+            {
+              label: "Network",
+              items: [{ label: "Network folders", link: "luciole/network/" }],
+            },
+            {
+              label: "Customize",
+              items: [
+                { label: "Settings", link: "luciole/settings/" },
+                { label: "Configuration reference", link: "luciole/configuration/" },
+                { label: "Keyboard shortcuts", link: "luciole/keybinds/" },
+              ],
+            },
+            { label: "Troubleshooting", link: "luciole/troubleshooting/" },
           ],
         },
       ],

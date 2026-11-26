@@ -1,0 +1,71 @@
+---
+title: Navigation
+---
+
+Move between folders with the location bar, history, search and the keyboard.
+
+## Edit the location
+
+The location bar shows clickable folder breadcrumbs. Double-click a breadcrumb or unused space, or press `Ctrl+L`, to edit the path. `Tab` accepts a path completion when one is available.
+
+Home and its descendants use Home as the breadcrumb root. You can still navigate above it.
+
+:::tip
+Enable **Settings → General → Single-Click Location Bar to Edit** to start editing with one click on the current breadcrumb or unused space.
+:::
+
+## Search or filter a folder
+
+By default, typing while browsing starts a recursive filename search rooted in the current folder. **Settings → General → When Typing** also offers **Filter Current Folder** and **Select Names**.
+
+- **Search files…** looks in the current folder and its subfolders.
+- **Filter files…** narrows the current listing by a case-insensitive name substring, without entering subfolders. `temp` matches `Template1.csv` and `Templates`, but not files inside `Templates`.
+- **Select Names** makes typing select matching names. Explicit searches stay recursive.
+
+Click the field next to the location bar or press `Ctrl+F` to use the same scope. Click the icon at the start of the field, or press `Ctrl+F` again, to switch the scope for the current pane. Clear the query or press `Escape` to return to the folder listing.
+
+Hidden-file and backup-file visibility still apply. Search covers names only; there is no content search or index.
+
+## Go back, forward or up
+
+| Action | Shortcut |
+| --- | --- |
+| Back / Forward | `Alt+Left` / `Alt+Right` |
+| Parent folder | `Alt+Up` or `Backspace` |
+| Home | `Alt+Home` |
+| Edit location | `Ctrl+L` |
+| Focus search | `Ctrl+F` |
+| Refresh | `F5` |
+| Show hidden files | `Ctrl+H` |
+| Show all shortcuts | `F1` |
+
+The mouse's Back and Forward side buttons work like the toolbar arrows. In split view, a side button over a pane uses that pane's history. Each button does nothing when its history is empty.
+
+The **Parent Folder** toolbar button returns keyboard focus to the file view. After the parent loads, `F2` renames the folder you left and `Delete` moves it to Trash.
+
+## Open a terminal here
+
+Press `F4` to open a terminal in the active pane's current folder, whatever is selected. It also works while the location or search field is focused, without clearing its text.
+
+The folder background menu offers **Open Terminal Here**. A folder's own menu offers **Open in Terminal** for that folder. Terminal actions need a local folder; see [terminal selection](/luciole/opening-files/) for the terminal order.
+
+## Navigate with the keyboard
+
+In List and Columns, `Right` or `Enter` enters the folder under the cursor. `Left` or `Backspace` goes to its parent. Entering selects the first item; going up selects the folder you left.
+
+In a List folder tree, `Left` and `Right` collapse and expand folders first. Grid keeps them for moving between items. While typeahead or a search query is active, `Backspace` edits it.
+
+The cursor ring marks the item the keyboard acts on and stays visible inside a multi-selection.
+
+| Action | Shortcut |
+| --- | --- |
+| Move the cursor without changing the selection | `Ctrl+Arrow` |
+| Select or unselect the item under the cursor | `Ctrl+Space` |
+| Open folder in a new tab | `Ctrl+Enter` |
+| Open folder in the other pane (splits if needed) | `Ctrl+Alt+Enter` |
+| Open folder in a new window (a tab with **Single Window**) | `Shift+Enter` |
+| Return focus to the file list | `Escape` |
+
+`Ctrl+Shift+Enter` reverses the **Switch to New Folder Tabs** preference for that opening. The **Open In** submenu shows the current shortcuts. In the search field, `Down` or `Enter` moves to the results with the first one selected.
+
+After you delete the selected item, selection moves to the next remaining item, or the previous one when there is none. See [keyboard shortcuts](/luciole/keybinds/) for every default and how to change it, and [undo and redo](/luciole/undo-redo/) for reverting changes.

@@ -1,0 +1,74 @@
+---
+title: Network folders
+---
+
+Browse SFTP, SMB, WebDAV and other remote locations as ordinary folders. Network access needs your system's GVfs services; see [optional features](/luciole/installation/#optional-features).
+
+## Open a network address
+
+Press `Ctrl+L`, enter an address such as `smb://server/share` and press `Enter`. You can also open a saved network place. If the location is not mounted, Luciole asks the installed GIO/GVfs provider to connect and then opens the folder.
+
+You can open an SMB server address and activate one of its listed shares. The mounted share becomes visible to other applications in the same desktop session.
+
+Use **Refresh** (`F5`) to see folder changes.
+
+## Connect over SFTP
+
+```text
+sftp://user@server/home/user
+sftp://user@server:2222/path/to/folder
+```
+
+Replace the username, server, port and path with your own. Omit the port to use 22. Encode spaces as `%20` and never put passwords in addresses.
+
+The path belongs to the server's SFTP filesystem, which a restricted server may root differently from its SSH shell. GVfs also accepts `ssh://` as an alias; it opens files, not a terminal. The server must offer the SFTP subsystem.
+
+## Log in
+
+When the server asks for login, enter the username, domain and password, or choose **Guest** if the server offers anonymous access. A rejected password can bring another prompt. **Cancel** stops the attempt; refresh or open the address again to retry.
+
+GVfs handles passwords, SSH keys and the SSH agent of your session. On first connection, verify the server's identity through a trusted source before accepting it. An existing authenticated mount or usable key opens without a prompt.
+
+Credentials go to GIO for the session and are not saved in Luciole settings or bookmarks.
+
+## Browse the Network entry
+
+Open **Network** in the sidebar, or enter `network:///`, to see servers found on your network. Open a server and its share as usual. `Ctrl+Enter` and middle-click open a discovered server in a new tab.
+
+Luciole finds SMB computers with its built-in WS-Discovery client, plus DNS-SD through GVfs and Avahi when available. No external helper is needed. Discovery runs only while Network is open and does not ask for credentials. **Refresh** retries it.
+
+A server may not appear because it does not advertise itself or multicast is filtered. Enter its address or use a saved network place instead. To hide or move the entry, see [sidebar](/luciole/sidebar/#show-or-hide-network).
+
+## Use NFS and SMB automounts
+
+Open an NFS or SMB share from the sidebar or enter its local mount path. systemd mounts it from your fstab entry or native automount unit, even without `user` in fstab. The share stays in the sidebar while idle.
+
+If the automount is stopped or the server is unreachable, Luciole shows an error. File operations, program launches and terminal actions on the share fail the same way instead of using the local folder beneath it.
+
+Permanent deletion refuses a folder that contains a share's mount point, and recursive permission changes skip the share.
+
+## Copy and move over the network
+
+Mounted, authenticated SFTP, SMB and WebDAV locations support copy and move through the installed GVfs backends. Some servers cannot keep symbolic links, raw filename bytes or every metadata field. Read-only targets, conflicts, disconnects and partial moves are reported as explicit outcomes. See [file operations](/luciole/file-operations/).
+
+## Fix "Operation not supported"
+
+An immediate **Operation not supported** error without a login prompt usually means no GVfs backend handles that protocol. Luciole tells you when the scheme is not available. A backend that is present can still reject an operation, and its own error is shown.
+
+1. Install your distribution's GVfs service and protocol backends, then restart Luciole.
+2. Arch Linux and Fedora provide SFTP in `gvfs`. Debian also needs `gvfs-backends`. An SSH client alone is not enough.
+3. On NixOS, set `services.gvfs.enable = true;` in your system configuration and rebuild. See [NixOS installation](/luciole/installation/#nixos).
+4. Make sure a session D-Bus connection is available and your launcher does not set `GIO_USE_VFS=local`, which disables remote access.
+
+See the [packaging requirements](https://github.com/noctalia-dev/luciole/blob/main/PACKAGING.md#gvfs-and-trash) for the full list.
+
+## Test the system provider
+
+In a terminal in the same desktop session, run these with your address:
+
+```sh
+gio mount 'sftp://user@server:2222/path/to/folder'
+gio list 'sftp://user@server:2222/path/to/folder'
+```
+
+If they fail too, include their error when reporting the problem. If they work while Luciole fails, report how Luciole was installed and launched, its version and its exact error.
