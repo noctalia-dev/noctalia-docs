@@ -41,6 +41,7 @@ single_window = false
 compact_menus = true
 context_menu_icons = true
 show_close_buttons = true
+show_folder_in_title = true
 background_opacity = 1.0
 corner_radius_scale = 1.0
 sort_by = "name"
@@ -90,6 +91,7 @@ All keys below belong in `[browser]`. Dimensions are logical pixels unless state
 | `show_close_buttons` | `true` | Show the glyph close buttons on tabs, dialogs, panes, the preview and archives. Disable to hide them live; the window controls, Escape and Close/Cancel actions still close things |
 | `reduce_animations` | `false` | Skip animated transitions, such as file entries fading in as they scroll into Grid and List views, smooth scrolling and the sidebar drawer. Applies live |
 | `use_ssd` | `true` | Let the compositor draw the title bar and borders (server-side decoration) when it supports them. Disable to always draw Luciole's own (client-side decoration). Open windows switch live |
+| `show_folder_in_title` | `true` | Title each browser window after the folder its active pane shows, as its tab label reads (`Downloads - Luciole`), so taskbars and window lists can tell windows apart. Disable to title every window `Luciole`. File picker windows keep their own title. Open windows switch live |
 | `color_scheme` | `"auto"` | `"auto"` uses Noctalia's current palette from `colors.toml` (the built-in dark palette without one); `"dark"` and `"light"` use that variant from `colors.toml`, or Luciole's built-in dark or light palette when the file has none (Noctalia versions that write only `[colors]`). Applies live |
 | `background_opacity` | `1.0` | Number from `0` (clear) to `1` (opaque) for the window background; tabs, toolbar, sidebar and file area share it. Menus and dialogs stay opaque |
 | `corner_radius_scale` | `1.0` | Number from `0` (square) to `2` (extra rounded) scaling every corner radius, like Noctalia's setting of the same name. Open windows, menus and dialogs update live |
