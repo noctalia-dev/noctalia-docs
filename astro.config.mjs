@@ -204,7 +204,8 @@ export default defineConfig({
               items: [
                 { label: "Outputs", link: "umbriel/outputs/" },
                 { label: "HDR, VRR, and tearing", link: "umbriel/display-features/" },
-                { label: "Input", link: "umbriel/input/" },
+                { label: "Input devices", link: "umbriel/input/" },
+                { label: "Pointer and focus", link: "umbriel/pointer-and-focus/" },
                 { label: "Keybinds", link: "umbriel/keybinds/" },
                 { label: "Game streaming", link: "umbriel/streaming/" },
               ],
@@ -213,15 +214,19 @@ export default defineConfig({
               label: "Look and feel",
               items: [
                 { label: "Appearance", link: "umbriel/appearance/" },
+                { label: "Title bars", link: "umbriel/title-bars/" },
                 { label: "Animation", link: "umbriel/animation/" },
                 { label: "Effects", link: "umbriel/effects/" },
+                { label: "Layer rules", link: "umbriel/layer-rules/" },
               ],
             },
             {
-              label: "Rules",
+              label: "Window rules",
               items: [
-                { label: "Window rules", link: "umbriel/window-rules/" },
-                { label: "Layer rules", link: "umbriel/layer-rules/" },
+                { label: "Overview", link: "umbriel/window-rules/" },
+                { label: "Placement", link: "umbriel/window-rules-placement/" },
+                { label: "Appearance", link: "umbriel/window-rules-appearance/" },
+                { label: "Behavior", link: "umbriel/window-rules-behavior/" },
               ],
             },
             {
