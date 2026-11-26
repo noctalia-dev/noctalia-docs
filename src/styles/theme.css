@@ -592,3 +592,28 @@ html {
 		transform: none !important;
 	}
 }
+
+/* Heading hierarchy: an h2 opens a section with a rule and extra space, and
+   h3/h4 step down in size so sub-sections read as children of the h2 above.
+   Starlight's defaults (h2 35px / h3 29px) are too close on long pages. */
+:root {
+	--sl-text-h3: var(--sl-text-xl);
+	--sl-text-h4: var(--sl-text-lg);
+}
+
+@media (min-width: 50em) {
+	:root {
+		--sl-text-h3: var(--sl-text-2xl);
+		--sl-text-h4: var(--sl-text-xl);
+	}
+}
+
+.sl-markdown-content .sl-heading-wrapper.level-h2:not(:first-child) {
+	margin-top: 2em;
+	padding-top: 0.75em;
+	border-top: 1px solid var(--sl-color-hairline);
+}
+
+.sl-markdown-content .sl-heading-wrapper.level-h4 > h4 {
+	color: var(--sl-color-gray-2);
+}
