@@ -68,7 +68,7 @@ const faqHref =
     const latestPath = document.querySelector<HTMLElement>('.header-inner')?.dataset.latestNoctaliaPath;
     if (latestPath && (window.location.pathname === '/' || window.location.pathname === '')) {
       document.querySelectorAll<HTMLAnchorElement>('a[href^="/noctalia/"]').forEach((anchor) => {
-        if (!anchor.pathname.startsWith('/noctalia/v')) {
+        if (!anchor.pathname.startsWith('/noctalia/v') && !anchor.hasAttribute('data-version-pill')) {
           anchor.href = anchor.href.replace('/noctalia/', latestPath);
         }
       });

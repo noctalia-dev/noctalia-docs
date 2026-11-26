@@ -21,19 +21,24 @@ hero:
         rel: noopener
 ---
 
+import { LATEST_NOCTALIA_VERSION } from '../../lib/projects';
+
 <div class="family">
 
 <h2 class="family-title">Choose a project</h2>
 
 <div class="family-grid">
 
-<a class="family-card" href="/noctalia/">
+<div class="family-card">
   <img class="family-logo" src="/noctalia.svg" alt="" width="76" height="76" loading="lazy" />
   <span class="family-name">Noctalia</span>
   <span class="family-role">Desktop shell</span>
   <span class="family-desc">Installation, configuration, bar and widgets, launcher, control center, theming, and IPC.</span>
-  <span class="family-link">Read the docs<span aria-hidden="true"> →</span></span>
-</a>
+  <span class="family-versions">
+    <a class="family-pill" href="/noctalia/" data-version-pill>Rolling</a>
+    {LATEST_NOCTALIA_VERSION && <a class="family-pill" href={LATEST_NOCTALIA_VERSION.path} data-version-pill>{LATEST_NOCTALIA_VERSION.tag}</a>}
+  </span>
+</div>
 
 <a class="family-card" href="/umbriel/">
   <img class="family-logo" src="/umbriel.svg" alt="" width="76" height="76" loading="lazy" />

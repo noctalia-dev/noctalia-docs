@@ -552,6 +552,28 @@ html {
 	text-underline-offset: 0.2em;
 }
 
+.family-versions {
+	display: flex;
+	gap: 0.5rem;
+	margin-top: auto;
+	padding-top: 0.5rem;
+}
+
+.family-pill {
+	padding: 0.2rem 0.85rem;
+	border: 1px solid var(--sl-color-text-accent);
+	border-radius: 999px;
+	font-size: var(--sl-text-sm);
+	font-weight: 600;
+	color: var(--sl-color-text-accent);
+	text-decoration: none;
+}
+
+.family-pill:hover {
+	background-color: var(--sl-color-text-accent);
+	color: var(--sl-color-black);
+}
+
 .family-note {
 	text-align: center;
 	margin-inline: auto;
