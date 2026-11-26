@@ -93,6 +93,10 @@ export default defineConfig({
               items: [
                 { label: "How configuration works", link: "noctalia/configuration/" },
                 { label: "Shell", link: "noctalia/configuration/shell/" },
+                { label: "General settings", link: "noctalia/configuration/general/" },
+                { label: "Look and feel", link: "noctalia/configuration/appearance/" },
+                { label: "Panels", link: "noctalia/configuration/panels/" },
+                { label: "Shell keybinds", link: "noctalia/configuration/keybinds/" },
                 { label: "Date format tokens", link: "noctalia/configuration/date-format-tokens/" },
                 { label: "Secret Service & keyrings", link: "noctalia/configuration/secret-service/" },
               ],
@@ -124,6 +128,10 @@ export default defineConfig({
             {
               label: "Desktop",
               items: [{ autogenerate: { directory: "noctalia/desktop" } }],
+            },
+            {
+              label: "Lock screen",
+              items: [{ autogenerate: { directory: "noctalia/lockscreen" } }],
             },
             {
               label: "Theming",
