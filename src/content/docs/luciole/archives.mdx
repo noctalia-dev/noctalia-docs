@@ -28,7 +28,11 @@ Other members open in their associated application. Large members and nested arc
 
 ## Extract
 
-Use **Extract Here** or **Extract To**, or the **Extract…** and **Extract Here** buttons on the archive page. They act on the selected members, or on the whole archive when nothing is selected. Extraction uses the normal conflict dialog, see [file operations](/luciole/file-operations/#resolve-name-conflicts).
+Select one or more supported native archives and choose **Extract Here** or **Extract To**. **Extract Here** creates a separate folder beside each archive. For one archive, **Extract To** chooses its new output-folder path. For multiple archives, it chooses an existing parent folder and creates a separate output folder for each archive inside it. Matching archive names get numbered folders, such as `photos` and `photos (1)`.
+
+A batch runs in selection order and appears as one job in **File Operations**, with progress and a result for each archive. Passwords are requested separately when needed. If one archive fails, the remaining archives are still attempted. Cancel stops the current archive and the remaining queue; completed extractions stay in place.
+
+The **Extract…** and **Extract Here** buttons on an archive page act on its selected members, or on the whole archive when nothing is selected. Existing output folders use the normal conflict dialog, see [file operations](/luciole/file-operations/#resolve-name-conflicts).
 
 You can also drop one archive on a folder and choose **Extract Here** from the menu.
 
