@@ -82,6 +82,8 @@ Restart the requesting application, then try its Open or Save dialog. The applic
 
 The chooser has its own [view, hidden-file and preview settings](/luciole/configuration/#browser-preferences). Its windows use the Wayland app ID `dev.noctalia.luciole-chooser`, with a hidden desktop entry that reuses Luciole's icon, so compositor rules can target them without affecting ordinary windows.
 
+Network folders opened through GVfs, such as `smb://` or `sftp://`, can be chosen while GVfs's FUSE daemon (`gvfsd-fuse`) runs; applications receive their path under `/run/user/<uid>/gvfs/`. Without it, the picker refuses them.
+
 If the old picker still appears, check the configuration's filename and precedence, Luciole's installed portal file and the application's portal support. With systemd, inspect errors using:
 
 ```sh
