@@ -22,13 +22,17 @@ Double-click, press `Enter` or choose **Open** on a supported local archive, or 
 - breadcrumbs for folders inside the archive
 - members with sortable **Name**, **Type**, **Size** and **Modified** columns
 
-**Open** on a member opens that file in its associated application. Members opened this way are limited to 128 MiB; use extraction for larger files. If another file operation is still finishing, Luciole says so instead of opening.
+Open a supported archive member to browse its contents inside Luciole. The breadcrumbs show the archive chain. `Alt+Left` returns to the outer archive with its folder, selection and scroll position restored; Up or `Backspace` at an archive's root also returns to its parent archive.
+
+Other members open in their associated application. Opening a member is limited to 128 MiB; use extraction for larger files. Opened members share a temporary-storage budget of 512 MiB and 32 members across nested levels. Closing the archive view keeps externally opened files available. Temporary files can remain while the tab is available to reopen and are removed when Luciole exits. If another file operation is still finishing, Luciole says so instead of opening.
 
 ## Extract
 
 Use **Extract Here** or **Extract To**, or the **Extract…** and **Extract Here** buttons on the archive page. They act on the selected members, or on the whole archive when nothing is selected. Extraction uses the normal conflict dialog, see [file operations](/luciole/file-operations/#resolve-name-conflicts).
 
 You can also drop one archive on a folder and choose **Extract Here** from the menu.
+
+For a nested archive, the default extraction destination is beside the original outer archive. **Extract Here** uses that folder too.
 
 Before extracting, Luciole checks that temporary storage and the destination have enough space. This is an estimate, so write errors are still reported. Archives that are unsafe or unsupported are refused with a message.
 
