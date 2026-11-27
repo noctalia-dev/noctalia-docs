@@ -2,7 +2,7 @@
 title: Sidebar and drives
 ---
 
-The sidebar lists your places, pinned folders and drives, and can show a folder tree.
+The sidebar lists your places, pinned folders, drives and remote locations, and can show a folder tree.
 
 ![The sidebar with Places and two pinned folders](../../../assets/luciole/sidebar-places.webp)
 
@@ -18,7 +18,7 @@ Below 760 logical pixels wide, the sidebar hides, and `F9` opens it as a drawer 
 
 ## Use Places
 
-Places holds Home, available user folders, Trash, Network and your pinned folders. Middle-click a Places or drive row to open it in a new tab.
+Places holds Home, available user folders, Trash and your pinned folders. Middle-click a Places, drive or remote row to open it in a new tab.
 
 Trash can be reordered but not unpinned, and its context menu offers **Empty Trash**. Drop files or folders on the Trash row to move them there; only moves are accepted. See [Trash](/luciole/trash/).
 
@@ -44,11 +44,11 @@ Choose **Change Icon…** in a bookmark's context menu and pick a [Tabler icon](
 
 ## Show or hide Network
 
-The **Network** entry is shown by default. Drag it, or use **Move Up** and **Move Down**, to move it. **Settings → Appearance → Sidebar → Show Network** or its **Hide Network** menu item hides it in both sidebar modes. See [network folders](/luciole/network/).
+In the flat sidebar, the **Remote** section lists **Network** followed by mounted and configured network shares, and appears whenever it has at least one row. In the folder tree, **Network**, mounted shares and configured system automounts appear at the end of **Folders**. **Settings → Appearance → Sidebar → Show Network** or Network's **Hide Network** menu item hides or restores **Network** in both sidebar modes while keeping mounted and configured shares visible. See [network folders](/luciole/network/).
 
 ## Use Drives
 
-Drives starts with File System (`/`), then removable media, extra partitions and network mounts. System mounts such as `/home` and bind mounts are not listed.
+In the flat sidebar, **Drives** starts with File System (`/`), followed by internal partitions and other local volumes. Attached USB drives, SD cards, phones, cameras and optical media appear in a separate **Removable** section below **Drives** whenever one or more are connected, and mounted or configured network shares appear under **Remote**. **Settings → Appearance → Sidebar → Show Drives** controls all drive, removable and share rows. The folder tree lists mounted drives and configured system automounts under **Folders** without section headings. System mounts such as `/home` and bind mounts are not listed.
 
 A mounted drive shows a bar of used space under its row, red at 90% used or more. Unmounted drives and filesystems that report no size have no bar. Hovering a mounted drive shows its mountpoint and free space.
 
@@ -58,7 +58,7 @@ Phones, players and cameras over MTP or PTP take their icon from udev's `ID_MEDI
 
 ## Unlock an encrypted drive
 
-1. Click the LUKS drive's row under Drives.
+1. Click the LUKS drive's row under Drives or Removable.
 2. In **Unlock Drive**, enter the passphrase and choose **Unlock**.
 3. The mounted folder opens once unlocking succeeds. If it fails, click the drive again to retry.
 
