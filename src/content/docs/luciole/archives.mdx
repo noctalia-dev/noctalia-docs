@@ -24,7 +24,7 @@ Double-click, press `Enter` or choose **Open** on a supported local archive, or 
 
 Open a supported archive member to browse its contents inside Luciole. The breadcrumbs show the archive chain. `Alt+Left` returns to the outer archive with its folder, selection and scroll position restored; Up or `Backspace` at an archive's root also returns to its parent archive.
 
-Other members open in their associated application. Opening a member is limited to 128 MiB; use extraction for larger files. Opened members share a temporary-storage budget of 512 MiB and 32 members across nested levels. Closing the archive view keeps externally opened files available. Temporary files can remain while the tab is available to reopen and are removed when Luciole exits. If another file operation is still finishing, Luciole says so instead of opening.
+Other members open in their associated application. Large members and nested archives stream into private temporary storage. Luciole checks available space when the output size is known and reports write failures if space runs out. There is no fixed member-size or member-count quota. Closing the archive view keeps externally opened files available. Temporary files can remain while the tab is available to reopen and are removed when Luciole exits. If another file operation is still finishing, Luciole says so instead of opening.
 
 ## Extract
 
