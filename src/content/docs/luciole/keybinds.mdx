@@ -14,13 +14,14 @@ search = ["Ctrl+F", "Ctrl+K"]
 open_in_new_tab = ["Ctrl+Return"]
 open_in_other_pane = ["Ctrl+Alt+Return"]
 open_in_new_window = ["Shift+Return"]
+administrator_access = ["Alt+Shift+Return"]
 copy_target_path = ["Ctrl+Alt+C"]
 copy_target_uri = ["Ctrl+Alt+U"]
 zoom_in = ["Ctrl+equal", "Ctrl+plus", "Ctrl+Shift+plus", "Ctrl+KP_Add"]
 quick_preview = []
 ```
 
-Commands belong to one of three scopes, listed below. Two commands in the same scope cannot share a chord, and Settings refuses the conflict; the same chord may be used once in each scope. `Super` combinations belong to the compositor and are rejected.
+Commands belong to one of three scopes, listed below. Two commands in the same scope cannot share a chord, and Settings refuses the conflict; the same chord may be used once in each scope. `Super` combinations belong to the compositor and are rejected. While browsing, Tabs and Windows bindings take precedence over File Browser bindings; for example, `F6` switches areas.
 
 :::caution
 An unknown command id or malformed chord in `[browser.keybinds]` invalidates the whole file, unlike other unknown keys. Check the reported error before restarting.
@@ -29,7 +30,7 @@ An unknown command id or malformed chord in `[browser.keybinds]` invalidates the
 Chords use key names such as `Return`, `Escape`, `Tab`, `space`, `BackSpace`, `Delete`, `Menu`, `Home`, `End`, `Page_Up`, `Page_Down`, `equal`, `minus`, `plus`, `comma`, `KP_Add`, `KP_0` and function keys such as `F4`. `Next` and `Prior` are aliases for `Page_Down` and `Page_Up`, and `Ctrl+,` and `Ctrl++` are accepted for `Ctrl+comma` and `Ctrl+plus`. Printable keys need `Ctrl`, `Alt` or another modifier; `Shift` alone is not enough, except for `validate` and `quick_preview`.
 
 :::note
-If another File Browser command already uses `Ctrl+Alt+C`, `Ctrl+Alt+U`, `Ctrl+Alt+Return` or `Shift+Return`, Copy Path, Copy URI, Open in Other Pane or Open in New Window stays unassigned until you assign it.
+If another File Browser command already uses `Ctrl+Alt+C`, `Ctrl+Alt+U`, `Ctrl+Alt+Return` or `Shift+Return`, the corresponding newer default stays unassigned until you assign it. The same applies to Administrator Access if `Alt+Shift+Return` is already assigned.
 :::
 
 ## File Browser
@@ -51,6 +52,7 @@ If another File Browser command already uses `Ctrl+Alt+C`, `Ctrl+Alt+U`, `Ctrl+A
 | Toggle Preview | `F8` | `toggle_preview` |
 | Quick Preview | `space` | `quick_preview` |
 | Open | `Return` | `open` |
+| Administrator Access | `Alt+Shift+Return` | `administrator_access` |
 | Open in New Tab | `Ctrl+Return` | `open_in_new_tab` |
 | Open in New Tab in Background | `Ctrl+Shift+Return` | `open_in_new_tab_background` |
 | Open in Other Pane | `Ctrl+Alt+Return` | `open_in_other_pane` |

@@ -13,6 +13,18 @@ When copying or moving to removable storage or mounted network shares, progress 
 
 To copy paths as text, use **Copy Location**: **Path** (`Ctrl+Alt+C`) or **URI** (`Ctrl+Alt+U`). Several items are separated by newlines. To change these shortcuts, see [keybinds](/luciole/keybinds/).
 
+## Administrator access
+
+Right-click a local folder, or the background of the current local folder, and choose **Open as Administrator**. **Alt+Shift+Enter** performs the same action for a selected folder, uses the current folder when nothing is selected, and returns an administrator pane to normal access. Change **Administrator Access** in Settings → Keybinds to rebind or disable it. Your desktop authentication agent asks for authorization when required. Luciole opens the folder through `admin:///`; the window continues running under your account.
+
+The location bar shows **Administrator** (a shield badge in a small window). Click it, or choose **Return to Normal Access** in the folder background menu, to open the same folder with your ordinary permissions. Each pane has its own location. Returning one pane does not revoke cached system authorization or change another administrator pane. Running jobs continue until they finish or you cancel them in File Operations.
+
+Administrator locations support copy, move, paste, new folders, empty files, documents from templates, pasted images and single-item rename. **Delete Permanently** is available and always asks for confirmation, including when ordinary deletion confirmation is disabled. `Delete` and `Shift+Delete` both open that confirmation; there is no administrator Trash action. Cancellation stops remaining work and preserves completed effects in the report.
+
+New administrator files start with private permissions (0600). These administrator jobs do not supply Undo/Redo. Archive operations, batch rename, link creation, permission editing and program/terminal launching retain their existing native-location requirements. Opening a document uses its normal associated application with the administrator URI; the application must support that URI.
+
+Administrator access requires the optional GVfs admin backend, Polkit and a desktop authentication agent. Ordinary reading of locations such as `/usr/share` usually works without elevation.
+
 ## Paste an image
 
 If the clipboard holds an image (PNG, JPEG, WebP, GIF, BMP, TIFF or SVG), `Ctrl+V` asks for a name, default `Pasted image`, and saves a new file in the current folder. An existing name is reported, never overwritten. The folder needs a native path, which includes mounted SFTP and WebDAV folders. You can undo it, see [undo and redo](/luciole/undo-redo/).
