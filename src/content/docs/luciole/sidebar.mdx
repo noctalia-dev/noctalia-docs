@@ -70,4 +70,6 @@ Unlocking needs the UDisks2 system service and working D-Bus connections. System
 
 The eject button and the drive's context menu offer the right action: **Safely Remove** powers off a USB disk plugged in during the session, **Eject** ejects removable media, and **Unmount** handles anything else.
 
+Luciole asks for confirmation before starting removal. **Cancel**, `Escape` or the dialog's close button leaves your browsing and file operations alone. Finish file transfers before confirming. To skip this dialog, turn off **Settings → General → Confirm Drive Removal**, or set `browser.confirm_drive_removal = false` in your configuration.
+
 Removal never forces: active operations or programs with open files prevent it, and the status bar names the blockers. System policy may ask for authorization when unmounting a drive that requires elevated permissions. [Undo](/luciole/undo-redo/) history involving that drive is discarded.

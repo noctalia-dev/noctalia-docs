@@ -32,6 +32,7 @@ typing_mode = "search"
 drop_action = "menu"
 switch_to_new_tab = true
 confirm_permanent_deletion = true
+confirm_drive_removal = true
 restore_last_window = false
 single_window = false
 compact_menus = true
@@ -97,6 +98,7 @@ All keys belong in `[browser]`. Dimensions are logical pixels. View, zoom and so
 | `drop_action` | `"menu"` | Drop without a modifier: `"menu"` opens a menu at the pointer, `"copy"` copies, `"move"` moves. `Ctrl`, `Shift` and `Alt` take priority; Trash, items from Trash and non-native folders keep fixed behavior |
 | `single_click_location_edit` | `false` | Edit the path with a single click on the current breadcrumb or unused space instead of a double-click |
 | `confirm_permanent_deletion` | `true` | Ask before permanently deleting, including `Shift+Delete` and selections in Trash; Empty Trash always asks |
+| `confirm_drive_removal` | `true` | Ask before Safely Remove, Eject or Unmount from the sidebar or its context menu |
 | `show_permanent_deletion` | `false` | Show Delete Permanently in context menus outside Trash; `Shift+Delete` and Trash actions work either way |
 | `switch_to_new_tab` | `true` | Switch to a folder opened in a new tab; disable to keep browsing the current tab |
 | `restore_last_window` | `false` | Reopen the tabs of the last closed window, once, in a new window or at startup without a location |
