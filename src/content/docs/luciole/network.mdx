@@ -45,7 +45,7 @@ Open an NFS or SMB share from the sidebar or enter its local mount path. systemd
 
 If the automount is stopped or the server is unreachable, Luciole shows an error. File operations, program launches and terminal actions on the share fail the same way instead of using the local folder beneath it.
 
-Permanent deletion refuses a folder that contains a share's mount point, and recursive permission changes skip the share.
+Permanent deletion refuses a folder that contains a mount point, including a share's, and recursive permission changes skip mounted subtrees.
 
 ## Copy and move over the network
 
