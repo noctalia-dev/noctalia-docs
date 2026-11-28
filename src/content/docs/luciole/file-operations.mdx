@@ -19,6 +19,8 @@ To copy paths as text, use **Copy Location**: **Path** (`Ctrl+Alt+C`) or **URI**
 
 Right-click a local folder, or the background of the current local folder, and choose **Open as Administrator**. **Alt+Shift+Enter** performs the same action for a selected folder, uses the current folder when nothing is selected, and returns an administrator pane to normal access. Change **Administrator Access** in Settings → Keybinds to rebind or disable it. Your desktop authentication agent asks for authorization when required. Luciole opens the folder through `admin:///`; the window continues running under your account.
 
+Cancelling authorization stops the remaining automatic requests for that folder load. Refresh or open the folder again to retry. Your desktop may report cancelled authorization as permission denied.
+
 The location bar shows **Administrator** (a shield badge in a small window). Click it, or choose **Return to Normal Access** in the folder background menu, to open the same folder with your ordinary permissions. Each pane has its own location. Returning one pane does not revoke cached system authorization or change another administrator pane. Running jobs continue until they finish or you cancel them in File Operations.
 
 Administrator locations support copy, move, paste, new folders, empty files, documents from templates, pasted images and single-item rename. **Delete Permanently** is available and always asks for confirmation, including when ordinary deletion confirmation is disabled. `Delete` and `Shift+Delete` both open that confirmation; there is no administrator Trash action. Cancellation stops remaining work and preserves completed effects in the report.
