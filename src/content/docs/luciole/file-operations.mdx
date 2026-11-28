@@ -9,6 +9,8 @@ Copy, move, create and rename files, and watch running jobs in the File Operatio
 
 Select items, press `Ctrl+C` to copy or `Ctrl+X` to cut, open the destination folder and press `Ctrl+V`. Paste is also in the context menus, including List view. Clipboard transfers and drag and drop work between Luciole windows and with other applications.
 
+Files on a phone or camera connected over MTP or PTP can be copied or cut into a local folder, by clipboard or drag and drop; dragging copies by default. Folders arrive file by file, so if the phone disconnects, the finished files stay and **Retry** copies only the rest. Copying or pasting onto the device is not supported. Unlock the phone and choose **File transfer** in its USB settings first.
+
 When copying or moving to removable storage or mounted network shares, progress follows the destination's writeback rather than racing ahead into the page cache. On removable storage, File Operations also shows **Writing to device…** while the filesystem finishes writing. Wait for completion before ejecting the drive. If writing fails after a file appears in the destination, the report marks the transfer partial and lists any retained replacement.
 
 To copy paths as text, use **Copy Location**: **Path** (`Ctrl+Alt+C`) or **URI** (`Ctrl+Alt+U`). Several items are separated by newlines. To change these shortcuts, see [keybinds](/luciole/keybinds/).
